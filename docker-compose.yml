@@ -5,10 +5,12 @@ services:
     build:
       context: .
       dockerfile: 'DEV.Dockerfile'
+    # コンテナに任意の名前をつける
     container_name: docker-rails-service
     # command = コンテナ起動時にコンテナ内で実行するコマンド（railsのサービスなのでrailsの起動コマンドを実行）
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     # volumes = コンテナ内で発生したデータをコンテナの外部に永続化させるための設定（volumesは保存する箱みたいなもの）
+    # コンテナとホストにディレクトリ共有
     volumes:
       - .:/webapp:cached
       - bundle:/usr/local/bundle:cached

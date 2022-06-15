@@ -5,9 +5,10 @@
 # are not: uncommented lines are intended to protect your configuration from
 # breaking changes in upgrades (i.e., in the event that future versions of
 # Devise change the default values for those options).
-#
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
+
+
 Devise.setup do |config|
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
@@ -24,6 +25,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
+
   config.mailer_sender = 'tech_video@gmail.com'
 
   # Configure the class responsible to send e-mails.
@@ -36,6 +38,7 @@ Devise.setup do |config|
   # Load and configure the ORM. Supports :active_record (default) and
   # :mongoid (bson_ext recommended) by default. Other ORMs may be
   # available as additional gems.
+
   require 'devise/orm/active_record'
 
   # ==> Configuration for any authentication mechanism
@@ -58,11 +61,13 @@ Devise.setup do |config|
   # Configure which authentication keys should be case-insensitive.
   # These keys will be downcased upon creating or modifying a user and when used
   # to authenticate or find a user. Default is :email.
+
   config.case_insensitive_keys = [:email]
 
   # Configure which authentication keys should have whitespace stripped.
   # These keys will have whitespace before and after removed upon creating or
   # modifying a user and when used to authenticate or find a user. Default is :email.
+
   config.strip_whitespace_keys = [:email]
 
   # Tell if authentication through request.params is enabled. True by default.
@@ -266,6 +271,7 @@ Devise.setup do |config|
   # config.navigational_formats = ['*/*', :html]
 
   # The default HTTP method used to sign out a resource. Default is :delete.
+
   config.sign_out_via = :delete
 
   # ==> OmniAuth
@@ -309,5 +315,7 @@ Devise.setup do |config|
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
 
+  
+# 複数のmodelで個別のログイン画面を使いたいので変更する
   config.scoped_views = true
 end
