@@ -1,0 +1,52 @@
+<%# javascript_pack_tag "users/articles" %>
+
+<%= form_with(model: @article, url: url, method: method, local: true) do |f| %>
+  <div class="row mt-4">
+
+    <div class="col-6 editor-side">
+      <div class="card card-outline card-info">
+        <div class="card-header">
+          <h3 class="card-title text-center">新規記事</h3>
+        </div>
+        <div class="card-body">
+          <div class="col-10 offset-1 mt-3">
+            <%= f.text_field :title, placeholder: "タイトル", class: "form-control title-form" %>
+          </div>
+
+          <div class="col-10 offset-1 mt-3">
+            <%= f.text_field :sub_title, placeholder: "サブタイトル", class: "form-control" %>
+          </div>
+
+          <div class="col-10 offset-1 mt-3">
+            <%= f.text_area :content, placeholder: "コンテンツ", cols: 50, rows: 100, class: "form-control markdown-editor" %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 preview-side">
+      <div class="card card-outline card-info d-flex flex-column justify-content-start">
+        <div class="card-header">
+          <h3 class="card-title">プレビュー</h3>
+        </div>
+        <div class="card-body">
+
+      <div class="sticky col-10 offset-1">
+        <div class="preview">
+          <div class="pl-4 preview-title"><%= @article.title ? @article.title : "タイトル" %></div>
+          <hr class="my-2">
+          <div class="pl-4 preview-content">
+            <%= @article.content ? simple_format(@article.content) : "コンテンツ" %>
+            <%# @article.content ? @article.content : "コンテンツ" %>
+          </div>
+        </div>
+        <div class="text-center">
+          <%= f.submit btn_name, class: "btn btn-primary mt-3" %>
+        </div>
+      </div>
+      </div>
+    </div>
+    </div>
+
+  </div>
+<% end %>

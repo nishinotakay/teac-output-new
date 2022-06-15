@@ -20,3 +20,8 @@ document.addEventListener("turbolinks:load", () => {
   $('[data-toggle="tooltip"]').tooltip()
 });
 
+// ようせい
+require ("./users/articles");
+// 以上
+
+

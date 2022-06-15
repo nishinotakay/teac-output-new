@@ -1,0 +1,28 @@
+//以下show
+.markdown-preview {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+//以下new
+.preview-side {
+  position: fixed;
+  height: 90%;
+  width: 50%;
+  bottom: 10%;
+  right: 50%;
+  border: 1px solid red;
+  overflow: scroll;
+}
+
+.preview {
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding: 10px;
+  height: 70%;
+  width: 30%;
+}
+
+.post_btn {
+}
