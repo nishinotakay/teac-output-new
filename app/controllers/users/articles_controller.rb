@@ -43,6 +43,9 @@ module Users
       redirect_to users_profile_url(current_user)
     end
 
+    def image
+    end
+
     private
 
       def article_params
