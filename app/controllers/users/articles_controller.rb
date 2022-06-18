@@ -44,11 +44,19 @@ module Users
     end
 
     def image
-      @article = current_user.articles.new(params.permit(:imagess))
-      format.json { render json: { name: @article.image.identifier, url: @article.image.url } }
+      # @article = current_user.articles.new(params.permit(:image))
+      @article = current_user.articles.new(article_params_image)
+      # render json: { name: @article.image.identifier, url: @article.image.url }
+      respond_to do |format|
+        format.json { render json: { name: @article.image.identifier, url: @article.image.url } }
+      end
     end
 
     private
+
+    def article_params_image
+      params.permit(:image)
+    end
 
       def article_params
         params.require(:article).permit(:title, :sub_title, :content)

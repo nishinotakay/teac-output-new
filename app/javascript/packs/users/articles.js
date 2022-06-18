@@ -27,10 +27,11 @@ $(function(){
 
 // drag&drop
 $(function() {
-  $('#markdown-editor').on('drop', function(e) { //dropのイベントをハンドル
+  $('.markdown-editor').on('drop', function(e) { //dropのイベントをハンドル
     e.preventDefault(); //元の動きを止める処理
     var f = e.originalEvent.dataTransfer.files[0]; //ドロップされた画像の1件目を取得
-    var formData = new FormData($("#markdown-editor").get(0));
+    // var formData = new FormData($(".markdown-editor").get(0));
+    var formData = new FormData();
     formData.append('image', f); // FormDataに画像を追加
 
     // ajaxで画像をアップロード
