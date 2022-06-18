@@ -44,6 +44,8 @@ module Users
     end
 
     def image
+      @article = current_user.articles.new(params.permit(:imagess))
+      format.json { render json: { name: @article.image.identifier, url: @article.image.url } }
     end
 
     private
