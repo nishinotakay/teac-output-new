@@ -10,6 +10,16 @@ Rails.application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
 
+  # config.web_console.whitelisted_ips = '172.19.0.1' #追記
+  # config.web_console.permissions = '172.19.0.1'
+  # config.web_console.whitelisted_ips = '0.0.0.0/0'
+  # config.web_console.allowed_ips = '0.0.0.0/0'
+  # config.web_console.whitelisted_ips = '0.0.0.0/0'
+
+  # リロードの設定
+  config.reload_classes_only_on_change = false
+
+
   config.hosts.clear
 
   # Do not eager load code on boot.
@@ -93,4 +103,6 @@ Rails.application.configure do
     authentication:       :plain,
     enable_starttls_auto: true
   }
+
+  
 end

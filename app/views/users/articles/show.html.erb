@@ -1,0 +1,21 @@
+<div>
+    <p>タイトル</p>
+    <%= @article.title %>
+</div>
+<br>
+<div>
+    <p>内容</p>
+<%
+=begin %><%= qiita_markdown(@article.content) %>
+<%
+=end %>
+    <%= qiita_markdown(@article.content) %>
+</div>
+
+
+<%# remote: trueになっていたため、ずっとページ移動できなかった %>
+<%= link_to "編集", edit_users_article_path(@article.id), 
+    local: true , class: "btn btn-primary" %>
+<%= link_to "削除", users_article_path(@article.id), method: :delete,
+     data: { confirm: "削除してよろしいですか？" }, class: "btn btn-danger" %>
+     

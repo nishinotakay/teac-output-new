@@ -1,1 +1,18 @@
+
+<%# .notifications
+  - flash.each do |key, value|
+    = content_tag(:div, value, class: key) %>
+<%
+=begin %>
+<% flash.each do |message_type, msg| %>
+    <div class="alert alert-<%= message_type %>"><%= msg.html_safe %></div>
+<% end %>
+<%
+=end %>
+
+<%# 三項演算子　contentがある場合、yield(:content) ない場合: yield %>
 <%= content_for?(:content) ? yield(:content) : yield %>
+
+ <script src='https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.js'></script>
+ <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.10/vue.js'></script>
+

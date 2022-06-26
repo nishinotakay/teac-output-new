@@ -1,9 +1,13 @@
-<% provide(:title,  "Notion") %>
-<div class="content">
-  <div class="container-fluid">
-    <div class="row">
-      <h1>近日公開予定！！</h1>
-    </div>
-    <!-- /.row -->
-  </div><!-- /.container-fluid -->
-</div>
+<% provide(:title,  "記事一覧") %>
+<% @articles.each do |item| %>
+  <div class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <%= link_to item.title , users_article_path(item.id) %>
+      </div>
+      <!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+
+<% end %>
+

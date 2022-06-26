@@ -3,6 +3,11 @@
 module Admins
   class ConfirmationsController < Devise::ConfirmationsController
     layout 'admins'
+#    →views/layouts/admins.html.erbを参照する
+#   【Rails】 layoutメソッドの使い方と使い所とは？
+# https://pikawaka.com/rails/layout
+
+
     # GET /resource/confirmation/new
     # def new
     #   super

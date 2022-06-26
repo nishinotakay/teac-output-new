@@ -1,0 +1,274 @@
+
+<% provide(:title,  "記事作成") %>
+  <%= form_with(model:@article ,url: users_articles_path, local: true, method: :post) do |f| %>
+        <%# .form-group はフォームに構造体を適用できます。ラベル, コントロール, 
+        オプションのヘルプテキスト, フォーム検証メッセージを提供しています。 %>
+<%
+=begin %>       
+   <%= form_with(model:@article ,url: users_article_path, local: true, method: :post) do |f| %>
+<div v-html='input | marked' style: :"width: 650px;"></div>
+<%
+=end %>  
+  <p>タイトル</p>
+    <div class="form-group">
+      <div id='editor0'>
+        <div class="row">  
+          <!-- ここに入力-->
+          <div class="col-5 m-1">
+            <%# name属性=カラム名 テキスト形式のコントロールはform-control が付与
+            id="n"の意味は不明 %>
+            <div>
+              <input name="title" id="n" class="form-control" rows="20" 
+              v-model='input' debounce='50'>
+            </div>
+          </div>
+          <!-- ここに出力-->
+          <div class="col-5 m-1 border">                 
+            <div class="di_inline_t preview">
+                  <%# v-html はHTMLタグのまま出力するときに用います。
+                  markdownを外すには、v-html='input | marked'の  markedを外す %>
+              <div v-html='input' style: :"width: 650px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p>内容</p>
+    <div class="form-group">
+      <div id='editor1'>
+        <div class="row">
+          <div class="col-5 m-1">
+            <div>                
+              <textarea name="content" id="n" class="form-control" rows="20" 
+              v-model='input' debounce='50'></textarea>
+            </div>
+          </div>
+          <div class="col-5 m-1 border">                   
+            <div class="di_inline_t preview">
+                  <%# v-html はHTMLタグのまま出力するときに用います。 %>
+              <div v-html='input | marked' style: :"width: 650px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%= f.submit %>
+  <% end %>
+
+  <script type="text/javascript">
+    window.onload = function() {
+      new Vue({
+        el: '#editor0', // 選別箇所
+        data: {
+          input: '<%== j @article.title %>',
+        },
+        filters: {
+          marked: marked,
+        },
+      }); 
+      new Vue({
+        el: '#editor1', // 選別箇所
+        data: {
+          input: '<%== j @article.content %>',
+        },
+        filters: {
+          marked: marked,
+        },
+      });
+    };
+  </script>
+
+<%
+=begin %>
+   <p>タイトル</p>
+    <div class="form-group">
+      <div class="row">  
+        <!-- ここに入力-->
+        <div class="col-5 m-1">
+          <%# name属性=カラム名 テキスト形式のコントロールはform-control が付与
+          id="n"の意味は不明 %>
+          <div>
+            <input name="title" id="n" class="form-control" rows="20" 
+            v-model='input' debounce='50'>
+          </div>
+        </div>
+        <!-- ここに出力-->
+        <div class="col-5 m-1 border">                 
+          <div class="di_inline_t preview">
+                <%# v-html はHTMLタグのまま出力するときに用います。 %>
+            <div v-html='input | marked' style: :"width: 650px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+   <p>タイトル</p>
+    <div class="form-group">
+      <div id='editor0'>
+        <div class="row">  
+          <!-- ここに入力-->
+          <div class="col-5 m-1">
+            <%# name属性=カラム名 テキスト形式のコントロールはform-control が付与
+            id="n"の意味は不明 %>
+            <div>
+              <input name="title" id="n" class="form-control" rows="20" 
+              v-model='input' debounce='50'>
+            </div>
+          </div>
+          <!-- ここに出力-->
+          <div class="col-5 m-1 border">                 
+            <div class="di_inline_t preview">
+                  <%# v-html はHTMLタグのまま出力するときに用います。 %>
+              <div v-html='input | marked' style: :"width: 650px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+--------------------------
+  <script type="text/javascript">
+    window.onload = function() {
+      // <!-- ここに出力される 2つめ -->
+      new Vue({
+        el: '#editor1',
+        data: {
+          input1: '<%== j @article.content %>',
+        },
+        filters: {
+          marked: marked,
+        },
+      });
+    };
+  </script>
+
+<%
+=end %>
+
+
+<%# 
+                <div>
+                  <textarea name="content" id="n" class="form-control" rows="20" 
+                  v-model='input' debounce='50'></textarea>    
+                </div>        
+              </div>  
+              <div class="col-5 m-1 border">       
+                <div class="di_inline_t preview"> %>
+  <%# v-html はHTMLタグのまま出力するときに用います。 %>
+                  <%# <div v-html='input | marked' style: :"width: 650px;"></div>
+                </div>
+                <div class="di_inline_t preview">
+                  <div v-html='input | marked' style: :"width: 650px;"></div>
+                </div>
+              </div>
+            </div>
+          </div> %>
+<%# </div> %>
+        <%# <div id='editor1'>
+          <div class="row">
+          <!-- ここに入力-->
+            <div class="col-5 m-1">
+            <%# name属性=カラム なテキスト形式のコントロールは form-control が付与
+            id="n"の意味は不明 %>
+              <%# <div>
+                <input name="title" id="n" class="form-control" rows="20" 
+                v-model='input1' debounce='50'>
+              </div>
+              <div>
+                <textarea name="content" id="n" class="form-control" rows="20" 
+                v-model='input1' debounce='50'></textarea>    
+              </div>        
+            </div>  
+            <div class="col-5 m-1 border">       
+              <div class="di_inline_t preview">
+                <div v-html='input1 | marked1' style: :"width: 650px;"></div>
+              </div>
+              <div class="di_inline_t preview">
+                <div v-html='input1 | marked1' style: :"width: 650px;"></div>
+              </div>
+            </div>
+          </div>
+        </div> %>
+<%
+=begin %>
+元
+
+
+<% provide(:title,  "記事作成") %>
+<div class="row">
+<!-- ここに入力-->
+  <div class="col-5 m-1">
+    <%= form_with(model:@article ,url: users_articles_path, local: true) do |f| %>
+      <div class="form-group">
+        <div id='editor'>
+          <textarea name="post[content]" id="n" class="form-control" rows="20" v-model='input' debounce='50'></textarea>
+          <div class="di_inline_t preview">
+            <div v-html='input | marked' style: :"width: 650px;"></div>
+          </div>
+        </div>
+      </div>
+      <%= f.submit %>
+    <% end %>
+  </div>
+
+  <!-- ここに出力される -->
+  <div class="col-6 m-1 border">
+
+    <script type="text/javascript">
+    window.onload = function() {
+    new Vue({
+    el: '#editor',
+    data: {
+    input: '<%== j @article.content %>',
+    },
+    filters: {
+    marked: marked,
+    },
+    });
+    };
+    </script>
+  </div>
+</div>
+<%
+=end %>
+<%
+=begin %>
+  <%= processor.call(markdown)[:output].to_s.html_safe %>
+<%
+=end %>
+
+
+<%
+=begin %><%= form_for(@article) do |f| %>
+
+<% provide(:title,  "記事作成") %>
+<div class="content">
+  <%= form_with(model:@article ,url: users_articles_path, local: true) do |f| %>
+    <%= f.text_area :content %>
+    <%= f.submit %>
+  <% end %>
+</div>
+
+<%
+=end %>
+
+
+<%# 
+
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <h1>近日公開予定！！</h1>
+    </div>
+    <!-- /.row -->
+  </div><!-- /.container-fluid -->
+</div> %>
