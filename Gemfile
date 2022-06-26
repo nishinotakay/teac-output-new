@@ -94,3 +94,5 @@ gem 'ffi', '~> 1.15'
 
 gem 'qiita-markdown'
 
+gem 'redcarpet'
+gem 'jquery-rails'

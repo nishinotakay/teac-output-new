@@ -57,7 +57,9 @@
   <% end %>
 
   <script type="text/javascript">
-    window.onload = function() {
+  console.log(0)
+    window.onload = function() { // onloadがあやしい？リロードが必要な件
+      console.log(1)
       new Vue({
         el: '#editor0', // 選別箇所
         data: {
