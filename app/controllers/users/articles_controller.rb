@@ -2,11 +2,16 @@
 
 module Users
   class ArticlesController < Users::Base
-    before_action :set_article, except: [:index, :new, :create]
+    before_action :set_article, except: [:index, :show, :new, :create, :image]
 
-    def index; end
+    def index
+      @users = User.all
+      @articles = Article.all
+    end
 
     def show
+      @article = Article.find(params[:id])
+      # binding.pry
     end
 
     def new
@@ -29,6 +34,7 @@ module Users
 
     def update
       if @article.update(article_params)
+        # binding.pry
         flash[:notice] = "記事を編集しました。"
         redirect_to users_article_url(@article)
       else
@@ -44,19 +50,15 @@ module Users
     end
 
     def image
-      # @article = current_user.articles.new(params.permit(:image))
-      @article = current_user.articles.new(article_params_image)
-      # render json: { name: @article.image.identifier, url: @article.image.url }
-      respond_to do |format|
-        format.json { render json: { name: @article.image.identifier, url: @article.image.url } }
-      end
+      @article = current_user.articles.new(params.permit(:image))
+      # @article = current_user.articles.new(image: params[:image])
+      render json: { name: @article.image.identifier, url: @article.image.url }
+      # respond_to do |format|
+        # format.json { render json: { name: @article.image.identifier, url: @article.image.url } }
+      # end
     end
 
     private
-
-    def article_params_image
-      params.permit(:image)
-    end
 
       def article_params
         params.require(:article).permit(:title, :sub_title, :content)

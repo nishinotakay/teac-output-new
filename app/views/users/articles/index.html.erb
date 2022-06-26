@@ -1,9 +1,25 @@
-<% provide(:title,  "Notion") %>
-<div class="content">
-  <div class="container-fluid">
-    <div class="row">
-      <h1>近日公開予定！！</h1>
-    </div>
-    <!-- /.row -->
-  </div><!-- /.container-fluid -->
+<%# javascript_pack_tag "users/articles" %>
+
+<% provide(:title,  "記事一覧") %>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>タイトル</th>
+            <th>著者</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @articles.each do |a| %>
+            <tr data-href="/users/articles/<%= a.id %>" class="tr-link">
+              <td><%= a.title %></td>
+              <td><%= @users.find(a.user_id).name %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </div>
+    </table>
+  </div>
 </div>

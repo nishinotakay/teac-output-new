@@ -1,19 +1,33 @@
-<%= javascript_pack_tag "users/articles" %>
+<%# javascript_pack_tag "users/articles" %>
 
 <div class="container">
   <div class="row">
-    <div class="d-flex col-10 justify-content-end">
-      <%= link_to "編集", edit_users_article_path, class: "btn btn-success" %>
-      <%= link_to "削除", users_article_path, method: :delete, data: {confirm: "記事#{@article.id}を削除します。"}, class: "btn btn-danger ml-2" %>
-    </div>
-    
-    <div class="col-8 offset-2">
-      <h1 class="text-left"><%= @article.title %></h1>
+    <% if @article.user_id == current_user.id %>
+      <div class="d-flex col-10 justify-content-end">
+        <%= link_to "編集", edit_users_article_path, class: "btn btn-success" %>
+        <%= link_to "削除", users_article_path, method: :delete, data: {confirm: "記事#{@article.id}を削除します。"}, class: "btn btn-danger ml-2" %>
+      </div>
+    <% end %>
+
+    <div class="col-10">
+      <div class="col-8 float-left">
+        <h1 class="text-left"><%= @article.title %></h1>
+      </div>
+      <% if @article.user_id != current_user.id %>
+        <div class="col-3 float-right">
+          <%# <h6> %>
+          <div class="mt-4">
+          <%= User.find(@article.user_id).name %>
+          </div>
+          <%# </h6> %>
+        </div>
+      <% end %>
     </div>
     <hr class="my-3">
-    <div class="col-8 offset-2 markdown-preview">
+    <%# <div class="col-8 offset-2 markdown-preview"> %>
+    <div class="col-8 offset-2 article-view" data-article="<%= @article.content %>">
       <%# @article.content %>
-      <%= simple_format(@article.content) %>
+      <%# simple_format(@article.content) %>
     </div>
 
   </div>
