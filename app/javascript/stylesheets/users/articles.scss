@@ -24,3 +24,14 @@
   height: 0.1px;
 }
 
+.articles-table {
+  tbody tr{
+    td {
+      padding-left: 2rem;
+    }
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+

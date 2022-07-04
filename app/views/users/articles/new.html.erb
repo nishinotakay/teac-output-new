@@ -1,6 +1,8 @@
-<%# javascript_pack_tag "users/articles" %>
-
-<div class="container">
-  <h1 class="text-center">記事投稿</h1>
-  <%= render "users/articles/shared/article_form_and_preview", btn_name: "投稿", url: users_articles_path, method: :post %>
+<%= javascript_pack_tag "users/articles" %>
+<% provide(:title,  "記事投稿") %>
+<div class="content">
+  <div class="container">
+    <%= render "users/articles/shared/article_form_and_preview", btn_name: "投稿", url: users_articles_path, method: :post %>
+  </div>
 </div>
+

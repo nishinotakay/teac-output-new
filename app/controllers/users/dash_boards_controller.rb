@@ -2,6 +2,8 @@
 
 module Users
   class DashBoardsController < Users::Base
-    def index; end
+    def index
+      @articles = current_user.articles.all.order(updated_at: "DESC")
+    end
   end
 end

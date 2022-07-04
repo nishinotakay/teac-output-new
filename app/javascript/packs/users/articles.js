@@ -2,30 +2,26 @@ import { marked } from 'marked'
 
 // articles/index.html.erb
 $(function(){
-  $('tr[data-href]').click(function(e){
-    if (!$(e.target).is('a')) {
-      // window.location = $(e.target).data('href');
-      window.location = $(this).data('href');
-    };
-  })
+  if($('tr[data-href]').length){
+    $('tr[data-href]').click(function(e){
+      if (!$(e.target).is('a')) {
+        window.location = $(this).data('href');
+      };
+    })
+  }
 })
-
 
 // articles/new articles/edit
 $(function(){
-
   if($(".title-form").length || $(".markdown-editor").length){
-    
+
     $('.title-form').keyup(function(){
       var title = $(this).val();
       $('.preview-title').text(title);
     });
       
-    var drop = 0
-    console.log(drop)
     $('.markdown-editor').keyup(function(){
       var content = marked($(this).val());
-      console.log(0)
       console.log(content)
       $('.preview-content').html(content);
     });
@@ -96,14 +92,14 @@ $(function(){
   }
 });
 
-
 // articles/show.html.erb
-$(window).on("load", function(){
+// $(window).on("load", function(){
+window.onload = function(){
   if($(".article-view").length){
     var content = $(".article-view").data("article")
     content = marked(content)
     $(".article-view").html(content);
   }
-});
-
+}
+// );
 
