@@ -2,12 +2,12 @@
   <h1>プロフィールを作成する</h1>
   <%= form_with model: @profile, url: { controller: "profiles", action: "create" }, local: true do |f| %>
     <div class="form-group">
-      <%= f.label :name, "ニックネーム" %><br>
+      <%= f.label :name, "名前" %><br>
       <%= f.text_field :name %>
     </div>
 
     <div class="form-group">
-      <%= f.label :learning_history, "学習歴(年)" %><br>
+      <%= f.label :learning_history, "学習歴(月)" %><br>
       <%= f.text_field :learning_history %>
     </div>
 
