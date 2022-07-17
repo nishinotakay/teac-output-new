@@ -1,7 +1,7 @@
-<% provide(:title,  "プロフィール編集") %>
-<div class="register-box">
+<% provide(:title, "プロフィール編集") %>
+<!-- <div class="register-box">
   <div class="card card-outline">
-    <div class="card-body">
+    <div class="card-body"> -->
       <!-- <p class="login-box-msg">プロフィールの編集を行えます。</p> -->
       <!-- <div class="card-header text-center">
         <h3 class="card-title">About Me</h3>
@@ -11,19 +11,24 @@
       <%= form_with model: @profile, url: users_profile_path, local: true do |f| %>
         <%= render "devise/shared/error_messages", resource: resource %>
 
-        <div class="field">
+        <div class="form-group">
           <%= f.label :name, "名前" %><br />
-          <%= f.text_field :name, autofocus: true, autocomplete: "name" %>
+          <%= f.text_field :name, class: 'form-control' %>
         </div>
 
-        <div class="field">
+        <!-- <div class="form-group">
           <%= f.label :learning_history, "学習歴（年）" %><br />
           <%= f.text_field :learning_history, autofocus: true, autocomplete: "learning_history" %>
+        </div> -->
+
+        <div class="form-group">
+          <%= f.label :learning_start, "学習開始日" %><br>
+          <%= f.date_field :learning_start, class: 'form-control' %>
         </div>
 
-        <div class="field">
+        <div class="form-group">
           <%= f.label :purpose, "プログラミング学習の目的" %><br />
-          <%= f.text_area :purpose, autofocus: true, autocomplete: "purpose" %>
+          <%= f.text_area :purpose, class: 'form-control' %>
         </div>
 
         <div class="form-group">
@@ -33,8 +38,8 @@
         
           <%= f.submit "更新", class: "button is-success" %>
       <% end %>
-    </div>
+    <!-- </div>
   </div>
-</div>
+</div> -->
 
 <%= link_to t('devise.shared.links.back'), :back %>

@@ -10,7 +10,7 @@
             <!-- <th>名前</th>
             <th>メールアドレス</th> -->
             <th>名前</th>
-            <th>学習歴（月）</th>
+            <!-- <th>学習歴（月）</th> -->
             <th>プログラミング学習の目的</th>
             <th>編集</th>
             <th>削除</th>
@@ -22,7 +22,7 @@
               <!-- <td><%= @users.find(a.user_id).name %></td>
               <td><%= @users.find(a.user_id).email %></td> -->
               <td><%= a.name %></td>
-              <td><%= a.learning_history %></td>
+              <!-- <td><%= a.learning_start %></td> -->
               <td><%= a.purpose %></td>
               <td><%= link_to "編集", users_profile_path(a), class: "btn btn-warning" %></td>
               <td><%= link_to "削除", users_profile_path(a), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %></td>

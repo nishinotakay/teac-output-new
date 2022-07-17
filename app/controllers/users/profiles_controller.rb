@@ -1,14 +1,21 @@
 module Users
   class ProfilesController < Users::Base
+  require "date"
   before_action :authenticate_user!
   before_action :find_profile, only: [:show, :edit, :update, :destroy]
 
+  
     def index
       @users = User.all
       @profiles = Profile.all
     end
 
     def show
+      @d1 = @profile.created_at.to_time
+      @d2 = Date.current.to_time
+      @d3 = @profile.learning_start.to_time
+      @sa = @d2 - @d1
+      @sa2 = @d2 - @d3
     end
 
     def new
@@ -55,7 +62,7 @@ module Users
  
     def profile_params
       params.require(:profile).permit(
-        :name, :learning_history, :purpose, :image
+        :name, :learning_history, :purpose, :image, :created_at, :learning_start
       )
     end
 

@@ -35,9 +35,25 @@
 
                       <hr>
 
-                      <div class="learning-history">学習歴（月）</div>
+                      <!-- <div class="learning-history">学習歴（月）</div>
 
-                      <p class="text-muted"><%= @profile.learning_history %></p>
+                      <p class="text-muted"><%= @profile.learning_history %>ヶ月</p>
+
+                      <hr>
+
+                      <div class="learning-history-start">学習開始日</div>
+
+                      <td><%= @profile.created_at %></td>
+
+                      <hr> -->
+
+                      <!-- <td><%= l Date.current, format: :short %></td>
+
+                      <hr> -->
+
+                      <div class="learning-history-day">学習歴（月）</div>
+
+                      <td><%= @sa2.to_i/60/60/24/30+1 %>ヶ月</td>
 
                       <hr>
 
