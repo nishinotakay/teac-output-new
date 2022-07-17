@@ -11,11 +11,9 @@ module Users
     end
 
     def show
-      @d1 = @profile.created_at.to_time
-      @d2 = Date.current.to_time
-      @d3 = @profile.learning_start.to_time
-      @sa = @d2 - @d1
-      @sa2 = @d2 - @d3
+      @d1 = Date.current.to_time
+      @d2 = @profile.learning_start.to_time
+      @sa = @d1 - @d2
     end
 
     def new
