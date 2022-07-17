@@ -1,8 +1,10 @@
+<%# javascript_pack_tag "users/profiles" %>
+
 <% provide(:title,  "プロフィール") %>
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        <%= link_to "編集", edit_user_registration_path, class:"btn btn-default" %>
+        <%= link_to "編集", edit_users_profile_path, class:"btn btn-default" %>
         <div class="row">
           <div class="col-md-12">
             <div class="card card-primary">
@@ -11,18 +13,57 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <strong>メールアドレス</strong>
+                <!-- <strong style="color: #f00;">メールアドレス</strong>
 
                 <p class="text-muted">
                   <%= current_user.email %>
                 </p>
 
-                <hr>
+                <hr> -->
+                <div class="user-about">
+                  <!-- <strong>プロフィール画像</strong> -->
+                  <% if @profile.image.attached? %>
+                    <div class="image">
+                      <p class="text-muted"><%= image_tag @profile.image %></p>
+                    </div>
+                  <% end %>
+                  <div class="profile">
+                    <div class="name-history>">
+                      <!-- <div class="nickname">ニックネーム</div> -->
 
-                <strong>名前</strong>
+                      <p class="text-muted"><%= @profile.name %></p>
 
-                <p class="text-muted"><%= current_user.name %></p>
+                      <hr>
 
+                      <!-- <div class="learning-history">学習歴（月）</div>
+
+                      <p class="text-muted"><%= @profile.learning_history %>ヶ月</p>
+
+                      <hr>
+
+                      <div class="learning-history-start">学習開始日</div>
+
+                      <td><%= @profile.created_at %></td>
+
+                      <hr> -->
+
+                      <!-- <td><%= l Date.current, format: :short %></td>
+
+                      <hr> -->
+
+                      <div class="learning-history-day">学習歴（月）</div>
+
+                      <td><%= @sa.to_i/60/60/24/30+1 %>ヶ月</td>
+
+                      <hr>
+
+                      <div class="purpose">プログラミングを学習している目的</div>
+
+                      <p class="text-muted"><%= @profile.purpose %></p>
+                    </div>
+                  </div>
+                </div>
+                
               </div>
               <!-- /.card-body -->
             </div>
