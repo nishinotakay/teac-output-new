@@ -6,7 +6,7 @@ module Users
 
     def index
       @users = User.all
-      @articles = Article.all
+      @articles = Article.all.order(updated_at: "DESC")
     end
 
     def show

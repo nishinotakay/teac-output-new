@@ -10,7 +10,10 @@ require("channels")
 require('admin-lte');
 require("jquery");
 require ("./users/auth");
-require ("./users/sample");
+// require ("./users/sample");
+
+// add by yosei
+// require ("./users/articles_index");
 
 import 'bootstrap';
 import '../stylesheets/users';
@@ -19,6 +22,4 @@ import "@fortawesome/fontawesome-free/js/all";
 document.addEventListener("turbolinks:load", () => {
   $('[data-toggle="tooltip"]').tooltip()
 });
-
-
 

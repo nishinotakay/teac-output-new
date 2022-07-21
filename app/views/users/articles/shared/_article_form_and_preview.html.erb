@@ -12,11 +12,11 @@
           </div>
 
           <div class="col-10 offset-1 mt-3">
-            <%= f.text_field :sub_title, placeholder: "サブタイトル", class: "form-control" %>
+            <%= f.text_field :sub_title, placeholder: "サブタイトル", class: "form-control subtitle-form" %>
           </div>
 
           <div class="col-10 offset-1 mt-3">
-            <%= f.text_area :content, placeholder: "コンテンツ", cols: 50, rows: 100, class: "form-control markdown-editor" %>
+            <%= f.text_area :content, placeholder: "コンテンツ", cols: 30, rows: 100, class: "form-control markdown-editor" %>
           </div>
         </div>
       </div>
@@ -28,23 +28,30 @@
           <h3 class="card-title">プレビュー</h3>
         </div>
         <div class="card-body">
-
-      <div class="sticky col-10 offset-1">
-        <div class="preview">
-          <div class="pl-4 preview-title"><%= @article.title ? @article.title : "タイトル" %></div>
-          <hr class="my-2">
-          <div class="pl-4 preview-content">
-            <%= @article.content ? simple_format(@article.content) : "コンテンツ" %>
-            <%# @article.content ? @article.content : "コンテンツ" %>
+          <div class="sticky col-10 offset-1">
+            <div class="preview form-control">
+              <%# <div class="pl-1 preview-title" style="display: inline;"> %>
+              <div class="pl-1" style="display: inline;">
+                <span class="preview-title"><%= @article.title ? @article.title : "タイトル" %></span>
+                <%# <span style="font-size: small"> %>
+                <span class="span-subtitle">
+                  〜<span class="preview-subtitle"><%= @article.sub_title ? @article.sub_title : "サブタイトル" %></span>〜
+                </span>
+              </div>
+              <hr class="my-2" size="5">
+              <div class="pl-1 preview-content">
+                <%= @article.content ? simple_format(@article.content) : "コンテンツ" %>
+                <%# @article.content ? @article.content : "コンテンツ" %>
+              </div>
+            </div>
+            <div class="text-center">
+              <%= f.submit btn_name, class: "btn btn-primary mt-3" %>
+            </div>
           </div>
         </div>
-        <div class="text-center">
-          <%= f.submit btn_name, class: "btn btn-primary mt-3" %>
-        </div>
       </div>
-      </div>
-    </div>
     </div>
 
   </div>
 <% end %>
+

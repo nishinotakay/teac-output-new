@@ -7,14 +7,15 @@
 }
 .sticky {
   position: sticky;
-  top: 15%;
+  top: 16%;
   // max-height: 80%;
 }
 
 .preview {
-  border: 1px solid gray;
-  border-radius: 5px;
+  // border: 1px solid gray;
+  // border-radius: 5px;
   padding: 10px;
+  // padding-top: 10px;
   overflow: scroll;
   height: 500px;
 }
@@ -35,3 +36,6 @@
   }
 }
 
+.span-subtitle {
+  font-size: small;
+}

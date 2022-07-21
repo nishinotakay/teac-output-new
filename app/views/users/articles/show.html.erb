@@ -1,3 +1,4 @@
+<%= javascript_pack_tag "users/articles_show" %>
 <% provide(:title,  "記事詳細") %>
 <div class="container">
   <div class="row">
@@ -9,22 +10,18 @@
     <% end %>
 
     <div class="col-10">
-      <div class="col-8 float-left">
-        <h1 class="text-left"><%= @article.title %></h1>
+      <div class="col-8 float-left mb-1" style="display: inline;">
+        <h1 class="text-left offset-2 mr-3" style="display: inline;"><%= @article.title %></h1>〜<%= @article.sub_title %>〜
       </div>
       <% if @article.user_id != current_user.id %>
-        <div class="col-3 float-right">
-          <%# <h6> %>
-          <div class="mt-4">
-          <%= User.find(@article.user_id).name %>
-          </div>
-          <%# </h6> %>
+        <div class="mt-3">
+          書き手：<%= User.find(@article.user_id).name %>
         </div>
       <% end %>
     </div>
-    <hr class="my-3">
+    <hr class="mx-4" size="5" style="width: 95%;">
     <%# <div class="col-8 offset-2 markdown-preview"> %>
-    <div class="col-8 offset-2 article-view" data-article="<%= @article.content %>">
+    <div class="col-10 offset-1 article-view" data-article="<%= @article.content %>">
       <%# @article.content %>
       <%# simple_format(@article.content) %>
     </div>
