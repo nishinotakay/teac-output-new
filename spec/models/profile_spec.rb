@@ -1,85 +1,28 @@
 require 'rails_helper'
+RSpec.describe 'Profileモデルのテスト', type: :model do
+  describe 'バリデーションのテスト' do
+    # factoriesで作成したダミーデータを使用します。
+    let(:user) { FactoryBot.create(:user) }
+    let!(:profile) { build(:profile, user_id: user.id) }
 
-RSpec.describe Profile, type: :model do
-  # pending "add some examples to (or delete) #{__FILE__}"
-  let :profile do
-    build(:profile)
-  end
+    # test_postを作成し、空欄での登録ができるか確認します。
+    subject { test_profile.valid? }
+    let(:test_profile) { profile }
 
-  describe 'バリデーションについて' do
-    subject do
-      profile
-    end
-
-    it 'バリデーションが通ること' do
-      expect(subject).to be_valid
-    end
-
-    describe '#name' do
-      context '存在しない場合' do
-        before :each do
-          subject.name = nil
-        end
-
-        it 'バリデーションに落ちること' do
-          expect(subject).to be_invalid
-        end
-
-        it 'バリデーションのエラーが正しいこと' do
-          subject.valid?
-          expect(subject.errors.full_messages).to include('nameを入力してください')
-        end
+    context 'nameカラム' do
+      it '空欄でないこと' do
+        profile.name = ''
+        is_expected.to eq false;
       end
-
-      context '文字数が1文字の場合' do
-        before :each do
-          subject.title = 'a' * 1
-        end
-
-        it 'バリデーションが通ること' do
-          expect(subject).to be_valid
-        end
-      end
-
-      context '文字数が20文字の場合' do
-        before :each do
-          subject.title = 'a' * 20
-        end
-
-        it 'バリデーションが通ること' do
-          expect(subject).to be_valid
-        end
-      end
-
-      context '文字数が21文字の場合' do
-        before :each do
-          subject.title = 'a' * 21
-        end
-
-        it 'バリデーションに落ちること' do
-          expect(subject).to be_invalid
-        end
-
-        it 'バリデーションのエラーが正しいこと' do
-          subject.valid?
-          expect(subject.errors.full_messages).to include('nameは20文字以内で入力してください')
-        end
+      it '20文字以下であること' do
+        profile.name = '月収50万円稼ぐrailsエンジニアの田中浩！'
+        expect(profile.valid?).to eq false;
       end
     end
-
-    describe '#purpose' do
-      context '存在しない場合' do
-        before :each do
-          subject.purpose = nil
-
-          it 'バリデーションに落ちること' do
-            expect(subject).to be_invalid
-          end
-
-          it 'バリデーションのエラーが正しいこと' do
-            subject.valid?
-            expect(subject.errors.full_messages).to include('purposeを入力してください')
-          end
+    describe 'アソシエーションのテスト' do
+      context 'custmerモデルとの関係' do
+        it 'N:1となっている' do
+          expect(Profile.reflect_on_association(:user).macro).to eq :belongs_to
         end
       end
     end

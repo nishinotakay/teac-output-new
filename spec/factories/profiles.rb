@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :profile do
-    users { nil }
-    name { "MyString" }
-    learning_histrory { 1 }
-    purpose { "MyString" }
+    # association :user    
+    name { '田中 浩' }
+    purpose { 'railsエンジニアになるため' }
+    user
   end
 end
