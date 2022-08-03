@@ -9,7 +9,7 @@ RSpec.describe 'Profileモデルのテスト', type: :model do
     subject { test_profile.valid? }
     let(:test_profile) { profile }
 
-    it "is valid with a name and purpose" do
+    it "is valid with a name and a purpose" do
       @profile = Profile.new(
         name: "田中浩",
         purpose: "月収50万円",
