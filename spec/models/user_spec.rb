@@ -19,4 +19,29 @@ RSpec.describe User, type: :model do
     user.valid?
     expect(user.errors[:email]).to include("を入力してください")
   end
+
+  it "is invalid with a duplicate email address" do
+    User.create(
+      email: "user1@user.com",
+      name: "user3",
+      password: "password",
+    )
+    user = User.new(
+      email: "user1@user.com",
+      name: "user3",
+      password: "password",
+    )
+    user.valid?
+    expect(user.errors[:email]).to include("はすでに存在します")
+  end
+
+  # it "factorybot test" do
+  #   user = FactoryBot.create(:user)
+  #   expect(user).to be_valid
+  # end
+
+  it "factorybot 2" do
+    user = FactoryBot.create(:user, :a)
+    expect(user.email).to eq "email@1.com"
+  end 
 end
