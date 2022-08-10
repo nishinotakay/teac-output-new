@@ -3,6 +3,16 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
+#ようせい追加
+gem 'carrierwave' #画像保存に必要
+#以上
+
+#すがわら追加
+gem 'redcarpet' #シンタックスハイライト実装
+gem 'rouge'
+gem 'bootstrap-sass'
+#以上
+
 ruby '3.0.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
@@ -38,6 +48,8 @@ gem 'devise-i18n'
 gem 'rails-i18n', '~> 6.0'
 
 gem 'dotenv-rails'
+gem 'qiita-markdown'
+gem 'github-linguist'
 
 group :development, :test do
   # ERD生成

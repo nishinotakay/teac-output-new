@@ -1,0 +1,86 @@
+<%# javascript_pack_tag "users/articles" %>
+
+<div class="container">
+  <h1 class="text-center">記事投稿</h1>
+  <%= render "users/articles/shared/article_form_and_preview", btn_name: "投稿", url: users_articles_path, method: :post %>
+</div>
+
+<%
+=begin
+%>
+<% provide(:title,  "記事作成") %>
+  <%= form_with(model:@article ,url: users_articles_path, local: true) do |f| %>
+        <%# .form-group はフォームに構造体を適用できます。ラベル, コントロール, 
+        オプションのヘルプテキスト, フォーム検証メッセージを提供しています。 %>
+    <p>タイトル</p>
+    <div class="form-group">
+      <div id='editor0'>
+        <div class="row">  
+          <!-- ここに入力-->
+          <div class="col-5 m-1">
+            <%# name属性=カラム名 テキスト形式のコントロールはform-control が付与
+            id="n"の意味は不明 %>
+            <div>
+              <input name="title" id="n" class="form-control" rows="20" 
+              v-model='input' debounce='50'>
+            </div>
+          </div>
+          <!-- ここに出力-->
+          <div class="col-5 m-1 border">                 
+            <div class="di_inline_t preview">
+                  <%# v-html はHTMLタグのまま出力するときに用います。 %>
+              <div v-html='input | marked' style: :"width: 650px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p>内容</p>
+    <div class="form-group">
+      <div id='editor1'>
+        <div class="row">
+          <div class="col-5 m-1">
+            <div>                
+              <textarea name="content" id="n" class="form-control" rows="20" 
+              v-model='input' debounce='50'></textarea>
+            </div>
+          </div>
+          <div class="col-5 m-1 border">                   
+            <div class="di_inline_t preview">
+                  <%# v-html はHTMLタグのまま出力するときに用います。 %>
+              <div v-html='input | marked' style: :"width: 650px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%= f.submit %>
+  <% end %>
+
+  <script type="text/javascript">
+
+    window.onload = function() {
+      new Vue({
+        el: '#editor0', // 選別箇所
+        data: {
+          input: '<%== j @article.content %>',
+        },
+        filters: {
+          marked: marked,
+        },
+      }); 
+      new Vue({
+        el: '#editor1', // 選別箇所
+        data: {
+          input: '<%== j @article.content %>',
+        },
+        filters: {
+          marked: marked,
+        },
+      });
+    };
+  </script>
+  <%
+=end
+%>

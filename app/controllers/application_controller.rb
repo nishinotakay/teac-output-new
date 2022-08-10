@@ -7,11 +7,11 @@ class ApplicationController < ActionController::Base
   def after_sign_in_path_for(resource)
     case resource
     when User
-      users_dash_boards_path
+      users_dash_boards_path(id: current_user.id)
     when Admin
-      admins_dash_boards_path
+      admins_dash_boards_path(id: current_user.id)
     when Manager
-      managers_dash_boards_path
+      managers_dash_boards_path(id: current_user.id)
     end
   end
 

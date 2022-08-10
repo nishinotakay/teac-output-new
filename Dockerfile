@@ -1,7 +1,7 @@
 FROM ruby:3.0.3
 
 RUN apt-get update -y && \
-    apt-get install default-mysql-client nodejs npm vim graphviz -y && \
+    apt-get install default-mysql-client nodejs npm vim graphviz cmake -y && \
     npm uninstall yarn -g && \
     npm install yarn -g -y && \
     curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
