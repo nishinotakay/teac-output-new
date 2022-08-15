@@ -16,16 +16,30 @@ RSpec.describe "Profiles", type: :request do
       it "access by guest" do
         get '/profiles/new'
         expect(response).to have_http_status(302)
+        # HTTPリクエスト302リクエストされたURIが一時的に変更されたことを意味する　ログインしていないユーザーがNewアクションをリクエストすると、ログイン画面に移るので、このように記述している
       end
 
       it "show" do
+        sign_in @user
         profile = Profile.create(
           name: "test",
           purpose: "test",
-          user_id: "1",
+          user_id: 1,
         )
         get users_profiles_path(profile)
         expect(response).to be_truthy
+      end
+      context "create" do
+        it "access by user" do
+          sign_in @user
+          profile "/profiles", :params => { :profile => { :name => "test", :purpose => "test", user_id => 1}}
+          expect(response).to have_http_status(200)
+        end
+        it "access by guest" do
+          profile "/profiles"
+          expect(response).to have_http_status(401)
+          # HTTPリクエスト401未認証
+        end
       end
     end
   end
