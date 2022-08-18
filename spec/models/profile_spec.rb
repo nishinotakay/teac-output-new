@@ -2,7 +2,7 @@ require 'rails_helper'
 RSpec.describe 'Profileモデルのテスト', type: :model do
   describe 'バリデーションのテスト' do
     # factoriesで作成したダミーデータを使用します。
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { FactoryBot.create(:user, :a) }
     let!(:profile) { build(:profile, user_id: user.id) }
 
     # test_postを作成し、空欄での登録ができるか確認します。
