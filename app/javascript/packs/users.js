@@ -10,10 +10,8 @@ require("channels")
 require('admin-lte');
 require("jquery");
 require ("./users/auth");
-// require ("./users/sample");
+require ("./users/sample");
 
-// add by yosei
-// require ("./users/articles_index");
 
 import 'bootstrap';
 import '../stylesheets/users';
