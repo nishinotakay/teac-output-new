@@ -1,13 +1,14 @@
 import { marked } from 'marked'
-import "./articles"
 
 $(function(){
 
   var me = $(".markdown-editor");
   me.resize(function(){
     $(".preview").width(me.width());
+    // $(".preview").css("width", "100%");
   });
 
+  
   $('.title-form').keyup(function(event){
     var title = $(this).val();
     title ||= "タイトル"
@@ -24,32 +25,24 @@ $(function(){
     var content = marked($(".markdown-editor").text())
     var elem = $('.preview-content')
     elem.html(content);
-    var pre = elem.find('pre');
-    // elem.css({"background-color": "#364549", "color": "#e3e3e3", "padding": "10px"})
-    pre.each(function(){
-      makecodeblock($(this))
-    })
-    // elem.css({"background-color": "#364549", "padding": "10px"})
+    elem = elem.find('pre');
+    elem.css({"background-color": "#364549", "color": "#e3e3e3"})
   }
 
   $('.markdown-editor').keyup(function(event){
     var content = $(this).val()
     content ||= "コンテンツ"
     if(event.keyCode == 13){
-      // addBr($(this))
-      console.log("inputed enter");
+      addBr($(this))
+      console.log($(this).val());
     }
-      content = marked(content);
+    content = marked(content);
     content ||= "コンテンツ"
-    // console.log(content)
-    var pre = $('.preview-content')
-    pre.html(content);
-    pre = pre.find('pre');
-    pre.each(function(){
-      makecodeblock($(this))
-    })
+    var elem = $('.preview-content')
+    elem.html(content);
+    elem = elem.find('pre');
+    elem.css({"background-color": "#364549", "color": "#e3e3e3"})
   });
-
 
   function addBr(elem) {
     var textarea = elem.get(0);
@@ -76,8 +69,11 @@ $(function(){
     $(".preview-content").html(content);
   }
 
-  
 
+
+  // background-color: #364549;
+  // color: #e3e3e3;
+    
   // drag&drop
   $('.markdown-editor').on('drop', function(e) { //dropのイベントをハンドル
     dragAndDrop(e)
