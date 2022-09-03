@@ -1,7 +1,7 @@
 module Users
   class ProfilesController < Users::Base
   require "date"
-  before_action :authenticate_user!
+  before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
   before_action :find_profile, only: [:show, :edit, :update, :destroy]
 
   
@@ -12,7 +12,7 @@ module Users
 
     def show
       @d1 = Date.current.to_time
-      @d2 = @profile.learning_start.to_time
+      @d2 = @profile.learning_start.to_time if @profile.learning_start.to_time
       @sa = @d1 - @d2
     end
 

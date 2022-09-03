@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe 'ログイン処理', type: :request do
-  let!(:user) { FactoryBot.create(:user, password: 'password', confirmed_at: Time.now) }
+  let!(:user) { FactoryBot.create(:user, :a) }
 
   describe '管理者がログインできることを確認' do
     it do
