@@ -16,7 +16,8 @@
           </div>
 
           <div class="col-10 offset-1 mt-3">
-            <%= f.text_area :content, placeholder: "コンテンツ", cols: 30, rows: 100, class: "form-control markdown-editor" %>
+            <%= f.text_area :content, placeholder: "コンテンツ", cols: 30, rows: 100,
+             class: "form-control markdown-editor", data: {user_id: current_user.id} %>
           </div>
         </div>
       </div>

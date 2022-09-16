@@ -26,11 +26,9 @@ Rails.application.routes.draw do
     resources :dash_boards, only: [:index]
     resources :articles #, only: %i[index show]
 
-    #以下、ようせい追加
     namespace :articles do
       post "image"
     end
-    #以上
 
     resource :profile, except: %i[create new]
   end

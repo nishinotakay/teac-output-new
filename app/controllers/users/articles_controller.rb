@@ -2,6 +2,7 @@
 
 module Users
   class ArticlesController < Users::Base
+    protect_from_forgery
     before_action :set_article, except: [:index, :show, :new, :create, :image]
 
     def index
@@ -50,8 +51,8 @@ module Users
     end
 
     def image
-      @article = current_user.articles.new(params.permit(:image))
-      # @article = current_user.articles.new(image: params[:image])
+      user = User.find(params[:user_id])
+      @article = user.articles.new(params.permit(:image))
       render json: { name: @article.image.identifier, url: @article.image.url }
       # respond_to do |format|
         # format.json { render json: { name: @article.image.identifier, url: @article.image.url } }
