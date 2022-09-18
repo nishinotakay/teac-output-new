@@ -1,22 +1,5 @@
 window.hljs = require('highlight.js');
-import 
-  // "highlight.js/scss/vs.scss";
-  // "highlight.js/scss/a11y-dark.scss";
-  // "highlight.js/scss/atom-one-dark.scss";
-  // "highlight.js/scss/atom-one-dark-reasonable.scss";
-  // "highlight.js/scss/github-dark-dimmed.scss";
-  "highlight.js/scss/github-dark.scss";
-  // "highlight.js/scss/isbl-editor-dark.scss";
-  // "highlight.js/scss/dark.scss";
-  // "highlight.js/scss/gradient-dark.scss";
-  // "highlight.js/scss/kimbie-dark.scss";
-  // "highlight.js/scss/nnfx-dark.scss";
-  // "highlight.js/scss/panda-syntax-dark.scss";
-  // "highlight.js/scss/paraiso-dark.scss";
-  // "highlight.js/scss/qtcreator-dark.scss";
-  // "highlight.js/scss/stackoverflow-dark.scss";
-  // "highlight.js/scss/tokyo-night-dark.scss";
-
+import "highlight.js/scss/github-dark.scss";
 
 import { marked } from 'marked'
 marked.setOptions({
@@ -25,21 +8,9 @@ marked.setOptions({
       lang = lang.split(":")[0]
       if(lang != "math"){
         lang ||= "plaintext"
-        // MathJax = {
-        //   chtml: {
-        //     matchFontHeight: false
-        //   },
-        //   tex: {
-        //     inlineMath: [['$', '$']]
-        //   }
-        // };
-        // MathJax.Hub.Queue(["Typeset",MathJax.Hub,"quMain"]);
         try{
           return hljs.highlight(code, {language: lang, ignoreIllegals: true}).value
         }catch(e){
-          console.log(DOMException())
-          console.error(e.name, e.message)
-          // return hljs.highlightAuto(code).value
         }
       }
     }
@@ -60,8 +31,6 @@ window.makecodeblock = function(pre){
     var coderef = pre.parent().prev()
     coderef.text(codeclass)
     coderef.css({"color": "#eee", "display": "inline-block", "background-color": "#777", "padding": "0 5px", "word-break": "break-all", "margin-left": "15px"})
-    // copybtn(coderef)
-    // coderef.next().next().css("background-color", "#364549")
   }
 }
 

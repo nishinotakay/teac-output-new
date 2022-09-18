@@ -1,41 +1,15 @@
-// @import "../../../../node_modules/highlight.js/styles/vs.css";
-// @import "/node_modules/highlight.js/styles/vs.css";
-@import 
-  // "/node_modules/highlight.js/scss/vs.scss";
-  // "/node_modules/highlight.js/scss/a11y-dark.scss";
-  // "node_modules/highlight.js/scss/atom-one-dark-reasonable.scss";
-  // "node_modules/highlight.js/scss/atom-one-dark.scss";
-  // "node_modules/highlight.js/scss/dark.scss";
-  // "node_modules/highlight.js/scss/github-dark-dimmed.scss";
-  // "node_modules/highlight.js/scss/github-dark.scss";
-  "node_modules/highlight.js/scss/gradient-dark.scss";
-  // "node_modules/highlight.js/scss/isbl-editor-dark.scss";
-  // "node_modules/highlight.js/scss/kimbie-dark.scss";
-  // "node_modules/highlight.js/scss/nnfx-dark.scss";
-  // "node_modules/highlight.js/scss/panda-syntax-dark.scss";
-  // "node_modules/highlight.js/scss/paraiso-dark.scss";
-  // "node_modules/highlight.js/scss/qtcreator-dark.scss";
-  // "node_modules/highlight.js/scss/stackoverflow-dark.scss";
-  // "node_modules/highlight.js/scss/tokyo-night-dark.scss";
-
 //以下new
 .card-body {
   height: 2570px;
-    // height: 100%;
-  // max-height: 100%;
-  // min-height: 90%;
 }
+
 .sticky {
   position: sticky;
   top: 16%;
-  // max-height: 80%;
 }
 
 .preview {
-  // border: 1px solid gray;
-  // border-radius: 5px;
   padding: 10px;
-  // padding-top: 10px;
   overflow: scroll;
   height: 500px;
 }

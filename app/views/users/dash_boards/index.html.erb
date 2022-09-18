@@ -3,19 +3,6 @@
 <div class="content">
   <div class="container">
     <div class="row">
-
-<%
-=begin
-%>    
-      <div class="col-12">
-        <%= link_to "更新日", users_dash_boards_path(order: "updated_at") %>
-        <%= link_to "投稿日", users_dash_boards_path(order: "created_at") %>
-        <%= link_to "降順", users_dash_boards_path(sort: "AC") %>
-        <%= link_to "昇順", users_dash_boards_path(order: "created_at") %>
-      </div>
-<%
-=end
-%>
       <div class="col-12">
         <%= render "users/articles/shared/articles_table", dashboard: true %>
       </div>

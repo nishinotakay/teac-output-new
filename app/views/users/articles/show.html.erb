@@ -1,5 +1,4 @@
 <%= javascript_pack_tag "users/articles_show" %>
-<%# provide(:title,  "メモ詳細") %>
 <div class="container">
   <div class="row">
     <% if @article.user_id == current_user.id %>
@@ -10,9 +9,7 @@
     <% end %>
 
     <div class="col-10">
-      <%# <div class="col-8 float-left mb-1" style="display: inline;"> %>
       <div class="col-9 offset-2 float-left mb-1 text-left">
-        <%# <h1 class="text-left offset-2 mr-3" style="display: inline;"> %>
         <h1>
           <%= @article.title %>
         </h1>
@@ -25,10 +22,8 @@
       <% end %>
     </div>
     <hr class="mx-4" size="5" style="width: 95%;">
-    <%# <div class="col-8 offset-2 markdown-preview"> %>
     <div class="col-10 offset-1 article-view" data-article="<%= @article.content %>">
     </div>
-
 
     <div class="code-copy" style="display: none;">
       <div class="code-copy__message" style="display: none;">
@@ -38,7 +33,5 @@
         <span class="fa fa-fw fa-clipboard"></span>
       </button>
     </div>
-
-
   </div>
 </div>

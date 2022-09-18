@@ -12,7 +12,6 @@ module Users
 
     def show
       @article = Article.find(params[:id])
-      # binding.pry
     end
 
     def new
@@ -35,7 +34,6 @@ module Users
 
     def update
       if @article.update(article_params)
-        # binding.pry
         flash[:notice] = "記事を編集しました。"
         redirect_to users_article_url(@article)
       else
@@ -54,9 +52,6 @@ module Users
       user = User.find(params[:user_id])
       @article = user.articles.new(params.permit(:image))
       render json: { name: @article.image.identifier, url: @article.image.url }
-      # respond_to do |format|
-        # format.json { render json: { name: @article.image.identifier, url: @article.image.url } }
-      # end
     end
 
     private

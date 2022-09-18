@@ -23,21 +23,15 @@ $(function(){
 
   if($(".markdown-editor").val()){
     var text = $(".markdown-editor").text()
-
     text = mathtodollars(text);
-    
     text = marked(text)
     var elem = $('.preview-content')
     elem.html(content);
     MathJax.Hub.Typeset(["Typeset",MathJax.Hub, "posts-preview"]); 
     var pre = elem.find('pre');
-    // elem.css({"background-color": "#364549", "color": "#e3e3e3", "padding": "10px"})
     pre.each(function(){
       makecodeblock($(this))
     })
-    // elem.css({"background-color": "#364549", "padding": "10px"})
-    
-    // $("img").css({"width": "200px", "height": "200px"})
     elem.find("img").each(function(){
       $(this).width("70%")
       $(this).height("70%")
@@ -47,39 +41,23 @@ $(function(){
   $('.markdown-editor').keyup(function(event){
     var content = $(this).val()
     content ||= "コンテンツ"
-    if(event.keyCode == 13){
-      // addBr($(this))
-      console.log("inputed enter");
-    }
-      content = marked(content);
+    content = marked(content);
     content ||= "コンテンツ"
-    // console.log(content)
     var pre = $('.preview-content')
     pre.html(content);
-
-
-    // 40行下の行に対応
-    // $(this).on('drop', function(event) {
-    //   drop(event, $(this))
-    // })
-
     pre = pre.find('pre');
     pre.each(function(){
       makecodeblock($(this))
     })
-
     $("img").each(function(){
       $(this).width("70%")
       $(this).height("70%")
     })
   });
   
-  // drag&drop
   $('.markdown-editor').on('drop', function(e) { //dropのイベントをハンドル
-  // function drop(e, elem){
     e.preventDefault(); //元の動きを止める処理
     var image = e.originalEvent.dataTransfer.files[0]; //ドロップされた画像の1件目を取得
-    // var f = e.originalEvent.dataTransfer.files[1]
     var formData = new FormData();
     formData.append('image', image); // FormDataに画像を追加
     formData.append('user_id', e.target.dataset.userId); // FormDataに画像を追加
@@ -95,15 +73,10 @@ $(function(){
     })
     .done(function(data, textStatus, jqXHR){
       setImage(data['name'], data['url'])
-      // var textarea = $('textarea').get(0);
-      // var textarea = $('textarea');
-      // var content = textarea.text()
-      // content = marked(content)
     })
     .fail(function(jqXHR, textStatus, errorThrown){
       alert("画像の挿入に失敗しました。");
     });
-  // }
   });
 
   // テキストエリアに画像タグを追加する関数
@@ -113,40 +86,12 @@ $(function(){
     var len      = sentence.length;
     var pos      = textarea.selectionStart;
     var before   = sentence.substr(0, pos);
-    // var word     = '![' + name + '](' + url + ')';
     var word     = '<img alt="' + name + '" src="' + url + '" width="200px" height="200px">\n';
     word     = '<img alt="' + name + '" src="' + url + '" width="100%" height="100%">\n';
     var after    = sentence.substr(pos, len);
-
     sentence = before + word + after;
     textarea.value = sentence;
     var content = marked(textarea.value)
-    $(".preview-content").html(content);
-
-  }
-
-  function addBr(elem) {
-    var textarea = elem.get(0);
-    var sentence = textarea.value;
-    var len      = sentence.length;
-    var pos      = textarea.selectionStart - 1;
-    var before   = sentence.substr(0, pos);
-    var a = sentence.substr(pos, pos + 1);
-    console.log(a)
-    console.log(pos)
-    console.log(a == "\n" ? 1 : a)
-    var word     = '<br>';
-    word     = a == " " ? "" : '  ';
-    var after    = sentence.substr(pos, len);
-    sentence = before + word + after;
-    textarea.value = sentence;
-    
-    pos += word.length;
-    textarea.setSelectionRange(pos + 1, pos + 1);
-
-    var content = marked(textarea.value)
-    content = marked(sentence)
-
     $(".preview-content").html(content);
   }
 

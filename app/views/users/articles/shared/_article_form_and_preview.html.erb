@@ -31,10 +31,8 @@
         <div class="card-body">
           <div class="sticky col-10 offset-1">
             <div class="preview form-control">
-              <%# <div class="pl-1 preview-title" style="display: inline;"> %>
               <div class="pl-1" style="display: inline;">
                 <span class="preview-title"><%= @article.title ? @article.title : "タイトル" %></span>
-                <%# <span style="font-size: small"> %>
                 <span class="span-subtitle">
                   〜<span class="preview-subtitle"><%= @article.sub_title ? @article.sub_title : "サブタイトル" %></span>〜
                 </span>
@@ -42,7 +40,6 @@
               <hr class="my-2" size="5">
               <div class="pl-1 preview-content">
                 <%= @article.content ? simple_format(@article.content) : "コンテンツ" %>
-                <%# @article.content ? @article.content : "コンテンツ" %>
               </div>
             </div>
             <div class="text-center">
