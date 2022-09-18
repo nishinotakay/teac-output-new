@@ -25,12 +25,15 @@ Rails.application.routes.draw do
   namespace :users do
     resources :dash_boards, only: [:index]
     resources :articles #, only: %i[index show]
+<<<<<<< HEAD
 
     namespace :articles do
       post "image"
     end
 
-    resource :profile, except: %i[create new]
+=======
+    resources :profiles
+>>>>>>> fa0478eafb8411bde7c5eb7d331c3d629426fc5d
   end
 
   # =================================================================
