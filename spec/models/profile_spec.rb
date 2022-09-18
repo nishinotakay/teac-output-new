@@ -14,7 +14,7 @@ RSpec.describe 'Profileモデルのテスト', type: :model do
         name: "田中浩",
         purpose: "月収50万円",
       )
-      expect(user).to be_valid
+      expect(profile).to be_valid
     end
     it "is invalid without a name" do
       @profile = Profile.new(
