@@ -12,7 +12,6 @@ require("jquery");
 require ("./users/auth");
 require ("./users/sample");
 
-
 import 'bootstrap';
 import '../stylesheets/users';
 import "@fortawesome/fontawesome-free/js/all";
