@@ -26,13 +26,11 @@ Rails.application.routes.draw do
     resources :dash_boards, only: [:index]
     resources :articles #, only: %i[index show]
 <<<<<<< HEAD
-
     namespace :articles do
       post "image"
     end
-
-=======
     resources :profiles
+=======
 >>>>>>> fa0478eafb8411bde7c5eb7d331c3d629426fc5d
   end
 
