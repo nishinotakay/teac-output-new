@@ -4992,10 +4992,10 @@
   dependencies:
     "object-visit" "^1.0.0"
 
-"marked@^4.0.18":
-  "integrity" "sha512-wbLDJ7Zh0sqA0Vdg6aqlbT+yPxqLblpAZh1mK2+AO2twQkPywvvqQNfEPVwSSRjZ7dZcdeVBIAgiO7MMp3Dszw=="
-  "resolved" "https://registry.npmjs.org/marked/-/marked-4.0.18.tgz"
-  "version" "4.0.18"
+"marked@^4.0.19":
+  "integrity" "sha512-rgQF/OxOiLcvgUAj1Q1tAf4Bgxn5h5JZTp04Fx4XUkVhs7B+7YA9JEWJhJpoO8eJt8MkZMwqLCNeNqj1bCREZQ=="
+  "resolved" "https://registry.npmjs.org/marked/-/marked-4.0.19.tgz"
+  "version" "4.0.19"
 
 "md5.js@^1.3.4":
   "integrity" "sha512-xitP+WxNPcTTOgnTJcrhM0xvdPepipPSf3I8EIpGKeFLjt3PlJLIDG3u8EX53ZIubkb+5U2+3rELYpEhHhzdkg=="

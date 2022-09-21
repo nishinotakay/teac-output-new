@@ -1,86 +1,421 @@
-<%# javascript_pack_tag "users/articles" %>
-
-<div class="container">
-  <h1 class="text-center">記事投稿</h1>
-  <%= render "users/articles/shared/article_form_and_preview", btn_name: "投稿", url: users_articles_path, method: :post %>
-</div>
+<%= javascript_pack_tag "users/articles_new_and_edit" %>
 
 <%
 =begin
 %>
-<% provide(:title,  "記事作成") %>
-  <%= form_with(model:@article ,url: users_articles_path, local: true) do |f| %>
-        <%# .form-group はフォームに構造体を適用できます。ラベル, コントロール, 
-        オプションのヘルプテキスト, フォーム検証メッセージを提供しています。 %>
-    <p>タイトル</p>
-    <div class="form-group">
-      <div id='editor0'>
-        <div class="row">  
-          <!-- ここに入力-->
-          <div class="col-5 m-1">
-            <%# name属性=カラム名 テキスト形式のコントロールはform-control が付与
-            id="n"の意味は不明 %>
-            <div>
-              <input name="title" id="n" class="form-control" rows="20" 
-              v-model='input' debounce='50'>
-            </div>
-          </div>
-          <!-- ここに出力-->
-          <div class="col-5 m-1 border">                 
-            <div class="di_inline_t preview">
-                  <%# v-html はHTMLタグのまま出力するときに用います。 %>
-              <div v-html='input | marked' style: :"width: 650px;"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <p>内容</p>
-    <div class="form-group">
-      <div id='editor1'>
-        <div class="row">
-          <div class="col-5 m-1">
-            <div>                
-              <textarea name="content" id="n" class="form-control" rows="20" 
-              v-model='input' debounce='50'></textarea>
-            </div>
-          </div>
-          <div class="col-5 m-1 border">                   
-            <div class="di_inline_t preview">
-                  <%# v-html はHTMLタグのまま出力するときに用います。 %>
-              <div v-html='input | marked' style: :"width: 650px;"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <%= f.submit %>
-  <% end %>
-
-  <script type="text/javascript">
-
-    window.onload = function() {
-      new Vue({
-        el: '#editor0', // 選別箇所
-        data: {
-          input: '<%== j @article.content %>',
-        },
-        filters: {
-          marked: marked,
-        },
-      }); 
-      new Vue({
-        el: '#editor1', // 選別箇所
-        data: {
-          input: '<%== j @article.content %>',
-        },
-        filters: {
-          marked: marked,
-        },
-      });
-    };
-  </script>
+<div class="container">
+  <h1 class="text-center">記事投稿</h1>
+  <%= render "users/articles/shared/article_form_and_preview", btn_name: "投稿", url: users_articles_path, method: :post %>
+</div>
   <%
 =end
 %>
+
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <title>Hello Vue</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <%#<link rel="stylesheet" href="index.css">%>
+    <link rel="stylesheet" href="articles.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"> </script>
+  </head>
+  <body>
+    <div id="app">
+      {{ message }}
+    </div>
+        <div id="app1">
+          <p>{{ messag }}</p>
+          <input v-model="messag">
+        </div>
+            <div id="app2">
+            <label>
+              <input type="radio" v-model="sports" value="baseball">
+              baseball
+            </label>
+            <label>
+              <input type="radio" v-model="sports" value="football">
+              football
+            </label>
+            <div class="choice_display">
+                <span>Checked {{ sports }}.</span>
+              </div>
+            </div>
+                <div id="app3">
+                  <input type="checkbox" id="checkbox" v-model="checked">
+                  <label for="checkbox">{{ checked }}</label>
+                </div>
+                    <div id="app4">
+                      <input type="checkbox"  value="baseball" v-model="sports">
+                      <label for="baseball">baseball</label>
+                      <input type="checkbox"  value="football" v-model="sports">
+                      <label for="football">football</label>
+                      <input type="checkbox"  value="basketball" v-model="sports">
+                      <label for="basketball">basketball</label>
+                      <p>Checked sports{{ sports }}.</p>
+                    </div>
+                        <div id="app5">
+                          <select v-model="sports">
+                            <option disabled value="">Please select</option>
+                            <option>baseball</option>
+                            <option>football</option>
+                            <option>basketball</option>
+                          </select>
+                          <p>Selected: {{ sports }}</p>
+                        </div>
+                            <div id="app6">
+                              <select v-model="sports" multiple>
+                                <option>baseball</option>
+                                <option>football</option>
+                                <option>basketball</option>
+                              </select>
+                              <p>Selected: {{ sports }}</p>%>
+                            </div>
+                                <div id="example">
+                                  <p>{{ type }}</p>
+                                  <input v-model="type" class="input1">
+                                </div>
+                                    <%#<div id="example1">
+                                      <label>
+                                        <input type="radio"  value="Ruby" v-model="program">
+                                        Ruby
+                                      </label>
+                                      <label>
+                                        <input type="radio"  value="PHP" v-model="program" >
+                                       PHP
+                                      </label>
+                                      <div class="choice_display">
+                                      <span>Choice {{ program }}.</span>
+                                    </div>%>
+                                        <div id="example2">
+                                          <input type="checkbox"  value="RubyOnRails" v-model="fw">
+                                          <label for="RubyOnRails">RubyOnRails</label>
+                                          <input type="checkbox"  value="Lalavel" v-model="fw">
+                                          <label for="Lalavel">Lalavel</label>
+                                          <input type="checkbox"  value="vue.js" v-model="fw">
+                                          <label for="vue.js">vue.js</label>
+                                          <p>私は{{ fw }}を習得しています。</p>
+                                        </div>
+                                            <div id="example3">
+                                              <select v-model="flamework">
+                                                <option disabled value="">言語/FWを選択してください。</option>
+                                                <option>Ruby/RubyOnRails</option>
+                                                <option>PHP/Lalavel</option>
+                                                <option>C#/.NET</option>
+                                              </select>
+                                              <p>私は {{ flamework }}を習得しています。</p>
+                                            </div>
+                                                <div id="app7">
+                                                  <h1>v-for</h1>
+                                                  <ul>
+                                                    <li v-for="n in 10">{{ n }}</li>
+                                                  </ul>
+                                                </div>
+                                                    <div id="app8">
+                                                      <h1>v-on</h1>
+                                                      <button v-on:click="counter += 1">ここをクリック</button>
+                                                      <p> {{ counter }} 回クリックしました。</p>
+                                                    </div>
+                                                        <div id="app9">
+                                                          <h1>v-on</h1>
+                                                          <button @click="counter += 1">ここをクリック</button>
+                                                          <p> {{ counter }} 回クリックしました。</p>
+                                                        </div>
+                                                            <div id="app10">
+                                                              <style>.active { color: #f00; } </style>
+                                                              <div v-bind:class="{ active: isActive }">vue.js lesson2</div>
+                                                            </div>
+                                                                <div id="app11">
+                                                                  <p v-show="toggle">v-showを使ってみました。</p>
+                                                                </div>
+                                                                    <div id="app12">
+                                                                      <p v-show="toggle">v-showを使ってみました。</p>
+                                                                    </div>
+                                                                        <div id="app13">
+                                                                          <p v-if="toggle">v-ifを使ってみました。</p>
+                                                                        </div>
+                                                                            <div id="app14">
+                                                                              <p v-if="toggle">v-ifを使ってみました。</p>
+                                                                            </div>
+  </body>
+</html>
+  <script>
+    var app = new Vue({
+      el: '#app', 
+      data: { message: 'Hello Vue!' }
+    });
+        var app = new Vue({
+            el: '#app1', 
+            data: { messag: 'Hello Vue!' }
+        });
+            var app = new Vue({
+                el: '#app2', 
+                data: { sports: 'baseball' }
+            });
+                var app = new Vue({
+                    el: '#app3', 
+                    data: { checked: 'true' }
+                });
+                    var app = new Vue({
+                        el: '#app4', 
+                        data: { sports: [] }
+                    });
+                        var app = new Vue({
+                          el: '#app5', 
+                          data: { sports: ''}
+                        });
+                            var app = new Vue({
+                              el: '#app6', 
+                              data: { sports: ''}
+                            });
+                                var sample = new Vue({
+                                  el: '#example', 
+                                  data: { type: 'vue.jsはコンポーネント指向のフレームワークです!' }
+                                });
+                                    //var app = new Vue({
+                                    //  el: '#example1', 
+                                    //  data: { program: 'Ruby' }
+                                    //});
+                                        var app = new Vue({
+                                          el: '#example2', 
+                                          data: { fw: ['RubyOnRails']}
+                                        });
+                                            var app = new Vue({
+                                              el: '#example3', 
+                                              data: { flamework: '' }
+                                            });
+                                                var vm = new Vue({
+                                                  el: '#app7',
+                                                });
+                                                    var vm = new Vue({
+                                                      el: '#app8',
+                                                      data: { counter: 0 }
+                                                    });
+                                                        var vm = new Vue({
+                                                          el: '#app9',
+                                                          data: { counter: 0 }
+                                                        });
+                                                            var vm = new Vue({
+                                                              el: '#app10',
+                                                              data: { isActive: true, },
+                                                            })
+                                                                var app = new Vue({
+                                                                 el: '#app11',
+                                                                 data: { toggle: true }
+                                                                })
+                                                                    var app = new Vue({
+                                                                     el: '#app12',
+                                                                     data: { toggle: false }
+                                                                    })
+                                                                        var app = new Vue({
+                                                                          el: '#app13',
+                                                                          data: { toggle: true }
+                                                                        })
+                                                                            var app = new Vue({
+                                                                              el: '#app14',
+                                                                              data: { toggle: false }
+                                                                            })
+  </script>
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>vue_lesson2</title>
+  <style>#app15 body { font-size: 16px; font-family: Verdana, sans-serif; }</style>
+  <style>#app15 h1 { font-size: 16px; border-bottom: 1px solid #ddd;padding: 16px 0; }</style>
+  <style>#app15 li { line-height: 2.5; }</style>
+  <style>#app15 input[type="text"] { width:  300px; margin-left: 25px; }</style>
+  <style>#app15 ul{ padding: 0; list-style: none; }</style>
+  <style>#app15 li > span.done{ text-decoration: line-through; color: #bbb; }</style>
+  <style>#app15 h1 > button{ float: right; }</style>
+  <style>.container { width: 500px; margin: auto; }</style>
+  <style>.info{ color: #bbb; font-size: 12px; font-weight: normal; }</style>
+  <style>.no_todo{ margin-left: 25px; }</style>
+</head>
+<body>
+  <div id="app15" class="container">
+    <h1><button @click="bulk">BulkDelete</button>
+    カリキュラム管理ツール
+    <%#<span class="info">({{ remaining }}/{{ todos.length }})</span>%>
+    <span class="info">({{ remaining.length }}/{{ todos.length }})</span>
+    </h1><!--残数/総数-->
+    <%#<ul v-if="todos.length"><!--空メッセージ-->%>
+      <%#<li v-for="todo in todos">{{ todo }}</li><!--dotot追加-->%>
+      <li v-for="(todo, index) in todos"><!--delete機能-->
+        <input type="checkbox" v-model="todo.isDone"><!--取り消し線-->
+        <span :class="{done: todo.isDone}">{{ todo.title }}</span><!--取り消し線-->
+        <span @click="deleteItem(index)"><button>Delete</button></span><!--delete機能-->
+      </li>
+    </ul>
+    <%#<ul v-else><!--空メッセージ-->%>
+      <li v-show="!todos.length">カリキュラムがありません。</li><!--空メッセージ-->
+    <%#</ul><!--空メッセージ-->%>
+    <form @submit.prevent="addItem">
+      <input type="text" v-model="newItem">
+      <input type="submit" value="ToDo追加">
+    </form>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+  <%#<script src="articles.js"></script>%>
+</body>
+</html>
+<script>
+(function() {
+  var vm = new Vue({
+    el: '#app15',
+    data: {
+      newItem: '',
+      //todos: [ //dotot追加 delete機能
+      //  'HTML&CSS:6/9(日)までに終わらせる。',//dotot追加 delete機能
+      //  'JavaScript:6/16(日)までに終わらせる。',//dotot追加 delete機能
+      //  'bootstrap:6/23(日)までに終わらせる。'//dotot追加 delete機能
+      //]
+      todos: [
+          { title: 'HTML&CSS:6/9(日)までに終わらせる。', isDone: true },
+          { title: 'JavaScript:6/16(日)までに終わらせる。', isDone: false },
+          { title: 'bootstrap:6/23(日)までに終わらせる。', isDone: false } 
+    ]
+    },
+    methods: {
+      addItem: function(){
+        //this.todos.push(this.newItem);//dotot追加
+        //this.newItem = '';//dotot追加
+        var item = { title: this.newItem, };
+        this.todos.push(item);
+        this.newItem = '';
+      },
+       deleteItem: function(index){
+        if (confirm('削除しても良いですか？')){
+          this.todos.splice(index, 1);
+        }
+      },
+     bulk: function(){
+        if (!confirm('一括削除しても良いですか？')){
+          return;
+        }
+        this.todos = this.remaining;
+      }      
+    },
+    computed: {
+      remaining: function(){
+        //var items = this.todos.filter(function(todo) {
+          //return !todo.isDone;
+          return this.todos.filter(function(todo){
+          return !todo.isDone;
+        })
+        //return items.length;
+      }
+    } 
+  });
+})();
+</script>
+
+    <!DOCTYPE html>
+    <html lang="ja">
+      <head>
+        <meta charset="utf-8">
+        <title>Vueで「いいね！」ボタンを作ろう！</title>
+        <style>#like_app body { font-size: 16px; font-family: Verdana, sans-serif; }</style>
+        <%#<link rel="stylesheet" href="vue_like.css">%>
+      </head>
+      <body>
+        <div id="like_app">
+        <like-component></like-component>
+        <like-component></like-component>
+        <like-component></like-component>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>   
+        <%#<script src="vue_like.js"></script>%>
+      </body>
+    </html>
+      <script>
+      (function(){
+      `use strict`;
+       var likeComponent = Vue.extend({
+        data: function(){
+          return{
+            count: 0
+          }
+        },
+        template: '<button @click="countUp">いいね！&#128077;{{ count }}</button>',
+        methods:{
+        countUp: function(){
+          this.count++;
+         }
+        }
+       })
+       var app = new Vue({
+        el: '#like_app',
+        components: {
+          'like-component': likeComponent
+         }
+        });
+      })();
+      </script>
+    
+        <!DOCTYPE html>
+        <html lang="ja">
+          <head>
+            <meta charset="utf-8">
+            <title>Vueで入力フォームを作ろう！</title>
+            <style>#form_app body { font-size: 20px; font-family: Verdana, sans-serif; text-align: center; }</style>
+            <style>#form_app button { width: 160px; }</style>
+            <style>.texttest{width: 250px;height: 20px; }</style>
+            <%#<style>.gender { margin-left: -12%; }</style>%>
+            <%#<link rel="stylesheet" href="vue_form.css">%>
+          </head>
+          <body>
+            <div id="form_app">
+              <h1>﻿スキル入力フォーム</h1>
+              <label>お名前</label>
+              <form-component></form-component><br>
+              <label>年齢　</label>
+              <form-component></form-component><br>
+              <label>ご住所</label>
+              <form-component></form-component><br>
+              <label>ＴＥＬ </label>
+              <form-component></form-component><br>
+              <label>メール</label>
+              <form-component></form-component><br>
+              <div class="gender">
+              <label>性別　</label>
+                <radio-component></radio-component>
+                <label>男</label>
+                <radio-component></radio-component>
+                <label>女</label><br>
+              </div>
+              <label>言語　</label>
+              <check-component></check-component>
+              <label>Ruby</label>
+              <check-component></check-component>
+              <label>PHP</label>
+              <check-component></check-component>
+              <label>Python</label><br>
+              <cancel-component></cancel-component>
+              <submit-component></submit-component>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>   
+            <%#<script src="vue_form.js"></script>%>
+          </body>
+        </html>
+          <script>
+          (function(){
+            `use strict`;
+            var formComponent = Vue.extend({ template: '<input type="text" class="texttest" placeholder="入力してください">' })
+            var radioComponent = Vue.extend({ template: '<input type="radio" class="radiotest" name="TAB">' }) 
+            var checkComponent = Vue.extend({ template: '<input type="checkbox">' }) 
+            var cancelComponent = Vue.extend({ template: '<button>キャンセル</button>' })   
+            var submitComponent = Vue.extend({ template: '<button>送信</button>' }) 
+            var app = new Vue({
+              el: '#form_app',
+              components: {
+                'form-component': formComponent,
+                'radio-component': radioComponent,
+                'check-component': checkComponent,
+                'cancel-component': cancelComponent,
+                'submit-component': submitComponent
+              }
+            });
+          })();
+          </script>

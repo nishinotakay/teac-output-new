@@ -1,5 +1,14 @@
-import { marked } from 'marked'
+// Vueインスタンスを生成します。
+var app = new Vue({
 
+  // id appを指定しています
+  el: '#app', 
+
+  // messageに'Hello Vue!'が代入されている状態です。
+  data: { message: 'Hello Vue!' }
+});
+
+import { marked } from 'marked'
 
 
 // articles/index.html.erb
@@ -108,3 +117,23 @@ $(window).on("load", function(){
     $(".article-view").html(content);
   }
 });
+
+(function() {
+  var vm = new Vue({
+    el: '#app15',
+    data: {
+      newItem: '',
+      todos: [
+        'HTML&CSS:6/9(日)までに終わらせる。',
+        'JavaScript:6/16(日)までに終わらせる。',
+        'bootstrap:6/23(日)までに終わらせる。'
+      ]
+    },
+    methods: {
+      addItem: function(){
+        this.todos.push(this.newItem);
+        this.newItem = '';
+     },
+    }
+  });
+})();
