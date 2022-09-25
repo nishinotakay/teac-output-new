@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     resources :dash_boards, only: [:index]
     resources :articles
     namespace :articles do
-      post "image"
+      post 'image'
     end
     resources :profiles
   end

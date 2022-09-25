@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Article < ApplicationRecord
-  mount_uploader :image, ImageUploader #ようせい追加（画像保存）
+  mount_uploader :image, ImageUploader # ようせい追加（画像保存）
 
   belongs_to :user
   validates :title, presence: true, length: { in: 1..20 }
