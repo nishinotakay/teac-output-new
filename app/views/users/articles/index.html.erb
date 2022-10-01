@@ -1,9 +1,11 @@
-<% provide(:title,  "Notion") %>
+<%= javascript_pack_tag "users/index_articles_and_dashboards" %>
+<% provide(:title,  "メモ一覧") %>
 <div class="content">
-  <div class="container-fluid">
+  <div class="container">
     <div class="row">
-      <h1>近日公開予定！！</h1>
+      <div class="col-12">
+        <%= render "users/articles/shared/articles_table", dashboard: false %>
+      </div>
     </div>
-    <!-- /.row -->
-  </div><!-- /.container-fluid -->
+  </div>
 </div>

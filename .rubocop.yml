@@ -189,6 +189,7 @@ Metrics/BlockLength:
     - 'route_param'
     - 'transaction'
     - 'class_methods'
+  Max: 30
 
 # 1クラスあたりの長さ制限を調整
 Metrics/ClassLength:
