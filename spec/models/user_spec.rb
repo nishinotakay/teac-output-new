@@ -1,4 +1,13 @@
 require 'rails_helper'
+# RSpec.describe User, type: :model do
+#   it "is valid with a name and an email" do
+#     user = User.new(
+#       email: "user1@user.com",
+#       name: "user1",
+#       password: "password"
+#     )
+#     expect(user).to be_valid
+#   end
 
 RSpec.describe User, type: :model do
   it 'is valid with a name and an email' do

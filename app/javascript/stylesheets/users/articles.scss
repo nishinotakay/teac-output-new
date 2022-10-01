@@ -1,0 +1,35 @@
+//以下new
+.card-body {
+  height: 2570px;
+}
+
+.sticky {
+  position: sticky;
+  top: 16%;
+}
+
+.preview {
+  padding: 10px;
+  overflow: scroll;
+  height: 500px;
+}
+
+.hr {
+  border: 0.5px solid black;
+  height: 0.1px;
+}
+
+.articles-table {
+  tbody tr{
+    td {
+      padding-left: 2rem;
+    }
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.span-subtitle {
+  font-size: small;
+}
