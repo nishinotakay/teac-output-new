@@ -16,10 +16,7 @@ window.onload = function(){
       var coderef = $(this).parent().prev()
       copybtn(coderef)
     })
-    article.find("img").each(function(){
-      $(this).width("70%")
-      $(this).height("70%")
-    })
+    resize_img(article)
   }
 
   function copybtn(coderef){

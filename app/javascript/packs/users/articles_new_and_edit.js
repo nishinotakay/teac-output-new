@@ -22,9 +22,9 @@ $(function(){
   });
 
   if($(".markdown-editor").val()){
-    var text = $(".markdown-editor").text()
-    text = mathtodollars(text);
-    text = marked(text)
+    var content = $(".markdown-editor").text()
+    content = mathtodollars(content);
+    content = marked(content)
     var elem = $('.preview-content')
     elem.html(content);
     MathJax.Hub.Typeset(["Typeset",MathJax.Hub, "posts-preview"]); 
@@ -33,8 +33,8 @@ $(function(){
       makecodeblock($(this))
     })
     elem.find("img").each(function(){
-      $(this).width("70%")
-      $(this).height("70%")
+      $(this).width("60%")
+      $(this).height("60%")
     })
   }
 
@@ -45,13 +45,13 @@ $(function(){
     content ||= "コンテンツ"
     var pre = $('.preview-content')
     pre.html(content);
+    pre.find("img").each(function(){
+      $(this).width("60%")
+      $(this).height("60%")
+    })
     pre = pre.find('pre');
     pre.each(function(){
       makecodeblock($(this))
-    })
-    $("img").each(function(){
-      $(this).width("70%")
-      $(this).height("70%")
     })
   });
   
@@ -86,13 +86,13 @@ $(function(){
     var len      = sentence.length;
     var pos      = textarea.selectionStart;
     var before   = sentence.substr(0, pos);
-    var word     = '<img alt="' + name + '" src="' + url + '" width="200px" height="200px">\n';
-    word     = '<img alt="' + name + '" src="' + url + '" width="100%" height="100%">\n';
+    var word     = '<img alt="' + name + '" src="' + url + '">';
     var after    = sentence.substr(pos, len);
     sentence = before + word + after;
     textarea.value = sentence;
     var content = marked(textarea.value)
     $(".preview-content").html(content);
+    resize_img($(".preview-content"))
   }
 
 });

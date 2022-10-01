@@ -51,3 +51,18 @@ window.mathtodollars = function(content){
   }
   return content
 }
+
+window.resize_img = function(parent){
+  parent.find("img").each(function(){
+    $(this).bind("load", function(){
+      var w = $(this).width()
+      var h = $(this).height()
+      if(w >= h){
+        $(this).width("250")
+      }else{
+        $(this).height("250")
+      }
+    })
+  })
+
+}
