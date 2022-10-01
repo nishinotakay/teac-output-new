@@ -1,14 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe "Profiles", type: :request do
-  describe "[Action test]" do
-    before do
-      @user = FactoryBot.create(:user, :a)
-    end
+RSpec.describe 'Profiles', type: :request do
+  describe '[Action test]' do
+    let(:user) { FactoryBot.create(:user, :a) }
 
-    context "new" do
-      it "access by user" do
-        sign_in @user
+    context 'new' do
+      it 'access by user' do
+        sign_in user
         get '/profiles/new'
         expect(response).to be_truthy
       end
@@ -19,12 +17,12 @@ RSpec.describe "Profiles", type: :request do
       #   # HTTPリクエスト302リクエストされたURIが一時的に変更されたことを意味する ログインしていないユーザーがNewアクションをリクエストすると、ログイン画面に移るので、このように記述している
       # end
 
-      it "show" do
-        sign_in @user
+      it 'show' do
+        sign_in user
         profile = Profile.create(
-          name: "test",
-          purpose: "test",
-          user_id: 1,
+          name:    'test',
+          purpose: 'test',
+          user_id: 1
         )
         get users_profiles_path(profile)
         expect(response).to be_truthy
