@@ -11,11 +11,11 @@ RSpec.describe 'Profiles', type: :request do
         expect(response).to be_truthy
       end
 
-#       # it "access by guest" do
-#       #   get '/profiles/new'
-#       #   expect(response).to have_http_status(:found)
-#       #   # HTTPリクエスト302リクエストされたURIが一時的に変更されたことを意味する ログインしていないユーザーがNewアクションをリクエストすると、ログイン画面に移るので、このように記述している
-#       # end
+      # it "access by guest" do
+      #   get '/profiles/new'
+      #   expect(response).to have_http_status(:found)
+      #   # HTTPリクエスト302リクエストされたURIが一時的に変更されたことを意味する ログインしていないユーザーがNewアクションをリクエストすると、ログイン画面に移るので、このように記述している
+      # end
 
       it 'show' do
         sign_in user
