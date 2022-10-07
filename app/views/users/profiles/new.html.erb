@@ -1,34 +1,48 @@
+<%= javascript_pack_tag "users/profiles" %>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 <div>
-  <h2>プロフィールを作成する</h2>
+  <div class="lesson-hover">
+    <h2>プロフィールを作成する</h2>
+    <p class="text-contents">作成お願いします。現状を公開することで貴方も他の受講生も学習効果が高まると思います。</p>
+  </div>
   <br>
-  <%= form_with model: @profile, url: { controller: "profiles", action: "create" }, local: true do |f| %>
-    <div class="form-group">
-      <%= f.label :name, "名前" %><br>
-      <%= f.text_field :name, class: 'form-control' %>
-    </div>
+  <div class="container mt-1">
+    <div class="justify-content-center">
+      <div class="col-8">
+        <%= form_with model: @profile, url: { controller: "profiles", action: "create" }, local: true do |f| %>
+          <div class="form-group">
+            <%= f.label :name, "名前" %><br>
+            <%= f.text_field :name, class: 'form-control' %>
+          </div>
 
-    <!-- <div class="form-group">
-      <%= f.label :learning_history, "学習歴(月)" %><br>
-      <%= f.text_field :learning_history %>
-    </div> -->
+          <!-- <div class="form-group">
+            <%= f.label :learning_history, "学習歴(月)" %><br>
+            <%= f.text_field :learning_history %>
+          </div> -->
 
-    <div class="form-group">
-      <%= f.label :learning_start, "学習開始日" %><br>
-      <%= f.date_field :learning_start, class: 'form-control' %>
-    </div>
+          <div class="form-group">
+            <%= f.label :learning_start, "学習開始日" %><br>
+            <%= f.date_field :learning_start, class: 'form-control' %>
+          </div>
 
-    <div class="form-group">
-      <%= f.label :purpose, "プログラミング学習の目的" %><br>
-      <%= f.text_field :purpose, class: 'form-control' %>
-    </div>
+          <div class="form-group">
+            <%= f.label :purpose, "プログラミング学習の目的" %><br>
+            <%= f.text_field :purpose, class: 'form-control' %>
+          </div>
 
-    <div class="form-group">
-      <%= f.label :image, "プロフィール画像" %><br>
-      <%= f.file_field :image %>
-    </div>
+          <div class="form-group">
+            <%= f.label :image, "プロフィール画像" %><br>
+            <%= f.file_field :image %>
+          </div>
 
-    <div class="submit-block">
-      <%= f.submit class: "button" %>
+          <div class="submit-block">
+            <%= f.submit class: "btn btn-primary" %>
+            <button type="reset" class="btn btn-danger" onclick="return confirm('Are you sure?')">リセット</button>
+          </div>
+        <% end %>
+      </div>
     </div>
-  <% end %>
+  </div>
+
 </div>
