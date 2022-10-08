@@ -7,23 +7,12 @@
       <table class="table table-hover">
         <thead>
           <tr>
-            <!-- <th>名前</th>
-            <th>メールアドレス</th> -->
             <th>名前</th>
-            <!-- <th>プログラミング学習の目的</th>
-            <th>編集</th>
-            <th>削除</th> -->
           </tr>
         </thead>
         <tbody>
           <% @profiles.each do |profile| %>
-            <!-- <tr data-href="/users/profiles/<%= profile.id %>" class="tr-link"> -->
-              <!-- <td><%= @users.find(profile.user_id).name %></td>
-              <td><%= @users.find(profile.user_id).email %></td> -->
               <td><%= link_to(profile.name, "/users/profiles/#{profile.id}") %></td>
-              <!-- <td><%= profile.purpose %></td>
-              <td><%= link_to "編集", users_profile_path(profile), class: "btn btn-warning" %></td>
-              <td><%= link_to "削除", users_profile_path(profile), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" %></td> -->
             </tr>
           <% end %>
         </tbody>
