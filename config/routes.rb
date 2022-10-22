@@ -5,8 +5,21 @@ Rails.application.routes.draw do
 
   # admin関連=========================================================
   devise_for :admins, controllers: {
-    sessions: 'admins/sessions'
+    sessions: 'admins/sessions',
+    passwords:     'admins/passwords',
+    confirmations: 'admins/confirmations',
+    registrations: 'admins/registrations'
   }
+  
+  namespace :admins do
+    resources :dash_boards, only: [:index]
+    resources :articles
+    namespace :articles do
+      post 'image'
+    end
+    resources :profiles
+  end
+
 
   # =================================================================
 

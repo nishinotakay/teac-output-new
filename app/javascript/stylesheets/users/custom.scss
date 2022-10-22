@@ -1,7 +1,12 @@
 // cssサンプル
 // stylesheet_pack_tag 'users'が適応されている、app/views/layouts/users_auth.html.erbと、app/views/layouts/users.html.erbのレイアウトでこのcssファイルが適応されます。
 // webpcker_dev_serverが起動しているので、開発環境ではcssが更新されると自動でフロント側に反映されます。
+body {
+  background-color: #e9ecef;
+ }
+ .card-body1 {
+  flex: 1 1 auto;
+  min-height: 1px;
+  padding: 1rem;
+}
 
-// body {
-//   background-color: aqua;
-// }
