@@ -13,7 +13,6 @@
         <tbody>
           <% @profiles.each do |profile| %>
               <td><%= link_to(profile.name, "/users/profiles/#{profile.id}") %></td>
-            </tr>
           <% end %>
         </tbody>
       </div>
