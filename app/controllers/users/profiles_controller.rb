@@ -19,7 +19,11 @@ module Users
       @profile = Profile.new
     end
 
-    def edit; end
+    def edit
+      if @user != @current_user
+        redirect_to users_profiles_path, notice: '編集権限がありません'
+      end
+    end
 
     def create
       @profile = Profile.new(profile_params)
