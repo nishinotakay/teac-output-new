@@ -1,5 +1,3 @@
-<%# javascript_pack_tag "users/profiles" %>
-
 <% provide(:title,  "プロフィール一覧") %>
 <div class="container">
   <div class="row">
@@ -12,7 +10,7 @@
         </thead>
         <tbody>
           <% @profiles.each do |profile| %>
-              <td><%= link_to(profile.name, "/users/profiles/#{profile.id}") %></td>
+            <td><%= link_to(profile.name, "/users/profiles/#{profile.id}") %></td>
           <% end %>
         </tbody>
       </div>
