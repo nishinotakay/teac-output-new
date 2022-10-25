@@ -37,6 +37,8 @@ Rails.application.routes.draw do
 
   namespace :users do
     resources :dash_boards, only: [:index]
+    resources :articles #, only: %i[index show]
+    resources :posts
     resources :articles
     namespace :articles do
       post 'image'
