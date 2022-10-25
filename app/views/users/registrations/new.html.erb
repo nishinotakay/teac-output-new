@@ -3,7 +3,7 @@
     <div class="card-header text-center">
       <a href="" class="h2"><b>Nature Technology</a>
     </div>
-    <div class="card-body">
+    <div class="card-body1">
       <p class="login-box-msg">アカウント登録を行いましょう！</p>
 
       <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
@@ -50,29 +50,15 @@
               </label>
             </div>
           </div>
-          <!-- /.col -->
           <div>
             <%= f.submit t('.sign_up'), class:"btn btn-primary btn-block", disabled: true, id:"sign_up_submit" %>
           </div>
-          <!-- /.col -->
         </div>
       <% end %>
-
-      <%# <div class="social-auth-links text-center">
-        <a href="#" class="btn btn-block btn-primary">
-          <i class="fab fa-facebook mr-2"></i>
-          Sign up using Facebook
-        </a>
-        <a href="#" class="btn btn-block btn-danger">
-          <i class="fab fa-google-plus mr-2"></i>
-          Sign up using Google+
-        </a>
-      </div> %>
       <br>
       <div>
         <%= render "users/shared/links" %>
       </div>
     </div>
-    <!-- /.form-box -->
-  </div><!-- /.card -->
+  </div>
 </div>

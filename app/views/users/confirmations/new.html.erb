@@ -3,7 +3,7 @@
     <div class="card-header text-center">
       <a href="" class="h2"><b>Nature Technology</a>
     </div>
-    <div class="card-body">
+    <div class="card-body1">
       <p class="login-box-msg">認証メールの再送信</p>
 
       <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
@@ -26,6 +26,5 @@
         <%= render "users/shared/links" %>
       </div>
     </div>
-    <!-- /.form-box -->
-  </div><!-- /.card -->
+  </div>
 </div>
