@@ -10,9 +10,7 @@ RSpec.describe 'Articles', type: :request do
     let(:articles_1) { create_list(:article, article_count, user: user_1) }
     let(:articles_2) { create_list(:article, article_count, user: user_2) }
 
-    before do
-      articles_1
-    end
+    before { articles_1 }
 
     context 'user is writer' do
       it 'success' do
@@ -92,6 +90,101 @@ RSpec.describe 'Articles', type: :request do
       expect(response.body).to include '<span class="preview-subtitle">' + article.sub_title + '</span>'
       expect(response.body).to include 'markdown-editor', article.content, '</div>'
       expect(response.body).to include 'preview-content', article.content, '</div>'
+    end
+  end
+
+  describe 'POST /create' do
+    let(:params) { { article: attributes_for(:article, user_id: user_1.id) } }
+
+    before { sign_in user_1 }
+
+    it 'success' do
+      expect{
+        post users_articles_url params: params
+      }.to change(Article, :count).by(1)
+      expect(response.status).to eq 302
+      expect(flash[:notice]).to eq 'メモを作成しました。'
+      expect(response).to redirect_to users_article_url(Article.count)
+    end
+
+    it 'failure' do
+      params[:article][:title] = nil
+      expect{
+        post users_articles_url params: params
+      }.to change(Article, :count).by(0)
+      expect(flash[:alert]).to eq 'メモの作成に失敗しました。'
+    end
+  end
+
+  describe 'PATCH /update' do
+    let(:article) { create(:article, user: user_1) }
+
+    before do
+      sign_in user_1
+      article
+    end
+
+    it 'success' do
+      params = { article: { sub_title: 'b', content: 'c' } }
+      patch users_article_url(article, params: params)
+      article.reload
+      expect(article.sub_title).to eq params[:article][:sub_title]
+      expect(article.content).to eq params[:article][:content]
+      expect(response.status).to eq 302
+      expect(flash[:notice]).to eq 'メモを編集しました。'
+      expect(response).to redirect_to users_article_url(article.id)
+    end
+
+    it 'failure' do
+      params = { article: { title: nil, sub_title: 'b', content: 'c' } }
+      patch users_article_url(article, params: params)
+      article.reload
+      expect(article.sub_title).to_not eq nil
+      expect(article.sub_title).to_not eq params[:article][:sub_title]
+      expect(article.content).to_not eq params[:article][:content]
+      expect(flash[:alert]).to eq 'メモの編集に失敗しました。'
+    end
+  end
+
+  describe 'DELETE /destroy' do
+    let(:params) { { article: attributes_for(:article, user_id: user_1.id) } }
+    it 'success' do
+      sign_in user_1
+      expect{
+        post users_articles_url params: params
+      }.to change(Article, :count).by(1)
+      expect(response.status).to eq 302
+      expect(flash[:notice]).to eq 'メモを作成しました。'
+      expect(response).to redirect_to users_article_url(Article.count)
+    end
+
+    context 'failuer because article without X' do
+      it 'X = title' do
+        params[:article][:title] = nil
+        sign_in user_1
+        expect{
+          post users_articles_url params: params
+        }.to change(Article, :count).by(0)
+        expect(flash[:alert]).to eq 'メモの作成に失敗しました。'
+      end
+
+      it 'X = sub_title' do
+        params[:article][:sub_title] = nil
+        sign_in user_1
+        expect{
+          post users_articles_url params: params
+        }.to change(Article, :count).by(0)
+        expect(flash[:alert]).to eq 'メモの作成に失敗しました。'
+      end
+
+      it 'X = content' do
+        params[:article][:content] = nil
+        sign_in user_1
+        expect{
+          post users_articles_url params: params
+        }.to change(Article, :count).by(0)
+        expect(flash[:alert]).to eq 'メモの作成に失敗しました。'
+      end
     end
   end
 
