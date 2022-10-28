@@ -1,6 +1,11 @@
 ---
 ja:
   activerecord:
+    attributes:
+     post:
+       title: 動画タイトル
+       body: 投稿内容
+       youtube_url: Youtube URL
     errors:
       messages:
         record_invalid: 'バリデーションに失敗しました: %{errors}'
