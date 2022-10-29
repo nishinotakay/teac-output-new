@@ -22,10 +22,10 @@ module Users
     def create
       @article = current_user.articles.new(article_params)
       if @article.save
-        flash[:notice] = 'メモを作成しました。'
+        flash[:notice] = '記事を作成しました。'
         redirect_to users_article_url(@article)
       else
-        flash.now[:alert] = 'メモの作成に失敗しました。'
+        flash.now[:alert] = '記事の作成に失敗しました。'
         render :new
       end
     end
@@ -35,16 +35,16 @@ module Users
 
     def update
       if @article.update(article_params)
-        flash[:notice] = 'メモを編集しました。'
+        flash[:notice] = '記事を編集しました。'
         redirect_to users_article_url(@article)
       else
-        flash.now[:alert] = 'メモの編集に失敗しました。'
+        flash.now[:alert] = '記事の編集に失敗しました。'
         render :edit
       end
     end
 
     def destroy
-      flash[:notice] = 'メモを削除しました。'
+      flash[:notice] = '記事を削除しました。'
       @article.destroy
       dashboard = params[:dashboard] == "false" ? false : true
       if dashboard
