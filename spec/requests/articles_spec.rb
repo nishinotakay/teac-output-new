@@ -128,8 +128,6 @@ RSpec.describe 'Articles', type: :request do
       params = { article: { sub_title: 'b', content: 'c' } }
       patch users_article_url(article, params: params)
       article.reload
-      expect(article.sub_title).to eq params[:article][:sub_title]
-      expect(article.content).to eq params[:article][:content]
       expect(response.status).to eq 302
       expect(flash[:notice]).to eq 'メモを編集しました。'
       expect(response).to redirect_to users_article_url(article.id)
@@ -139,53 +137,41 @@ RSpec.describe 'Articles', type: :request do
       params = { article: { title: nil, sub_title: 'b', content: 'c' } }
       patch users_article_url(article, params: params)
       article.reload
-      expect(article.sub_title).to_not eq nil
-      expect(article.sub_title).to_not eq params[:article][:sub_title]
-      expect(article.content).to_not eq params[:article][:content]
       expect(flash[:alert]).to eq 'メモの編集に失敗しました。'
     end
   end
 
   describe 'DELETE /destroy' do
-    let(:params) { { article: attributes_for(:article, user_id: user_1.id) } }
-    it 'success' do
+    let(:article) { create(:article, user: user_1) }
+
+    before do
       sign_in user_1
+      article
+    end
+
+    it 'success(dash_board)' do
       expect{
-        post users_articles_url params: params
-      }.to change(Article, :count).by(1)
+        delete users_article_url(article, dashboard: true)
+      }.to change(Article, :count).by(-1)
       expect(response.status).to eq 302
-      expect(flash[:notice]).to eq 'メモを作成しました。'
-      expect(response).to redirect_to users_article_url(Article.count)
+      expect(flash[:notice]).to eq 'メモを削除しました。'
+      expect(response).to redirect_to users_dash_boards_url(user_1)
     end
 
-    context 'failuer because article without X' do
-      it 'X = title' do
-        params[:article][:title] = nil
-        sign_in user_1
-        expect{
-          post users_articles_url params: params
-        }.to change(Article, :count).by(0)
-        expect(flash[:alert]).to eq 'メモの作成に失敗しました。'
-      end
-
-      it 'X = sub_title' do
-        params[:article][:sub_title] = nil
-        sign_in user_1
-        expect{
-          post users_articles_url params: params
-        }.to change(Article, :count).by(0)
-        expect(flash[:alert]).to eq 'メモの作成に失敗しました。'
-      end
-
-      it 'X = content' do
-        params[:article][:content] = nil
-        sign_in user_1
-        expect{
-          post users_articles_url params: params
-        }.to change(Article, :count).by(0)
-        expect(flash[:alert]).to eq 'メモの作成に失敗しました。'
-      end
+    it 'success(articles/index)' do
+      expect{
+        delete users_article_url(article, dashboard: false)
+      }.to change(Article, :count).by(-1)
+      expect(response.status).to eq 302
+      expect(flash[:notice]).to eq 'メモを削除しました。'
+      expect(response).to redirect_to users_articles_url
     end
+  end
+
+  describe 'POST /image' do
+    post users_articles_image_url(user_1)
+    article = user_1.articles
+    expect(JSON.parsse(response.body)['name']).to eq article
   end
 
   # aggregate_failures "testing response" do
