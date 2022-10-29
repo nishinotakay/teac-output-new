@@ -58,6 +58,7 @@ $(function(){
   $('.markdown-editor').on('drop', function(e) { //dropのイベントをハンドル
     e.preventDefault(); //元の動きを止める処理
     var image = e.originalEvent.dataTransfer.files[0]; //ドロップされた画像の1件目を取得
+    console.log(image)
     var formData = new FormData();
     formData.append('image', image); // FormDataに画像を追加
     formData.append('user_id', e.target.dataset.userId); // FormDataに画像を追加
