@@ -4,7 +4,7 @@
     <%= image_tag "AdminLTELogo.png", class:"brand-image img-circle elevation-3", style: "opacity: .8" %>
     <span class="brand-text font-weight-light">ネイテク</span>
   <% end %>
-
+  
   <!-- Sidebar -->
   <div class="sidebar">
     <!-- Sidebar user panel (optional) -->
@@ -18,84 +18,65 @@
       </div>
     </div>
 
-    <!-- SidebarSearch Form -->
-    <%# <div class="form-inline">
-      <div class="input-group" data-widget="sidebar-search">
-        <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-        <div class="input-group-append">
-          <button class="btn btn-sidebar">
-            <i class="fas fa-search fa-fw"></i>
-          </button>
-        </div>
-      </div>
-    </div> %>
-
-    <!-- Sidebar Menu -->
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-        <!-- Add icons to the links using the .nav-icon class
-              with font-awesome or any other icon font library -->
-        <%# <li class="nav-item menu-open">
-          <a href="#" class="nav-link active">
-            <i class="nav-icon fas fa-tachometer-alt"></i>
-            <p>
-              Starter Pages
-              <i class="right fas fa-angle-left"></i>
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="#" class="nav-link active">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Active Page</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Inactive Page</p>
-              </a>
-            </li>
-          </ul>
-        </li> %>
         <li class="nav-item">
-          <%= link_to users_articles_path, class:"nav-link" do %>
+          <%= link_to users_articles_path, class:"nav-link", method: :get do %>
             <i class="nav-icon fas fa-th"></i>
             <p>
               メモ一覧
-              <%# <span class="right badge badge-danger">New</span> %>
             </p>
           <% end %>
         </li>
         <li class="nav-item">
-          <%= link_to users_profiles_path, class:"nav-link" do %>
+          <%= link_to users_profiles_path, class:"nav-link", method: :get do %>
             <i class="nav-icon fas fa-list"></i>
             <p>
               プロフィール一覧
-              <%# <span class="right badge badge-danger">New</span> %>
             </p>
           <% end %>
         </li>
         <li class="nav-item">
-          <%= link_to new_users_profile_url, class:"nav-link" do %>
-            <i class="nav-icon fas fa-user-tie"></i>
-            <p>
-              プロフィール作成
-              <%# <span class="right badge badge-danger">New</span> %>
-            </p>
-          <% end %>
-        </li>
-        <li class="nav-item">
-          <%= link_to new_users_article_path, class: "nav-link" do %>
+          <%= link_to new_users_article_path, class: "nav-link", method: :get do %>
             <i class="nav-icon far fa-plus-square"></i>
             <p>
               メモ作成
             </p>
           <% end %>
         </li>
+        <li class="nav-item">
+          <%= link_to new_users_profile_url, class:"nav-link", method: :get do %>
+            <i class="nav-icon fas fa-user-tie"></i>
+            <p>
+              プロフィール作成
+            </p>
+          <% end %>
+        </li>
+
+        <div class="card accordion-container">
+          <div class="card-body accordion-title js-accordion-title">
+            動画投稿
+          </div>
+          <div class="card-body accordion-content">
+              <%= link_to '新規投稿ページ', new_users_post_path, class:"nav-link", method: :get %>
+              <%= link_to "投稿動画一覧", users_posts_path, class:"nav-link", method: :get %>
+          </div>
+        </div>
       </ul>
-    </nav>
-    <!-- /.sidebar-menu -->
+    </nav>    
   </div>
-  <!-- /.sidebar -->
 </aside>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script>
+$(document).on('turbolinks:load', function() {
+  $(function(){
+    $('.js-accordion-title').on('click', function () {
+      /*クリックでコンテンツを開閉*/
+      $(this).next().slideToggle(200);
+      /*矢印の向きを変更*/
+      $(this).toggleClass('open', 200);
+    });
+  });
+});
+</script>
