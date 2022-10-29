@@ -4,7 +4,7 @@
     <% if @article.user_id == current_user.id %>
       <div class="d-flex col-10 justify-content-end">
         <%= link_to "編集", edit_users_article_path, class: "btn btn-success" %>
-        <%= link_to "削除", users_article_path(dashboard: @dashboard), method: :delete, data: {confirm: "メモ#{@article.id}を削除します。"}, class: "btn btn-danger ml-2" %>
+        <%= link_to "削除", users_article_path(dashboard: @dashboard), method: :delete, data: {confirm: "表示中のメモを削除します。"}, class: "btn btn-danger ml-2" %>
       </div>
     <% end %>
 
