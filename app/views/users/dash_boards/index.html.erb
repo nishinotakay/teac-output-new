@@ -1,9 +1,11 @@
+<%= javascript_pack_tag "users/index_articles_and_dashboards" %>
 <% provide(:title,  "DashBoard") %>
 <div class="content">
-  <div class="container-fluid">
+  <div class="container">
     <div class="row">
-
+      <div class="col-12">
+        <%= render "users/articles/shared/articles_table", dashboard: true %>
+      </div>
     </div>
-    <!-- /.row -->
-  </div><!-- /.container-fluid -->
+  </div>
 </div>
