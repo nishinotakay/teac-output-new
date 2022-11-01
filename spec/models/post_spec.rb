@@ -4,7 +4,7 @@ RSpec.describe Post, type: :model do
 
   before do
     # 成功した場合のpostデータを定義
-    @post = build(:post, title: "Rspecテスト集", body: "Rspecに関する解説動画", youtube_url: "outube.com/watch?v=qpiKb0mdbr0&t=496s")
+    @post = build(:post, title: "Rspecテスト集", body: "Rspecに関する解説動画", youtube_url: "youtube.com/watch?v=qpiKb0mdbr0&t=496s")
   end
 
   # describeでテスト対象をグループ分け
