@@ -1,5 +1,4 @@
 FactoryBot.define do
-  # postに「title」という別名を命名
   factory :post do
     # userモデルアソシエーション
     association :user
