@@ -1,29 +1,41 @@
-<table class="table table-hover articles-table">
-  <thead>
-    <tr>
-      <% if dashboard %>
-       <th class="px-5">これまでに書いたメモ</th>
-      <% else %>
-        <th class="px-5">タイトル<span class="span-subtitle">〜サブタイトル〜</span></th>
-        <th class="px-5">書き手</th>
-      <% end %>
-      <th class="px-5">投稿日</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @articles.each do |a| %>
-      <tr data-href="/users/articles/<%= a.id %>" class="tr-link">
-        <td>
-          <%= a.title %>
-          <% if a.sub_title.present? %>
-            <span class="span-subtitle">〜<%= a.sub_title %>〜</span>
-          <% end %>
-        </td>
-        <% if !dashboard %>
-          <td><%= @users.find(a.user_id).name %></td>
-        <% end %>
-        <td><%= l(a.created_at, format: :long) %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="content">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <table class="table table-hover articles-table">
+          <thead>
+            <tr>
+              <% if dashboard %>
+                <th class="px-5">これまでに書いた記事</th>
+              <% else %>
+                <th class="px-5">タイトル<span class="span-subtitle">〜サブタイトル〜</span></th>
+                <th class="px-5">書き手</th>
+              <% end %>
+              <th class="px-5">投稿日</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% colspan = dashboard ? 2 : 3 %>
+            <tr class="nohover">
+              <td colspan="<%= colspan %>" class="search"></td>
+            </tr>
+            <% @articles.each do |a| %>
+              <tr class="link-tr" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'>
+                <td>
+                  <%= a.title %>
+                  <% if a.sub_title.present? %>
+                    <span class="span-subtitle">〜<%= a.sub_title %>〜</span>
+                  <% end %>
+                </td>
+                <% if !dashboard %>
+                  <td><%= @users.find(a.user_id).name %></td>
+                <% end %>
+                <td><%= l(a.created_at, format: :long) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
