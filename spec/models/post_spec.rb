@@ -49,7 +49,7 @@ RSpec.describe Post, type: :model do
     context "文字制限のバリデーションチェック" do
       it "titleの文字数が30文字以上の場合エラーメッセージが返ってくるか" do
         post = build(:post)
-        # Faker::Lorem.characters(number: 31)でランダムな文字列を40字で作成できる
+        # Faker::Lorem.characters(number: 31)でランダムな文字列を31字で作成できる
         post.title = Faker::Lorem.characters(number: 31)
         post.valid?
         expect(post.errors[:title]).to include("は30文字以内で入力してください")
