@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  # aliases: ⇨ Postのモデルテストで起きた『KeyError: Factory not registered:~』に対処 
   factory :user do
     trait :a do
       id { 1 }
