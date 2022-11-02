@@ -46,11 +46,14 @@
   transform: rotate(-45deg);
   top: 45%;
 }
-// 下は、平野追加
-table th ,td {
-  border:1px solid;
-  }
-   
+
+// 下は、平野追加（修正）
+.posts_table{
+  table th ,td {
+    border:1px solid;
+    }
+}
+
 /*スクロールバーの実装 */
 .table_sticky {
   display: block;

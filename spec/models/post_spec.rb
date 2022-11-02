@@ -63,5 +63,13 @@ RSpec.describe Post, type: :model do
         expect(post.errors[:body]).to include("は240文字以内で入力してください")
       end
     end
+
+    describe 'アソシエーションのテスト' do
+      context 'Userモデルとの関係' do
+        it '多:1となっている' do
+          expect(Post.reflect_on_association(:user).macro).to eq :belongs_to
+        end
+      end
+    end
   end
 end
