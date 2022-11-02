@@ -1,6 +1,7 @@
 module Users
   class PostsController < Users::Base
-    # before_action :set_post, only: %i[ show edit update destroy ]
+    # Userがログインしていないと、投稿を作成できない
+    before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
     before_action :set_post, only: %i[ show edit update destroy ]
     # GET /posts or /posts.json
     def index
