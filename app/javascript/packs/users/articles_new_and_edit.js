@@ -3,12 +3,13 @@ import "./articles"
 
 $(function(){
 
-  var me = $(".markdown-editor");
-  me.resize(function(){
-    $(".preview").width(me.width());
-    $(".preview").height(window.innerHeight());
-  });
-
+  var elem = $(".div-textarea");
+  var height = elem.position().top + $(".markdown-editor").height();
+  elem = $(".div-title-form");
+  height -= elem.position().top;
+  height -= $(".div-btns").height();
+  $(".preview").height(height);
+  
   $('.title-form').keyup(function(event){
     var title = $(this).val();
     title ||= "タイトル"
