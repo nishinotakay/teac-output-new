@@ -3,6 +3,11 @@ import "./articles"
 
 $(function(){
 
+  var elem = $('.editor-side .card')
+  var height = elem.height() + $('.div-btns').height();
+  elem.height(height);
+  $('.preview-side .card').height(height);
+
   var elem = $(".div-textarea");
   var height = elem.position().top + $(".markdown-editor").height();
   elem = $(".div-title-form");

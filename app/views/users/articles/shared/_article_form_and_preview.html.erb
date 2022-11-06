@@ -37,7 +37,7 @@
                 <%= @article.content ? simple_format(@article.content) : "コンテンツ" %>
               </div>
             </div>
-            <div class="text-center div-btns mt-3">
+            <div class="text-center div-btns mt-4">
               <%= f.submit btn_name, class: "btn btn-primary" %>
               <%= link_to 'キャンセル', users_article_path(@article, dashboard: true), class: "btn btn-outline-dark" if btn_name == "更新" %>
             </div>
