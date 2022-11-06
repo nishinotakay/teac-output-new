@@ -20,10 +20,30 @@
   </head>
 
   <body class="hold-transition sidebar-mini" id="<%= page_body_id(params) %>">
-    <div class="wrapper">
-      <%= render "layouts/admins/header" %>
-      <%= render "layouts/admins/side" %>
-      <div class="content-wrapper">
+    <% if params[:controller] != "admins/sessions" && params[:action] != "new" %>
+      <div class="wrapper">
+          <%= render "layouts/admins/header" %>
+          <%= render "layouts/admins/side" %>
+        <div class="content-wrapper">
+          <%= render "layouts/flash" %>
+          <!-- Content Header (Page header) -->
+          <div class="content-header">
+            <div class="container-fluid">
+              <div class="row mb-2">
+                <div class="col-sm-6">
+                  <h1 class="m-0"><%= yield(:title) %></h1>
+                </div><!-- /.col -->
+              </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+          </div>
+          <%= render template: "layouts/application" %>
+          <%= debug(params) if Rails.env.development? %>
+        </div>
+        <%= render "layouts/admins/control_side" %>
+        <%= render "layouts/admins/footer" %>
+      </div>
+    <% else %>
+      <div class="content">
         <%= render "layouts/flash" %>
         <!-- Content Header (Page header) -->
         <div class="content-header">
@@ -36,10 +56,7 @@
           </div><!-- /.container-fluid -->
         </div>
         <%= render template: "layouts/application" %>
-        <%= debug(params) if Rails.env.development? %>
       </div>
-      <%= render "layouts/admins/control_side" %>
-      <%= render "layouts/admins/footer" %>
-    </div>
+    <% end %>
   </body>
 </html>
