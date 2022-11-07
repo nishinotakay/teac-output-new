@@ -1,6 +1,7 @@
+<head><script src="https://kit.fontawesome.com/c3f6f3c4db.js" crossorigin="anonymous"></script></head>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
-  <%= link_to users_dash_boards_path, class:"brand-link" do %>
+  <%= link_to users_dash_boards_path, class:"brand-link", method: :get do %>
     <%= image_tag "AdminLTELogo.png", class:"brand-image img-circle elevation-3", style: "opacity: .8" %>
     <span class="brand-text font-weight-light">ネイテク</span>
   <% end %>
@@ -13,7 +14,7 @@
         <%#= image_tag "user2-160x160.jpg", class:"img-circle elevation-2" %>
       </div>
       <div class="info">
-        <%= link_to current_user.name, new_users_profile_url, class:"d-block" %>
+        <%= link_to current_user.name, new_users_profile_url, class:"d-block", method: :get %>
         <!-- <%= link_to current_user.name, new_users_profile_url, class:"d-block" %> -->
       </div>
     </div>
@@ -53,13 +54,15 @@
           <% end %>
         </li>
 
-        <div class="card accordion-container">
+        <div class="card accordion-container nav-item">
           <div class="card-body accordion-title js-accordion-title">
-            動画投稿
+          <i class="fa-solid fa-video"></i>
+            &emsp;動画投稿
           </div>
           <div class="card-body accordion-content">
               <%= link_to '新規投稿ページ', new_users_post_path, class:"btn btn-success", method: :get %><br><br>
-              <%= link_to "投稿動画一覧", users_posts_path, class:"btn btn-success", method: :get %>
+              <%= link_to "投稿動画一覧", users_posts_path, class:"btn btn-success", method: :get %><br><br>
+              <%= link_to "動画一覧（全ユーザー）", index_1_users_posts_path, class:"btn btn-success", method: :get %>
           </div>
         </div>
       </ul>

@@ -1,0 +1,28 @@
+<h1 style="text-align:center;">動画詳細<%= "（#{@post.user.name}さん）" %></h1>
+
+<table class="table_sticky posts_table">
+<thead>
+  <tr>
+    <th width="100">タイトル</th>
+    <th>内容</th>
+    <th>Youtube</th>
+    <th width="300" colspan="3"></th>
+  </tr>
+</thead>
+
+<tbody>
+  <tr>
+    <td width="230"><%= @post.title %></td>
+    <td width="230"><%= simple_format(@post.body) %></td>
+    <td><iframe width="600" height="315" src="https://www.youtube.com/embed/<%=@post.youtube_url%>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
+    <td>
+      <%= button_to '動画一覧', index_1_users_posts_path, method: :get ,class: "btn btn-primary" %><br>
+    <!-- 現在のユーザーと投稿者が一致していれば、編集削除可能 -->
+    <% if current_user.id == @post.user_id %>
+      <%= button_to '編集画面', edit_1_users_post_path(@post), method: :get ,class: "btn btn-success" %><br>
+      <%= button_to '削除', users_post_path(@post), method: :delete ,class: "btn btn-danger", data: {confirm: "削除しますか？"}  %>
+    </td>
+    <% end %>
+  </tr>
+</table>
+</table>

@@ -3,6 +3,7 @@
 @import '@fortawesome/fontawesome-free';
 // @import './users/**';
 
+// 平野追加
 // アコーディオンメニューデザイン
 .accordion-container .accordion-title {
   color: #fff;
@@ -44,7 +45,8 @@
 .accordion-title.open:after {
   -webkit-transform: rotate(-45deg);
   transform: rotate(-45deg);
-  top: 45%;
+  // 開きの
+  top: 50%;
 }
 
 // 下は、平野追加（修正）
