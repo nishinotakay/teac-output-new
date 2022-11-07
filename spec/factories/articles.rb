@@ -2,10 +2,8 @@
 
 FactoryBot.define do
   factory :article do
-    association :user
-
-    title { 'railsエンジニアのブログ記事' }
-    sub_title { 'railsエンジニアのためのブログ記事を書きました！' }
-    content { 'MyText' }
+    sequence(:title, 'railsエンジニアのブログ記事_1')
+    sequence(:sub_title, 'railsエンジニアのためのブログ記事を書きました！_1')
+    sequence(:content, 'MyText_1')
   end
 end
