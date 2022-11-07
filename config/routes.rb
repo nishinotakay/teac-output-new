@@ -43,8 +43,14 @@ Rails.application.routes.draw do
     namespace :articles do
       post 'image'
     end
+    namespace :users do
+    resources :users, only: [:show]
+    # get "users/:id" => "users#show"
+
+    end
     resources :profiles
-  end
+    
+   end
 
   # =================================================================
 
@@ -62,3 +68,4 @@ Rails.application.routes.draw do
   get 'use' => 'use#index'
   # =================================================================
 end
+# end
