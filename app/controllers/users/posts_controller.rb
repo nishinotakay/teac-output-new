@@ -97,21 +97,21 @@ module Users
     private
       # Use callbacks to share common setup or constraints between actions.
 
-      def set_post
-        @post = current_user.posts.find(params[:id])
-      end
+    def set_post
+      @post = current_user.posts.find(params[:id])
+    end
 
-      # 投稿動画に関するカラム
-      def post_params
-        params.require(:post).permit(:title, :body, :youtube_url)
-      end
+    # 投稿動画に関するカラム
+    def post_params
+      params.require(:post).permit(:title, :body, :youtube_url)
+    end
 
-      # 投稿したユーザーと現在のユーザーのidが違えばトップページに飛ばす
-      def prevent_url
-        @post = current_user.posts.find(params[:id])
-        if @post.user_id != current_user.id
-        redirect_to root_path
-        end
+    # 投稿したユーザーと現在のユーザーのidが違えばトップページに飛ばす
+    def prevent_url
+      @post = current_user.posts.find(params[:id])
+      if @post.user_id != current_user.id
+      redirect_to root_path
       end
+    end
   end
 end
