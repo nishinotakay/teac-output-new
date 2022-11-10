@@ -12,7 +12,7 @@
         </thead>
         <tbody>
           <% @profiles.each do |profile| %>
-              <td><%= link_to(profile.name, "/users/profiles/#{profile.id}") %></td>
+              <td><%= link_to(profile.name, "/users/profiles/#{profile.id}", method: :get) %></td>
             </tr>
           <% end %>
         </tbody>
