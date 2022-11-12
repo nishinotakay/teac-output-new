@@ -38,7 +38,20 @@ Rails.application.routes.draw do
   namespace :users do
     resources :dash_boards, only: [:index]
     resources :articles #, only: %i[index show]
-    resources :posts
+    resources :posts do
+      collection do # idを外す
+      # 全ユーザー投稿一覧（/users/posts/index_1）
+      get 'index_1'
+      end
+      # 全ユーザー詳細ページ（/users/posts/:id/show_1）
+      member do # id付与
+        get 'show_1'
+        # 全ユーザー編集ページ（/users/posts/:id/edit_1）
+        get 'edit_1'
+        # 全ユーザー編集ページの更新（/users/posts/:id/update_1(）
+        patch 'update_1'
+      end
+    end
     resources :articles
     namespace :articles do
       post 'image'
