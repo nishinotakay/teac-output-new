@@ -60,12 +60,11 @@ RSpec.describe 'Articles', type: :system do
           expect(current_path).to eq users_article_path(article)
           expect(page).to_not have_content '編集'
           expect(page).to_not have_content '削除'
-          expect(page).to have_content '投稿者'
+          expect(page).to have_content '書き手'
           expect(page).to have_content article.user.name
           expect(page).to have_content article.title
           expect(page).to have_content article.sub_title
           expect(page).to have_content article.content
-          page.save_screenshot 'index.png'
         end
       end
     end
@@ -76,15 +75,24 @@ RSpec.describe 'Articles', type: :system do
         visit new_users_article_path
         expect(current_path).to eq new_users_article_path
         expect(page).to have_content "記事投稿"
-        expect(page).to have_content article.title
-        expect(page).to have_content article.sub_title
-        expect(page).to have_content article.content
-        expect(page).to_not have_content article.user.name, count: 2
+        expect(page).to have_content "新規記事"
+        expect(page).to have_content "タイトル", count: 2
+        expect(page).to have_content "プレビュー"
+        expect(page).to have_content "投稿"
+        page.save_screenshot 'new.png'
       end
     end
 
     context 'X = edit' do
       it 'success' do
+        visit edit_users_article_path(article)
+        expect(current_path).to eq edit_users_article_path(article)
+        expect(page).to have_content "記事編集"
+        expect(page).to have_content "新規記事"
+        expect(page).to have_content "タイトル", count: 2
+        expect(page).to have_content "プレビュー"
+        expect(page).to have_content "投稿"
+        page.save_screenshot 'new.png'
       end
     end
   end
