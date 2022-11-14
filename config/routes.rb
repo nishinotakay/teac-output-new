@@ -25,7 +25,7 @@ Rails.application.routes.draw do
 
   # user関連==========================================================
   devise_scope :user do
-    root 'users/sessions#new'
+     root 'users/sessions#new'
   end
 
   devise_for :users, controllers: {
@@ -39,18 +39,19 @@ Rails.application.routes.draw do
     resources :dash_boards, only: [:index]
     resources :articles #, only: %i[index show]
     resources :posts
+    resources :users, only: [:show]
     resources :articles
     namespace :articles do
       post 'image'
     end
     namespace :users do
-    resources :users, only: [:show]
-    # get "users/:id" => "users#show"
-
+    resources :users, only: [:index]
+    
+    
     end
     resources :profiles
     
-   end
+  end
 
   # =================================================================
 

@@ -1,9 +1,10 @@
-class UsersController < ApplicationController
-  def show
-    @user = User.find_by(id: params[:id])
-  end
+module Users
+  class UsersController < Users::Base
+    before_action :authenticate_user! #認証ユーザーのみアクセス ログインしていないユーザーを強制的にログインページへ飛ばす
 
-  def index
-    @users = User.all
+    def show
+      @user = User.find(params[:id]) #該当idのユーザーレコードをとってくる様に設定
+      # binding.pry
+    end
   end
 end

@@ -4,7 +4,10 @@ class ApplicationController < ActionController::Base
   add_flash_types :success, :info, :warning, :danger
   before_action :configure_permitted_parameters, if: :devise_controller?
 
-  def after_sign_in_path_for(resource)
+  def after_sign_in_path_for(resource)#usersコントローラーのshowアクションを呼び出すパスを設定  ここに追加するのか？
+    users_show_path
+  end
+  def after_sign_in_path_for(resource)  
     case resource
     when User
       users_dash_boards_path
