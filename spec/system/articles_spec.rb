@@ -5,36 +5,69 @@ RSpec.describe 'Articles', type: :system do
   let(:user_b) { create(:user, :b, confirmed_at: Date.today) }
   let(:article) { create(:article, user: user_a) }
 
-  describe 'redirect to #X' do
-    before { sign_in(user_a); article }
+  before do
+    sign_in(user_a)
+    article
+  end
 
-    context 'X = index' do
-      it 'success' do
-        visit users_articles_path
-        expect(current_path).to eq users_articles_path
-        expect(page).to have_content '記事一覧'
+  describe 'redirect to #X' do
+    context 'X = index || dashboards' do
+      context 'index' do
+        it 'success' do
+          visit users_articles_path
+          expect(current_path).to eq users_articles_path
+          expect(page).to have_content '記事一覧'
+          expect(page).to have_content '投稿者'
+          expect(page).to have_content article.user.name, count: 2
+        end
+      end
+
+      context 'dashboards' do
+        it 'success' do
+          visit users_dash_boards_path
+          expect(current_path).to eq users_dash_boards_path
+          expect(page).to have_content '投稿した記事一覧'
+          expect(page).to_not have_content '投稿者'
+          expect(page).to_not have_content article.user.name, count: 2
+        end
+      end
+
+      after do
         expect(page).to have_content 'タイトル〜サブタイトル〜'
-        expect(page).to have_content '投稿者'
         expect(page).to have_content '投稿日'
+        expect(page).to have_content article.created_at.strftime('%-m/%d %-H:%M')
         expect(page).to have_content article.title
         expect(page).to have_content article.sub_title
-        expect(page).to have_content article.user.name
-        expect(page).to have_content article.created_at.strftime('%-m/%d %-H:%M')
       end
     end
 
-    context 'X = dashboards' do
-      it 'success' do
-        visit users_dash_boards_path
-        expect(current_path).to eq users_dash_boards_path
-        expect(page).to have_content '投稿した記事一覧'
-        expect(page).to have_content 'タイトル〜サブタイトル〜'
-        expect(page).to have_content '投稿日'
-        expect(page).to_not have_content '投稿者'
-        expect(page).to have_content article.title
-        expect(page).to have_content article.sub_title
-        expect(page).to have_content article.created_at
-        expect(page).to have_content article.created_at.strftime('%-m/%d %-H:%M')
+    context 'X = new || edit' do
+      context 'new' do
+        it 'success' do
+          visit new_users_article_path
+          expect(current_path).to eq new_users_article_path
+          expect(page).to have_content "記事投稿"
+          text = "タイトル 〜サブタイトル〜"
+          expect(page).to have_content "コンテンツ"
+        end
+      end
+
+      context 'edit' do
+        it 'success' do
+          visit edit_users_article_path(article)
+          page.save_screenshot '記事投稿.png'
+          expect(current_path).to eq edit_users_article_path(article)
+          expect(page).to have_content "記事編集"
+          text = "#{article.title} 〜#{article.sub_title}〜"
+          expect(page).to have_content article.content, count: 2
+        end
+      end
+
+      after do
+        expect(page).to have_content "新規記事"
+        # expect(page).to have_content "エディター"
+        expect(page).to have_content "プレビュー"
+        expect(page).to have_content text
       end
     end
 
@@ -42,12 +75,8 @@ RSpec.describe 'Articles', type: :system do
       context 'writer' do
         it 'success' do
           visit users_article_path(article)
-          expect(current_path).to eq users_article_path(article)
           expect(page).to have_content '編集'
           expect(page).to have_content '削除'
-          expect(page).to have_content article.title
-          expect(page).to have_content article.sub_title
-          expect(page).to have_content article.content
           expect(page).to_not have_content article.user.name, count: 2
         end
       end
@@ -57,89 +86,108 @@ RSpec.describe 'Articles', type: :system do
           click_link 'ログアウト'
           sign_in(user_b)
           visit users_article_path(article)
-          expect(current_path).to eq users_article_path(article)
           expect(page).to_not have_content '編集'
           expect(page).to_not have_content '削除'
           expect(page).to have_content '書き手'
+          # expect(page).to have_content '投稿者'
           expect(page).to have_content article.user.name
-          expect(page).to have_content article.title
-          expect(page).to have_content article.sub_title
-          expect(page).to have_content article.content
         end
       end
-    end
 
-
-    context 'X = new' do
-      it 'success' do
-        visit new_users_article_path
-        expect(current_path).to eq new_users_article_path
-        expect(page).to have_content "記事投稿"
-        expect(page).to have_content "新規記事"
-        expect(page).to have_content "タイトル", count: 2
-        expect(page).to have_content "プレビュー"
-        expect(page).to have_content "投稿"
-        page.save_screenshot 'new.png'
-      end
-    end
-
-    context 'X = edit' do
-      it 'success' do
-        visit edit_users_article_path(article)
-        expect(current_path).to eq edit_users_article_path(article)
-        expect(page).to have_content "記事編集"
-        expect(page).to have_content "新規記事"
-        expect(page).to have_content "タイトル", count: 2
-        expect(page).to have_content "プレビュー"
-        expect(page).to have_content "投稿"
-        page.save_screenshot 'new.png'
+      after do
+        expect(current_path).to eq users_article_path(article)
+        expect(page).to have_content article.title
+        expect(page).to have_content article.sub_title
+        expect(page).to have_content article.content
       end
     end
   end
 
-  it 'create article' do
-    click_link '記事作成'
-    # click_link '記事投稿' リネームしたプルリクのマージ待ち
-    fill_in "article[title]", with: 'title'
-    fill_in "article[sub_title]", with: 'sub_title'
-    fill_in "article[content]", with: 'content'
-    expect(page).to have_content('title', count: 2)
-    expect(page).to have_content('〜sub_title〜')
-    expect(page).to have_content('content', count: 2)
-    click_button '投稿'
-    expect(page).to have_content('記事詳細')
-    expect(page).to have_content('編集')
-    expect(page).to have_content('削除')
-    expect(page).to have_content('title')
-    expect(page).to have_content('sub_title')
-    expect(page).to have_content('content')
-    page.save_screenshot '記事投稿.png'
-  end
-end
+  describe 'create article' do
+    let(:article) { Article.new }
 
-
-
-RSpec.describe 'Profiles', type: :system do
-  it 'user creates a new profile' do
-    user = FactoryBot.create(:user, :a)
-
-    # ログイン操作
-    visit root_path
-    fill_in 'user[email]', with: user.email
-    fill_in 'user[password]', with: user.password
-    click_button 'ログイン'
-
-    # プロフィール作成
-    subject do
-      click_link 'プロフィール作成'
-      fill_in 'name', with: user.name
-      fill_in 'purpose', with: user.purpose
-      click_button '登録する'
+    before do
+      article
+      visit new_users_article_path
     end
-    # before do
-    #   driven_by(:rack_test)
-    # end
 
-    # pending "add some scenarios (or delete) #{__FILE__}"
+    it 'success' do
+      fill_in 'article[title]', with: 'title'
+      fill_in 'article[sub_title]', with: 'sub_title'
+      fill_in 'article[content]', with: 'content'
+      click_button '投稿'
+      expect(article).to eq 1
+      article.reload
+      expect(article).to eq 1
+      expect(current_path).to eq users_article_path(article)
+      expect(page).to have_content '記事を作成しました。'
+      expect(page).to have_content 'title'
+    end
+
+    it 'failure' do
+      click_button '投稿'
+      # expect(current_path).to eq new_users_article_path
+      expect(page).to have_content '記事の作成に失敗しました。'
+    end
+  end
+
+  describe 'edit article' do
+    before do
+      visit edit_users_article_path(article)
+    end
+
+    it 'success' do
+      prev_article_title = article.title
+      fill_in 'article[title]', with: 'たいとる'
+      fill_in 'article[sub_title]', with: 'さぶたいとる'
+      fill_in 'article[content]', with: 'こんてんつ'
+      click_button '更新'
+      article.reload
+      expect(article).to eq 1
+      expect(current_path).to eq users_article_path(article)
+      expect(page).to have_content '記事を編集しました。'
+      expect(page).to have_content article.title
+      expect(page).to have_content 'たいとる'
+      expect(page).to_not have_content prev_article_title
+    end
+
+    it 'failure' do
+      fill_in 'article[title]', with: nil
+      click_button '更新'
+      expect(current_path).to eq edit_users_article_path(article)
+      expect(page).to have_content '記事の編集に失敗しました。'
+      expect(page).to have_content  article.title
+      expect(page).to_not have_content ''
+    end
+  end
+
+  describe 'delete article' do
+    context 'dashboards to delete' do
+      it 'success' do
+        visit users_dash_boards_path
+        click_button article.title
+        # click_link article.title
+        click_button '削除'
+        expect(current_path).to eq users_dash_boards_path
+      end
+    end
+
+    context 'index to delete' do
+      it 'success' do
+        visit users_articles_path
+        click_link users_article_path(article)
+        # click_link article.title
+        click_button '削除'
+        expect(current_path).to eq users_articles_path
+      end
+    end
+
+    after do
+      expect(article).to eq 1
+      expect(page).to have_content '記事を削除しました。'
+      expect(page).to_not have_content article.title
+    end
   end
 end
+
+# page.save_screenshot '記事投稿.png'
