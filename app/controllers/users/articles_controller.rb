@@ -12,6 +12,7 @@ module Users
 
     def show
       @article = Article.find(params[:id])
+      @dashboard = params[:dashboard] == "false" ? false : true
     end
 
     def new
@@ -29,7 +30,8 @@ module Users
       end
     end
 
-    def edit; end
+    def edit
+    end
 
     def update
       if @article.update(article_params)
@@ -44,7 +46,12 @@ module Users
     def destroy
       flash[:notice] = '記事を削除しました。'
       @article.destroy
-      redirect_to users_profile_url(current_user)
+      dashboard = params[:dashboard] == "false" ? false : true
+      if dashboard
+        redirect_to users_dash_boards_path(current_user)
+      else
+        redirect_to users_articles_path
+      end
     end
 
     def image

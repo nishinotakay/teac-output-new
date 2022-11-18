@@ -43,6 +43,14 @@ bin/dev
 bin/dev 8080
 ```
 
+## Docker image 削除方法
+docker rmi -f ナンバー
+
+## Docke container 内確認
+docker ps -a
+
+## Docke container内の削除
+docker rm -f ナンバー
 ---
 
 ## 開発コマンド
@@ -96,6 +104,17 @@ bin/testで全てのチェックに合格すると以下のように表示され
 ```
 
 ---
+## My SQLの日本語化（文字化け解消）
+https://qiita.com/kotobuki5991/items/9a7e0e9ed7ebf30ba01d
+
+## MySQLの設定ファイル（my.cnf）を探す方法
+https://wa3.i-3-i.info/word13606.html
+
+## DBをMy SQLを指定してrails newする
+docker-compose run web rails new . --force --database=mysql --skip-bundle
+
+## DockerでMy SQL立ち上げ
+docker-compose exec db mysql -u root -p
 
 ## テストコマンド(gem 'rspec')
 ```ruby
