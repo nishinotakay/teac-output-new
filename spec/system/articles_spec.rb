@@ -88,8 +88,7 @@ RSpec.describe 'Articles', type: :system do
           visit users_article_path(article)
           expect(page).to_not have_content '編集'
           expect(page).to_not have_content '削除'
-          expect(page).to have_content '書き手'
-          # expect(page).to have_content '投稿者'
+          expect(page).to have_content '投稿者'
           expect(page).to have_content article.user.name
         end
       end
@@ -104,60 +103,47 @@ RSpec.describe 'Articles', type: :system do
   end
 
   describe 'create article' do
-    let(:article) { Article.new }
-
-    before do
-      article
-      visit new_users_article_path
-    end
-
     it 'success' do
+      visit new_users_article_path
       fill_in 'article[title]', with: 'title'
       fill_in 'article[sub_title]', with: 'sub_title'
       fill_in 'article[content]', with: 'content'
       click_button '投稿'
-      expect(article).to eq 1
-      article.reload
-      expect(article).to eq 1
-      expect(current_path).to eq users_article_path(article)
+      expect(current_path).to eq users_article_path(Article.last)
       expect(page).to have_content '記事を作成しました。'
-      expect(page).to have_content 'title'
+      # expect(page).to have_content '記事を投稿しました。'
     end
 
     it 'failure' do
+      visit new_users_article_path
       click_button '投稿'
-      # expect(current_path).to eq new_users_article_path
       expect(page).to have_content '記事の作成に失敗しました。'
+      # expect(page).to have_content '記事の投稿に失敗しました。'
     end
   end
 
   describe 'edit article' do
-    before do
-      visit edit_users_article_path(article)
-    end
-
     it 'success' do
+      visit edit_users_article_path(article)
       prev_article_title = article.title
       fill_in 'article[title]', with: 'たいとる'
       fill_in 'article[sub_title]', with: 'さぶたいとる'
       fill_in 'article[content]', with: 'こんてんつ'
       click_button '更新'
       article.reload
-      expect(article).to eq 1
       expect(current_path).to eq users_article_path(article)
       expect(page).to have_content '記事を編集しました。'
       expect(page).to have_content article.title
-      expect(page).to have_content 'たいとる'
       expect(page).to_not have_content prev_article_title
     end
 
     it 'failure' do
+      visit edit_users_article_path(article)
       fill_in 'article[title]', with: nil
       click_button '更新'
-      expect(current_path).to eq edit_users_article_path(article)
       expect(page).to have_content '記事の編集に失敗しました。'
-      expect(page).to have_content  article.title
-      expect(page).to_not have_content ''
+      expect(page).to_not have_content article.title
+      page.save_screenshot '記事編集失敗.png'
     end
   end
 
@@ -165,8 +151,8 @@ RSpec.describe 'Articles', type: :system do
     context 'dashboards to delete' do
       it 'success' do
         visit users_dash_boards_path
-        click_button article.title
-        # click_link article.title
+        # click_button article.title
+        click_link article.title
         click_button '削除'
         expect(current_path).to eq users_dash_boards_path
       end
@@ -183,7 +169,6 @@ RSpec.describe 'Articles', type: :system do
     end
 
     after do
-      expect(article).to eq 1
       expect(page).to have_content '記事を削除しました。'
       expect(page).to_not have_content article.title
     end
