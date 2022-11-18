@@ -33,7 +33,6 @@ $(function(){
     content = marked(content)
     var elem = $('.preview-content')
     elem.html(content);
-    MathJax.Hub.Typeset(["Typeset",MathJax.Hub, "posts-preview"]); 
     var pre = elem.find('pre');
     pre.each(function(){
       makecodeblock($(this))

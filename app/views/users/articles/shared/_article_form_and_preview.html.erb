@@ -29,8 +29,8 @@
           <div class="sticky col-10 offset-1">
             <div class="preview form-control mt-3">
               <div class="ml-4">
-                <h2><%= @article.title || 'タイトル' %></h2>
-                <h5 class="mx-3">〜<%= @article.sub_title || 'サブタイトル' %>〜</h5>
+                <h2><span class="preview-title"><%= @article.title ? @article.title : "タイトル" %></span></h2>
+                <h5 class="mx-3">〜<span class="preview-subtitle"><%= @article.sub_title ? @article.sub_title : "サブタイトル" %></span>〜</h5>
               </div>
               <div class="hr"></div>
               <div class="px-2 preview-content">
