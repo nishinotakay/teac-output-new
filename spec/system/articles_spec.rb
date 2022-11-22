@@ -55,7 +55,6 @@ RSpec.describe 'Articles', type: :system do
       context 'edit' do
         it 'success' do
           visit edit_users_article_path(article)
-          page.save_screenshot '記事投稿.png'
           expect(current_path).to eq edit_users_article_path(article)
           expect(page).to have_content "記事編集"
           text = "#{article.title} 〜#{article.sub_title}〜"
@@ -143,7 +142,6 @@ RSpec.describe 'Articles', type: :system do
       click_button '更新'
       expect(page).to have_content '記事の編集に失敗しました。'
       expect(page).to_not have_content article.title
-      page.save_screenshot '記事編集失敗.png'
     end
   end
 
@@ -151,26 +149,44 @@ RSpec.describe 'Articles', type: :system do
     context 'dashboards to delete' do
       it 'success' do
         visit users_dash_boards_path
-        # click_button article.title
-        click_link article.title
-        click_button '削除'
-        expect(current_path).to eq users_dash_boards_path
+        expect(page).to have_content article.title
+        page.find('.link-tr', text: article.title).click
+        expect(current_path).to eq users_article_path(article)
+        page.accept_confirm('表示中の記事を削除します。') do
+          click_link "削除"
+        end
+        expect(page).to have_content '記事を削除しました。'
+        expect(current_path).to eq users_dash_boards_path(user_a)
+        expect(page).to_not have_content article.title
       end
     end
 
     context 'index to delete' do
       it 'success' do
         visit users_articles_path
-        click_link users_article_path(article)
-        # click_link article.title
-        click_button '削除'
+        expect(page).to have_content article.title
+        page.find('.link-tr', text: article.title).click
+        expect(current_path).to eq users_article_path(article)
+        page.accept_confirm('表示中の記事を削除します。') do
+          click_link "削除"
+        end
+        expect(page).to have_content '記事を削除しました。'
         expect(current_path).to eq users_articles_path
+        expect(page).to_not have_content article.title
       end
     end
+  end
 
-    after do
-      expect(page).to have_content '記事を削除しました。'
-      expect(page).to_not have_content article.title
+  describe 'upload image' do
+    it 'success' do
+      page.execute_script ''
+      image = File.new("#{Rails.root}/spec/fixtures/ruby.png")
+      visit new_users_article_path
+      # fill_in 'article[content]', with: image
+      # find('.markdown-editor').drag_to image
+      drop_files image, 'article[content]'
+      # Rack::Test::UploadedFile.new(File.join(Rails.root, "spec/fixtures/ruby.png"))
+      page.save_screenshot 'ruby画像添付.png'
     end
   end
 end

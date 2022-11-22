@@ -58,6 +58,7 @@ module Users
       user = User.find(params[:user_id])
       @article = user.articles.new(params.permit(:image))
       render json: { name: @article.image.identifier, url: @article.image.url }
+      binding.pry
     end
 
     private

@@ -169,13 +169,22 @@ RSpec.describe 'Articles', type: :request do
   end
 
   describe 'POST /image' do
-    post users_articles_image_url(user_1)
-    article = user_1.articles
-    expect(JSON.parsse(response.body)['name']).to eq article
-  end
+    let(:user) { create(:user, :a, confirmed_at: Date.today) }
 
-  # aggregate_failures "testing response" do
-  # end
+    it 'success' do
+      file_path = File.join(Rails.root, 'spec/fixtures/ruby.png')
+      image = ActionDispatch::Http::UploadedFile.new(
+        filename: File.basename(file_path),
+        type: 'image/png',
+        tempfile: File.open(file_path)
+      )
+      sign_in user
+      post users_articles_image_url(image: image, user_id: user)
+      articles = Article.all
+      binding.pry
+      expect(JSON.parse(response.body)['name']).to eq article
+    end
+  end
 
   pending 'add some examples (or delete) #{__FILE__}'
 end
