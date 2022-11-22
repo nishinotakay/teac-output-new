@@ -3,12 +3,18 @@ import "./articles"
 
 $(function(){
 
-  var me = $(".markdown-editor");
-  me.resize(function(){
-    $(".preview").width(me.width());
-    $(".preview").height(window.innerHeight());
-  });
+  var elem = $('.editor-side .card')
+  var height = elem.height() + $('.div-btns').height();
+  elem.height(height);
+  $('.preview-side .card').height(height);
 
+  var elem = $(".div-textarea");
+  var height = elem.position().top + $(".markdown-editor").height();
+  elem = $(".div-title-form");
+  height -= elem.position().top;
+  height -= $(".div-btns").height();
+  $(".preview").height(height);
+  
   $('.title-form').keyup(function(event){
     var title = $(this).val();
     title ||= "タイトル"
@@ -27,7 +33,6 @@ $(function(){
     content = marked(content)
     var elem = $('.preview-content')
     elem.html(content);
-    MathJax.Hub.Typeset(["Typeset",MathJax.Hub, "posts-preview"]); 
     var pre = elem.find('pre');
     pre.each(function(){
       makecodeblock($(this))
