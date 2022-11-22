@@ -6,13 +6,13 @@
           <h3 class="card-title text-center">エディター</h3>
         </div>
         <div class="card-body">
-          <div class="col-10 offset-1 mt-3">
+          <div class="col-10 offset-1 mt-3 div-title-form">
             <%= f.text_field :title, placeholder: "タイトル", class: "form-control title-form" %>
           </div>
           <div class="col-10 offset-1 mt-3">
             <%= f.text_field :sub_title, placeholder: "サブタイトル", class: "form-control subtitle-form" %>
           </div>
-          <div class="col-10 offset-1 mt-3">
+          <div class="col-10 offset-1 mt-3 div-textarea">
             <%= f.text_area :content, placeholder: "コンテンツ", cols: 30, rows: 100,
              class: "form-control markdown-editor", data: {user_id: current_user.id} %>
           </div>
@@ -27,20 +27,19 @@
         </div>
         <div class="card-body">
           <div class="sticky col-10 offset-1">
-            <div class="preview form-control">
-              <div class="pl-1" style="display: inline;">
-                <span class="preview-title"><%= @article.title ? @article.title : "タイトル" %></span>
-                <span class="span-subtitle">
-                  〜<span class="preview-subtitle"><%= @article.sub_title ? @article.sub_title : "サブタイトル" %></span>〜
-                </span>
+            <div class="preview form-control mt-3">
+              <div class="ml-4">
+                <h2><span class="preview-title"><%= @article.title ? @article.title : "タイトル" %></span></h2>
+                <h5 class="mx-3">〜<span class="preview-subtitle"><%= @article.sub_title ? @article.sub_title : "サブタイトル" %></span>〜</h5>
               </div>
-              <hr class="my-2" size="5">
-              <div class="pl-1 preview-content">
+              <div class="hr"></div>
+              <div class="px-2 preview-content">
                 <%= @article.content ? simple_format(@article.content) : "コンテンツ" %>
               </div>
             </div>
-            <div class="text-center">
-              <%= f.submit btn_name, class: "btn btn-primary mt-3" %>
+            <div class="text-center div-btns mt-4">
+              <%= f.submit btn_name, class: "btn btn-primary" %>
+              <%= link_to 'キャンセル', users_article_path(@article, dashboard: true), class: "btn btn-outline-dark" if btn_name == "更新" %>
             </div>
           </div>
         </div>
