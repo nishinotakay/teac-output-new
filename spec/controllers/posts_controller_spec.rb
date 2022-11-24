@@ -193,7 +193,7 @@ describe Users::PostsController, type: :request do
           end
         end
       end
-      describe 'PATCH #update' do
+      describe 'updateアクション' do
         context "ログイン済みユーザーの場合" do
           it "有効な値の場合、UPDATEができる" do
             @user.confirm
@@ -219,7 +219,7 @@ describe Users::PostsController, type: :request do
           end
         end
       end
-      describe 'DELETE #destroy' do
+      describe 'destroyアクション' do
         context "ログイン済みユーザーの場合" do
           it "削除ができる" do
             # deviseでメール認証機能をつけている場合はサインインの前に user.confirm を行い認証を済ませておく必要がある
