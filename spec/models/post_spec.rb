@@ -18,7 +18,7 @@ RSpec.describe Post, type: :model do
     end
 
     context "空白のバリデーションチェック" do
-      it "titleが空白の場合にエラーメッセージが返ってくるか" do
+      it "titleが空白の場合にエラーメッセージが返ってくる" do
         # postにtitleカラムを空で保存したものを代入
         post = build(:post, title: nil)
         # バリデーションチェックを行う
@@ -27,7 +27,7 @@ RSpec.describe Post, type: :model do
         expect(post.errors[:title]).to include("を入力してください")
       end
 
-      it "bodyが空白の場合にエラーメッセージが返ってくるか" do
+      it "bodyが空白の場合にエラーメッセージが返ってくる" do
         # postにbodyカラムを空で保存したものを代入
         post = build(:post, body: nil)
         # バリデーションチェックを行う
@@ -36,7 +36,7 @@ RSpec.describe Post, type: :model do
         expect(post.errors[:body]).to include("を入力してください")
       end
 
-      it "Youtubeが空白の場合にエラーメッセージが返ってくるか" do
+      it "Youtubeが空白の場合にエラーメッセージが返ってくる" do
         # postにyoutube_urlカラムを空で保存したものを代入
         post = build(:post, youtube_url: nil)
         # バリデーションチェックを行う
@@ -47,7 +47,7 @@ RSpec.describe Post, type: :model do
     end
 
     context "文字制限のバリデーションチェック" do
-      it "titleの文字数が30文字以上の場合エラーメッセージが返ってくるか" do
+      it "titleの文字数が30文字以上の場合エラーメッセージが返ってくる" do
         post = build(:post)
         # Faker::Lorem.characters(number: 31)でランダムな文字列を31字で作成できる
         post.title = Faker::Lorem.characters(number: 31)
@@ -55,7 +55,7 @@ RSpec.describe Post, type: :model do
         expect(post.errors[:title]).to include("は30文字以内で入力してください")
       end
 
-      it "bodyの文字数が241文字以上の場合エラーメッセージが返ってくるか" do
+      it "bodyの文字数が241文字以上の場合エラーメッセージが返ってくる" do
         post = build(:post)
         # Faker::Lorem.characters(number: 241)でランダムな文字列を241字で作成できる
         post.body = Faker::Lorem.characters(number: 241)
