@@ -1,35 +1,29 @@
 //以下new
-.card-body {
-  height: 2570px;
-}
-
-.sticky {
+.div-btns {
   position: sticky;
-  top: 16%;
+  bottom: 10%;
 }
 
 .preview {
-  padding: 10px;
   overflow: scroll;
-  height: 500px;
 }
 
-.hr {
-  border: 0.5px solid black;
-  height: 0.1px;
-}
-
+//以下index
 .articles-table {
-  tbody tr{
-    td {
-      padding-left: 2rem;
-    }
-    &:hover {
-      cursor: pointer;
-    }
+  tr td {
+    padding-left: 2rem;
+  }
+  .link-tr:hover {
+    cursor: pointer;
+  }
+  .span-subtitle {
+    font-size: small;
   }
 }
 
-.span-subtitle {
-  font-size: small;
+//共通(show&index&dashboard)
+.hr {
+  border: 1px solid #adb5bd;
+  margin: 10px 0;
 }
+

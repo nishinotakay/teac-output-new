@@ -13,10 +13,6 @@
             </tr>
           </thead>
           <tbody>
-            <% colspan = dashboard ? 2 : 3 %>
-            <tr class="nohover">
-              <td colspan="<%= colspan %>" class="search"></td>
-            </tr>
             <% @articles.each do |a| %>
               <tr class="link-tr" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'>
                 <td>
