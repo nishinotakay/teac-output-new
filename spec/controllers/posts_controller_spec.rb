@@ -167,23 +167,80 @@ describe Users::PostsController, type: :request do
       end
     end
   end
-  # describe "データの登録及び更新" do
-  #   context "ログインを必要とするアクション" do
-  #     let(:user) { FactoryBot.create(:user) }
-  #     let(:login_user) { login(user) }
-  #     let(:post_params) { { title: "Rspecコントローラーテスト", body: "Rspecコントローラーテストの方法を解説", youtube_url: "youtube.com/watch?v=qpiKb0mdbr0&t=496s" } }
-  #     let(:new_post)  { create(:post, user: user) } #変数名変更
+  describe "データの登録及び更新" do
+    context "ログインを必要とするアクション" do
+      before do
+        @user = FactoryBot.create(:user)
+      end
 
-  #     describe "createアクション" do
-  #       context "ログイン済みユーザーの場合" do
-  #         it "投稿を作成する" do
-  #           sign_in user
-  #           expect {
-  #             post users_posts_path(new_post), params: { post: post_params }
-  #           }.to change(user.posts, :count).by(1)
-  #         end
-  #       end
-  #     end
-  #   end
-  # end
+      describe "createアクション" do
+        context "ログイン済みユーザーの場合" do
+          it "投稿ができる" do
+            # deviseでメール認証機能をつけている場合はサインインの前に user.confirm を行い認証を済ませておく必要がある
+            @user.confirm
+            post_params = FactoryBot.attributes_for(:post, :a)
+            sign_in @user
+            expect{
+              post users_posts_path, params: { post: post_params }
+            }.to change(@user.posts, :count).by(1)
+          end
+          it "showページにリダイレクトされている" do
+            @user.confirm
+            post_params = FactoryBot.attributes_for(:post, :a)
+            sign_in @user
+            post users_posts_path, params: { post: post_params }
+            expect(response).to redirect_to users_post_path(@user, @post)
+          end
+        end
+      end
+      describe 'updateアクション' do
+        context "ログイン済みユーザーの場合" do
+          it "有効な値の場合、UPDATEができる" do
+            @user.confirm
+            post_params = FactoryBot.attributes_for(:post, :a)
+            sign_in @user
+            @post = @user.posts.create(post_params)
+            patch users_post_path @post, params: { post: post_params }
+            expect(@post.reload.title).to eq "Ruby on Rails解説動画"
+            expect(@post.reload.body).to eq "Rspecについて詳しく解説した動画です。"
+            expect(@post.reload.youtube_url).to eq "https://www.youtube.com/watch?v=AgeJhUvEezo"
+          end
+
+          it "無効な値の場合、UPDATEができない" do
+            @user.confirm
+            post_params = FactoryBot.attributes_for(:post, :a)
+            sign_in @user
+            @post = @user.posts.create(post_params)
+            patch users_post_path @post, params: { post: post_params }
+            # not_to eq => 〜ではないこと
+            expect(@post.reload.title).not_to eq ""
+            expect(@post.reload.body).not_to eq ""
+            expect(@post.reload.youtube_url).not_to eq ""
+          end
+        end
+      end
+      describe 'destroyアクション' do
+        context "ログイン済みユーザーの場合" do
+          it "削除ができる" do
+            # deviseでメール認証機能をつけている場合はサインインの前に user.confirm を行い認証を済ませておく必要がある
+            @user.confirm
+            post_params = FactoryBot.attributes_for(:post, :a)
+            sign_in @user
+            @post = @user.posts.create(post_params)
+            expect{
+              delete users_post_path @post, params: { post: post_params }
+            }.to change(@user.posts, :count).by(-1)
+          end
+          it "indexページにリダイレクトされている" do
+            @user.confirm
+            post_params = FactoryBot.attributes_for(:post, :a)
+            sign_in @user
+            @post = @user.posts.create(post_params)
+            delete users_post_path @post, params: { post: post_params }
+            expect(response).to redirect_to users_posts_path
+          end
+        end
+      end
+    end
+  end
 end
