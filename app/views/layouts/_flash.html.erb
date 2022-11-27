@@ -1,5 +1,16 @@
 <% flash.each do |key, value| %>
    <p class="alert alert-<%= key %>">
       <%= value %>
+      <!-- flashメッセージを×ボタンで消す -->
+      <%= alert %><button type="button" class="close" data-dismiss="alert">&times;</button>
     </p>
 <% end %>
+<!-- 下記は、flashメッセージの×ボタンを機能させるスクリプト -->
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script>
+$(function() {
+  $(".close").on('click', function() {
+    $(".alert").hide();
+  });
+});
+</script>
