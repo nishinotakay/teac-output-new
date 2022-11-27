@@ -2,8 +2,10 @@
 
 class ApplicationController < ActionController::Base
   add_flash_types :success, :info, :warning, :danger
+  # ログイン済ユーザーのみにアクセスを許可する
+  before_action :authenticate_user!
   before_action :configure_permitted_parameters, if: :devise_controller?
-
+  # protect_from_forgery
   def after_sign_in_path_for(resource)#usersコントローラーのshowアクションを呼び出すパスを設定  ここに追加するのか？
     users_show_path
   end
