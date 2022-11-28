@@ -1,4 +1,73 @@
 @import "bootstrap";
 @import "admin-lte";
 @import '@fortawesome/fontawesome-free';
-@import './users/**';
+@import './users/custom';
+
+// 平野追加
+// アコーディオンメニューデザイン
+.accordion-container .accordion-title {
+  color: #fff;
+  background: #343a40 ;
+  cursor: pointer
+}
+// カーソルが乗ったときのデザイン
+.accordion-container .accordion-title:hover,
+.accordion-container .accordion-title:active,
+.accordion-container .content-entry.open .accordion-title {
+  background-color: #000000;
+  color: white;
+  box-shadow: 0 4px 7px 0 rgba(0, 0, 0, 0.5);
+  transform: translateY(-5px);
+}
+// 最初は隠しておく
+.accordion-content {
+  display: none;
+}
+// トグルの位置固定
+.accordion-title{
+  position: relative;
+}
+// トグルのデザイン
+.accordion-title:after {
+  content: "";
+  position: absolute;
+  right: 25px;
+  top: 38%;
+  transition: all 0.2s ease-in-out;
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-top: solid 2px #fff;
+  border-right: solid 2px #fff;
+  -webkit-transform: rotate(135deg);
+  transform: rotate(135deg);
+}
+.accordion-title.open:after {
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  // 開きの
+  top: 50%;
+}
+
+// 下は、平野追加（修正）
+.posts_table{
+  table th ,td {
+    border:1px solid;
+    }
+}
+
+/*スクロールバーの実装 */
+.table_sticky {
+  display: block;
+  overflow-y: scroll;
+  height: calc(100vh/2);
+  border:1px solid;
+  border-collapse: collapse;
+}
+.table_sticky thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: gold;
+  border-top:#FFFFFF;
+}

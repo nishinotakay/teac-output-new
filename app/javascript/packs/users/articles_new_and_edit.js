@@ -3,12 +3,18 @@ import "./articles"
 
 $(function(){
 
-  var me = $(".markdown-editor");
-  me.resize(function(){
-    $(".preview").width(me.width());
-    $(".preview").height(window.innerHeight());
-  });
+  var elem = $('.editor-side .card')
+  var height = elem.height() + $('.div-btns').height();
+  elem.height(height);
+  $('.preview-side .card').height(height);
 
+  var elem = $(".div-textarea");
+  var height = elem.position().top + $(".markdown-editor").height();
+  elem = $(".div-title-form");
+  height -= elem.position().top;
+  height -= $(".div-btns").height();
+  $(".preview").height(height);
+  
   $('.title-form').keyup(function(event){
     var title = $(this).val();
     title ||= "タイトル"
@@ -27,7 +33,6 @@ $(function(){
     content = marked(content)
     var elem = $('.preview-content')
     elem.html(content);
-    MathJax.Hub.Typeset(["Typeset",MathJax.Hub, "posts-preview"]); 
     var pre = elem.find('pre');
     pre.each(function(){
       makecodeblock($(this))
@@ -58,6 +63,7 @@ $(function(){
   $('.markdown-editor').on('drop', function(e) { //dropのイベントをハンドル
     e.preventDefault(); //元の動きを止める処理
     var image = e.originalEvent.dataTransfer.files[0]; //ドロップされた画像の1件目を取得
+    console.log(image)
     var formData = new FormData();
     formData.append('image', image); // FormDataに画像を追加
     formData.append('user_id', e.target.dataset.userId); // FormDataに画像を追加
