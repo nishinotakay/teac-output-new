@@ -210,7 +210,8 @@ ja:
       long: "%Y/%m/%d %H:%M"
       short: "%m/%d %H:%M"
     pm: 午後
-gender:
-      female: 女性
-      male: 男性
-     
+  enumerize:
+      user:
+        gender:
+          male: 男
+          famale:  女

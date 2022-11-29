@@ -31,6 +31,9 @@
 
 en:
   hello: "Hello world"
-gender:
-      female: 女性
-      male: 男性
+  enumerize:
+      user:
+        gender:
+          male: 0
+          famale:  1
+        
