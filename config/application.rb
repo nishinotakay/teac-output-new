@@ -15,7 +15,7 @@ module App
     config.i18n.default_locale = :ja
     config.time_zone = 'Asia/Tokyo'
     # config.session_store :cookie_store, domain: Settings['cookie_domain']
-    config.i18n.default_locale = :ja
+    
 
     config.generators do |g|
       g.assets false    # <= css,javascriptファイルを作成しない

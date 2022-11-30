@@ -11,8 +11,6 @@
 50.times do |i|
   user = User.new(
     email: "test_user#{i}@gmail.com", # sample: test_user1@gmail.com
-    gender: 1,
-    age: 21,
     name: "テストuser#{i}",
     password: 'password'
   )

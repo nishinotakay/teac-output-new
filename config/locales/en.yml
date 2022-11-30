@@ -31,9 +31,9 @@
 
 en:
   hello: "Hello world"
-  enumerize:
-      user:
-        gender:
-          male: 0
-          famale:  1
-        
+  enums:
+    user:
+      gender:
+          male: "male"
+          female: "female"
+          other: "other"
