@@ -25,7 +25,7 @@ Rails.application.routes.draw do
 
   # user関連==========================================================
   devise_scope :user do
-     root 'users/sessions#new'
+    root 'users/sessions#new'
   end
 
   devise_for :users, controllers: {
@@ -46,13 +46,10 @@ Rails.application.routes.draw do
     end
     namespace :users do
     resources :users, only: [:index]
-    
-    
     end
     resources :profiles
     
   end
-
   # =================================================================
 
   # manager関連=======================================================
@@ -69,4 +66,3 @@ Rails.application.routes.draw do
   get 'use' => 'use#index'
   # =================================================================
 end
-# end

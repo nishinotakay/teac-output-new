@@ -12,17 +12,31 @@
         </thead>
         <tbody>
           <% @profiles.each do |profile| %>
-              <td><%= link_to(profile.name, "/users/profiles/#{profile.id}") %></td>
+              <td>
+                <%= link_to(profile.name, "/users/profiles/#{profile.id}") %>
+              </td>
             </tr>
           <% end %>
           <% @profiles.each do |profile| %>
           <tr>
-            <td><%= profile.id %></td>
-            <td><%= profile.title %></td>
-            <td><%= profile.name %></td>
-            <td><%= profile.created_at.to_s(:datetime_jp) %></td>
-            <td><%= profile.updated_at.to_s(:datetime_jp) %></td>
-            <td><%= link_to '詳細', profile, class: 'btn btn-outline-dark' %></td>
+            <td>
+              <%= profile.id %>
+            </td>
+            <td>
+              <%= profile.title %>
+            </td>
+            <td>
+              <%= profile.name %>
+            </td>
+            <td>
+              <%= profile.created_at.to_s(:datetime_jp) %>
+            </td>
+            <td>
+              <%= profile.updated_at.to_s(:datetime_jp) %>
+            </td>
+            <td>
+              <%= link_to '詳細', profile, class: 'btn btn-outline-dark' %>
+            </td>
           </tr>
           <% end %>
         </tbody>

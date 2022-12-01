@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
   def after_sign_in_path_for(resource)#usersコントローラーのshowアクションを呼び出すパスを設定  ここに追加するのか？
     users_show_path
   end
+  
   def after_sign_in_path_for(resource)  
     case resource
     when User

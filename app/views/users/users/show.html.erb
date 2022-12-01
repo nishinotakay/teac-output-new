@@ -8,23 +8,23 @@
 <html>
   <body>
     <div class="inline-block_test">
-        <%= link_to users_articles_path, class:"nav-link", method: :get do %>
-          <button type="button" class="btn btn-success">
+      <%= link_to users_articles_path, class:"nav-link", method: :get do %>
+        <button type="button" class="btn btn-success">
+          <p>
+            投稿した記事一覧
+          </p>
+        </button>
+    <% end %>
+    </div>
+      <div class="inline-block_test">
+        <%= link_to users_profiles_path, class:"nav-link", method: :get do %>
+          <button type="button" class="btn btn-primary">
             <p>
-              投稿した記事一覧
-            </p>
+                プロフィール
+            </p>  
           </button>
-        <% end %>
-          </div>
-            <div class="inline-block_test">
-              <%= link_to users_profiles_path, class:"nav-link", method: :get do %>
-                <button type="button" class="btn btn-primary">
-                  <p>
-                      プロフィール
-                  </p>  
-                </button>
-              <% end %>   
-          </div>
+        <% end %>   
+      </div>
        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   </body>
 </html>
