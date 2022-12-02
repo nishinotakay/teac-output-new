@@ -1,5 +1,5 @@
 <h1 style="text-align:center;">編集画面</h1>
-<%= form_with model: @post, url: users_post_path(@post), method: :patch, local: true do |form| %>
+<%= form_with model: @post, url: update_1_users_post_path(@post), method: :patch, local: true do |form| %>
   <div style="text-align:center;">
     <%= render 'layouts/error_messages', model: form.object %>
     <div class="field">

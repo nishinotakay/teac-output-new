@@ -2,6 +2,10 @@
 
 FactoryBot.define do
   factory :user do
+    name { '山田太郎' }
+    email { Faker::Internet.email }
+    password { 'password' }
+
     trait :a do
       id { 1 }
       email { 'email@1.com' }
