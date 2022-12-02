@@ -13,21 +13,21 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <% @users.each do |u| %>
-                <td><%= u.name %></td>
-                <td><%= u.email %></td>
-                <td><%= u.articles.count %></td>
-                <td><%= u.posts.count %></td>
-                <td>
-                  <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
-                  <ul class="dropdown-menu">
-                    <li><%= link_to '詳細', users_show_admins_profiles_path(u.id), class:"nav-link" %></li>
-                    <li><%= link_to '編集', users_edit_admins_profiles_path(u.id), class:"nav-link" %></li>
-                    <li><%= link_to '削除', user_destroy_admins_profiles_path(u.id), method: :delete, data: { confirm: 'Are you sure?' }, class:"nav-link" %></li>
-                  </ul>
-                </td>
-          </tr>
+          <% @users.each do |u| %>
+            <tr>
+              <td><%= u.name %></td>
+              <td><%= u.email %></td>
+              <td><%= u.articles.count %></td>
+              <td><%= u.posts.count %></td>
+              <td>
+                <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
+                <ul class="dropdown-menu">
+                  <li><%= link_to '詳細', users_show_admins_profiles_path(u.id), class:"nav-link" %></li>
+                  <li><%= link_to '編集', users_edit_admins_profiles_path(u.id), class:"nav-link" %></li>
+                  <li><%= link_to '削除', user_destroy_admins_profiles_path(u.id), method: :delete, data: { confirm: 'Are you sure?' }, class:"nav-link" %></li>
+                </ul>
+              </td>
+            </tr>
           <% end %>
         </tbody>
       </table>
