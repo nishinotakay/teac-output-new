@@ -31,9 +31,5 @@
 
 en:
   hello: "Hello world"
-  enums:
-    user:
-      gender:
-          male: "male"
-          female: "female"
-          other: "other"
+  
+        
