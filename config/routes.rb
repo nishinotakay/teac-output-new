@@ -17,7 +17,13 @@ Rails.application.routes.draw do
     namespace :articles do
       post 'image'
     end
-    resources :profiles
+    resources :profiles do
+      collection do
+        get 'users_show'
+        get 'users_edit'
+        delete 'user_destroy'
+      end
+    end
   end
 
 
