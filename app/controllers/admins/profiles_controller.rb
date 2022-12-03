@@ -8,7 +8,7 @@ module Admins
       @user = User.find(params[:format]) 
     end
     
-    def user_edit
+    def users_edit
       @user = User.find(params[:format]) 
     end
     
