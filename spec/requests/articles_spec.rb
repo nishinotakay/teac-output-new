@@ -103,7 +103,7 @@ RSpec.describe 'Articles', type: :request do
         post users_articles_url params: params
       }.to change(Article, :count).by(1)
       expect(response.status).to eq 302
-      expect(flash[:notice]).to eq 'メモを作成しました。'
+      expect(flash[:notice]).to eq '記事を作成しました。'
       expect(response).to redirect_to users_article_url(Article.count)
     end
 
@@ -112,7 +112,7 @@ RSpec.describe 'Articles', type: :request do
       expect{
         post users_articles_url params: params
       }.to change(Article, :count).by(0)
-      expect(flash[:alert]).to eq 'メモの作成に失敗しました。'
+      expect(flash[:alert]).to eq '記事の作成に失敗しました。'
     end
   end
 
@@ -129,7 +129,7 @@ RSpec.describe 'Articles', type: :request do
       patch users_article_url(article, params: params)
       article.reload
       expect(response.status).to eq 302
-      expect(flash[:notice]).to eq 'メモを編集しました。'
+      expect(flash[:notice]).to eq '記事を編集しました。'
       expect(response).to redirect_to users_article_url(article.id)
     end
 
@@ -137,7 +137,7 @@ RSpec.describe 'Articles', type: :request do
       params = { article: { title: nil, sub_title: 'b', content: 'c' } }
       patch users_article_url(article, params: params)
       article.reload
-      expect(flash[:alert]).to eq 'メモの編集に失敗しました。'
+      expect(flash[:alert]).to eq '記事の編集に失敗しました。'
     end
   end
 
@@ -154,7 +154,7 @@ RSpec.describe 'Articles', type: :request do
         delete users_article_url(article, dashboard: true)
       }.to change(Article, :count).by(-1)
       expect(response.status).to eq 302
-      expect(flash[:notice]).to eq 'メモを削除しました。'
+      expect(flash[:notice]).to eq '記事を削除しました。'
       expect(response).to redirect_to users_dash_boards_url(user_1)
     end
 
@@ -163,19 +163,20 @@ RSpec.describe 'Articles', type: :request do
         delete users_article_url(article, dashboard: false)
       }.to change(Article, :count).by(-1)
       expect(response.status).to eq 302
-      expect(flash[:notice]).to eq 'メモを削除しました。'
+      expect(flash[:notice]).to eq '記事を削除しました。'
       expect(response).to redirect_to users_articles_url
     end
   end
 
   describe 'POST /image' do
-    post users_articles_image_url(user_1)
-    article = user_1.articles
-    expect(JSON.parsse(response.body)['name']).to eq article
+    it 'success' do
+      user_1.save
+      image = fixture_file_upload("spec/fixtures/ruby.png", 'image/png')
+      sign_in user_1
+      post users_articles_image_url, params: {image: image, user_id: user_1.id}
+      expect(JSON.parse(response.body)['name']).to eq "ruby.png"
+      expect(JSON.parse(response.body)['url']).to include "ruby.png"
+      expect(JSON.parse(response.body)['url']).to include "/uploads/tmp/"
+    end
   end
-
-  # aggregate_failures "testing response" do
-  # end
-
-  pending 'add some examples (or delete) #{__FILE__}'
 end

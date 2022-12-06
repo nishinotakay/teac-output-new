@@ -71,3 +71,10 @@
   background: gold;
   border-top:#FFFFFF;
 }
+
+// 下記ついか
+.inline-block_test {
+  display: inline-block;      /* インラインブロック要素にする */
+  // background-color:  rgb(252, 252, 252);    /* 背景色指定 */
+  padding: 96px;              /* 余白指定 */
+}

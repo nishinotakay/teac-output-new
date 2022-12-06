@@ -85,4 +85,5 @@ RSpec.configure do |config|
   # ↓letを使用したときに、FactoryBotが使用できるように設定
   config.include FactoryBot::Syntax::Methods
   config.include Devise::Test::IntegrationHelpers, type: :request
+  config.include LoginSupport, type: :system
 end

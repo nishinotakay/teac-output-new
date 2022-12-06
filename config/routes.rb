@@ -17,7 +17,13 @@ Rails.application.routes.draw do
     namespace :articles do
       post 'image'
     end
-    resources :profiles
+    resources :profiles do
+      collection do
+        get 'users_show'
+        get 'users_edit'
+        delete 'user_destroy'
+      end
+    end
   end
 
 
@@ -38,6 +44,8 @@ Rails.application.routes.draw do
   namespace :users do
     resources :dash_boards, only: [:index]
     resources :articles #, only: %i[index show]
+    resources :posts
+    resources :users, only: [:show]
     resources :posts do
       collection do # idを外す
       # 全ユーザー投稿一覧（/users/posts/index_1）
@@ -56,9 +64,11 @@ Rails.application.routes.draw do
     namespace :articles do
       post 'image'
     end
+    namespace :users do
+    resources :users, only: [:index]
+    end
     resources :profiles
   end
-
   # =================================================================
 
   # manager関連=======================================================

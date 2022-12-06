@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
-  <%= link_to users_dash_boards_path, class:"brand-link" do %>
+  <%= link_to admins_dash_boards_path, class:"brand-link" do %>
     <%= image_tag "AdminLTELogo.png", class:"brand-image img-circle elevation-3", style: "opacity: .8" %>
     <span class="brand-text font-weight-light">ネイテク管理画面</span>
   <% end %>
@@ -11,7 +11,7 @@
       <div class="image">
       </div>
       <div class="info">
-        <%#<%= link_to current_admin.name, new_users_profile_url, class:"d-block" %>
+        <%= link_to current_admin.name, edit_admin_registration_url, class:"d-block" %>
       </div>
     </div>
     <!-- Sidebar Menu -->
@@ -21,12 +21,12 @@
           <%= link_to admins_dash_boards_path, class:"nav-link" do %>
             <i class="nav-icon fas fa-th"></i>
             <p>
-              投稿メモ一覧
+              投稿記事一覧
             </p>
           <% end %>
         </li>
         <li class="nav-item">
-          <%= link_to users_profiles_path, class:"nav-link" do %>
+          <%= link_to admins_profiles_path, class:"nav-link", method: :get do  %>
             <i class="nav-icon fas fa-list"></i>
             <p>
               登録ユーザー一覧
