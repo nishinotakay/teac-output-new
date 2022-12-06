@@ -55,7 +55,6 @@ docker rm -f ナンバー
 
 ## windowsの場合
 
-
    ## loaderのエラー解消
    docker-compose run --rm app npm install --save-dev pug pug-plain-loader
    docker-compose run --rm app npm install --save-dev sass sass-loader@10 
