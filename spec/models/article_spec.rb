@@ -3,10 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe Article, type: :model do
-  let :article do
-    build(:article)
-  end
-
+  let(:article) { build(:article) }
+  
   describe 'バリデーションについて' do
     subject do
       article

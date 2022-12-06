@@ -2,7 +2,8 @@ module Users
   class ProfilesController < Users::Base
     require 'date'
     before_action :authenticate_user!, only: %i[new create edit update destroy]
-    before_action :find_profile, only: %i[show edit update destroy]
+    before_action :find_profile, only: %i[show double_registration edit update destroy]
+    # before_action :double_registration, only: %i[create]
 
     def index
       @users = User.all
@@ -16,7 +17,7 @@ module Users
     end
 
     def new
-      @profile = Profile.new
+      @profile = current_user.build_profile
     end
 
     def edit
@@ -26,10 +27,9 @@ module Users
     end
 
     def create
-      @profile = Profile.new(profile_params)
-      @profile.user = current_user
+      @profile = current_user.build_profile(profile_params)
       if @profile.save
-        redirect_to users_profiles_path, notice: 'プロフィール情報の入力が完了しました'
+        redirect_to users_profiles_path, notice: 'プロフィール情報の入力が完了しました'        
       else
         render :new
       end
@@ -58,7 +58,21 @@ module Users
 
     def find_profile
       @profile = Profile.find(params[:id])
+      # if @profile
+      #   # binding.pry
+      #   redirect_to users_profiles_path, notice: 'プロフィール情報は入力済です'
+      # else
+      # end
     end
+
+    # def double_registration
+    #   # @profile = Profile.find(params[:id])
+    #   if @profile.present?
+    #     redirect_to users_profiles_path, notice: 'プロフィール情報は入力済です'
+    #   else
+    #     # render :show
+    #   end
+    # end  
 
     def profile_params
       params.require(:profile).permit(

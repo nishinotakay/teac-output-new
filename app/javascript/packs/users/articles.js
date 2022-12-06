@@ -1,7 +1,12 @@
 window.hljs = require('highlight.js');
 import "highlight.js/scss/github-dark.scss";
-
 import { marked } from 'marked'
+import '../../stylesheets/users/articles'
+
+$(function(){
+  $(".hr").css({"color": "$gray-400"})
+})
+
 marked.setOptions({
   highlight: function (code, lang) {
     if(lang && lang.indexOf(":") >= 0){

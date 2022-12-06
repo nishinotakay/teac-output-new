@@ -1,1 +1,4 @@
-<%= content_for?(:content) ? yield(:content) : yield %>
+<div class="flash">
+  <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <%= content_for?(:content) ? yield(:content) : yield %>
+<div>
