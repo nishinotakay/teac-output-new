@@ -178,14 +178,32 @@ RSpec.describe 'Articles', type: :system do
   end
 
   describe 'upload image' do
-    it 'success' do
-      page.execute_script ''
-      image = File.new("#{Rails.root}/spec/fixtures/ruby.png")
+    it 'success', js: true do
+      image = fixture_file_upload("spec/fixtures/ruby.png", 'image/png')
+      image = File.new("spec/fixtures/ruby.png")
+      # image = file_fixture("ruby.png")
+      # page.execute_script ''
+      # page.execute_script "var fd = new FormData()"
+      # page.execute_script "fd.append('image', #{image})"
+      # page.execute_script "fd.append('user_id', #{user.id})"
+
       visit new_users_article_path
       # fill_in 'article[content]', with: image
       # find('.markdown-editor').drag_to image
-      drop_files image, 'article[content]'
-      # Rack::Test::UploadedFile.new(File.join(Rails.root, "spec/fixtures/ruby.png"))
+      source = page.find('.markdown-editor')
+      source.click
+      drop_files image, 'markdown-editor'
+      # binding.pry
+      # source.drop(file_fixture("ruby.png"))
+      # page.attach_file(file_fixture("ruby.png"), source)
+      # attach_file(source, file_fixture("ruby.png"))
+      # source.click
+      # page.attach_file("spec/fixtures/ruby.png") do
+
+      # drop_files image, source
+      # source.drag_to(image)
+      # source.set(File.open("spec/fixtures/ruby.png"))
+      # source.set(image.read)
       page.save_screenshot 'ruby画像添付.png'
     end
   end

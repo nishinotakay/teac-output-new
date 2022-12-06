@@ -66,8 +66,6 @@ $(function(){
     var formData = new FormData();
     formData.append('image', image); // FormDataに画像を追加
     formData.append('user_id', e.target.dataset.userId); // FormDataに画像を追加
-    console.log(image)
-    console.log(formData)
 
     // ajaxで画像をアップロード
     $.ajax({
