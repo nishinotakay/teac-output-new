@@ -53,6 +53,16 @@ docker ps -a
 docker rm -f ナンバー
 ---
 
+## windowsの場合
+
+
+   ## loaderのエラー解消
+   docker-compose run --rm app npm install --save-dev pug pug-plain-loader
+   docker-compose run --rm app npm install --save-dev sass sass-loader@10 
+   ## webpacerのインストール
+   docker-compose run --rm app rails webpacker:install
+
+
 ## 開発コマンド
 ```ruby
 # コンテナ起動＜binding.irbを使いたい時（docker-compose upより常にこっちの方がいいかも）＞
