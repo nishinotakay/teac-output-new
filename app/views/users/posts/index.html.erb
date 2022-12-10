@@ -16,17 +16,21 @@
         </tr>
       </thead>
 
-      <tbody>
-        <% @posts.each do |post| %>
-          <tr>
-            <td width="230"><%= post.title %></td>
-            <td width="230"><%= simple_format(post.body) %></td>
-            <td><iframe width="600" height="315" src="https://www.youtube.com/embed/<%=post.youtube_url%>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
-            <td>
-              <%= button_to '動画詳細', users_post_path(post), method: :get, class: "btn btn-warning" %><br>
-              <%= button_to '削除', users_post_path(post), method: :delete, class: "btn btn-danger", data: {confirm: "#{post.title}を削除してもよろしいですか？"} %>
-            </td>
-          </tr>
+      <tbody>      
+        <% if @posts.exists? %>
+          <% @posts.each do |post| %>
+            <tr>
+              <td width="230"><%= post.title %></td>
+              <td width="230"><%= simple_format(post.body) %></td>
+              <td><iframe width="600" height="315" src="https://www.youtube.com/embed/<%=post.youtube_url%>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
+              <td>
+                <%= button_to '動画詳細', users_post_path(post), method: :get, class: "btn btn-warning" %><br>
+                <%= button_to '削除', users_post_path(post), method: :delete, class: "btn btn-danger", data: {confirm: "#{post.title}を削除してもよろしいですか？"} %>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <%= render 'users/shared/table_without_record' %>
         <% end %>
       </tbody>
     </table>

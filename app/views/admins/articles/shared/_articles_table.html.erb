@@ -15,23 +15,29 @@
             </tr>
           </thead>
           <tbody>
-            <% colspan = dashboard ? 2 : 3 %>
-            <tr class="nohover">
-              <td colspan="<%= colspan %>" class="search"></td>
-            </tr>
-            <% @articles.each do |a| %>
-              <tr class="link-tr" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'>
-                <td>
-                  <%= a.title %>
-                  <% if a.sub_title.present? %>
-                    <span class="span-subtitle">〜<%= a.sub_title %>〜</span>
-                  <% end %>
-                </td>
-                <% if !dashboard %>
-                  <td><%= @users.find(a.user_id).name %></td>
-                <% end %>
-                <td><%= l(a.created_at, format: :long) %></td>
+            <% if @articles.exists? %>
+              <% colspan = dashboard ? 2 : 3 %>
+              <tr class="nohover">
+                <td colspan="<%= colspan %>" class="search"></td>
               </tr>
+              <% @articles.each do |a| %>
+                <tr class="link-tr" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'>
+                  <td>
+                    <%= a.title %>
+                    <% if a.sub_title.present? %>
+                      <span class="span-subtitle">〜<%= a.sub_title %>〜</span>
+                    <% end %>
+                  </td>
+                  <% if !dashboard %>
+                    <td><%= @users.find(a.user_id).name %></td>
+                  <% end %>
+                  <td><%= l(a.created_at, format: :long) %></td>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr>
+                <td colspan="100" class="text-center py-5">投稿なし</tr>
+              </tr>                
             <% end %>
           </tbody>
         </table>

@@ -13,19 +13,23 @@
             </tr>
           </thead>
           <tbody>
-            <% @articles.each do |a| %>
-              <tr class="link-tr" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'>
-                <td>
-                  <%= a.title %>
-                  <% if a.sub_title.present? %>
-                    <span class="span-subtitle">〜<%= a.sub_title %>〜</span>
+            <% if @articles.exists? %>
+              <% @articles.each do |a| %>
+                <tr class="link-tr" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'>
+                  <td>
+                    <%= a.title %>
+                    <% if a.sub_title.present? %>
+                      <span class="span-subtitle">〜<%= a.sub_title %>〜</span>
+                    <% end %>
+                  </td>
+                  <% if !dashboard %>
+                    <td><%= @users.find(a.user_id).name %></td>
                   <% end %>
-                </td>
-                <% if !dashboard %>
-                  <td><%= @users.find(a.user_id).name %></td>
-                <% end %>
-                <td><%= l(a.created_at, format: :long) %></td>
-              </tr>
+                  <td><%= l(a.created_at, format: :long) %></td>
+                </tr>
+              <% end %>
+            <% else %>
+              <%= render 'users/shared/table_without_record' %>
             <% end %>
           </tbody>
         </table>
