@@ -179,8 +179,8 @@ RSpec.describe 'Articles', type: :system do
 
   describe 'upload image' do
     it 'success', js: true do
-      image = fixture_file_upload("spec/fixtures/ruby.png", 'image/png')
-      image = File.new("spec/fixtures/ruby.png")
+      # image = fixture_file_upload("spec/fixtures/ruby.png", 'image/png')
+      # image = File.new("spec/fixtures/ruby.png")
       # image = file_fixture("ruby.png")
       # page.execute_script ''
       # page.execute_script "var fd = new FormData()"
@@ -190,9 +190,9 @@ RSpec.describe 'Articles', type: :system do
       visit new_users_article_path
       # fill_in 'article[content]', with: image
       # find('.markdown-editor').drag_to image
-      source = page.find('.markdown-editor')
-      source.click
-      drop_files image, 'markdown-editor'
+      # source = page.find('.markdown-editor')
+      # source.click
+      # drop_files image, 'markdown-editor'
       # binding.pry
       # source.drop(file_fixture("ruby.png"))
       # page.attach_file(file_fixture("ruby.png"), source)
@@ -200,11 +200,24 @@ RSpec.describe 'Articles', type: :system do
       # source.click
       # page.attach_file("spec/fixtures/ruby.png") do
 
-      # drop_files image, source
-      # source.drag_to(image)
-      # source.set(File.open("spec/fixtures/ruby.png"))
-      # source.set(image.read)
-      page.save_screenshot 'ruby画像添付.png'
+    #   page.execute_script <<-EOS
+      #   var dragSource = document.querySelector('#item_#{item2_list1.id}');
+      #   var dropTarget = document.querySelector('#item_#{item1_list2.id}');
+
+      #   window.dragMock.dragStart(dragSource).delay(100).dragOver(dropTarget).delay(100).drop(dropTarget);
+      # EOS
+
+      page.execute_script <<-JS
+        var image = new Image();
+        binding.pry
+        $('.markdown-editor').trigger('drop', [image]);
+      JS
+
+    #   fakeFileInput = window.$('<input/>').attr(
+    #     {id: 'fakeFileInput', type:'file'}
+    #   ).appendTo('body');
+
+      # page.save_screenshot 'ruby画像添付.png'
     end
   end
 end
