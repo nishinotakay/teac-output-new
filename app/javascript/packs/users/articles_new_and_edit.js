@@ -24,6 +24,8 @@ $(function(){
       $(this).width("60%")
       $(this).height("60%")
     })
+  }else{
+    $('.preview').html("コンテンツ");
   }
 
   $('.markdown-editor').keyup(function(event){
