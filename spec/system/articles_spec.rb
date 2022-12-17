@@ -181,11 +181,15 @@ RSpec.describe 'Articles', type: :system do
     it 'success', js: true do
       # image = fixture_file_upload("spec/fixtures/ruby.png", 'image/png')
       # image = File.new("spec/fixtures/ruby.png")
+      # png = File.new("spec/fixtures/ruby.png")
       # image = file_fixture("ruby.png")
+      png = file_fixture("ruby.png")
       # page.execute_script ''
       # page.execute_script "var fd = new FormData()"
       # page.execute_script "fd.append('image', #{image})"
       # page.execute_script "fd.append('user_id', #{user.id})"
+
+      assert_equal 2, png 
 
       visit new_users_article_path
       # fill_in 'article[content]', with: image
@@ -207,11 +211,12 @@ RSpec.describe 'Articles', type: :system do
       #   window.dragMock.dragStart(dragSource).delay(100).dragOver(dropTarget).delay(100).drop(dropTarget);
       # EOS
 
-      page.execute_script <<-JS
+      page.execute_script <<-EOS
         var image = new Image();
-        binding.pry
+        image = new FormData();
+        image.append('image', #{png});
         $('.markdown-editor').trigger('drop', [image]);
-      JS
+      EOS
 
     #   fakeFileInput = window.$('<input/>').attr(
     #     {id: 'fakeFileInput', type:'file'}
