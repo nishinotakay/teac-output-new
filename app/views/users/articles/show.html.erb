@@ -13,7 +13,7 @@
         <h1>
           <%= @article.title %>
         </h1>
-        <h4 class="ml-3">〜<%= @article.sub_title %>〜</h4>
+        <h4 class="ml-3"><%= @article.sub_title %></h4>
       </div>
       <% if @article.user_id != current_user.id %>
         <div class="mt-3">
