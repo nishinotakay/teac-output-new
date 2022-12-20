@@ -37,15 +37,33 @@
             </p>
           <% end %>
         </li>
-        <li class="nav-item">
-          <%= link_to users_posts_path, class:"nav-link", method: :get do %>
-            <i class="nav-icon fas fa-caret-right"></i>
-            <p>
-              動画投稿一覧
-            </p>
-          <% end %>
-        </li>
+
+        <div class="card accordion-container nav-item">
+          <div class="card-body accordion-title js-accordion-title">
+          <i class="fa-solid fa-video"></i>
+            &emsp;動画投稿
+          </div>
+          <div class="card-body accordion-content">
+              <%= link_to '新規投稿ページ', new_users_post_path, class:"btn btn-success", method: :get %><br><br>
+              <%= link_to "投稿動画一覧", users_posts_path, class:"btn btn-success", method: :get %><br><br>
+              <%= link_to "動画一覧（全ユーザー）", index_1_users_posts_path, class:"btn btn-success", method: :get %>
+          </div>
+        </div>
+      </ul>
     </nav>    
   </div>
 </aside>
 
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script>
+$(document).on('turbolinks:load', function() {
+  $(function(){
+    $('.js-accordion-title').on('click', function () {
+      /*クリックでコンテンツを開閉*/
+      $(this).next().slideToggle(200);
+      /*矢印の向きを変更*/
+      $(this).toggleClass('open', 200);
+    });
+  });
+});
+</script>
