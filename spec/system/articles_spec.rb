@@ -188,42 +188,32 @@ RSpec.describe 'Articles', type: :system do
       visit new_users_article_path
       # fill_in 'article[content]', with: image
       # find('.markdown-editor').drag_to image
-      # source = page.find('.markdown-editor')
-      # source.click
-      # drop_files image, 'markdown-editor'
-      # binding.pry
-      # source.drop(file_fixture("ruby.png"))
-      # page.attach_file(file_fixture("ruby.png"), source)
-      # attach_file(source, file_fixture("ruby.png"))
-      # source.click
-      # page.attach_file("spec/fixtures/ruby.png") do
+      source = page.find('.markdown-editor')
+      source.click
 
-    #   page.execute_script <<-EOS
-      #   var dragSource = document.querySelector('#item_#{item2_list1.id}');
-      #   var dropTarget = document.querySelector('#item_#{item1_list2.id}');
+      source.drop(png)
+      page.save_screenshot 'a.png'
 
-      #   window.dragMock.dragStart(dragSource).delay(100).dragOver(dropTarget).delay(100).drop(dropTarget);
-      # EOS
+      # page.execute_script <<-JS
+      #   dataTransfer = new DataTransfer()
+      #   dataTransfer.files.add(fakeFileInput.get(0).files[0])
+      #   testEvent = new DragEvent('drop', {bubbles:true, dataTransfer: dataTransfer })
+      #   $('.markdown-editor').dispatchEvent(testEvent)
+      # JS      
 
-      # window.dragMock.dragStart(#{png}).delay(100).dragOver(dropTarget).delay(100).drop(dropTarget);      
-
-      # var image = new Image();
-      # image = new FormData();
-      # image.append('image', #{png});
-      # var dragMock = require('drag-mock');
+      # var dragSource = document.querySelector('#item_#{item2_list1.id}');
+      # var dropTarget = document.querySelector('#item_#{item1_list2.id}');
       page.execute_script <<-EOS
-        $.event.props.push('dataTransfer');
-        event.dataTransfer.setData("text", 'hoge')
-        $('.markdown-editor').trigger('drop', '#{png}');
+        var dragSource = $('.article-img');
         var dropTarget = $('.markdown-editor');
+        dragMock.dragStart(dragSource).delay(100).dragOver(dropTarget).delay(100).drop(dropTarget);
       EOS
-      # window.dragMock.dragStart('#{png}').drop(dropTarget);      
+      # dragMock.dragStart(dragSource).drop(dropTarget);      
+      # dragMock.dragStart('#{png}').delay(100).dragOver(dropTarget).delay(100).drop('#{source}');      
+      # window.dragMock.dragStart('#{png}').delay(100).dragOver(dropTarget).delay(100).drop('#{source}');      
+      # window.dragMock.dragStart(dragSource).delay(100).dragOver(dropTarget).delay(100).drop(dropTarget);
+
       page.save_screenshot 'ruby画像添付.png'
-
-    #   fakeFileInput = window.$('<input/>').attr(
-    #     {id: 'fakeFileInput', type:'file'}
-    #   ).appendTo('body');
-
     end
   end
 end
