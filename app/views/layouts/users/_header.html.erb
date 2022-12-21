@@ -20,7 +20,7 @@
         <%= link_to new_users_article_path, class: "nav-link", method: :get do %>
           <p>記事投稿</p>
         <% end %>
-      </li> 
+      </li>    
     <% elsif request.fullpath == "/users/profiles" %>
       <li class="nav-item">
         <%= link_to new_users_profile_path, class: "nav-link", method: :get do %>
@@ -28,7 +28,7 @@
         <% end %>
       </li>
     <% elsif request.fullpath == "/users/posts" %>
-      <li class="nav-item">
+      <li class="nav-item ">
         <%= link_to new_users_post_path, class: "nav-link", method: :get do %>
           <p>動画投稿</p>
         <% end %>
