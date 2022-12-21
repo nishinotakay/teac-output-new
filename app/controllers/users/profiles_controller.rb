@@ -7,7 +7,7 @@ module Users
 
     def index
       @users = User.all
-      @profiles = Profile.all
+      @profiles = Profile.all.page(params[:page]).per(30)
     end
 
     def show
