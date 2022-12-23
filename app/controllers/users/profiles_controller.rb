@@ -76,7 +76,7 @@ module Users
 
     def profile_params
       params.require(:profile).permit(
-        :name, :learning_history, :purpose, :image, :created_at, :learning_start
+        :name, :learning_history, :purpose, :image, :created_at, :learning_start, :birthday, :gender
       )
     end
   end
