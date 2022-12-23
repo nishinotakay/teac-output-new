@@ -4,12 +4,12 @@
 <div class="col-10 offset-1 div-title-form">
   <div class="card card-outline card-success">
     <div class="card-header text-center">
-        <h2>プロフィールを作成する</h2>
-        <p class="text-contents">現状を公開することで貴方も他の受講生も学習効果が高まります。</p>
-        </div>
+      <h2>プロフィールを作成する</h2>
+      <p class="text-contents">現状を公開することで貴方も他の受講生も学習効果が高まります。</p>
+    </div>
+    <br>
+    <%= form_with model: @profile, url: { controller: "profiles", action: "create" }, local: true do |f| %>
       <div style="padding-left:265px">
-      <br>
-      <%= form_with model: @profile, url: { controller: "profiles", action: "create" }, local: true do |f| %>
         <div class="form-group">
           <div class="form-inline">
             <span class="fas fa-user"></span>
@@ -67,10 +67,10 @@
                 </label>
           </div>
         </div>
-        </div>
-        <div class="text-center form-group">
-          <%= f.submit class: "btn btn-primary" , style:"width:150px"%>
-        </div>
-      <% end %>
+      </div>
+      <div class="text-center form-group">
+        <%= f.submit class: "btn btn-primary" , style:"width:150px"%>
+      </div>
+    <% end %>
   </div>
 </div>
