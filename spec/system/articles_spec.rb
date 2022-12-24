@@ -186,13 +186,11 @@ RSpec.describe 'Articles', type: :system do
       # assert_equal 2, png 
 
       visit new_users_article_path
-      # fill_in 'article[content]', with: image
-      # find('.markdown-editor').drag_to image
+
       source = page.find('.markdown-editor')
       source.click
 
-      source.drop(png)
-      page.save_screenshot 'a.png'
+      # source.drop(png)
 
       # page.execute_script <<-JS
       #   dataTransfer = new DataTransfer()
@@ -203,15 +201,23 @@ RSpec.describe 'Articles', type: :system do
 
       # var dragSource = document.querySelector('#item_#{item2_list1.id}');
       # var dropTarget = document.querySelector('#item_#{item1_list2.id}');
+
       page.execute_script <<-EOS
         var dragSource = $('.article-img');
         var dropTarget = $('.markdown-editor');
-        dragMock.dragStart(dragSource).delay(100).dragOver(dropTarget).delay(100).drop(dropTarget);
+        window.dragMock.dragStart(dragSource).delay(100).dragOver(dropTarget).delay(100).drop(dropTarget);
       EOS
+      puts page.driver.browser.manage.logs.get(:browser)
+      # puts page.driver.browser.manage.logs.get(:browser).collect(&:message)
+
       # dragMock.dragStart(dragSource).drop(dropTarget);      
       # dragMock.dragStart('#{png}').delay(100).dragOver(dropTarget).delay(100).drop('#{source}');      
-      # window.dragMock.dragStart('#{png}').delay(100).dragOver(dropTarget).delay(100).drop('#{source}');      
+      # windows.dragMock.dragStart("#{png}").delay(100).dragOver("#{source}").delay(100).drop("#{source}");
       # window.dragMock.dragStart(dragSource).delay(100).dragOver(dropTarget).delay(100).drop(dropTarget);
+
+      puts '0'
+      # drop_file png, 'markdown-editor'
+      puts '1'
 
       page.save_screenshot 'ruby画像添付.png'
     end
