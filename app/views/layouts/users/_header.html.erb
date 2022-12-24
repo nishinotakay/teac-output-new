@@ -8,18 +8,27 @@
     <li class="nav-item d-none d-sm-inline-block">
       <%= link_to "投稿した記事一覧", users_dash_boards_path, class:"nav-link", method: :get %>
     </li>
+    <!-- 
     <li class="nav-item d-none d-sm-inline-block">
       <%= link_to "ログアウト", destroy_user_session_path, class:"nav-link", method: :delete %>
     </li>
+    -->
   </ul>
 
   <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto">
     <% if request.fullpath == "/users/articles" || request.fullpath == "/users/dash_boards" %>
-      <li class="nav-item">
-        <%= link_to new_users_article_path, class: "nav-link", method: :get do %>
-          <p>記事投稿</p>
-        <% end %>
+      <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <%= link_to current_user.name %> <b class="caret"></b>
+          </a>
+        <ul class="dropdown-menu">
+        <!-- 
+          <li><%= link_to "記事投稿", new_users_article_path %></li>
+        -->
+          <li><%= link_to "詳細", users_article_path(:id), method: :patch  %></li>
+          <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
+        </ul>
       </li> 
     <% elsif request.fullpath == "/users/profiles" %>
       <li class="nav-item">
