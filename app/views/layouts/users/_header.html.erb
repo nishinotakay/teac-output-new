@@ -26,7 +26,7 @@
         <!-- 
           <li><%= link_to "記事投稿", new_users_article_path %></li>
         -->
-          <li><%= link_to "詳細", users_article_path(:id), method: :patch  %></li>
+          <li><%= link_to "詳細", users_user_path(current_user), method: :get, class: "d-block" %></li>
           <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
         </ul>
       </li> 
