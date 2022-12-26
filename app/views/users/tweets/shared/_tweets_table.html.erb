@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-12">
-        <table class="table table-hover articles-table">
+        <table class="table tweets-table">
           <thead>
             <tr>
               <th class="px-5">タイトル</th>
@@ -13,26 +13,6 @@
               <th class="px-5">投稿日</th>
             </tr>
           </thead>
-          <%
-=begin%>
- <tbody>
-            <% if @articles.exists? %>
-              <% @articles.each do |a| %>
-                <tr class="link-tr" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'>
-                  <td><%= a.title %></td>
-                  <td><%= a.sub_title %></td>
-                  <% if !dashboard %>
-                    <td><%= @users.find(a.user_id).name %></td>
-                  <% end %>
-                  <td><%= l(a.created_at, format: :long) %></td>
-                </tr>
-              <% end %>
-            <% else %>
-              <%= render 'users/shared/table_without_record' %>
-            <% end %>
-          </tbody> 
-<%
-=end%>
         </table>
       </div>
     </div>
