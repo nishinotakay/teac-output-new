@@ -27,10 +27,13 @@ module Users
     end
 
     def create
+      binding.pry
       @profile = current_user.build_profile(profile_params)
+      binding.pry
       if @profile.save
         redirect_to users_profiles_path, notice: 'プロフィール情報の入力が完了しました'        
       else
+        binding.pry
         render :new
       end
     end
@@ -76,8 +79,8 @@ module Users
 
     def profile_params
       params.require(:profile).permit(
-        :name, :learning_history, :purpose, :image, :created_at, :learning_start, :birthday, :gender
-      )
+        :purpose, :image, :created_at, :learning_start, :birthday, :gender
+      ).merge(user_id: current_user.id)
     end
   end
 end

@@ -33,7 +33,7 @@
             <span class="fas fa-heart"></span>
               <label class="profile-indent">性別</label>
                 <label class="profile-indent-gender">
-                  <%= f.select :gender, User.genders_i18n.keys.map {|k| [User.genders_i18n[k], k]}, {include_blank: '選択してください'}, class: 'form-control', style:"width:300px" %>
+                  <%= f.select :gender, Profile.genders_i18n.keys.map {|k| [User.genders_i18n[k], k]}, {include_blank: '選択してください'}, class: 'form-control', style:"width:300px" %>
                 </label>
           </div>
         </div>
