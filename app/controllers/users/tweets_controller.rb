@@ -19,6 +19,29 @@ module Users
       end 
     end
 
+    def edit
+      @tweet = Tweet.find(params[:id])
+    end
+
+    def update
+      @tweet = Tweet.find(params[:id])
+      if @tweet.update(tweet_params)
+        @tweet.save
+        flash[:success] = "編集成功しました。"
+        redirect_to users_tweets_url(current_user)
+      else
+        render :edit
+      end
+    end
+
+    def destroy
+      @tweet = Tweet.find(params[:id])
+      if @tweet.destroy
+        flash[:success] = "削除に成功しました。"
+        redirect_to users_tweets_url(current_user)
+      end
+    end
+
     private
       
       def tweet_params
