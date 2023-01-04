@@ -15,12 +15,14 @@
 
   <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto">
+
     <% if request.fullpath == "/users/articles" || request.fullpath == "/users/dash_boards" %>
+
       <li class="nav-item">
         <%= link_to new_users_article_path, class: "nav-link", method: :get do %>
           <p>記事投稿</p>
         <% end %>
-      </li>    
+      </li> 
     <% elsif request.fullpath == "/users/profiles" %>
       <li class="nav-item">
         <%= link_to new_users_profile_path, class: "nav-link", method: :get do %>
@@ -34,7 +36,22 @@
         <% end %>
       </li>
     <% end %>
-
+    <li class="dropdown">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <%= link_to current_user.name, users_user_path(current_user) %><b class="caret"></b>
+      </a>
+      <ul class="dropdown-menu">
+         <li><%= link_to "詳細画面", users_user_path(current_user), method: :get, class: "d-block" %></li>
+         <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
+      </ul>
+    </li>
+    <span class="v-badge v-badge--bordered v-badge--dot theme--light"><i aria-hidden="true" class="v-icon notranslate fas fa-user-circle theme--light" style="font-size:40px;color:#003973;caret-color:#003973;"></i>
+      <span class="v-badge__wrapper">
+        <span aria-atomic="true" aria-label="Badge" aria-live="polite" role="status" class="v-badge__badge pink" style="bottom:calc(100% - 10px);left:calc(100% - 10px);right:auto;top:auto;">
+        </span>
+      </span>
+    </span>   
+    
     <%# <!-- Navbar Search -->
     <li class="nav-item">
       <a class="nav-link" data-widget="navbar-search" href="#" role="button">
