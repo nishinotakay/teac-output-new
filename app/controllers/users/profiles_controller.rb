@@ -27,13 +27,11 @@ module Users
     end
 
     def create
-      binding.pry
       @profile = current_user.build_profile(profile_params)
-      binding.pry
+      @profile.name = current_user.name
       if @profile.save
         redirect_to users_profiles_path, notice: 'プロフィール情報の入力が完了しました'        
       else
-        binding.pry
         render :new
       end
     end

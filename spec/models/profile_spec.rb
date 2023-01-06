@@ -9,23 +9,22 @@ RSpec.describe 'Profileモデルのテスト', type: :model do
     let(:test_profile) { profile }
     let!(:profile) { build(:profile, user_id: user.id) }
 
-    it 'is valid with a name and a purpose' do
-      profile = Profile.new(name: '田中浩', purpose: '月収50万円')
-      expect(profile.name).to eq '田中浩'
+    it 'is valid with a purpose' do
+      profile = Profile.new(purpose: '月収50万円')
+      expect(profile.purpose).to eq '月収50万円'
     end
 
-    it 'is invalid without a name' do
+    it 'is invalid without a purpose' do
       profile = Profile.new(
-        name:    nil,
-        purpose: '月収50万円'
+        purpose: nil,
       )
       profile.valid?
-      expect(profile.errors[:name]).to include('を入力してください')
+      expect(profile.errors[:purpose]).to include('を入力してください')
     end
 
-    context 'nameカラム' do
+    context 'purposeカラム' do
       it '空欄でないこと' do
-        profile.name = ''
+        profile.purpose = ''
         expect(subject).to eq false
       end
 

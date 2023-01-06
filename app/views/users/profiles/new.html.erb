@@ -8,8 +8,8 @@
       <p class="text-contents">現状を公開することで貴方も他の受講生も学習効果が高まります。</p>
     </div>
     <br>
-    <%= form_with model: @profile, url: { controller: "profiles", action: "create" }, local: true do |f| %>
-      <div style="padding-left:265px">
+    <div style="padding-left:265px">
+      <%= form_with model: @profile, url: { controller: "profiles", action: "create" }, local: true do |f| %>
         <div class="form-group">
           <div class="form-inline">
             <span class="fas fa-user"></span>
@@ -33,7 +33,7 @@
             <span class="fas fa-heart"></span>
               <label class="profile-indent">性別</label>
                 <label class="profile-indent-gender">
-                  <%= f.select :gender, Profile.genders_i18n.keys.map {|k| [User.genders_i18n[k], k]}, {include_blank: '選択してください'}, class: 'form-control', style:"width:300px" %>
+                  <%= f.select :gender, Profile.genders_i18n.keys.map {|k| [Profile.genders_i18n[k], k]}, {include_blank: '選択してください'}, class: 'form-control', style:"width:300px" %>
                 </label>
           </div>
         </div>
@@ -67,7 +67,8 @@
                 </label>
           </div>
         </div>
-      </div>
+    </div>
+      <p class="text-center" style="font-size:13px">※プログラミング学習開始日と、プログラミング学習の目的は必須項目です。</p>
       <div class="text-center form-group">
         <%= f.submit class: "btn btn-primary" , style:"width:150px"%>
       </div>

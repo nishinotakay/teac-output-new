@@ -78,3 +78,10 @@
   // background-color:  rgb(252, 252, 252);    /* 背景色指定 */
   padding: 96px;              /* 余白指定 */
 }
+
+.dropdown-menu {
+  min-width: 0px;
+}
+.nav-link:hover{
+  background-color: #e9ecef;
+}

@@ -5,20 +5,8 @@
     <%= image_tag "AdminLTELogo.png", class:"brand-image img-circle elevation-3", style: "opacity: .8" %>
     <span class="brand-text font-weight-light">ネイテク</span>
   <% end %>
-  
   <!-- Sidebar -->
   <div class="sidebar">
-    <!-- Sidebar user panel (optional) -->
-    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-      <div class="image">
-        <%#= image_tag "user2-160x160.jpg", class:"img-circle elevation-2" %>
-      </div>
-      <div class="info">
-        <%= link_to current_user.name, users_user_path(current_user), method: :get, class:"d-block" %>
-        <!-- <%= link_to current_user.name, new_users_profile_url, class:"d-block" %> -->
-      </div>
-    </div>
-
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item">
@@ -42,6 +30,14 @@
             <i class="nav-icon fas fa-caret-right"></i>
             <p>
               動画投稿一覧
+            </p>
+          <% end %>
+        </li>
+        <li class="nav-item">
+          <%= link_to users_tweets_path, class:"nav-link", method: :get do %>
+            <i class="nav-icon fas fa-caret-right"></i> 
+            <p>
+              つぶやき一覧
             </p>
           <% end %>
         </li>
