@@ -13,14 +13,9 @@ RSpec.describe 'Profiles', type: :system do
     # プロフィール作成
     subject do
       click_link 'プロフィール作成'
-      fill_in 'name', with: user.name
+      fill_in 'purpose', with: user.learning_start
       fill_in 'purpose', with: user.purpose
       click_button '登録する'
     end
-    # before do
-    #   driven_by(:rack_test)
-    # end
-
-    # pending "add some scenarios (or delete) #{__FILE__}"
   end
 end
