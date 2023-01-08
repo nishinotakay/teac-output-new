@@ -13,7 +13,7 @@ module Users
       @tweet =current_user.tweets.new(tweet_params)
       if @tweet.save
         flash[:success] = "つぶやきを作成しました。"
-        redirect_to users_tweets_url(current_user)
+        redirect_to users_tweets_url
       else
         render :new
       end 
