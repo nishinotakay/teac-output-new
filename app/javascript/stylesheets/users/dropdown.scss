@@ -1,0 +1,11 @@
+@import "bootstrap";
+@import "admin-lte";
+@import '@fortawesome/fontawesome-free';
+@import './users/custom';
+
+.dropdown-menu.show {
+    display: block;
+    right: 0;
+    left: auto;
+    text-align: start;
+}

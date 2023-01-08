@@ -3,6 +3,8 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
+gem 'enum_help'
+
 # 画像保存に必要
 gem 'carrierwave'
 
