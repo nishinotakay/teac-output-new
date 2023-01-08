@@ -12,34 +12,35 @@
   </ul>
 
   <!-- Right navbar links -->
-  <% if request.fullpath == "/users/articles" || request.fullpath == "/users/dash_boards" %>
     <ul class="navbar-nav ml-auto">
       <li class="dropdown">
-        <li class="nav-item">
-          <%= link_to new_users_article_path, class: "nav-link", method: :get do %>
-            <p>記事投稿</p>
-          <% end %>
-        </li> 
-      <% elsif request.fullpath == "/users/profiles" %>
-        <li class="nav-item">
-          <%= link_to new_users_profile_path, class: "nav-link", method: :get do %>
-            <p>プロフィール投稿</p>
-          <% end %>
-        </li>
-      <% elsif request.fullpath == "/users/posts" %>
-        <li class="nav-item">
-          <%= link_to new_users_post_path, class: "nav-link", method: :get do %>
-            <p>動画投稿</p>
-          <% end %>
-        </li>
-      <% elsif request.fullpath == "/users/tweets" %>
-        <li class="nav-item">
-          <%= link_to new_users_tweet_path, class: "nav-link", method: :get do %>
-            <p>つぶやき投稿</p>
-          <% end %>
-        </li>      
+        <% if request.fullpath == "/users/articles" || request.fullpath == "/users/dash_boards" %>
+          <li class="nav-item">
+            <%= link_to new_users_article_path, class: "nav-link", method: :get do %>
+              <p>記事投稿</p>
+            <% end %>
+          </li> 
+        <% elsif request.fullpath == "/users/profiles" %>
+          <li class="nav-item">
+            <%= link_to new_users_profile_path, class: "nav-link", method: :get do %>
+              <p>プロフィール投稿</p>
+            <% end %>
+          </li>
+        <% elsif request.fullpath == "/users/posts" %>
+          <li class="nav-item">
+            <%= link_to new_users_post_path, class: "nav-link", method: :get do %>
+              <p>動画投稿</p>
+            <% end %>
+          </li>
+        <% elsif request.fullpath == "/users/tweets" %>
+          <li class="nav-item">
+            <%= link_to new_users_tweet_path, class: "nav-link", method: :get do %>
+              <p>つぶやき投稿</p>
+            <% end %>
+          </li>
+        <% end %>
+      </li>    
     </ul>
-  <% end %>
   <div class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
     <a class="gb_d gb_Ra gb_l" aria-label="" href="" role="button" tabindex="0" target="_top" aria-expanded="false"><img class="gb_Ia gbii" 
@@ -56,3 +57,4 @@
     </ul>
   </div>
 </nav>
+

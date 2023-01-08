@@ -80,8 +80,19 @@
 }
 
 .dropdown-menu {
-  min-width: 0px;
+  min-width: 100px;
 }
+
+.dropdown-menu.show {
+  display: block;
+  right: 0;
+  left: auto;
+  text-align: start;
+}
+
+
+
+
 .nav-link:hover{
   background-color: #e9ecef;
 }
