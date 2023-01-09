@@ -8,6 +8,7 @@ module Users
     def index
       @users = User.all
       @articles = Article.all.order(updated_at: 'DESC')
+      @profiles = Profile.all
     end
 
     def show

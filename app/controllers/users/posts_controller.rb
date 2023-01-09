@@ -10,6 +10,7 @@ module Users
     def index
       # ログインしていなかった場合は401ページを表示して終了（※ 401用のテンプレートファイルを作っていないと動きません）
       @posts = current_user.posts.all.search(params[:search])
+      @profiles = Profile.all
     end
     
     # 全ユーザーの投稿一覧ページ
