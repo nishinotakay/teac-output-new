@@ -6,7 +6,6 @@ module Users
     before_action :set_article, except: %i[index show new create image]
 
     def index
-      @users = User.all
       @articles = Article.all.order(updated_at: 'DESC')
     end
 
