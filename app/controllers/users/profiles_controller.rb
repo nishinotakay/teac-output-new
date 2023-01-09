@@ -28,6 +28,7 @@ module Users
 
     def create
       @profile = current_user.build_profile(profile_params)
+      @profile.name = current_user.name
       if @profile.save
         redirect_to users_profiles_path, notice: 'プロフィール情報の入力が完了しました'        
       else
@@ -76,8 +77,8 @@ module Users
 
     def profile_params
       params.require(:profile).permit(
-        :name, :learning_history, :purpose, :image, :created_at, :learning_start
-      )
+        :purpose, :image, :created_at, :learning_start, :birthday, :gender
+      ).merge(user_id: current_user.id)
     end
   end
 end

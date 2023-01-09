@@ -5,20 +5,8 @@
     <%= image_tag "AdminLTELogo.png", class:"brand-image img-circle elevation-3", style: "opacity: .8" %>
     <span class="brand-text font-weight-light">ネイテク</span>
   <% end %>
-  
   <!-- Sidebar -->
   <div class="sidebar">
-    <!-- Sidebar user panel (optional) -->
-    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-      <div class="image">
-        <%#= image_tag "user2-160x160.jpg", class:"img-circle elevation-2" %>
-      </div>
-      <div class="info">
-        <%= link_to current_user.name, users_user_path(current_user), method: :get, class:"d-block" %>
-        <!-- <%= link_to current_user.name, new_users_profile_url, class:"d-block" %> -->
-      </div>
-    </div>
-
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item">
@@ -37,33 +25,23 @@
             </p>
           <% end %>
         </li>
-
-        <div class="card accordion-container nav-item">
-          <div class="card-body accordion-title js-accordion-title">
-          <i class="fa-solid fa-video"></i>
-            &emsp;動画投稿
-          </div>
-          <div class="card-body accordion-content">
-              <%= link_to '新規投稿ページ', new_users_post_path, class:"btn btn-success", method: :get %><br><br>
-              <%= link_to "投稿動画一覧", users_posts_path, class:"btn btn-success", method: :get %><br><br>
-              <%= link_to "動画一覧（全ユーザー）", index_1_users_posts_path, class:"btn btn-success", method: :get %>
-          </div>
-        </div>
+        <li class="nav-item">
+          <%= link_to users_posts_path, class:"nav-link", method: :get do %>
+            <i class="nav-icon fas fa-caret-right"></i>
+            <p>
+              動画投稿一覧
+            </p>
+          <% end %>
+        </li>
+        <li class="nav-item">
+          <%= link_to users_tweets_path, class:"nav-link", method: :get do %>
+            <i class="nav-icon fas fa-caret-right"></i> 
+            <p>
+              つぶやき一覧
+            </p>
+          <% end %>
+        </li>
       </ul>
     </nav>    
   </div>
 </aside>
-
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-<script>
-$(document).on('turbolinks:load', function() {
-  $(function(){
-    $('.js-accordion-title').on('click', function () {
-      /*クリックでコンテンツを開閉*/
-      $(this).next().slideToggle(200);
-      /*矢印の向きを変更*/
-      $(this).toggleClass('open', 200);
-    });
-  });
-});
-</script>
