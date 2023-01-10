@@ -35,6 +35,11 @@
                   <% end %>
                   <td><%= l(a.created_at, format: :long) %></td>
                 </tr>
+                <%# if params[:content] %>
+                  <tr class="text-center">
+                    <td colspan="4">あ</td>
+                  </tr>
+                <%# end %>
               <% end %>
             <% else %>
               <%= render 'users/shared/table_without_record' %>
@@ -85,6 +90,12 @@
             <label for="input-subtitle" class="col-sm-3 col-form-label">サブタイトル</label>
             <div class="col-md-9">
               <input type="text" aria-label="subtitle" id="input-subtitle" class="form-control" value="<%= params[:subtitle] %>">
+            </div>
+          </div>
+          <div class="form-group row my-4">
+            <label for="input-content" class="col-sm-3 col-form-label">内容</label>
+            <div class="col-md-9">
+              <input type="text" aria-label="content" id="input-content" class="form-control" value="<%= params[:content] %>">
             </div>
           </div>
           <div class="form-group row my-4">

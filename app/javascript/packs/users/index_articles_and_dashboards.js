@@ -37,7 +37,7 @@ $(function(){
 
   $('.submit-btn').on('click', function(){
     var sort = $('#sort-select option:selected').val()
-    var values = ['author', 'title', 'subtitle', 'start', 'finish']
+    var values = ['author', 'title', 'subtitle', 'content', 'start', 'finish']
     var search = "order=" + sort
     $.each(values, function(index, value){
       var input = $('#input-' + value).val()
