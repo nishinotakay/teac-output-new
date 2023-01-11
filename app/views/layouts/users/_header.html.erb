@@ -42,17 +42,23 @@
       </li>    
     </ul>
   <div class="dropdown">
-   <% @profiles.each do |profile| %>
-    <div class="nav-link" id="dropdownMenuButton button_group" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <%= image_tag profile.image , class: "rounded-circle", size: "30x30" %><b class="caret"></b> 
-    </div>
+  <% if @profiles.exists? %>
+    <% @profiles.each do |profile| %>
+      <div class="nav-link" id="dropdownMenuButton button_group" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <%= image_tag profile.image , class: "rounded-circle", size: "30x30" %><b class="caret"></b> 
+      </div>
     <% end %>
+  <% else %>
+      <div class="nav-link" id="dropdownMenuButton button_group" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        アカウント<b class="caret"></b> 
+      </div>
+  <% end %>
     <ul class="dropdown-menu">
-      <li>
-        <%= link_to current_user.name, users_user_path(current_user) %>
-      </li>
-      <li><%= link_to "詳細画面", users_user_path(current_user), method: :get, class: "d-block" %></li>
-      <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
+      <div class="dropdown-menu-header">
+        <li><%= link_to current_user.name, users_user_path(current_user) %></li>
+        <li><%= link_to "詳細画面", users_user_path(current_user), method: :get, class: "d-block" %></li>
+        <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
+      </div>
     </ul>
   </div>
 </nav>

@@ -80,21 +80,12 @@
 }
 
 .dropdown-menu {
-  min-width: 100px;
-}
-
-.dropdown-menu.profile {
   min-width: 0px;
 }
 
-.dropdown-menu.show {
-  display: block;
-  right: 0;
-  left: auto;
-  text-align: start;
+.dropdown-menu-header {
+  min-width: 100px;
 }
-
-
 
 
 .nav-link:hover{
