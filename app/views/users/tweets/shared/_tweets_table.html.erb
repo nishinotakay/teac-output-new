@@ -1,5 +1,6 @@
 <div class="content">
   <div class="container">
+  <% if @tweets.exists? %>
     <% @tweets.each do |tweet| %>
       <div class="tweets-index-item">
         <div class="fw-bold">
@@ -30,5 +31,8 @@
       </div>
     </div>
     <% end %>
+  <% else %>
+    <%= render 'users/shared/table_without_record' %>
+  <% end %>
   </div>
 </div>

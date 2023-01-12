@@ -38,7 +38,7 @@ module Users
       @tweet = Tweet.find(params[:id])
       if @tweet.destroy
         flash[:success] = "削除に成功しました。"
-        redirect_to users_tweets_url(current_user)
+        redirect_to users_tweets_url
       end
     end
 
