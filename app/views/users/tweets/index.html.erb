@@ -3,3 +3,22 @@
 <%= render "users/tweets/shared/tweets_table", dashboard: false %>
 <div id="new" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+//* 以下は記事・動画サイトを参考に記述した内容です。*//
+
+<h1>お問い合わせ</h1>
+<a id="modalOpen" class="modalOpen">問い合わせる</a>
+<%#= link_to "問い合わせる", "#", class: "modalOpen" %>
+<div class="modal1" id="modal1">
+  <h3>お問い合わせ</h3>
+  <div class="modalContents">
+    ここに内容が入ります。<br>
+    ここに内容が入ります。<br>
+    ここに内容が入ります。<br>
+    ここに内容が入ります。<br>
+    ここに内容が入ります。
+  </div>
+  <a id="modalClose" class="modalClose">閉じる</a>
+</div>
+
+<div class="mask" id="mask"></div>
