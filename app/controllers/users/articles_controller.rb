@@ -6,7 +6,7 @@ module Users
     before_action :set_article, except: %i[index show new create image]
 
     def index
-      @articles = Article.all.order(updated_at: 'DESC')
+      @articles = Article.all.order(updated_at: 'DESC').page(params[:page]).per(30)
     end
 
     def show
