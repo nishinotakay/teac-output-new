@@ -20,7 +20,7 @@
                   <td><%= a.title %></td>
                   <td><%= a.sub_title %></td>
                   <% if !dashboard %>
-                    <td><%= @users.find(a.user_id).name %></td>
+                    <td><%= a.user.name %></td>
                   <% end %>
                   <td><%= l(a.created_at, format: :long) %></td>
                 </tr>
