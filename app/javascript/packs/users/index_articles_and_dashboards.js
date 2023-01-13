@@ -35,6 +35,16 @@ $(function(){
     window.location.search = ''
   })
 
+  $('.link-tr').hover(function(){
+    var classname = $(this).next().attr('class');
+    console.log(classname)
+    if(classname == 'content-tr'){
+      // $(this).next().hover()
+      // $(this).next().css('background-color', 'var(--bs-table-hover-color)')
+      $(this).next().css('background-color', 'red')
+    }
+  })
+
   $('.submit-btn').on('click', function(){
     var sort = $('#sort-select option:selected').val()
     var values = ['author', 'title', 'subtitle', 'content', 'start', 'finish']
