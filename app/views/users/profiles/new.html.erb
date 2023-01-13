@@ -1,14 +1,14 @@
 <%= javascript_pack_tag "users/profiles" %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-<div class="col-10 offset-1 div-title-form">
-  <div class="card card-outline card-success">
+<div class="col-6 offset-3 div-title-form">
+  <div class="card card-outline card-primary">
     <div class="card-header text-center">
       <h2>プロフィールを作成する</h2>
       <p class="text-contents">現状を公開することで貴方も他の受講生も学習効果が高まります。</p>
     </div>
     <br>
-    <div style="padding-left:265px">
+    <div style="padding-left:50px">
       <%= form_with model: @profile, url: { controller: "profiles", action: "create" }, local: true do |f| %>
         <div class="form-group">
           <div class="form-inline">
