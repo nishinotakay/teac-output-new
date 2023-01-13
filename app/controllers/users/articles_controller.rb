@@ -12,19 +12,8 @@ module Users
       params[:start] ||= Article.order(created_at: "ASC").first.created_at if params[:finish]
       params[:finish] ||= Date.current if params[:start]
       @articles &= Article.time_filter(params[:start], params[:finish]) if params[:start] && params[:finish]
-      filter = {author: params[:author], title: params[:title], subtitle: params[:subtitle]}
+      filter = {author: params[:author], title: params[:title], subtitle: params[:subtitle], content: params[:content]}
       @articles &= Article.multi_filter(filter)
-
-      # @articles = @articles.where('title like ?', "%#{params[:title]}%").where('sub_title like ?', "%#{params[:subtitle]}%")
-      # params[:start] &&= params[:start].to_datetime
-      # params[:finish] &&= params[:finish].to_datetime.end_of_day
-      # @articles = @articles.where('created_at between ? and ?', params[:start], params[:finish]) if params[:start] && params[:finish]
-      # @articles = @articles.where('created_at >= ?', params[:start]) if params[:start] && !params[:finish]
-      # @articles = @articles.where('created_at <= ?', params[:finish]) if !params[:start] && params[:finish]
-      # uids = params[:author] ? @users.where('name like ?', "%#{params[:author]}%").pluck(:id) : []
-      # binding.pry
-      # articles = []
-      # uids.each{|id| articles << @articles.where(user_id: id)} if uids.present?
     end
 
     def show
