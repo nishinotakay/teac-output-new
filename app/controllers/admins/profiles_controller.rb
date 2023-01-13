@@ -25,7 +25,7 @@ module Admins
     end
 
     def index
-      @users = User.all
+      @users = User.all.page(params[:page]).per(30)
       @profiles = Profile.all
     end
 
