@@ -16,7 +16,6 @@
         <table class="table articles-table <%= hover %>">
           <thead>
             <tr>
-              <th></th>
               <th class="px-5">タイトル</th>
               <th class="px-5">サブタイトル</th>
               <% unless dashboard %>
@@ -29,7 +28,6 @@
             <% if hover.present? %>
               <% @articles.each_with_index do |a, i| %>
                 <tr class="link-tr" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'>
-                  <td rowspan="2" class="align-middle text-center"><%= i + 1 %></td>
                   <td><%= a.title %></td>
                   <td><%= a.sub_title %></td>
                   <% if !dashboard %>
@@ -37,11 +35,17 @@
                   <% end %>
                   <td><%= l(a.created_at, format: :long) %></td>
                 </tr>
-                <%# if params[:content] %>
+<%
+=begin
+%>                
+                <% if params[:content] %>
                   <tr class="content-tr link-tr" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'>
                     <td class="px-5" colspan="4"><%= a.content %></td>
                   </tr>
-                <%# end %>
+                <% end %>
+<%
+=end
+%>                
               <% end %>
             <% else %>
               <%= render 'users/shared/table_without_record' %>
