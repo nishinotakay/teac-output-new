@@ -43,7 +43,7 @@
     </ul>
   <div class="dropdown">
       <div class="nav-link" id="dropdownMenuButton button_group" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "avatar/ico_default_green.png" %>
+        <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
         <%= image_tag image , class: "rounded-circle", size: "30x30" %><b class="caret"></b> 
       </div>
     <ul class="dropdown-menu dropdown-menu-header">
