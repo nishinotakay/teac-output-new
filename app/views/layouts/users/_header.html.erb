@@ -8,24 +8,48 @@
     <li class="nav-item d-none d-sm-inline-block">
       <%= link_to "投稿した記事一覧", users_dash_boards_path, class:"nav-link", method: :get %>
     </li>
-    <li class="nav-item d-none d-sm-inline-block">
-      <%= link_to "ログアウト", destroy_user_session_path, class:"nav-link", method: :delete %>
-    </li>
+
   </ul>
 
   <!-- Right navbar links -->
-  <ul class="navbar-nav ml-auto">
-    <% if request.fullpath == "/users/articles" || request.fullpath == "/users/dash_boards" %>
-      <li class="nav-item">
-        <%= link_to new_users_article_path, class: "nav-link", method: :get do %>
-          <p>記事投稿</p>
-        <% end %>
-      </li>    
-    <% elsif request.fullpath == "/users/profiles" %>
-      <li class="nav-item">
-        <%= link_to new_users_profile_path, class: "nav-link", method: :get do %>
-          <p>プロフィール投稿</p>
-        <% end %>
+  <% if request.fullpath == "/users/articles" || request.fullpath == "/users/dash_boards" %>
+    <ul class="navbar-nav ml-auto">
+      <li class="dropdown">
+        <li class="nav-item">
+          <%= link_to new_users_article_path, class: "nav-link", method: :get do %>
+            <p>記事投稿</p>
+          <% end %>
+        </li> 
+      <% elsif request.fullpath == "/users/profiles" %>
+        <li class="nav-item">
+          <%= link_to new_users_profile_path, class: "nav-link", method: :get do %>
+            <p>プロフィール投稿</p>
+          <% end %>
+        </li>
+      <% elsif request.fullpath == "/users/posts" %>
+        <li class="nav-item">
+          <%= link_to new_users_post_path, class: "nav-link", method: :get do %>
+            <p>動画投稿</p>
+          <% end %>
+        </li>
+      <% elsif request.fullpath == "/users/tweets" %>
+        <li class="nav-item">
+          <%= link_to new_users_tweet_path, class: "nav-link", method: :get do %>
+            <p>つぶやき投稿</p>
+          <% end %>
+        </li>      
+    </ul>
+  <% end %>
+  <div class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+    <a class="gb_d gb_Ra gb_l" aria-label="" href="" role="button" tabindex="0" target="_top" aria-expanded="false"><img class="gb_Ia gbii" 
+    src="https://lh3.googleusercontent.com/ogw/AOh-ky3HObCgZIQXGiMvD1UNMPypOq9BCUSdZa1tSyQ8=s32-c-mo" 
+    srcset="https://lh3.googleusercontent.com/ogw/AOh-ky3HObCgZIQXGiMvD1UNMPypOq9BCUSdZa1tSyQ8=s32-c-mo, https://lh3.googleusercontent.com/ogw/AOh-ky3HObCgZIQXGiMvD1UNMPypOq9BCUSdZa1tSyQ8=s64-c-mo" 
+    alt="" aria-hidden="true" data-noaft=""></a> 
+    </a>
+    <ul class="dropdown-menu">
+      <li>
+        <%= link_to current_user.name, users_user_path(current_user) %>
       </li>
     <% elsif request.fullpath == "/users/posts" %>
       <li class="nav-item">
@@ -159,5 +183,8 @@
       </a>
     </li> %>
   </ul>
+      <li><%= link_to "詳細画面", users_user_path(current_user), method: :get, class: "d-block" %></li>
+      <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
+    </ul>
+  </div>
 </nav>
-<!-- /.navbar -->

@@ -138,3 +138,10 @@
   opacity: 0;
   visibility: hidden;
 }
+
+.dropdown-menu {
+  min-width: 0px;
+}
+.nav-link:hover{
+  background-color: #e9ecef;
+}
