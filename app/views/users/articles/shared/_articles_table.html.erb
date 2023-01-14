@@ -11,18 +11,35 @@
                 <th class="px-5">投稿者</th>
               <% end %>
               <th class="px-5">投稿日</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             <% if @articles.exists? %>
               <% @articles.each do |a| %>
-                <tr class="link-tr" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'>
+                <tr>
                   <td><%= a.title %></td>
                   <td><%= a.sub_title %></td>
                   <% if !dashboard %>
                     <td><%= a.user.name %></td>
                   <% end %>
                   <td><%= l(a.created_at, format: :long) %></td>
+                  <%# if params[:content] %>
+                  <%# <td rowspan="2" class="align-middle text-center"> %>
+                  <%# else %>
+                  <td>
+                  <%# end %>
+                    <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
+                    <ul class="dropdown-menu">
+                      <% if a.user_id == current_user.id %>
+                        <li><%= link_to '閲覧', users_article_path(id: a.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
+                        <li><%= link_to '編集', edit_users_article_path(id: a.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
+                        <li><%= link_to '削除', users_article_path(id: a.id, dashboard: dashboard, page: params[:page]), method: :delete, data: {confirm: "選択した記事を削除します。"}, class: "nav-link" %></li>
+                      <% else %>
+                        <li><%= link_to '閲覧', users_article_path(id: a.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
+                      <% end %>
+                    </ul>
+                  </td>
                 </tr>
               <% end %>
             <% else %>
