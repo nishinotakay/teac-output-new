@@ -14,6 +14,8 @@ module Users
       @articles &= Article.time_filter(params[:start], params[:finish]) if params[:start] && params[:finish]
       filter = {author: params[:author], title: params[:title], subtitle: params[:subtitle], content: params[:content]}
       @articles &= Article.multi_filter(filter)
+      articles = Article.all.order(updated_at: 'DESC').page(params[:page]).per(30)
+      @articles &= articles
     end
 
     def show

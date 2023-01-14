@@ -7,21 +7,17 @@
             <tr>
               <th class="px-5">タイトル</th>
               <th class="px-5">サブタイトル</th>
-              <% unless dashboard %>
-                <th class="px-5">投稿者</th>
-              <% end %>
+              <th class="px-5">投稿者</th>
               <th class="px-5">投稿日</th>
             </tr>
           </thead>
           <tbody>
             <% if @articles.exists? %>
               <% @articles.each do |a| %>
-                <tr class="link-tr" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'>
+                <tr class="link-tr" onclick='window.location="<%= users_article_path(a.id) %>"'>
                   <td><%= a.title %></td>
                   <td><%= a.sub_title %></td>
-                  <% if !dashboard %>
-                    <td><%= @users.find(a.user_id).name %></td>
-                  <% end %>
+                  <td><%= a.user.name %></td>
                   <td><%= l(a.created_at, format: :long) %></td>
                 </tr>
               <% end %>
@@ -32,6 +28,7 @@
             <% end %>
           </tbody>
         </table>
+        <%= paginate @articles, theme: 'bootstrap-5' %>        
       </div>
     </div>
   </div>
