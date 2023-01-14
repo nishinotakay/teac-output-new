@@ -7,15 +7,13 @@ module Users
 
     def index
       params[:order] ||= 'DESC'
-      @users = User.all
       @articles = Article.order(created_at: params[:order])
       params[:start] ||= Article.order(created_at: "ASC").first.created_at if params[:finish]
       params[:finish] ||= Date.current if params[:start]
       @articles &= Article.time_filter(params[:start], params[:finish]) if params[:start] && params[:finish]
       filter = {author: params[:author], title: params[:title], subtitle: params[:subtitle], content: params[:content]}
       @articles &= Article.multi_filter(filter)
-      articles = Article.all.order(updated_at: 'DESC').page(params[:page]).per(30)
-      @articles &= articles
+      @articles = @articles.page(params[:page]).per(30)
     end
 
     def show
