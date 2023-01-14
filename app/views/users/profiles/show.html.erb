@@ -12,33 +12,32 @@
               <div class="col-md-12"></div>
               <div class="card-body">
                 <div class="user-about">
-                  <% if @profile.image.attached? %>
+                  <% @profile.image%>
                     <div class="image text-center">
                       <p class="text-muted"><%= image_tag @profile.image, class: "rounded-circle", size: "120x120" %></p>
                     </div>
-                  <% end %>
                   <div class="profile-indent text-center">
-                    <span class="nav-icon fas fa-user"></span>
-                    <span class="profile-indent"><%= @profile.name %></span>
+                    <i class="fas fa-user"></i>
+                    <span><%= @profile.name %></span>
                   </div>
                     <hr>
                   <div class="profile-indent text-center">
-                    <span class="nav-icon fas fa-gift"></span>
+                    <i class="fas fa-gift"></i>
                     年齢
-                    <span class="profile-indent" style="padding-right:10px"><%= @age.to_i/60/60/24/30+1 %>歳</span>
-                    <span class="nav-icon fas fa-heart"></span>
+                    <span class="profile-indent" style="padding-right:10px"><%= @age.to_i/60/60/24/365-1 %>歳</span>
+                    <i class="fas fa-heart"></i>
                     性別
                     <span class="profile-indent"><%= @profile.gender_i18n %></span>
                   </div>
                     <hr>
                   <div class="profile-indent" style="padding-left:30px">
-                   <span class="nav-icon fas fa-book-open"></span>
+                   <i class="fas fa-book-open"></i>
                    プログラミング学習の期間
-                    <td><%= @sa.to_i/60/60/24/30+1 %>ヶ月</td>
+                    <td><%= @sa.to_i/60/60/24/30-1 %>ヶ月</td>
                   </div>
                     <hr style="height:0.5px">
                   <div class="profile-indent" style="padding-left:30px">
-                    <span class="nav-icon fas fa-flag"></span>
+                    <i class="fas fa-flag"></i>
                     プログラミング学習の目的
                     <td class="text-muted"><%= @profile.purpose %></td>
                   </div>
