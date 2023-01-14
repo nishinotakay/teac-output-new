@@ -9,7 +9,6 @@ module Users
     # 投稿動画一覧ページ
     def index
       # ログインしていなかった場合は401ページを表示して終了（※ 401用のテンプレートファイルを作っていないと動きません）
-      @profiles = Profile.all
       @posts = current_user.posts.all.search(params[:search]).page(params[:page]).per(30)
     end
     
