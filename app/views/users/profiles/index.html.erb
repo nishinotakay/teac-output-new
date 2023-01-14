@@ -23,7 +23,8 @@
             <% @profiles.each do |profile| %>
               <tr>
                 <td style="padding: 10px">
-                  <%= image_tag profile.image , class: "rounded-circle", size: "30x30" %>
+                  <% image = profile.present? && profile.image.present? ? profile.image : "avatar.png" %>
+                  <%= image_tag image , class: "rounded-circle", size: "30x30" %>
                 </td>
                 <td>
                   <%= profile.name %>
