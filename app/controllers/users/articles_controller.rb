@@ -7,14 +7,17 @@ module Users
     before_action :set_dashboard, only: %i[show new create edit update destroy]
 
     def index
-      params[:order] ||= 'DESC'
-      @articles = Article.order(created_at: params[:order])
-      params[:start] ||= Article.order(created_at: "ASC").first.created_at if params[:finish]
-      params[:finish] ||= Date.current if params[:start]
-      @articles &= Article.time_filter(params[:start], params[:finish]) if params[:start] && params[:finish]
       filter = {author: params[:author], title: params[:title], subtitle: params[:subtitle], content: params[:content]}
-      @articles &= Article.multi_filter(filter)
-      @articles = @articles.page(params[:page]).per(30)
+      params[:order] ||= 'DESC'
+      if @paginate = params[:start].blank? && params[:finish].blank? && filter.compact.blank?
+        @articles = Article.order(created_at: params[:order]).page(params[:page]).per(30) 
+      else
+        @articles = Article.order(created_at: params[:order])
+        params[:start] ||= "2022-01-01".to_date if params[:finish]
+        params[:finish] ||= Date.current if params[:start]
+        @articles &= Article.time_filter(params[:start], params[:finish]) if params[:start] && params[:finish]
+        @articles &= Article.multi_filter(filter)
+      end
     end
 
     def show

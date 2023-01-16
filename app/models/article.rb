@@ -16,8 +16,9 @@ class Article < ApplicationRecord
   end
 
   def self.multi_filter(filter)
-    articles = joins(:user).merge(where('name like ?', "%#{filter[:author]}%"))
-      .where(["title like ? and sub_title like ? and content like ?", "%#{filter[:title]}%", "%#{filter[:subtitle]}%", "%#{filter[:content]}%"]).presence
+    articles = where(["title like ? and sub_title like ? and content like ?",
+      "%#{filter[:title]}%", "%#{filter[:subtitle]}%", "%#{filter[:content]}%"])
+      .joins(:user).merge(where('name like ?', "%#{filter[:author]}%")).presence
     return articles.blank? ? [] : articles
   end
 end

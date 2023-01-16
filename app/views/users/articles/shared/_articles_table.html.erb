@@ -69,7 +69,7 @@
             <% end %>
           </tbody>
         </table>
-        <%= paginate @articles, theme: 'bootstrap-5' %>        
+        <%= paginate @articles, theme: 'bootstrap-5' if @paginate %>
       </div>
     </div>
   </div>
@@ -88,6 +88,7 @@
             <label for="sort-select" class="col-sm-2 col-form-label">投稿日</label>
             <div class="col-md-10">
               <% order = {'DESC': '新しい順', 'ASC': '古い順'} %>
+              <% params[:order] ||= 'DESC' %>
               <select id="sort-select" class="form-select" aria-label="Default select desc">
                 <option value="<%= params[:order] %>" selected><%= order.delete(:"#{params[:order]}") %></option>
                 <option value="<%= order.keys[0] %>"><%= order[order.keys[0]] %></option>
