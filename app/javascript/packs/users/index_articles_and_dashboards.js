@@ -32,18 +32,23 @@ $(function(){
   })
 
   $('.reset-btn').on('click', function(){
-    window.location.search = ''
-  })
-
-  $('.link-tr').hover(function(){
-    var classname = $(this).next().attr('class');
-    console.log(classname)
-    if(classname == 'content-tr'){
-      // $(this).next().hover()
-      // $(this).next().css('background-color', 'var(--bs-table-hover-color)')
-      $(this).next().css('background-color', 'red')
+    var search = window.location.search
+    if(search.indexOf("order=") != -1){
+      window.location.search = search.indexOf("DESC") != -1 ? '?order=DESC' : '?order=ASC'
+    }else{
+      window.location.search = ''
     }
   })
+
+  // テーブルにコンテンツを追加するときにコメントイン
+  // $('.link-tr').hover(function(){
+  //   var classname = $(this).next().attr('class');
+  //   if(classname == 'content-tr'){
+  //     // $(this).next().hover()
+  //     // $(this).next().css('background-color', 'var(--bs-table-hover-color)')
+  //     $(this).next().css('background-color', 'red')
+  //   }
+  // })
 
   $('.submit-btn').on('click', function(){
     var sort = $('#sort-select option:selected').val()
@@ -55,7 +60,7 @@ $(function(){
         search += '&' + value + '=' + input
       }
     })
-    search += '&reset=true'
+    search += search.indexOf('order=') != -1 ? '' : '&reset=true'
     window.location.search = search
   })
 })
