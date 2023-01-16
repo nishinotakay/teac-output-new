@@ -14,6 +14,8 @@ module Users
       @d1 = Date.current.to_time
       @d2 = @profile.learning_start.to_time if @profile.learning_start.to_time
       @sa = @d1 - @d2
+      @birthday = @profile.birthday.to_time 
+      @age = @d1 - @birthday
     end
 
     def new
