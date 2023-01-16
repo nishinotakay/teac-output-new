@@ -9,18 +9,18 @@
     </div>
     <div class="modal-body">
       <div class="row">
-      <%= form_with(model: @tweet, url: users_tweet_path, method: :patch, local: true) do |form| %>
-        <div style="text-align:center;">
+        <%= form_with(model: @tweet, url: users_tweet_path, method: :patch, local: true) do |form| %>
           <%= render 'layouts/error_messages', model: form.object %>
-          <div class="field">
-            <%= form.label :post, "#{yield(:label_text)}", class: "tweet-form" %><br>
-            <%= form.text_area :post, id:"tweet_post", size: "50x5" %>
-          </div>
-          <div class="actions">
-            <br><%= form.submit "#{yield(:btn_text)}", class: "btn btn-lg btn-primary" %>
-          </div>
-        </div>
-      <% end %>
+          <div style="text-align:center;"> 
+            <div class="field">
+              <%= form.label :post, "#{yield(:label_text)}", class: "tweet-form" %><br>
+              <%= form.text_area :post, id:"tweet_post", size: "50x5" %>
+            </div>
+            <div class="actions">
+              <br><%= form.submit "#{yield(:btn_text)}", class: "btn btn-lg btn-primary" %>
+            </div>
+          </div>  
+        <% end %>
       </div>
     </div>
   </div>

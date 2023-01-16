@@ -14,8 +14,7 @@
         <table class= "table table-borderless">
           <td class="text-wrap col-6" style="width: 28rem;">
             <%= tweet.post %>
-          </td>
-          
+          </td> 
           <td class="dropdown"> 
             <span style="margin-right: 1em;"></span>
             <% if tweet.user.name == current_user.name %>
@@ -25,8 +24,7 @@
               <li><%= link_to '削除', users_tweet_path(tweet), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
             </ul>
             <% end %>            
-          </td>
-                           
+          </td>                  
         </table>
       </div>
     </div>

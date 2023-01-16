@@ -44,8 +44,8 @@ module Users
 
     private
       
-      def tweet_params
-        params.require(:tweet).permit(:post)
-      end
+    def tweet_params
+      params.require(:tweet).permit(:post)
+    end
   end
 end
