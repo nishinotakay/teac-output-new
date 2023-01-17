@@ -1,30 +1,79 @@
-
-<h1>ユーザー詳細画面</h1>
-  <p>名前 : <br><%= @user.name %></p>
-    <p>メールアドレス : <br><%= @user.email %></p>
-      <p>性別 : <br><%= @user.gender %></p>
-        <p>年齢 : <br><%= @user.age %>歳</p>
-
-<html>
-  <body>
-    <div class="inline-block_test">
-      <%= link_to users_articles_path, class:"nav-link", method: :get do %>
-        <button type="button" class="btn btn-success">
-          <p>
-            投稿した記事一覧
-          </p>
-        </button>
-    <% end %>
-    </div>
-      <div class="inline-block_test">
-        <%= link_to users_profiles_path, class:"nav-link", method: :get do %>
-          <button type="button" class="btn btn-primary">
-            <p>
-                プロフィール
-            </p>  
-          </button>
-        <% end %>   
+<%= javascript_pack_tag "users/profiles" %>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col align-self-start"><!--左余白--></div><!--左余白-->
+    <div class="col-4 align-self-center"><!--中央余白-->
+      <div class="card card-outline card-primary">
+        <div class="card-header text-center"><h2>ユーザー詳細画面</h2></div>
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-12"></div>
+              <div class="card-body">
+                <div class="user-about">
+                  <% @profile.image%>
+                    <div class="image text-center">
+                      <p class="text-muted"><%= image_tag @profile.image, class: "rounded-circle", size: "120x120" %></p>
+                    </div>
+                  <div class="profile-indent text-center">
+                    <i class="fas fa-user"></i>
+                    <span><%= @profile.name %></span>
+                  </div>
+                    <hr>
+                  <div class="profile-indent text-center">
+                    <i class="fas fa-envelope"></i>
+                    <span><%= @user.email %></span>
+                  </div>
+                    <hr style="height:0.5px">
+                  <div class="profile-indent" style="padding-left:30px">
+                    <i class="fas fa-heart"></i>
+                    性別
+                    <span class="profile-indent"><%= @profile.gender_i18n %></span>
+                  </div>
+                    <hr>
+                  <div class="profile-indent" style="padding-left:30px">
+                    <i class="fas fa-gift"></i>
+                    誕生日
+                    <span class="profile-indent" style="padding-right:10px"><%= @profile.birthday %></span>
+                  </div>
+                    <hr>
+                  <div class="profile-indent" style="padding-left:30px">
+                   <i class="fas fa-book-open"></i>
+                   プログラミング学習開始日
+                    <td><%= @profile.learning_start %></td>
+                  </div>
+                    <hr style="height:0.5px">
+                  <div class="profile-indent" style="padding-left:30px">
+                    <i class="fas fa-flag"></i>
+                    プログラミング学習の目的
+                    <td class="text-muted"><%= @profile.purpose %></td>
+                  </div>
+                    <hr>
+                  <div class="content">
+                    <div class="text-center">
+                      <button type="button" class="btn btn-success" style="width:110px">
+                      <%= link_to "投稿記事",users_articles_path,class: "Editlink" %>
+                      </button>
+                     <button type="button" class="btn btn-danger" style="width:110px">
+                      <%= link_to "投稿動画",users_posts_path,class: "Editlink" %>
+                      </button>
+                     <button type="button" class="btn btn-info" style="width:110px">
+                      <%= link_to "投稿つぶやき",users_tweets_path,class: "Editlink" %>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
-       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-  </body>
-</html>
+    </div><!--中央余白-->
+    <div class="col align-self-end"><!--右余白--></div><!--右余白-->
+  </div>
+</div>
+<style>
+
+
+</style>
