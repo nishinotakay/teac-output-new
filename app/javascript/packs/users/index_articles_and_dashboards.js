@@ -32,9 +32,9 @@ $(function(){
   })
 
   $('.reset-btn').on('click', function(){
-    var search = window.location.search
+    var search = location.search
     if(search.indexOf("order=") != -1){
-      window.location.search = search.indexOf("DESC") != -1 ? '?order=DESC' : '?order=ASC'
+      window.location.search = search.indexOf("DESC") != -1 ? 'order=DESC' : 'order=ASC'
     }else{
       window.location.search = ''
     }
@@ -52,15 +52,15 @@ $(function(){
 
   $('.submit-btn').on('click', function(){
     var sort = $('#sort-select option:selected').val()
-    var values = ['author', 'title', 'subtitle', 'content', 'start', 'finish']
     var search = "order=" + sort
+    var values = ['author', 'title', 'subtitle', 'content', 'start', 'finish']
     $.each(values, function(index, value){
       var input = $('#input-' + value).val()
       if(input){
         search += '&' + value + '=' + input
+        search += search.indexOf('reset=') != -1 ? '' : '&reset=true'
       }
     })
-    search += search.indexOf('order=') != -1 ? '' : '&reset=true'
     window.location.search = search
   })
 })
