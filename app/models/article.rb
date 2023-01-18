@@ -8,7 +8,7 @@ class Article < ApplicationRecord
   validates :sub_title, allow_nil: true, length: { in: 1..40 }
   validates :content, presence: true
 
-  def self.multi_filter(filter)
+  def self.sort_filter(filter)
     start = filter[:start].blank? ? "2022-01-01" : filter[:start]
     finish = filter[:finish].blank? ? Date.current : filter[:finish]
     start = start.to_datetime.since(9.hours).beginning_of_day

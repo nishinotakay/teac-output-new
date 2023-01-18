@@ -8,7 +8,7 @@ module Users
         @articles = current_user.articles.order(created_at: params[:order]).page(params[:page]).per(30) 
       else
         filter[:order] = params[:order]
-        @articles = current_user.articles.sort_filter(filter)&.page(params[:page]).per(30) 
+        @articles = current_user.articles.sort_filter(filter)
       end
     end
   end
