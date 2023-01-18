@@ -3,6 +3,12 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
+# ページネーション
+gem 'kaminari', '~> 1.2', '>= 1.2.1'
+gem 'bootstrap5-kaminari-views', '~> 0.0.1'
+
+gem 'enum_help'
+
 # 画像保存に必要
 gem 'carrierwave'
 

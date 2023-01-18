@@ -7,7 +7,7 @@ module Users
 
     def index
       @users = User.all
-      @articles = Article.all.order(updated_at: 'DESC')
+      @articles = Article.all.order(updated_at: 'DESC').page(params[:page]).per(30)
     end
 
     def show
