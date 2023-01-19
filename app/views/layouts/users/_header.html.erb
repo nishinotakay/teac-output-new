@@ -1,4 +1,4 @@
- <!-- Navbar -->
+<!-- Navbar -->
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
   <!-- Left navbar links -->
   <ul class="navbar-nav">
@@ -10,44 +10,45 @@
     </li>
   </ul>
   <!-- Right navbar links -->
-  <ul class="navbar-nav ml-auto">
-    <li class="dropdown">
-      <% if request.fullpath == "/users/articles" || request.fullpath == "/users/dash_boards" %>
-        <li class="nav-item">
-          <%= link_to new_users_article_path, class: "nav-link", method: :get do %>
-            <p>記事投稿</p>
-          <% end %>
-        </li> 
-      <% elsif request.fullpath == "/users/profiles" %>
-        <li class="nav-item">
-          <%= link_to new_users_profile_path, class: "nav-link", method: :get do %>
-            <p>プロフィール投稿</p>
-          <% end %>
-        </li>
-      <% elsif request.fullpath == "/users/posts" %>
-        <li class="nav-item">
-          <%= link_to new_users_post_path, class: "nav-link", method: :get do %>
-            <p>動画投稿</p>
-          <% end %>
-        </li>
-      <% elsif request.fullpath == "/users/tweets" %>
-        <li class="nav-item">
-          <%= link_to new_users_tweet_path, class: "nav-link", remote: true, method: :get do %>
-            <p>つぶやき投稿</p>
-          <% end %>
-        </li>
-      <% end %>
-    </li>    
-  </ul>
-  <div class="dropdown">
-    <div class="nav-link" id="dropdownMenuButton button_group" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
-      <%= image_tag image , class: "rounded-circle", size: "30x30" %><b class="caret"></b> 
-    </div>
-    <ul class="dropdown-menu dropdown-menu-header">
-      <li><%= link_to current_user.name, users_user_path(current_user) %></li>
-      <li><%= link_to "詳細画面", users_user_path(current_user), method: :get, class: "d-block" %></li>
-      <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
+    <ul class="navbar-nav ml-auto">
+      <li class="dropdown">
+        <% if request.fullpath == "/users/articles" || request.fullpath == "/users/dash_boards" %>
+          <li class="nav-item">
+            <%= link_to new_users_article_path, class: "nav-link", method: :get do %>
+              <p>記事投稿</p>
+            <% end %>
+          </li> 
+        <% elsif request.fullpath == "/users/profiles" %>
+          <li class="nav-item">
+            <%= link_to new_users_profile_path, class: "nav-link", method: :get do %>
+              <p>プロフィール投稿</p>
+            <% end %>
+          </li>
+        <% elsif request.fullpath == "/users/posts" %>
+          <li class="nav-item">
+            <%= link_to new_users_post_path, class: "nav-link", method: :get do %>
+              <p>動画投稿</p>
+            <% end %>
+          </li>
+        <% elsif request.fullpath == "/users/tweets" %>
+          <li class="nav-item">
+            <%= link_to new_users_tweet_path, class: "nav-link", remote: true, method: :get do %>
+              <p>つぶやき投稿</p>
+            <% end %>
+          </li>
+        <% end %>
+      </li>    
+    </ul>
+  <div class="dropdown navbar-nav" style="padding-bottom:6px">
+      <div class="nav-link" id="dropdownMenuButton button_group" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
+        <%= image_tag image , class: "rounded-circle", size: "30x30" %><b class="caret"></b> 
+      </div>
+    <ul class="dropdown-menu dropdown-menu-right dropdown-menu-header">
+        <li style="padding-left:3px"><%= current_user.name %></li>
+        <hr style="height:0.5px">
+        <li style="padding-left:3px"><%= link_to "詳細画面", users_user_path(current_user), method: :get, class: "d-block" %></li>
+        <li style="padding-left:3px"><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
     </ul>
   </div>
 </nav>

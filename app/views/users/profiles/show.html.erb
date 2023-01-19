@@ -22,17 +22,17 @@
                   </div>
                     <hr>
                   <div class="profile-indent" style="padding-left:30px">
-                    <i class="fas fa-gift"></i>
-                    年齢
-                    <span class="profile-indent" style="padding-right:10px"><%= @age.to_i/60/60/24/365-1 %>歳</span>
-                  </div>
-                    <hr>
-                  <div class="profile-indent" style="padding-left:30px">
                     <i class="fas fa-heart"></i>
                     性別
                     <span class="profile-indent"><%= @profile.gender_i18n %></span>
                   </div>
                     <hr style="height:0.5px">
+                  <div class="profile-indent" style="padding-left:30px">
+                    <i class="fas fa-gift"></i>
+                    年齢
+                    <span class="profile-indent" style="padding-right:10px"><%= @age.to_i/60/60/24/365-1 %>歳</span>
+                  </div>
+                    <hr>
                   <div class="profile-indent" style="padding-left:30px">
                    <i class="fas fa-book-open"></i>
                    プログラミング学習の期間
@@ -44,7 +44,7 @@
                     プログラミング学習の目的
                     <td class="text-muted"><%= @profile.purpose %></td>
                   </div>
-                    <hr>
+                    <hr style="height:0.5px">
                 </div>
               </div>
             </div>
