@@ -1,0 +1,12 @@
+ja:
+  activerecord:
+    models:
+      article: '記事'
+    attributes:
+      article:
+        title: 'タイトル'
+        sub_title: 'サブタイトル'
+        content: '本文'
+        created_at: '投稿日時'
+        updated_at: '編集日時'
+        image: '添付画像'
