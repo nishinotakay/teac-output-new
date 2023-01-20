@@ -10,3 +10,4 @@ ja:
         created_at: '投稿日時'
         updated_at: '編集日時'
         image: '添付画像'
+        user: '投稿者'

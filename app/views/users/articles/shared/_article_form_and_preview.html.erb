@@ -1,10 +1,10 @@
 <%= form_with(model: @article, url: url, method: method, local: true) do |f| %>
   <div class="row mt-4">
     <div class="col-10 offset-1 div-title-form">
-      <%= f.text_field :title, placeholder: "タイトル", class: "form-control title-form" %>
+      <%= f.text_field :title, placeholder: :title, class: "form-control title-form" %>
     </div>
     <div class="col-10 offset-1 my-2">
-      <%= f.text_field :sub_title, placeholder: "サブタイトル", class: "form-control subtitle-form" %>
+      <%= f.text_field :sub_title, placeholder: :sub_title, class: "form-control subtitle-form" %>
     </div>
     
     <div class="col-5 offset-1 editor-side">
@@ -14,7 +14,7 @@
         </div>
         <div class="card-body">
           <div class="col-12 div-textarea">
-            <%= f.text_area :content, placeholder: "コンテンツ", cols: 30, rows: 100,
+            <%= f.text_area :content, placeholder: :content, cols: 30, rows: 100,
              class: "form-control markdown-editor", data: {user_id: current_user.id} %>
           </div>
         </div>
@@ -28,7 +28,7 @@
         </div>
         <div class="card-body col-12">
           <div class="sticky">
-            <% content = @article.content ? simple_format(@article.content) : "コンテンツ" %>
+            <% content = @article.content ? simple_format(@article.content) : Article.human_attribute_name(:content) %>
             <div class="preview form-control" data-preview-content='<%= content %>'></div>
             <div class="text-center div-btns mt-2">
               <%= f.submit btn_name, class: "btn btn-primary" %>
