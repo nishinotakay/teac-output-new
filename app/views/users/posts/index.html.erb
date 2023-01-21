@@ -20,26 +20,26 @@
       <tbody>      
         <% if @posts.exists? %>
           <% @posts.each do |post| %>
-            <tr onclick='window.location="<%= users_post_path(id: post.id) %>"' >
-                  <td><%= post.title %></td>
-                  <td><%= simple_format(post.body) %></td>
-                  <td width="150">
-                    <iframe width="289" height="180" src="https://www.youtube.com/embed/<%=post.youtube_url %>"  frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                  </td>
-                  <td><%= post.user.name %></td>
-                  <td><%= post.created_at.strftime('%Y/%m/%d') %></td> 
-                <td>
-                  <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
-                  <ul class="dropdown-menu">
-                  <% if post.user_id == current_user.id %>
-                      <li><%= link_to '閲覧', users_post_path(post), class:"nav-link" %></li>
-                      <li><%= link_to '編集', edit_users_post_path(post), class:"nav-link" %></li>
-                      <li><%= link_to '削除', users_post_path(post), method: :delete, class:"nav-link", data: {confirm: "#{post.title}を削除してもよろしいですか？"} %></li>
-                  <% else %>
-                      <li><%= link_to '閲覧', users_post_path(post), class:"nav-link" %></li>
-                    </ul>
-                  <% end %>
-                </td> 
+            <tr>
+              <td onclick='window.location="<%= users_post_path(id: post.id) %>"'><%= post.title %></td>
+              <td onclick='window.location="<%= users_post_path(id: post.id) %>"'><%= simple_format(post.body) %></td>
+              <td width="150" onclick='window.location="<%= users_post_path(id: post.id) %>"'>
+                <iframe width="289" height="180" src="https://www.youtube.com/embed/<%=post.youtube_url %>"  frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              </td>
+              <td onclick='window.location="<%= users_post_path(id: post.id) %>"'><%= post.user.name %></td>
+              <td onclick='window.location="<%= users_post_path(id: post.id) %>"'><%= post.created_at.strftime('%Y/%m/%d') %></td> 
+              <td>
+                <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
+                <ul class="dropdown-menu">
+                <% if post.user_id == current_user.id %>
+                  <li><%= link_to '閲覧', users_post_path(post), class:"nav-link" %></li>
+                  <li><%= link_to '編集', edit_users_post_path(post), class:"nav-link" %></li>
+                  <li><%= link_to '削除', users_post_path(post), method: :delete, class:"nav-link", data: {confirm: "#{post.title}を削除してもよろしいですか？"} %></li>
+                <% else %>
+                  <li><%= link_to '閲覧', users_post_path(post), class:"nav-link" %></li>
+                </ul>
+                <% end %>
+              </td> 
             </tr>
           <% end %>
         <% else %>
