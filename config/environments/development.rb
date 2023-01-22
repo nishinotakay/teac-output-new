@@ -94,5 +94,4 @@ Rails.application.configure do
     authentication:       :plain,
     enable_starttls_auto: true
   }
-  config.web_console.whitelisted_ips = '172.19.0.1' # この行を追加
 end
