@@ -70,6 +70,7 @@ Rails.application.routes.draw do
     end
     resources :profiles
     resources :tweets #つぶやき機能
+    resources :inquiries
   end
   # =================================================================
 
