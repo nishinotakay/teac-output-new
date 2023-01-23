@@ -1,18 +1,36 @@
 <div class="content">
   <div class="container">
-    <% @tweets.each do |tweet| %>
-      <table class= "table">
+    <% if @tweets.exists? %>
+      <% @tweets.each do |tweet| %>
         <div class="tweets-index-item">
           <div class="fw-bold">
             <%= tweet.user.name %>
-            <span style="margin-right: 1em;"></span>
-            <%= tweet.user.created_at.strftime("%Y年%m月%d日").to_s %>
-          </div>
-          <div class="text-wrap" style="width: 28rem;">
-            <%= tweet.post %>
+              <span style="margin-right: 1em;"></span>
+            <%= tweet.created_at.strftime("%Y年%m月%d日").to_s %>
           </div>
         </div>
-      </table>
+        <div class="row">
+          <div class="col-12">
+            <table class= "table table-borderless">
+              <td class="text-wrap col-6" style="width: 28rem;">
+                <%= tweet.post %>
+              </td> 
+              <td class="dropdown"> 
+                <span style="margin-right: 1em;"></span>
+                <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
+                <ul class="dropdown-menu">
+                  <% if tweet.user.name == current_user.name %>
+                    <li><%= link_to '編集', edit_users_tweet_path(tweet), remote: true, class:"dropdown-item" %></li>
+                    <li><%= link_to '削除', users_tweet_path(tweet), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
+                  <% end %>            
+                </ul>
+              </td>                  
+            </table>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <%= render 'users/shared/table_without_record' %>
     <% end %>
   </div>
 </div>
