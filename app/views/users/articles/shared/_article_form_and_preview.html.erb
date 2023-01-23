@@ -28,7 +28,7 @@
         </div>
         <div class="card-body col-12">
           <div class="sticky">
-            <% content = @article.content ? simple_format(@article.content) : "コンテンツ" %>
+            <% content = @article.content ? simple_format(@article.content) : "" %>
             <div class="preview form-control" data-preview-content='<%= content %>'></div>
             <div class="text-center div-btns mt-2">
               <%= f.submit btn_name, class: "btn btn-primary" %>
