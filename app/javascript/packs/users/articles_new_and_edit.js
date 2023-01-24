@@ -6,8 +6,6 @@ $(function(){
   var m_editor = $(".markdown-editor");
   var preview = $(".preview");
   preview.height(m_editor.height());
-  console.log(m_editor.css('color'))
-  preview.css('color', "#212529");
   preview.html(preview.data("preview-content"));
   $('.editor-side .card').height($('.preview-side .card').height())
   
@@ -30,10 +28,8 @@ $(function(){
 
   $('.markdown-editor').keyup(function(event){
     var content = $(this).val()
-    // content ||= "コンテンツ"
     content ||= preview.data("preview-content")
     content = marked(content);
-    // content ||= "コンテンツ"
     content ||= preview.data("preview-content")
     var pre = $('.preview')
     pre.html(content);
