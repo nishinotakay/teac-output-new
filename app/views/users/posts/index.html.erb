@@ -20,11 +20,11 @@
       <tbody>      
         <% if @posts.exists? %>
           <% @posts.each do |post| %>
-            <tr>
+            <tr onclick='window.location="<%= users_post_path(id: post.id) %>"' >
                   <td><%= post.title %></td>
                   <td><%= simple_format(post.body) %></td>
                   <td width="150">
-                    <iframe width="289" height="180" src="https://www.youtube.com/embed/<%=post.youtube_url %>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe width="289" height="180" src="https://www.youtube.com/embed/<%=post.youtube_url %>"  frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                   </td>
                   <td><%= post.user.name %></td>
                   <td><%= post.created_at.strftime('%Y/%m/%d') %></td> 
