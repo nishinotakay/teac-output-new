@@ -54,6 +54,7 @@ Rails.application.routes.draw do
       # 全ユーザー詳細ページ（/users/posts/:id/show_1）
       member do # id付与
         get 'show_1'
+        get 'show'
         # 全ユーザー編集ページ（/users/posts/:id/edit_1）
         get 'edit_1'
         # 全ユーザー編集ページの更新（/users/posts/:id/update_1(）
@@ -69,6 +70,7 @@ Rails.application.routes.draw do
     end
     resources :profiles
     resources :tweets #つぶやき機能
+    resources :inquiries
   end
   # =================================================================
 
