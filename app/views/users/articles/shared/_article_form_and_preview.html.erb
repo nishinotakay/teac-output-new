@@ -28,9 +28,9 @@
         </div>
         <div class="card-body col-12">
           <div class="sticky">
-            <% content = @article.content ? simple_format(@article.content) : "コンテンツ" %>
+            <% content = @article.content ? simple_format(@article.content) : "" %>
             <div class="preview form-control" data-preview-content='<%= content %>'></div>
-            <div class="text-center div-btns mt-2">
+            <div class="text-center div-btns mt-3">
               <%= f.submit btn_name, class: "btn btn-primary" %>
               <% if btn_name == "更新" && @show %>
                 <%= link_to 'キャンセル', users_article_path(@article, dashboard: @dashboard, page: params[:page]), class: "btn btn-outline-dark" %>
