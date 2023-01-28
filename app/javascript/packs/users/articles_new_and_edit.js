@@ -6,12 +6,12 @@ $(function(){
   var m_editor = $(".markdown-editor");
   var preview = $(".preview");
   preview.height(m_editor.height());
-  preview.css('color', m_editor.css('color'));
   preview.html(preview.data("preview-content"));
   $('.editor-side .card').height($('.preview-side .card').height())
   
   if($(".markdown-editor").val()){
     var content = $(".markdown-editor").text()
+    content ||= ''
     content = mathtodollars(content);
     content = marked(content)
     var elem = $('.preview')
@@ -24,15 +24,13 @@ $(function(){
       $(this).width("60%")
       $(this).height("60%")
     })
-  }else{
-    $('.preview').html("コンテンツ");
   }
 
   $('.markdown-editor').keyup(function(event){
     var content = $(this).val()
-    content ||= "コンテンツ"
+    content ||= preview.data("preview-content")
     content = marked(content);
-    content ||= "コンテンツ"
+    content ||= preview.data("preview-content")
     var pre = $('.preview')
     pre.html(content);
     pre.find("img").each(function(){
@@ -52,8 +50,6 @@ $(function(){
     var formData = new FormData();
     formData.append('image', image); // FormDataに画像を追加
     formData.append('user_id', e.target.dataset.userId); // FormDataに画像を追加
-    console.log(e)
-    console.log(image)
 
     // ajaxで画像をアップロード
     $.ajax({

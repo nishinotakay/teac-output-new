@@ -5,11 +5,13 @@ $(function(){
 
   $('.hr').css({'width': '90%', 'margin-left': '4rem'})
 
-  if($(".article-view").length){
-    var article = $(".article-view")
+  if($(".article-content").length){
+    var article = $(".article-content")
     var content = article.data("article")
-    content = mathtodollars(content);
-    content = marked(content)
+    if($.type(content) == "string"){
+      content = mathtodollars(content);
+      content = marked(content)
+    }
     article.html(content);
     MathJax.Hub.Typeset(["Typeset",MathJax.Hub, "posts-preview"]); 
     var pre = article.find("pre")
