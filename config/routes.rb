@@ -69,8 +69,13 @@ Rails.application.routes.draw do
     resources :users, only: [:index]
     end
     resources :profiles
-    resources :tweets #つぶやき機能
+    resources :tweets do #つぶやき機能
+      member do
+        get 'index_user'
+      end
+    end
     resources :inquiries #問い合わせ
+
   end
   # =================================================================
 
