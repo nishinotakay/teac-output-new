@@ -1,7 +1,7 @@
 module Users
   class InquiriesController < Users::Base
     def index
-     @inquiry = Inquiry.all
+      @inquiry = Inquiry.all
     end
 
     def show
@@ -12,23 +12,20 @@ module Users
     end
 
     def create
-      @inquiry = current_user.inquiries.new(inquiry_params)
+        @inquiry = current_user.inquiries.new(inquiry_params)
       if @inquiry.save
-         redirect_to new_users_inquiry_path , flash: {success: "問い合わせを投稿しました。"}
+        redirect_to new_users_inquiry_path , flash: {success: "問い合わせを投稿しました。"}
       else
-         flash.now[:danger] = '問い合わせ投稿出来ませんでした。'
-         render :new
+        flash.now[:danger] = '問い合わせ投稿出来ませんでした。'
+        render :new
       end
     end
-
-    def edit
-    end
   
-  private
+    private
 
-  def inquiry_params
-    params.require(:inquiry).permit(:subject, :content)
-  end
+    def inquiry_params
+      params.require(:inquiry).permit(:subject, :content)
+    end
 
   end
 end
