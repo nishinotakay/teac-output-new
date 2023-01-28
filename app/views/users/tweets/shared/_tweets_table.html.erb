@@ -4,8 +4,12 @@
       <% @tweets.each do |tweet| %>
         <div class="tweets-index-item">
           <div class="fw-bold">
-            <%= tweet.user.name %>
-              <span style="margin-right: 1em;"></span>
+            <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
+            <%= image_tag image , class: "rounded-circle", size: "30x30" %><b class="caret"></b>          
+            <%= link_to index_user_users_tweet_path(tweet.user_id), style: "text-decoration: underline;" do %>
+              <%= tweet.user.name %>
+            <% end %>
+            <span style="margin-right: 1em;"></span>
             <%= tweet.created_at.strftime("%Y年%m月%d日").to_s %>
           </div>
         </div>
@@ -19,6 +23,7 @@
                 <span style="margin-right: 1em;"></span>
                 <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
                 <ul class="dropdown-menu">
+                  <li><%= link_to '詳細', index_user_users_tweet_path(tweet.user_id), class:"dropdown-item" %></li>
                   <% if tweet.user.name == current_user.name %>
                     <li><%= link_to '編集', edit_users_tweet_path(tweet), remote: true, class:"dropdown-item" %></li>
                     <li><%= link_to '削除', users_tweet_path(tweet), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
