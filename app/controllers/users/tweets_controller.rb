@@ -5,6 +5,12 @@ module Users
       @tweets = Tweet.all
     end
 
+    def show
+      @tweet = Tweet.find(params[:id])
+      @comments = @tweet.comments
+      @comment = current_user.comments.new
+    end
+
     def new
       @tweet = current_user.tweets.new
     end

@@ -1,0 +1,16 @@
+<h2>投稿詳細<h2>
+
+<%= @tweet.post %>
+
+<h2>コメントをする</h2>
+
+<%= form_with(url: users_tweet_comments_path(@tweet, @comment), method: :post) do |f| %>
+  <%= f.text_area :comment_content %>
+  <%= f.hidden_field :tweet_id, value: @tweet.id %>
+  <%= f.submit 'コメントする' %>
+<% end %>
+
+<h2>コメント一覧</h2>
+  <% @comments.each do |comment| %>
+    <%= comment.comment_content %>
+  <% end %>
