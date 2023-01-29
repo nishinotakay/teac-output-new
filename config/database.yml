@@ -17,4 +17,4 @@ test:
 
 production:
   <<: *default
-  url: <%= (ENV.fetch("JAWSDB_URL") { "mysql://pmk9cljb078n9i6h:hwqrz0ub6ggd2a62@d6rii63wp64rsfb5.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/lxibsvy2fqsqgod5" }).gsub(/mysql/, 'mysql2') %>
+  url: <%= (ENV.fetch("JAWSDB_URL") { "mysql://n71mthu8yv0xnd5k:paykwf5rqak5tjpn@phtfaw4p6a970uc0.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/ld2cpczu84ne0evh" }).gsub(/mysql/, 'mysql2') %>
