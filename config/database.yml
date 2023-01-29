@@ -17,7 +17,7 @@ test:
 
 production:
   <<: *default
-  database: "mysql2://pmk9cljb078n9i6h:hwqrz0ub6ggd2a62@d6rii63wp64rsfb5.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/lxibsvy2fqsqgod5"
-  username: "pmk9cljb078n9i6h"
-  password: "hwqrz0ub6ggd2a622"
-  url: "mysql2://pmk9cljb078n9i6h:hwqrz0ub6ggd2a62@d6rii63wp64rsfb5.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/lxibsvy2fqsqgod5"
+  database: <%= ENV['DATABASE_URL'] %>
+  username: <%= ENV['DATABASE_USERNAME'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+  url: <%= ENV['DATABASE_URL'] %>
