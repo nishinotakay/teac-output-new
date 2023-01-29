@@ -179,31 +179,46 @@ RSpec.describe 'Articles', type: :system do
 
   describe 'upload image' do
     it 'success', js: true do
-      image = fixture_file_upload("spec/fixtures/ruby.png", 'image/png')
-      image = File.new("spec/fixtures/ruby.png")
-      # image = file_fixture("ruby.png")
-      # page.execute_script ''
-      # page.execute_script "var fd = new FormData()"
-      # page.execute_script "fd.append('image', #{image})"
-      # page.execute_script "fd.append('user_id', #{user.id})"
+      # png = fixture_file_upload("spec/fixtures/ruby.png", 'image/png')
+      # png = File.new("spec/fixtures/ruby.png")
+      png = file_fixture("ruby.png")
+
+      # assert_equal 2, png 
 
       visit new_users_article_path
-      # fill_in 'article[content]', with: image
-      # find('.markdown-editor').drag_to image
+
       source = page.find('.markdown-editor')
       source.click
-      drop_files image, 'markdown-editor'
-      # binding.pry
-      # source.drop(file_fixture("ruby.png"))
-      # page.attach_file(file_fixture("ruby.png"), source)
-      # attach_file(source, file_fixture("ruby.png"))
-      # source.click
-      # page.attach_file("spec/fixtures/ruby.png") do
 
-      # drop_files image, source
-      # source.drag_to(image)
-      # source.set(File.open("spec/fixtures/ruby.png"))
-      # source.set(image.read)
+      # source.drop(png)
+
+      # page.execute_script <<-JS
+      #   dataTransfer = new DataTransfer()
+      #   dataTransfer.files.add(fakeFileInput.get(0).files[0])
+      #   testEvent = new DragEvent('drop', {bubbles:true, dataTransfer: dataTransfer })
+      #   $('.markdown-editor').dispatchEvent(testEvent)
+      # JS      
+
+      # var dragSource = document.querySelector('#item_#{item2_list1.id}');
+      # var dropTarget = document.querySelector('#item_#{item1_list2.id}');
+
+      page.execute_script <<-EOS
+        var dragSource = $('.article-img');
+        var dropTarget = $('.markdown-editor');
+        window.dragMock.dragStart(dragSource).delay(100).dragOver(dropTarget).delay(100).drop(dropTarget);
+      EOS
+      puts page.driver.browser.manage.logs.get(:browser)
+      # puts page.driver.browser.manage.logs.get(:browser).collect(&:message)
+
+      # dragMock.dragStart(dragSource).drop(dropTarget);      
+      # dragMock.dragStart('#{png}').delay(100).dragOver(dropTarget).delay(100).drop('#{source}');      
+      # windows.dragMock.dragStart("#{png}").delay(100).dragOver("#{source}").delay(100).drop("#{source}");
+      # window.dragMock.dragStart(dragSource).delay(100).dragOver(dropTarget).delay(100).drop(dropTarget);
+
+      puts '0'
+      # drop_file png, 'markdown-editor'
+      puts '1'
+
       page.save_screenshot 'ruby画像添付.png'
     end
   end

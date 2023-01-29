@@ -2,6 +2,6 @@
 <% provide(:title,  "記事投稿") %>
 <div class="content">
   <div class="container">
-    <%= render "users/articles/shared/article_form_and_preview", btn_name: "投稿", url: users_articles_path, method: :post %>
+    <%= render "users/articles/shared/article_form_and_preview", btn_name: "投稿", url: users_articles_path(dashboard: @dashboard, page: params[:page]), method: :post %>
   </div>
 </div>

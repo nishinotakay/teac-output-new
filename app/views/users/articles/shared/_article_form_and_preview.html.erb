@@ -1,18 +1,19 @@
 <%= form_with(model: @article, url: url, method: method, local: true) do |f| %>
   <div class="row mt-4">
-    <div class="col-6 editor-side">
+    <div class="col-10 offset-1 div-title-form">
+      <%= f.text_field :title, placeholder: "タイトル", class: "form-control title-form" %>
+    </div>
+    <div class="col-10 offset-1 my-2">
+      <%= f.text_field :sub_title, placeholder: "サブタイトル", class: "form-control subtitle-form" %>
+    </div>
+    
+    <div class="col-5 offset-1 editor-side">
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title text-center">エディター</h3>
         </div>
         <div class="card-body">
-          <div class="col-10 offset-1 mt-3 div-title-form">
-            <%= f.text_field :title, placeholder: "タイトル", class: "form-control title-form" %>
-          </div>
-          <div class="col-10 offset-1 mt-3">
-            <%= f.text_field :sub_title, placeholder: "サブタイトル", class: "form-control subtitle-form" %>
-          </div>
-          <div class="col-10 offset-1 mt-3 div-textarea">
+          <div class="col-12 div-textarea">
             <%= f.text_area :content, placeholder: "コンテンツ", cols: 30, rows: 100,
              class: "form-control markdown-editor", data: {user_id: current_user.id} %>
           </div>
@@ -20,26 +21,25 @@
       </div>
     </div>
 
-    <div class="col-6 preview-side">
+    <div class="col-5 preview-side">
       <div class="card card-outline card-info d-flex flex-column justify-content-start">
         <div class="card-header">
           <h3 class="card-title">プレビュー</h3>
         </div>
-        <div class="card-body">
-          <div class="sticky col-10 offset-1">
-            <div class="preview form-control mt-3">
-              <div class="ml-4">
-                <h2><span class="preview-title"><%= @article.title ? @article.title : "タイトル" %></span></h2>
-                <h5 class="mx-3">〜<span class="preview-subtitle"><%= @article.sub_title ? @article.sub_title : "サブタイトル" %></span>〜</h5>
-              </div>
-              <div class="hr"></div>
-              <div class="px-2 preview-content">
-                <%= @article.content ? simple_format(@article.content) : "コンテンツ" %>
-              </div>
-            </div>
-            <div class="text-center div-btns mt-4">
+        <div class="card-body col-12">
+          <div class="sticky">
+            <% content = @article.content ? simple_format(@article.content) : "" %>
+            <div class="preview form-control" data-preview-content='<%= content %>'></div>
+            <div class="text-center div-btns mt-3">
               <%= f.submit btn_name, class: "btn btn-primary" %>
-              <%= link_to 'キャンセル', users_article_path(@article, dashboard: true), class: "btn btn-outline-dark" if btn_name == "更新" %>
+              <% if btn_name == "更新" && @show %>
+                <%= link_to 'キャンセル', users_article_path(@article, dashboard: @dashboard, page: params[:page]), class: "btn btn-outline-dark" %>
+              <% elsif btn_name == "更新" && !@show %>
+                <%= link_to 'キャンセル', users_dash_boards_path(page: params[:page]), class: "btn btn-outline-dark" if @dashboard %>
+                <%= link_to 'キャンセル', users_articles_path(page: params[:page]), class: "btn btn-outline-dark" unless @dashboard %>
+              <% else %>
+                <%= link_to 'キャンセル', :back, class: "btn btn-outline-dark" if request.referer %>
+              <% end %>
             </div>
           </div>
         </div>

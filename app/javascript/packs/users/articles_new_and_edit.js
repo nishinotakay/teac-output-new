@@ -2,36 +2,19 @@ import { marked } from 'marked'
 import "./articles"
 
 $(function(){
-
-  var elem = $('.editor-side .card')
-  var height = elem.height() + $('.div-btns').height();
-  elem.height(height);
-  $('.preview-side .card').height(height);
-
-  var elem = $(".div-textarea");
-  var height = elem.position().top + $(".markdown-editor").height();
-  elem = $(".div-title-form");
-  height -= elem.position().top;
-  height -= $(".div-btns").height();
-  $(".preview").height(height);
   
-  $('.title-form').keyup(function(event){
-    var title = $(this).val();
-    title ||= "タイトル"
-    $('.preview-title').text(title);
-  });
-
-  $('.subtitle-form').keyup(function(){
-    var subtitle = $(this).val();
-    subtitle ||= "サブタイトル"
-    $('.preview-subtitle').text(subtitle);
-  });
-
+  var m_editor = $(".markdown-editor");
+  var preview = $(".preview");
+  preview.height(m_editor.height());
+  preview.html(preview.data("preview-content"));
+  $('.editor-side .card').height($('.preview-side .card').height())
+  
   if($(".markdown-editor").val()){
     var content = $(".markdown-editor").text()
+    content ||= ''
     content = mathtodollars(content);
     content = marked(content)
-    var elem = $('.preview-content')
+    var elem = $('.preview')
     elem.html(content);
     var pre = elem.find('pre');
     pre.each(function(){
@@ -45,10 +28,10 @@ $(function(){
 
   $('.markdown-editor').keyup(function(event){
     var content = $(this).val()
-    content ||= "コンテンツ"
+    content ||= preview.data("preview-content")
     content = marked(content);
-    content ||= "コンテンツ"
-    var pre = $('.preview-content')
+    content ||= preview.data("preview-content")
+    var pre = $('.preview')
     pre.html(content);
     pre.find("img").each(function(){
       $(this).width("60%")
@@ -61,6 +44,7 @@ $(function(){
   });
   
   $('.markdown-editor').on('drop', function(e) { //dropのイベントをハンドル
+    console.warn('a')
     e.preventDefault(); //元の動きを止める処理
     var image = e.originalEvent.dataTransfer.files[0]; //ドロップされた画像の1件目を取得
     var formData = new FormData();
@@ -96,8 +80,8 @@ $(function(){
     sentence = before + word + after;
     textarea.value = sentence;
     var content = marked(textarea.value)
-    $(".preview-content").html(content);
-    resize_img($(".preview-content"))
+    $(".preview").html(content);
+    resize_img($(".preview"))
   }
 
 });
