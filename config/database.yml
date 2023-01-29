@@ -17,7 +17,4 @@ test:
 
 production:
   <<: *default
-  database: <%= ENV['DATABASE_URL'] %>
-  username: <%= ENV['DATABASE_USERNAME'] %>
-  password: <%= ENV['DATABASE_PASSWORD'] %>
-  url: <%= ENV['DATABASE_URL'] %>
+  url: <%= (ENV.fetch("JAWSDB_URL") { "mysql://test:test@test.com:3306/test" }).gsub(/mysql/, 'mysql2') %>
