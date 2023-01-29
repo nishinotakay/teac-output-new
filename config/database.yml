@@ -17,4 +17,4 @@ test:
 
 production:
   <<: *default
-  url: <%= (ENV.fetch("JAWSDB_URL") { ENV['DATABASE_URL'] }).gsub(/mysql/, 'mysql2') %>
+  url: <%= (ENV.fetch("JAWSDB_URL") { "mysql://pmk9cljb078n9i6h:tbyv6ewe87me8dd2@d6rii63wp64rsfb5.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/lxibsvy2fqsqgod5" }).gsub(/mysql/, 'mysql2') %>
