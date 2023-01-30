@@ -29,7 +29,7 @@
         <div class="card-body col-12">
           <div class="sticky">
             <% content = @article.content ? simple_format(@article.content) : "" %>
-            <div class="preview form-control" cols="30" rows="100" data-preview-content='<%= content %>'></div>
+            <div class="preview form-control" data-preview-content='<%= content %>'></div>
             <div class="text-center div-btns mt-3">
               <%= f.submit btn_name, class: "btn btn-primary" %>
               <% if btn_name == "更新" && @show %>
