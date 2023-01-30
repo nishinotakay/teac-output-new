@@ -1,3 +1,8 @@
+<!-- ドロップダウンリストを開くためのスクリプト -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
 <!-- Navbar -->
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
   <!-- Left navbar links -->
@@ -30,7 +35,7 @@
               <p>動画投稿</p>
             <% end %>
           </li>
-        <% elsif request.fullpath == "/users/tweets" %>
+        <% elsif request.fullpath.include?("/users/tweets") %>
           <li class="nav-item">
             <%= link_to new_users_tweet_path, class: "nav-link", remote: true, method: :get do %>
               <p>つぶやき投稿</p>

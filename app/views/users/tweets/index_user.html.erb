@@ -1,0 +1,5 @@
+<%= javascript_pack_tag "users/index_articles_and_dashboards" %>
+<% provide(:title,  "#{@user.name}のつぶやき一覧") %>
+<%= render "users/tweets/shared/tweets_table", dashboard: false %>
+<div id="new" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
