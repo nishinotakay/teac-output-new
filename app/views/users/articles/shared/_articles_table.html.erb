@@ -54,7 +54,8 @@
                 </tr>
 <%
 =begin
-%>                
+%>
+テーブルにコンテンツを表示する際にコメント解除
                 <% if params[:content] %>
                   <tr class="content-tr link-tr" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'>
                     <td class="px-5" colspan="4"><%= a.content %></td>
@@ -85,8 +86,8 @@
       <div class="modal-body text-right">
         <div class="sort-modal" style="display: none;">
           <div class="form-group row my-5">
-            <label for="sort-select" class="col-sm-2 col-form-label">投稿日</label>
-            <div class="col-md-10">
+            <label for="sort-select" class="col-sm-3 col-form-label"><%= Article.human_attribute_name(:created_at) %></label>
+            <div class="col-md-9">
               <% order = {'DESC': '新しい順', 'ASC': '古い順'} %>
               <% params[:order] ||= 'DESC' %>
               <select id="sort-select" class="form-select" aria-label="Default select desc">
@@ -99,37 +100,37 @@
         <div class="filter-modal" style="display: none;">
           <% if !dashboard %>
             <div class="form-group row my-4">
-              <label for="input-author" class="col-sm-3 col-form-label">投稿者</label>
-              <div class="col-md-9">
+              <label for="input-author" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:user) %></label>
+              <div class="col-md-8">
                 <input type="text" aria-label="author" id="input-author" class="form-control" value="<%= params[:author] %>">
               </div>
             </div>
           <% end %>
           <div class="form-group row my-4">
-            <label for="input-title" class="col-sm-3 col-form-label">タイトル</label>
-            <div class="col-md-9">
+            <label for="input-title" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:title) %></label>
+            <div class="col-md-8">
               <input type="text" aria-label="title" id="input-title" class="form-control" value="<%= params[:title] %>">
             </div>
           </div>
           <div class="form-group row my-4">
-            <label for="input-subtitle" class="col-sm-3 col-form-label">サブタイトル</label>
-            <div class="col-md-9">
+            <label for="input-subtitle" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:sub_title) %></label>
+            <div class="col-md-8">
               <input type="text" aria-label="subtitle" id="input-subtitle" class="form-control" value="<%= params[:subtitle] %>">
             </div>
           </div>
           <div class="form-group row my-4">
-            <label for="input-content" class="col-sm-3 col-form-label">内容</label>
-            <div class="col-md-9">
+            <label for="input-content" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:content) %></label>
+            <div class="col-md-8">
               <input type="text" aria-label="content" id="input-content" class="form-control" value="<%= params[:content] %>">
             </div>
           </div>
           <div class="form-group row my-4">
-            <label for="input-created" class="col-sm-2 col-form-label">投稿日</label>
-            <div class="col-md-10 form-inline">
+            <label for="input-created" class="col-sm-3 col-form-label"><%= Article.human_attribute_name(:created_at) %></label>
+            <div class="col-md-9 form-inline">
               <div class="col-md-5">
                 <input type="date" aria-label="created" id="input-start" class="form-control" value="<%= params[:start] %>">
               </div>
-              <div class="col-md-2 align-bottom">〜</div>
+              <div class="offset-1 align-bottom">〜</div>
               <div class="col-md-5">
                 <input type="date" aria-label="created" id="input-finish" class="form-control" value="<%= params[:finish] %>">
               </div>
