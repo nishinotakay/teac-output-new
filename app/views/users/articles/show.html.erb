@@ -13,12 +13,13 @@
             <%= link_to "編集", edit_users_article_path(dashboard: @dashboard, page: params[:page], show: true), class: "btn btn-success" %>
             <%= link_to "削除", users_article_path(dashboard: @dashboard, page: params[:page]), method: :delete, data: {confirm: "表示中の記事を削除します。"}, class: "btn btn-danger ml-2" %>
           <% else %>
-            投稿者：<%= User.find(@article.user_id).name %>
+            <%= Article.human_attribute_name(:user) %>：<%= @article.user.name %>
           <% end %>
         </div>
       </div>
       <hr>
       <div class="m-4 article-content" data-article="<%= @article.content %>"></div>
+
 
       <div class="code-copy" style="display: none;">
         <div class="code-copy__message" style="display: none;">

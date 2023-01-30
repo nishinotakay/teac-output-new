@@ -1,0 +1,6 @@
+ja:
+  activerecord:
+    models:
+      manager: 'マネージャー'
+    attributes:
+      manager:
