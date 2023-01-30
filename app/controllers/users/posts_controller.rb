@@ -70,21 +70,6 @@ module Users
       end
     end
 
-    # edit_1の投稿動画編集のアップデート
-    def update_1
-      #追記した部分ここから
-      url = params[:post][:youtube_url]
-      url = url.last(11)
-      @post.youtube_url = url
-      #ここまで
-      if @post.update(post_params)
-        redirect_to show_1_users_post_path(@post), flash: {success: "動画編集完了致しました"}
-      else
-        flash.now[:danger] = '動画投稿出来ませんでした。'  # 4/25訂正
-        render :new
-      end
-    end
-
     # 投稿動画削除
     def destroy
       if @post.destroy!
