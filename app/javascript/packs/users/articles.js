@@ -3,10 +3,6 @@ import "highlight.js/scss/github-dark.scss";
 import { marked } from 'marked'
 import '../../stylesheets/users/articles'
 
-$(function(){
-  $(".hr").css({"color": "$gray-400"})
-})
-
 marked.setOptions({
   highlight: function (code, lang) {
     if(lang && lang.indexOf(":") >= 0){
@@ -60,12 +56,11 @@ window.mathtodollars = function(content){
 window.resize_img = function(parent){
   parent.find("img").each(function(){
     $(this).bind("load", function(){
-      var w = $(this).width()
-      var h = $(this).height()
-      if(w >= h){
-        $(this).width("250")
+      var parent_wide = $(this).parent().width()
+      if($(this).width() >= $(this).height()){
+        $(this).width(parent_wide)
       }else{
-        $(this).height("250")
+        $(this).height(parent_wide)
       }
     })
   })

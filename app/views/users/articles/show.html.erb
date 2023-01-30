@@ -1,36 +1,46 @@
+<%# <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script> %>
 <%= javascript_pack_tag "users/articles_show" %>
 <div class="container">
   <div class="row">
-    <% if @article.user_id == current_user.id %>
-      <div class="d-flex col-10 justify-content-end">
-        <%= link_to "編集", edit_users_article_path(dashboard: @dashboard, page: params[:page], show: true), class: "btn btn-success" %>
-        <%= link_to "削除", users_article_path(dashboard: @dashboard, page: params[:page]), method: :delete, data: {confirm: "表示中の記事を削除します。"}, class: "btn btn-danger ml-2" %>
-      </div>
-    <% end %>
-
-    <div class="col-10">
-      <div class="col-9 offset-2 float-left mb-1 text-left">
-        <h1>
-          <%= @article.title %>
-        </h1>
-        <h4 class="ml-3"><%= @article.sub_title %></h4>
-      </div>
-      <% if @article.user_id != current_user.id %>
-        <div class="mt-3">
-          投稿者：<%= User.find(@article.user_id).name %>
+    <div class="offset-1 col-10 article-show">
+      <div class="col-12 d-flex justify-content-between">
+        <div class="ml-4 mt-4">
+          <h1><%= @article.title %></h1>
+          <h4 class="ml-5"><%= @article.sub_title %></h4>
         </div>
-      <% end %>
-    </div>
-    <div class="hr"></div>
-    <div class="col-10 offset-1 article-content" data-article="<%= @article.content %>"></div>
-
-    <div class="code-copy" style="display: none;">
-      <div class="code-copy__message" style="display: none;">
-        Copied!
+        <div class="m-5 mb-4">
+          <% if @article.user == current_user %>
+            <%= link_to "編集", edit_users_article_path(dashboard: @dashboard, page: params[:page], show: true), class: "btn btn-success" %>
+            <%= link_to "削除", users_article_path(dashboard: @dashboard, page: params[:page]), method: :delete, data: {confirm: "表示中の記事を削除します。"}, class: "btn btn-danger ml-2" %>
+          <% else %>
+            <%= Article.human_attribute_name(:user) %>：<%= @article.user.name %>
+          <% end %>
+        </div>
       </div>
-      <button class="code-copy__button" style="display: none;">
-        <span class="fa fa-fw fa-clipboard"></span>
-      </button>
+      <hr>
+      <div class="m-4 article-content" data-article="<%= @article.content %>"></div>
+
+
+      <div class="code-copy" style="display: none;">
+        <div class="code-copy__message" style="display: none;">
+          Copied!
+        </div>
+        <button class="code-copy__button" style="display: none;">
+          <span class="fa fa-fw fa-clipboard"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="zoominImgModal" tabindex="-1" aria-labelledby="zoominImgModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <button type="button" class="text-right modal-close btn-close mr-3" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-body text-center align-middle">
+        <div class="zoomin-modal">
+        </div>
+      </div>
     </div>
   </div>
 </div>
