@@ -12,7 +12,7 @@ module Users
     end
 
     def create
-        @inquiry = current_user.inquiries.new(inquiry_params)
+      @inquiry = current_user.inquiries.new(inquiry_params)
       if @inquiry.save
         redirect_to new_users_inquiry_path , flash: {success: "問い合わせを投稿しました。"}
       else
