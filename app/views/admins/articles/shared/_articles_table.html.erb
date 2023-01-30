@@ -5,10 +5,10 @@
         <table class="table table-hover articles-table">
           <thead>
             <tr>
-              <th class="px-5">タイトル</th>
-              <th class="px-5">サブタイトル</th>
-              <th class="px-5">投稿者</th>
-              <th class="px-5">投稿日</th>
+              <th class="px-5"><%= Article.human_attribute_name(:title) %></th>
+              <th class="px-5"><%= Article.human_attribute_name(:sub_title) %></th>
+              <th class="px-5"><%= Article.human_attribute_name(:user) %></th>
+              <th class="px-5"><%= Article.human_attribute_name(:created_at) %></th>
             </tr>
           </thead>
           <tbody>

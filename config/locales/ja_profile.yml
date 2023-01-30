@@ -1,0 +1,8 @@
+ja:
+  activerecord:
+    models:
+      profile: 'プロフィール'
+    attributes:
+      profile:
+        name: '名前'
+        purpose: 'プログラミング学習の目的'

@@ -1,23 +1,34 @@
+<button type="button" class="btn btn-success sort-modal-btn ml-5" data-bs-toggle="modal" data-bs-target="#sortFilterModal" style="display: none;">
+  並べ替え
+</button>
+<button type="button" class="btn btn-success filter-modal-btn ml-3" data-bs-toggle="modal" data-bs-target="#sortFilterModal" style="display: none;">
+  絞り込み検索
+</button>
+<% if params[:reset] %>
+  <button type="button" class="btn btn-outline-success reset-btn ml-3">リセット</button>
+<% end %>
+
 <div class="content">
   <div class="container">
     <div class="row">
       <div class="col-12">
-        <table class="table table-hover articles-table">
+        <% hover = @articles.present? ? "table-hover" : "" %>
+        <table class="table articles-table <%= hover %>">
           <thead>
             <tr>
-              <th class="px-5">タイトル</th>
-              <th class="px-5">サブタイトル</th>
+              <th class="px-5"><%= Article.human_attribute_name(:title) %></th>
+              <th class="px-5"><%= Article.human_attribute_name(:sub_title) %></th>
               <% unless dashboard %>
-                <th class="px-5">投稿者</th>
+                <th class="px-5"><%= Article.human_attribute_name(:user) %></th>
               <% end %>
-              <th class="px-5">投稿日</th>
+              <th class="px-5"><%= Article.human_attribute_name(:created_at) %></th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            <% if @articles.exists? %>
-              <% @articles.each do |a| %>
-                <tr>
+            <% if hover.present? %>
+              <% @articles.each_with_index do |a, i| %>
+                <tr class="link-tr" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'>
                   <td><%= a.title %></td>
                   <td><%= a.sub_title %></td>
                   <% if !dashboard %>
@@ -41,13 +52,95 @@
                     </ul>
                   </td>
                 </tr>
+<%
+=begin
+%>
+テーブルにコンテンツを表示する際にコメント解除
+                <% if params[:content] %>
+                  <tr class="content-tr link-tr" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'>
+                    <td class="px-5" colspan="4"><%= a.content %></td>
+                  </tr>
+                <% end %>
+<%
+=end
+%>                
               <% end %>
             <% else %>
               <%= render 'users/shared/table_without_record' %>
             <% end %>
           </tbody>
         </table>
-        <%= paginate @articles, theme: 'bootstrap-5' %>        
+        <%= paginate @articles, theme: 'bootstrap-5' if @paginate %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="sortFilterModal" tabindex="-1" aria-labelledby="sortFilterModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="form-inline">
+        <h5 class="modal-title text-center flex-grow-1 mt-4" id="sortFilterModalLabel"></h5>
+        <button type="button" class="modal-close btn-close mr-3" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-right">
+        <div class="sort-modal" style="display: none;">
+          <div class="form-group row my-5">
+            <label for="sort-select" class="col-sm-3 col-form-label"><%= Article.human_attribute_name(:created_at) %></label>
+            <div class="col-md-9">
+              <% order = {'DESC': '新しい順', 'ASC': '古い順'} %>
+              <% params[:order] ||= 'DESC' %>
+              <select id="sort-select" class="form-select" aria-label="Default select desc">
+                <option value="<%= params[:order] %>" selected><%= order.delete(:"#{params[:order]}") %></option>
+                <option value="<%= order.keys[0] %>"><%= order[order.keys[0]] %></option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="filter-modal" style="display: none;">
+          <% if !dashboard %>
+            <div class="form-group row my-4">
+              <label for="input-author" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:user) %></label>
+              <div class="col-md-8">
+                <input type="text" aria-label="author" id="input-author" class="form-control" value="<%= params[:author] %>">
+              </div>
+            </div>
+          <% end %>
+          <div class="form-group row my-4">
+            <label for="input-title" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:title) %></label>
+            <div class="col-md-8">
+              <input type="text" aria-label="title" id="input-title" class="form-control" value="<%= params[:title] %>">
+            </div>
+          </div>
+          <div class="form-group row my-4">
+            <label for="input-subtitle" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:sub_title) %></label>
+            <div class="col-md-8">
+              <input type="text" aria-label="subtitle" id="input-subtitle" class="form-control" value="<%= params[:subtitle] %>">
+            </div>
+          </div>
+          <div class="form-group row my-4">
+            <label for="input-content" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:content) %></label>
+            <div class="col-md-8">
+              <input type="text" aria-label="content" id="input-content" class="form-control" value="<%= params[:content] %>">
+            </div>
+          </div>
+          <div class="form-group row my-4">
+            <label for="input-created" class="col-sm-3 col-form-label"><%= Article.human_attribute_name(:created_at) %></label>
+            <div class="col-md-9 form-inline">
+              <div class="col-md-5">
+                <input type="date" aria-label="created" id="input-start" class="form-control" value="<%= params[:start] %>">
+              </div>
+              <div class="offset-1 align-bottom">〜</div>
+              <div class="col-md-5">
+                <input type="date" aria-label="created" id="input-finish" class="form-control" value="<%= params[:finish] %>">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <button type="button" class="btn btn-primary submit-btn"></button>
+          <button type="button" class="modal-close btn btn-secondary" data-bs-dismiss="modal">戻る</button>
+        </div>
       </div>
     </div>
   </div>

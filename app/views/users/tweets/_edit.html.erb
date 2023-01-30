@@ -1,0 +1,27 @@
+<% provide(:label_text, "投稿を編集") %>
+<% provide(:btn_text, "編集") %>
+<div class="modal-dialog modal-lg modal-dialog-center">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <%= form_with(model: @tweet, url: users_tweet_path, method: :patch, local: true) do |form| %>
+          <%= render 'layouts/error_messages', model: form.object %>
+          <div style="text-align:center;"> 
+            <div class="field">
+              <%= form.label :post, "#{yield(:label_text)}", class: "tweet-form" %><br>
+              <%= form.text_area :post, id:"tweet_post", size: "50x5" %>
+            </div>
+            <div class="actions">
+              <br><%= form.submit "#{yield(:btn_text)}", class: "btn btn-lg btn-primary" %>
+            </div>
+          </div>  
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>          

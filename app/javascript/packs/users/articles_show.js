@@ -3,15 +3,15 @@ import "./articles"
 
 $(function(){
 
-  $('.hr').css({'width': '90%', 'margin-left': '4rem'})
-
-  if($(".article-view").length){
-    var article = $(".article-view")
+  if($(".article-content").length){
+    var article = $(".article-content")
     var content = article.data("article")
-    content = mathtodollars(content);
-    content = marked(content)
+    if($.type(content) == "string"){
+      content = mathtodollars(content);
+      content = marked(content)
+    }
     article.html(content);
-    MathJax.Hub.Typeset(["Typeset",MathJax.Hub, "posts-preview"]); 
+    // MathJax.Hub.Typeset(["Typeset",MathJax.Hub, "posts-preview"]); 
     var pre = article.find("pre")
     pre.each(function(){
       makecodeblock($(this))
@@ -20,6 +20,20 @@ $(function(){
     })
     resize_img(article)
   }
+
+  $(window).on('load', function () {
+    $(".article-content").find("img").each(function(){
+      $(this).wrap('<a href="" class="zoomin-img" data-bs-toggle="modal" data-bs-target="#zoominImgModal"></a>')
+    })
+
+    $('.zoomin-img').on('click', function(){
+      var img = $('.zoomin-modal').children()
+      if(img.length){
+        img.remove()
+      }
+      $('.zoomin-modal').append($(this).children('img').clone())
+    })
+  });
 
   $(".code-copy__button").click(function(){
     var codecopy = $(this).parent(".code-copy")
