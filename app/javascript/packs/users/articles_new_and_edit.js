@@ -11,40 +11,49 @@ $(function(){
   
   if($(".markdown-editor").val()){
     var content = $(".markdown-editor").text()
-    content ||= ''
-    content = mathtodollars(content);
-    content = marked(content)
-    var elem = $('.preview')
-    elem.html(content);
-    var pre = elem.find('pre');
+    if($.type(content) == "string"){
+      content = mathtodollars(content);
+      content = marked(content)
+    }
+    // content ||= ''
+    // content = mathtodollars(content);
+    // content = marked(content)
+    var preview = $('.preview')
+    preview.html(content);
+    var pre = preview.find('pre');
     pre.each(function(){
       makecodeblock($(this))
     })
-    elem.find("img").each(function(){
-      $(this).width("60%")
-      $(this).height("60%")
-    })
+    // preview.find("img").each(function(){
+    //   $(this).width("100%")
+    //   $(this).height("60%")
+    // })
+    resize_img(preview)
   }
 
   $('.markdown-editor').keyup(function(event){
     var content = $(this).val()
-    content ||= preview.data("preview-content")
-    content = marked(content);
-    content ||= preview.data("preview-content")
-    var pre = $('.preview')
-    pre.html(content);
-    pre.find("img").each(function(){
-      $(this).width("60%")
-      $(this).height("60%")
-    })
-    pre = pre.find('pre');
-    pre.each(function(){
+    if($.type(content) == "string"){
+      content = mathtodollars(content);
+      content = marked(content)
+    }
+    // content ||= preview.data("preview-content")
+    // content = marked(content);
+    // content ||= preview.data("preview-content")
+    var preview = $('.preview')
+    preview.html(content);
+    // preview.find("img").each(function(){
+    //   $(this).width("100%")
+    //   $(this).height("100%")
+    // })
+    preview = preview.find('pre');
+    preview.each(function(){
       makecodeblock($(this))
     })
+    resize_img(preview)
   });
   
   $('.markdown-editor').on('drop', function(e) { //dropのイベントをハンドル
-    console.warn('a')
     e.preventDefault(); //元の動きを止める処理
     var image = e.originalEvent.dataTransfer.files[0]; //ドロップされた画像の1件目を取得
     var formData = new FormData();

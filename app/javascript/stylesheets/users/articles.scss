@@ -3,6 +3,13 @@
   overflow: scroll;
 }
 
+//show
+.article-show {
+  background-color: white;
+  border: 1px solid blue;
+  border-radius: 5px;
+}
+
 //以下index
 .articles-table {
   tr td {
@@ -15,10 +22,3 @@
     font-size: small;
   }
 }
-
-//共通(show&index&dashboard)
-.hr {
-  border: 1px solid #adb5bd;
-  margin: 10px 0;
-}
-
