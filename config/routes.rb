@@ -74,6 +74,7 @@ Rails.application.routes.draw do
         get 'index_user'
       end
     end
+    resources :inquiries #問い合わせ
   end
   # =================================================================
 

@@ -1,0 +1,18 @@
+<h1 style="text-align:center;">お問い合わせ</h1>
+<br>
+<%= form_with model: @inquiry, url: users_inquiries_path(@inquiry),local: true do |form| %>
+  <div style="text-align:center;">
+    <div class="field">
+      <%= form.label :subject, "件名" %><br>
+      <%= form.text_field :subject, id:"post_title", placeholder:"", maxlength: 80, size: 90 %>
+    </div>
+    
+    <div class="field">
+      <%= form.label :content, "内容" %><br>
+      <%= form.text_area :content, id:"content", placeholder:"", maxlength: 240, size: "90x12" %>
+    </div>
+    
+    <%= form.submit "投稿", class: "btn btn-md btn-success" %>
+  </div>
+<% end %>
+
