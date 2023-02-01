@@ -12,19 +12,9 @@ module Users
       @posts = Post.all.search(params[:search]).page(params[:page]).per(30)
     end
     
-    # 全ユーザーの投稿一覧ページ
-    # def index_1
-    #   @posts = Post.includes(:user).search(params[:search]).page(params[:page]).per(30) # Post.allから変更
-    # end
-
     # GET /posts/1 or /posts/1.json
     def show
     end
-
-    # 全ユーザーの詳細ページ
-    # def show_1
-    #   @post = Post.find(params[:id])
-    # end
 
     # 新規投稿ページ
     def new
@@ -42,11 +32,8 @@ module Users
     # 投稿動画作成
     def create
       @post = current_user.posts.new(post_params)
-      #追記した部分ここから
-      url = params[:post][:youtube_url]
-      url = url.last(11)
+      url = params[:post][:youtube_url].last(11)
       @post.youtube_url = url
-      #ここまで
       if @post.save
         redirect_to users_post_path(@post), flash: {success: "動画投稿完了致しました"}
       else
@@ -58,8 +45,7 @@ module Users
     # 投稿動画編集のアップデート
     def update
       #追記した部分ここから
-      url = params[:post][:youtube_url]
-      url = url.last(11)
+      url = params[:post][:youtube_url].last(11)
       @post.youtube_url = url
       #ここまで
       if @post.update(post_params)
