@@ -1,20 +1,22 @@
-<%# <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script> %>
+<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 <%= javascript_pack_tag "users/articles_show" %>
 <div class="container">
   <div class="row">
     <div class="offset-1 col-10 article-show">
-      <div class="col-12 d-flex justify-content-between">
-        <div class="ml-4 mt-4">
+      <div class="col-12">
+        <div class="mx-2 mt-4 mb-3">
           <h1><%= @article.title %></h1>
-          <h4 class="ml-5"><%= @article.sub_title %></h4>
         </div>
-        <div class="m-5 mb-4">
-          <% if @article.user == current_user %>
-            <%= link_to "編集", edit_users_article_path(dashboard: @dashboard, page: params[:page], show: true), class: "btn btn-success" %>
-            <%= link_to "削除", users_article_path(dashboard: @dashboard, page: params[:page]), method: :delete, data: {confirm: "表示中の記事を削除します。"}, class: "btn btn-danger ml-2" %>
-          <% else %>
-            <%= Article.human_attribute_name(:user) %>：<%= @article.user.name %>
-          <% end %>
+        <div class="d-flex justify-content-between">
+          <h4 class="ml-5"><%= @article.sub_title %></h4>
+          <div>
+            <% if @article.user == current_user %>
+              <%= link_to "編集", edit_users_article_path(dashboard: @dashboard, page: params[:page], show: true), class: "btn btn-success" %>
+              <%= link_to "削除", users_article_path(dashboard: @dashboard, page: params[:page]), method: :delete, data: {confirm: "表示中の記事を削除します。"}, class: "btn btn-danger ml-1" %>
+            <% else %>
+              <%= Article.human_attribute_name(:user) %>：<%= @article.user.name %>
+            <% end %>
+          </div>
         </div>
       </div>
       <hr>
