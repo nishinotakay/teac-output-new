@@ -1,0 +1,12 @@
+ja:
+  activerecord:
+    models:
+      post: '動画'
+    attributes:
+      post:
+        id: 'id'
+        title: 'タイトル'
+        body: '投稿内容'
+        youtube_url: 'Youtube_URL'
+        created_at: '投稿日時'
+        updated_at: '編集日時'

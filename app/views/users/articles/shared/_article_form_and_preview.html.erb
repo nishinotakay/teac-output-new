@@ -1,10 +1,10 @@
 <%= form_with(model: @article, url: url, method: method, local: true) do |f| %>
   <div class="row mt-4">
     <div class="col-10 offset-1 div-title-form">
-      <%= f.text_field :title, placeholder: "タイトル", class: "form-control title-form" %>
+      <%= f.text_field :title, placeholder: Article.human_attribute_name(:title), class: "form-control title-form" %>
     </div>
     <div class="col-10 offset-1 my-2">
-      <%= f.text_field :sub_title, placeholder: "サブタイトル", class: "form-control subtitle-form" %>
+      <%= f.text_field :sub_title, placeholder: Article.human_attribute_name(:sub_title), class: "form-control subtitle-form" %>
     </div>
     
     <div class="col-5 offset-1 editor-side">
@@ -13,9 +13,9 @@
           <h3 class="card-title text-center">エディター</h3>
         </div>
         <div class="card-body">
-          <div class="col-12 div-textarea">
-            <%= f.text_area :content, placeholder: "コンテンツ", cols: 30, rows: 100,
-             class: "form-control markdown-editor", data: {user_id: current_user.id} %>
+          <div class="col-12">
+            <%= f.text_area :content, placeholder: Article.human_attribute_name(:content), cols: 30, rows: 100,
+              class: "form-control markdown-editor", data: {user_id: current_user.id} %>
           </div>
         </div>
       </div>
