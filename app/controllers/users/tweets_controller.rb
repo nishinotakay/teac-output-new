@@ -7,7 +7,7 @@ module Users
 
     def show
       @tweet = Tweet.find(params[:id])
-      @comments = @tweet.comments
+      @comments = @tweet.comments.all
       @comment = current_user.comments.new
     end
 

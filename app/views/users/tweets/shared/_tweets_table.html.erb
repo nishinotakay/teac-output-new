@@ -16,20 +16,34 @@
         <div class="row">
           <div class="col-6 offset-3">
             <table class= "table table-borderless">
-              <td class="text-wrap col-6" style="width: 28rem;">
-                <%= tweet.post %>
-              </td> 
-              <td class="dropdown"> 
-                <span style="margin-right: 1em;"></span>
-                <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
-                <ul class="dropdown-menu">
-                  <li><%= link_to '詳細', index_user_users_tweet_path(tweet.user_id), class:"dropdown-item" %></li>
-                  <% if tweet.user.name == current_user.name %>
-                    <li><%= link_to '編集', edit_users_tweet_path(tweet), remote: true, class:"dropdown-item" %></li>
-                    <li><%= link_to '削除', users_tweet_path(tweet), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
-                  <% end %>            
-                </ul>
-              </td>                  
+              <tr>
+                <td class="text-wrap col-6" style="width: 28rem;">
+                  <%= link_to users_tweet_path(tweet.id), style: "color: black; text-decoration: none;" do %>
+                    <%= tweet.post %>
+                  <% end %>
+                </td>
+                <td class="dropdown"> 
+                  <span style="margin-right: 1em;"></span>
+                  <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
+                  <ul class="dropdown-menu test-color">
+                    <li><%= link_to '詳細', index_user_users_tweet_path(tweet.user_id), class:"dropdown-item" %></li>
+                    <% if tweet.user.name == current_user.name %>
+                      <li><%= link_to '編集', edit_users_tweet_path(tweet), remote: true, class:"dropdown-item" %></li>
+                      <li><%= link_to '削除', users_tweet_path(tweet), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
+                    <% end %>
+                  </ul>
+                </td>  
+              </tr>
+              <tr class="row row-cols-4 pb-5">
+                <td class="pl-5 pt-0">
+                  <i class="fa-regular fa-comment fa-lg"></i>
+                </td>
+                <td></td>
+                <td class="pl-5 pt-0">
+                  <i class="fa-regular fa-heart fa-lg"></i>
+                </td>
+                <td></td>
+              </tr>
             </table>
           </div>
         </div>

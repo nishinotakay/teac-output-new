@@ -1,4 +1,9 @@
 <h2>投稿詳細<h2>
+<h2>
+  <%= @tweet.user.name %>
+    &emsp;
+  <%= l(@tweet.user.created_at, format: :long) %><h2>
+<h2><h2>
 
 <%= @tweet.post %>
 
@@ -10,7 +15,10 @@
   <%= f.submit 'コメントする' %>
 <% end %>
 
+<% if @comments.exists? %>
 <h2>コメント一覧</h2>
   <% @comments.each do |comment| %>
     <%= comment.comment_content %>
   <% end %>
+<% end %>
+
