@@ -1,9 +1,65 @@
-<h2>投稿詳細<h2>
+<%= javascript_pack_tag "users/tweets" %> <%# cssを反映させる%>
+<h1>投稿詳細</h1>
+<%= form_with(model: [@tweet, @comment], url: users_tweet_comments_path(@tweet, @comment), method: :post) do |f| %>
+<%= render 'layouts/error_messages', model: f.object %>
+
+<div class="container">
+  <div class="justify-content-center">
+    <div class="row row-cols-auto">
+      <div class="col">
+        <%= @tweet.user.name %>
+      </div>
+      <div class="col">
+        <%= l(@tweet.user.created_at, format: :long) %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="text-wrap rounded-2 comment-bgcolor fs-3" style="width: auto;">
+        <%= @tweet.post %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="mt-5 fw-bold">〜コメント一覧〜</div>
+    </div>
+      <% @comments.each do |comment| %>
+      <div class="comment-contents">
+        <div class="row row-cols-auto">
+          <div class="col">
+            <%= comment.user.name %>
+          </div>
+          <div class="col">
+            <%= l(comment.created_at, format: :long) %>
+          </div>
+        </div>
+        <div class="row row-cols-auto">
+          <div class="text-wrap rounded-2 comment-bgcolor" style="width: 30rem;">
+            <%= comment.comment_content %>
+          </div>
+          <div>
+            <%= link_to users_tweet_comment_path(@tweet, comment), method: :delete, style: "color: red;", data: { confirm: 'Are you sure?' } do %>
+              <i class="fa-solid fa-trash"></i>
+            <% end %>
+          </div>        
+        </div>
+      </div>
+      <% end %>
+          <%= f.text_area :comment_content %>
+          <%= f.hidden_field :tweet_id, value: @tweet.id %>
+          <%= f.submit 'コメントする' %>
+    </div>
+  </div>
+</div>
+<% end %>
+
+
+<%
+=begin%>
+ <h2>投稿詳細</h2>
 <h2>
   <%= @tweet.user.name %>
     &emsp;
-  <%= l(@tweet.user.created_at, format: :long) %><h2>
-<h2><h2>
+  <%= l(@tweet.user.created_at, format: :long) %>
+</h2>
 
 <%= @tweet.post %>
 
@@ -21,4 +77,6 @@
     <%= comment.comment_content %>
   <% end %>
 <% end %>
-
+ 
+<%
+=end%>

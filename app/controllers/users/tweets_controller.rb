@@ -1,5 +1,8 @@
 module Users
   class TweetsController < Users::Base
+    # Userがログインしていないと、投稿を作成・編集・削除できない
+    before_action :authenticate_user!, only: [:show, :index, :new, :create, :edit, :update, :destroy, :index_user]
+
     def index
       @users = User.all
       @tweets = Tweet.all
@@ -19,10 +22,10 @@ module Users
       @tweet =current_user.tweets.new(tweet_params)
       if @tweet.save
         flash[:success] = "つぶやきを作成しました。"
-        redirect_to users_tweets_url
+        redirect_back(fallback_location: root_path)
       else
-        render :new
-      end 
+        redirect_back(fallback_location: root_path)
+      end
     end
 
     def edit
