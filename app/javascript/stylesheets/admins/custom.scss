@@ -20,8 +20,20 @@ body {
   padding: 1rem;
 }
 
+.card-header{
+  background-color: #f8f9fa;
+}
+
 .dropdown-menu {
   min-width: 0px;
+}
+
+.nav-link:hover{
+  background-color: #e9ecef;
+}
+
+.dropdown-menu-header {
+  min-width: 100px;
 }
 
 .nav-link:hover{
