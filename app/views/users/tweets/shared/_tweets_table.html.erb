@@ -17,7 +17,7 @@
           <div class="col-6 offset-3">
             <table class= "table table-borderless">
               <tr>
-                <td class="text-wrap col-6" style="width: 28rem;">
+                <td class="text-wrap col-6 fs-4" style="width: 28rem;">
                   <%= link_to users_tweet_path(tweet.id), style: "color: black; text-decoration: none;" do %>
                     <%= tweet.post %>
                   <% end %>
@@ -37,7 +37,10 @@
               <tr class="row row-cols-4 pb-5">
                 <td class="pl-5 pt-0">
                 <%= link_to users_tweet_path(tweet.id), style: "color: black; text-decoration: none;" do %>
-                  <i class="fa-regular fa-comment fa-lg"></i>&nbsp;<%= tweet.comments.count %>
+                  <i class="fa-regular fa-comment fa-lg"></i>
+                  <% if tweet.comments.count > 0 %>
+                    &nbsp;<%= tweet.comments.count %>
+                  <% end %>
                 <% end %>
                 </td>
                 <td></td>
