@@ -3,10 +3,9 @@ import "./articles"
 
 $(function(){
   
-  var m_editor = $(".markdown-editor");
+  var editor = $(".markdown-editor");
   var preview = $(".preview");
-  preview.height(m_editor.height());
-  preview.html(preview.data("preview-content"));
+  preview.height(editor.height());
   $('.editor-side .card').height($('.preview-side .card').height())
   
   if($(".markdown-editor").val()){
@@ -15,19 +14,12 @@ $(function(){
       content = mathtodollars(content);
       content = marked(content)
     }
-    // content ||= ''
-    // content = mathtodollars(content);
-    // content = marked(content)
     var preview = $('.preview')
     preview.html(content);
     var pre = preview.find('pre');
     pre.each(function(){
       makecodeblock($(this))
     })
-    // preview.find("img").each(function(){
-    //   $(this).width("100%")
-    //   $(this).height("60%")
-    // })
     resize_img(preview)
   }
 
@@ -37,15 +29,8 @@ $(function(){
       content = mathtodollars(content);
       content = marked(content)
     }
-    // content ||= preview.data("preview-content")
-    // content = marked(content);
-    // content ||= preview.data("preview-content")
     var preview = $('.preview')
     preview.html(content);
-    // preview.find("img").each(function(){
-    //   $(this).width("100%")
-    //   $(this).height("100%")
-    // })
     preview = preview.find('pre');
     preview.each(function(){
       makecodeblock($(this))
@@ -71,6 +56,7 @@ $(function(){
     })
     .done(function(data, textStatus, jqXHR){
       setImage(data['name'], data['url'])
+      resize_img($(".preview"))
     })
     .fail(function(jqXHR, textStatus, errorThrown){
       alert("画像の挿入に失敗しました。");
@@ -90,7 +76,6 @@ $(function(){
     textarea.value = sentence;
     var content = marked(textarea.value)
     $(".preview").html(content);
-    resize_img($(".preview"))
   }
 
 });
