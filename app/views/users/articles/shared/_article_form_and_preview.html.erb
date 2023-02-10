@@ -27,20 +27,18 @@
           <h3 class="card-title">プレビュー</h3>
         </div>
         <div class="card-body col-12">
-          <div class="sticky">
-            <% content = @article.content ? simple_format(@article.content) : "" %>
-            <div class="preview form-control" data-preview-content='<%= content %>'></div>
-            <div class="text-center div-btns mt-3">
-              <%= f.submit btn_name, class: "btn btn-primary" %>
-              <% if btn_name == "更新" && @show %>
-                <%= link_to 'キャンセル', users_article_path(@article, dashboard: @dashboard, page: params[:page]), class: "btn btn-outline-dark" %>
-              <% elsif btn_name == "更新" && !@show %>
-                <%= link_to 'キャンセル', users_dash_boards_path(page: params[:page]), class: "btn btn-outline-dark" if @dashboard %>
-                <%= link_to 'キャンセル', users_articles_path(page: params[:page]), class: "btn btn-outline-dark" unless @dashboard %>
-              <% else %>
-                <%= link_to 'キャンセル', :back, class: "btn btn-outline-dark" if request.referer %>
-              <% end %>
-            </div>
+          <% content = @article.content ? @article.content : "" %>
+          <div class="preview form-control" style="overflow: scroll;"></div>
+          <div class="text-center div-btns mt-3">
+            <%= f.submit btn_name, class: "btn btn-primary" %>
+            <% if btn_name == "更新" && @show %>
+              <%= link_to 'キャンセル', users_article_path(@article, dashboard: @dashboard, page: params[:page]), class: "btn btn-outline-dark" %>
+            <% elsif btn_name == "更新" && !@show %>
+              <%= link_to 'キャンセル', users_dash_boards_path(page: params[:page]), class: "btn btn-outline-dark" if @dashboard %>
+              <%= link_to 'キャンセル', users_articles_path(page: params[:page]), class: "btn btn-outline-dark" unless @dashboard %>
+            <% else %>
+              <%= link_to 'キャンセル', :back, class: "btn btn-outline-dark" if request.referer %>
+            <% end %>
           </div>
         </div>
       </div>
