@@ -52,19 +52,6 @@
                 </td>
                 <td></td>
               </tr>
-              <td class="text-wrap col-6" style="width: 28rem;">
-                <%= tweet.post %>
-              </td> 
-              <td class="dropdown"> 
-                <span style="margin-right: 1em;"></span>
-                <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
-                <ul class="dropdown-menu">
-                  <% if tweet.user.name == current_user.name %>
-                    <li><%= link_to '編集', edit_users_tweet_path(tweet), remote: true, class:"dropdown-item" %></li>
-                    <li><%= link_to '削除', users_tweet_path(tweet), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
-                  <% end %>            
-                </ul>
-              </td>                  
             </table>
           </div>
         </div>
