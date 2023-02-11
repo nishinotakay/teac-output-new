@@ -1,27 +1,89 @@
 <%= javascript_pack_tag "users/profiles" %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-<% provide(:title,  "ユーザー") %>
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="card card-success">
-              <div class="card-header">
-                <h3 class="card-title">About user</h3>
-              </div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col align-self-start"><!--左余白--></div><!--左余白-->
+    <div class="align-self-center profile-title-form "><!--中央余白-->
+      <div class="card card-outline card-primary">
+        <div class="card-header text-center"><h2>登録ユーザー詳細画面</h2></div>
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-12"></div>
               <div class="card-body">
                 <div class="user-about">
-                  <div class="profile">
-                    <div class="name-history>">
-                      <p class="text-muted"><%= @user.name %></p>
-                      <hr>
-                      <p class="text-muted"><%= @user.email %></p>
+                  <div class="image text-center">
+                    <p class="text-muted">
+                      <% image = @profile.present? && @profile.image.present? ? @profile.image : "user_default.png" %>
+                      <%= image_tag image , class: "rounded-circle", size: "120x120" %>
+                    </p>
+                  </div>
+                  <div class="profile-indent text-center">
+                    <i class="fas fa-user"></i>
+                    <span><%= @user.name %></span>
+                  </div>
+                    <hr style="height:0.1px">
+                  <div class="profile-indent text-center">
+                    <i class="fas fa-envelope"></i>
+                    <span><%= @user.email %></span>
+                  </div>
+                    <hr style="height:0.1px">
+                  <div class="profile-indent" style="padding-left:30px">
+                    <i class="fas fa-heart"></i>
+                    性別
+                    <span class="profile-indent">
+                    <% gender = @profile.present? && @profile.gender_i18n.present? ? @profile.gender_i18n : "―" %>
+                    <%= gender %></span>
+                  </div>
+                    <hr style="height:0.1px">
+                  <div class="profile-indent" style="padding-left:30px">
+                    <i class="fas fa-gift"></i>
+                    誕生日
+                    <span class="profile-indent" style="padding-right:10px">
+                    <% birthday = @profile.present? && @profile.birthday.present? ? @profile.birthday : "―" %>
+                    <%= birthday %></span>
+                    年齢
+                    <span class="profile-indent" style="padding-right:10px">
+                    <%= @age %>歳</span>
+                  </div>
+                    <hr style="height:0.1px">
+                  <div class="profile-indent" style="padding-left:30px">
+                    <i class="fas fa-book-open"></i>
+                    プログラミング学習
+                    <td>
+                    <% learning_start = @profile.present? && @profile.learning_start.present? ? @profile.learning_start : "―" %>
+                    <%= learning_start %>開始
+                    <%= @study_period %>ヶ月</td>
+                  </div>
+                    <hr style="height:0.1px">
+                  <div class="profile-indent" style="padding-left:30px">
+                    <i class="fas fa-flag"></i>
+                    プログラミング学習の目的
+                    <td class="text-muted">
+                    <% purpose = @profile.present? && @profile.purpose.present? ? @profile.purpose : "―" %>
+                    <%= purpose %></td>
+                  </div>
+                    <hr style="height:0.1px">
+                  <div class="content">
+                    <div class="text-center">
+                      <button type="button" class="btn btn-success" style="width:100px">
+                       <%= link_to "投稿記事",users_articles_path,class: "Editlink" %>
+                      </button>
+                      <button type="button" class="btn btn-danger" style="width:100px">
+                       <%= link_to "投稿動画",users_posts_path,class: "Editlink" %>
+                      </button>
+                      <button type="button" class="btn btn-info" style="width:100px font-size:10px">
+                       <%= link_to "投稿つぶやき",users_tweets_path,class: "Editlink" %>
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-    </section>
+        </section>
+      </div>
+    </div><!--中央余白-->
+    <div class="col align-self-end"><!--右余白--></div><!--右余白-->
+  </div>
+</div>

@@ -9,21 +9,11 @@ module Users
     # 投稿動画一覧ページ
     def index
       # ログインしていなかった場合は401ページを表示して終了（※ 401用のテンプレートファイルを作っていないと動きません）
-      @posts = current_user.posts.all.search(params[:search]).page(params[:page]).per(30)
+      @posts = Post.all.search(params[:search]).page(params[:page]).per(30)
     end
     
-    # 全ユーザーの投稿一覧ページ
-    def index_1
-      @posts = Post.includes(:user).search(params[:search]).page(params[:page]).per(30) # Post.allから変更
-    end
-
     # GET /posts/1 or /posts/1.json
     def show
-    end
-
-    # 全ユーザーの詳細ページ
-    def show_1
-      @post = Post.find(params[:id])
     end
 
     # 新規投稿ページ
@@ -42,11 +32,8 @@ module Users
     # 投稿動画作成
     def create
       @post = current_user.posts.new(post_params)
-        #追記した部分ここから
-        url = params[:post][:youtube_url]
-        url = url.last(11)
-        @post.youtube_url = url
-        #ここまで
+      url = params[:post][:youtube_url].last(11)
+      @post.youtube_url = url
       if @post.save
         redirect_to users_post_path(@post), flash: {success: "動画投稿完了致しました"}
       else
@@ -57,28 +44,12 @@ module Users
 
     # 投稿動画編集のアップデート
     def update
-         #追記した部分ここから
-         url = params[:post][:youtube_url]
-         url = url.last(11)
-         @post.youtube_url = url
-         #ここまで
-        if @post.update(post_params)
-          redirect_to users_posts_path(@post), flash: {success: "動画編集完了致しました"}
-        else
-          flash.now[:danger] = '動画投稿出来ませんでした。'  # 4/25訂正
-          render :new
-        end
-    end
-
-    # edit_1の投稿動画編集のアップデート
-    def update_1
-        #追記した部分ここから
-        url = params[:post][:youtube_url]
-        url = url.last(11)
-        @post.youtube_url = url
-        #ここまで
+      #追記した部分ここから
+      url = params[:post][:youtube_url].last(11)
+      @post.youtube_url = url
+      #ここまで
       if @post.update(post_params)
-        redirect_to show_1_users_post_path(@post), flash: {success: "動画編集完了致しました"}
+        redirect_to users_posts_path(@post), flash: {success: "動画編集完了致しました"}
       else
         flash.now[:danger] = '動画投稿出来ませんでした。'  # 4/25訂正
         render :new
@@ -98,7 +69,7 @@ module Users
       # Use callbacks to share common setup or constraints between actions.
 
     def set_post
-      @post = current_user.posts.find(params[:id])
+      @post = Post.find(params[:id])
     end
 
     # 投稿動画に関するカラム
@@ -110,7 +81,7 @@ module Users
     def prevent_url
       @post = current_user.posts.find(params[:id])
       if @post.user_id != current_user.id
-      redirect_to root_path
+        redirect_to root_path
       end
     end
   end

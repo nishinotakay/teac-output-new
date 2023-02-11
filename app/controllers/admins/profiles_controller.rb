@@ -6,6 +6,12 @@ module Admins
     
     def users_show
       @user = User.find(params[:format]) 
+      @profile = @user.profile
+      today = Date.today.strftime('%Y%m%d').to_i
+      learning_startday = @profile.learning_start.strftime('%Y%m%d').to_i if @profile.present? && @profile.learning_start? 
+      @study_period = (today - learning_startday) / 10000 if learning_startday.present?
+      birthday = @profile.birthday.strftime('%Y%m%d').to_i if @profile.present? && @profile.birthday?
+      @age = (today - birthday) / 10000 if birthday.present?
     end
     
     def users_edit

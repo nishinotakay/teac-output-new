@@ -11,11 +11,11 @@ module Users
     end
 
     def show
-      @d1 = Date.current.to_time
-      @d2 = @profile.learning_start.to_time if @profile.learning_start.to_time
-      @sa = @d1 - @d2
-      @birthday = @profile.birthday.to_time 
-      @age = @d1 - @birthday
+      today = Date.today.strftime('%Y%m%d').to_i
+      learning_startday = @profile.learning_start.strftime('%Y%m%d').to_i if @profile.present? && @profile.learning_start? 
+      @study_period = (today - learning_startday) / 10000 if learning_startday.present?
+      birthday = @profile.birthday.strftime('%Y%m%d').to_i if @profile.present? && @profile.birthday?
+      @age = (today - birthday) / 10000 if birthday.present?
     end
 
     def new

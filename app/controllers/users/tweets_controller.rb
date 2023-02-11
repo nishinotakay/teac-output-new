@@ -51,11 +51,6 @@ module Users
       end
     end
 
-    def index_user
-      @tweets = Tweet.where(user_id: params[:id])
-      @user = User.find(params[:id])
-    end
-
     private
       
     def tweet_params
