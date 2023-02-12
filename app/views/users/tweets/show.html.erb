@@ -3,6 +3,16 @@
 <%= form_with(model: [@tweet, @comment], url: users_tweet_comments_path(@tweet, @comment), method: :post) do |f| %>
 <%= render 'layouts/error_messages', model: f.object %>
 
+<div id="dialog">
+  <p>ボタンをクリックしてください</p>
+  <button id="yes">はい</button>
+  <button id="no">いいえ</button>
+  <button id="cancel">キャンセル</button>
+</div>
+ 
+<a id="btn">ボタン</a>
+
+
 <div class="container">
   <div class="col-8 offset-2">
     <div class="row row-cols-auto">
@@ -14,7 +24,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="text-wrap rounded-2 comment-bgcolor mb-5 fs-3" style="width: auto;">
+      <div class="text-wrap rounded-2 tweet-bgcolor mb-5 fs-3" style="width: auto;">
         <%= @tweet.post %>
       </div>
     </div>
@@ -32,26 +42,30 @@
             <%= l(comment.created_at, format: :long) %>
           </div>
         </div>
-        <div class="row row-cols-auto">
-          <div class="text-wrap rounded-2 comment-bgcolor break-all" style="width: 30rem;">
-            <%= safe_join(comment.comment_content.split("\n"),tag(:br)) %>
-          </div>
-          <div class="dropdown"> 
-            <span style="margin-right: 1em;"></span>
-            <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
-            <ul class="dropdown-menu test-color">
-              <% if comment.user == current_user %>
-                <li><%= link_to '編集', "#", class:"dropdown-item" %></li>
-                <li><%= link_to '削除', users_tweet_comment_path(@tweet, comment), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
-              <% end %>
-            </ul>
-          </div>
-        </div>
+        <table class="table table-borderless">
+          <tbody>
+            <tr>
+              <td class="text-wrap rounded-2 comment-bgcolor break-all" style="width: 30rem;">
+                <%= safe_join(comment.comment_content.split("\n"),tag(:br)) %>
+              </td>
+              <td class="dropdown col-1 rounded-2">
+                <span style="margin-right: 1em;"></span>
+                <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
+                <ul class="dropdown-menu test-color">
+                  <% if comment.user == current_user %>
+                    <li><%= link_to '編集', "#", class:"dropdown-item" %></li>
+                    <li><%= link_to '削除', users_tweet_comment_path(@tweet, comment), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
+                  <% end %>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <% end %>
       <%= f.text_area :comment_content, class: "form-control mt-5" %>
       <%= f.hidden_field :tweet_id, value: @tweet.id %>
-      <%= f.submit 'コメントする' %>
+      <%= f.submit 'コメントする', class: "comment-submit" %>
     </div>
   </div>
 </div>

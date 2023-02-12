@@ -11,7 +11,7 @@
   text-align: left;
 }
 
-.comment-bgcolor {
+.tweet-bgcolor {
   background-color: rgb(255, 255, 255);
 }
 
@@ -21,4 +21,29 @@
 
 .break-all {
   word-break: break-all;
+}
+
+#dialog {
+  width: 300px;
+  margin: auto;
+  margin-top: 40vh;
+  padding: 30px 20px;
+  display: none;
+  text-align: center;
+  border: 1px solid #aaa;
+  box-shadow: 2px 2px 4px #888;
+}
+
+.table {
+  border-collapse: separate;
+  border-spacing: 8px;
+  border: 20px
+}
+
+.table > tbody > tr > td.comment-bgcolor {
+  background-color:#ffffff;
+}
+
+.comment-submit {
+  margin-top: 5px;
 }
