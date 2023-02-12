@@ -7,13 +7,15 @@ module Users
 
     def index
       @users = User.all
-      @profiles = Profile.all
+      @profiles = Profile.all.page(params[:page]).per(30)
     end
 
     def show
-      @d1 = Date.current.to_time
-      @d2 = @profile.learning_start.to_time if @profile.learning_start.to_time
-      @sa = @d1 - @d2
+      today = Date.today.strftime('%Y%m%d').to_i
+      learning_startday = @profile.learning_start.strftime('%Y%m%d').to_i if @profile.present? && @profile.learning_start? 
+      @study_period = (today - learning_startday) / 10000 if learning_startday.present?
+      birthday = @profile.birthday.strftime('%Y%m%d').to_i if @profile.present? && @profile.birthday?
+      @age = (today - birthday) / 10000 if birthday.present?
     end
 
     def new
@@ -28,6 +30,7 @@ module Users
 
     def create
       @profile = current_user.build_profile(profile_params)
+      @profile.name = current_user.name
       if @profile.save
         redirect_to users_profiles_path, notice: 'プロフィール情報の入力が完了しました'        
       else
@@ -76,8 +79,8 @@ module Users
 
     def profile_params
       params.require(:profile).permit(
-        :name, :learning_history, :purpose, :image, :created_at, :learning_start
-      )
+        :purpose, :image, :created_at, :learning_start, :birthday, :gender
+      ).merge(user_id: current_user.id)
     end
   end
 end

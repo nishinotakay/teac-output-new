@@ -5,32 +5,19 @@
         <table class="table table-hover articles-table">
           <thead>
             <tr>
-              <% if dashboard %>
-                <th class="px-5">これまでに書いた記事</th>
-              <% else %>
-                <th class="px-5">タイトル<span class="span-subtitle">〜サブタイトル〜</span></th>
-                <th class="px-5">書き手</th>
-              <% end %>
-              <th class="px-5">投稿日</th>
+              <th class="px-5"><%= Article.human_attribute_name(:title) %></th>
+              <th class="px-5"><%= Article.human_attribute_name(:sub_title) %></th>
+              <th class="px-5"><%= Article.human_attribute_name(:user) %></th>
+              <th class="px-5"><%= Article.human_attribute_name(:created_at) %></th>
             </tr>
           </thead>
           <tbody>
             <% if @articles.exists? %>
-              <% colspan = dashboard ? 2 : 3 %>
-              <tr class="nohover">
-                <td colspan="<%= colspan %>" class="search"></td>
-              </tr>
               <% @articles.each do |a| %>
-                <tr class="link-tr" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'>
-                  <td>
-                    <%= a.title %>
-                    <% if a.sub_title.present? %>
-                      <span class="span-subtitle">〜<%= a.sub_title %>〜</span>
-                    <% end %>
-                  </td>
-                  <% if !dashboard %>
-                    <td><%= @users.find(a.user_id).name %></td>
-                  <% end %>
+                <tr class="link-tr" onclick='window.location="<%= users_article_path(a.id) %>"'>
+                  <td><%= a.title %></td>
+                  <td><%= a.sub_title %></td>
+                  <td><%= a.user.name %></td>
                   <td><%= l(a.created_at, format: :long) %></td>
                 </tr>
               <% end %>
@@ -41,6 +28,7 @@
             <% end %>
           </tbody>
         </table>
+        <%= paginate @articles, theme: 'bootstrap-5' %>        
       </div>
     </div>
   </div>

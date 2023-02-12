@@ -1,39 +1,46 @@
-<% provide(:title,  "プロフィール一覧") %>
+<span style="background: linear-gradient(transparent 98%, #0073ff 0%);">
+<% provide(:title,  "プロフィール一覧") %></span>
 <div class="container">
   <div class="row">
     <div class="col-12">
       <table class="table table-hover">
         <thead>
           <tr>
-            <th>名前</th>
+            <th><!--アイコンテーブル--></th>
+            <th>
+              <i class="fas fa-user"></i>
+                名前</th>
+            <th>
+              <i class="fas fa-book-open"></i>
+                プログラミング学習開始日</th>
+            <th>
+              <i class="fas fa-flag"></i>
+                プログラミング学習目的</th>
+            <th><!--三点リーダーテーブル--></th>
           </tr>
         </thead>
         <tbody>
           <% if @profiles.exists? %>
             <% @profiles.each do |profile| %>
               <tr>
-                <td><%= link_to(profile.name, "/users/profiles/#{profile.id}", method: :get) %></td>
-              </tr>
-            <% end %>
-            <% @profiles.each do |profile| %>
-              <tr>
-                <td>
-                  <%= profile.id %>
-                </td>
-                <td>
-                  <%= profile.title %>
+                <td style="padding: 10px">
+                  <% image = profile.present? && profile.image.present? ? profile.image : "user_default.png" %>
+                  <%= image_tag image , class: "rounded-circle", size: "30x30" %>
                 </td>
                 <td>
                   <%= profile.name %>
                 </td>
                 <td>
-                  <%= profile.created_at.to_s(:datetime_jp) %>
+                  <%= profile.learning_start %>
                 </td>
                 <td>
-                  <%= profile.updated_at.to_s(:datetime_jp) %>
+                  <%= profile.purpose %>
                 </td>
                 <td>
-                  <%= link_to '詳細', profile, class: 'btn btn-outline-dark' %>
+                  <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
+                  <ul class="dropdown-menu">
+                    <li><%= link_to '詳細', users_profile_path(profile.id), class:"nav-link" %></li>
+                  </ul>
                 </td>
               </tr>
             <% end %>
@@ -42,6 +49,8 @@
           <% end %>
         </tbody>
       </table>
+      <%= paginate @profiles, theme: 'bootstrap-5' %>        
     </div>
   </div>
 </div>
+

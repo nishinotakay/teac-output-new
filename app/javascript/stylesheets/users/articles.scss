@@ -1,11 +1,7 @@
-//以下new
-.div-btns {
-  position: sticky;
-  bottom: 10%;
-}
-
-.preview {
-  overflow: scroll;
+//show
+.article-show {
+  background-color: white;
+  border-radius: 5px;
 }
 
 //以下index
@@ -20,10 +16,3 @@
     font-size: small;
   }
 }
-
-//共通(show&index&dashboard)
-.hr {
-  border: 1px solid #adb5bd;
-  margin: 10px 0;
-}
-

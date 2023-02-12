@@ -5,31 +5,47 @@
     <%= submit_tag "検索" ,:title => nil, :body => nil, class: "button is-info"%> 
   <% end %> 
 </div>
-<table class="table table-hover">
-      <thead>
-        <tr>
-          <th width="100">タイトル</th>
-          <th>内容</th>
-          <th>Youtube</th>
-          <th width="300" colspan="3"></th>
-        </tr>
-      </thead>
 
-      <tbody>      
-        <% if @posts.exists? %>
-          <% @posts.each do |post| %>
-            <tr>
-              <td width="230"><%= post.title %></td>
-              <td width="230"><%= simple_format(post.body) %></td>
-              <td><iframe width="600" height="315" src="https://www.youtube.com/embed/<%=post.youtube_url%>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
-              <td>
-                <%= button_to '動画詳細', users_post_path(post), method: :get, class: "btn btn-warning" %><br>
-                <%= button_to '削除', users_post_path(post), method: :delete, class: "btn btn-danger", data: {confirm: "#{post.title}を削除してもよろしいですか？"} %>
-              </td>
-            </tr>
-          <% end %>
-        <% else %>
-          <%= render 'users/shared/table_without_record' %>
-        <% end %>
-      </tbody>
-    </table>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>タイトル</th>
+      <th>内容</th>
+      <th>Youtube</th>
+      <th>投稿者</th>
+      <th>投稿日</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>      
+    <% if @posts.exists? %>
+      <% @posts.each do |post| %>
+        <tr>
+          <td onclick='window.location="<%= users_post_path(id: post.id) %>"'><%= post.title %></td>
+          <td onclick='window.location="<%= users_post_path(id: post.id) %>"'><%= simple_format(post.body) %></td>
+          <td width="150" onclick='window.location="<%= users_post_path(id: post.id) %>"'>
+            <iframe width="289" height="180" src="https://www.youtube.com/embed/<%=post.youtube_url %>"  frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </td>
+          <td onclick='window.location="<%= users_post_path(id: post.id) %>"'><%= post.user.name %></td>
+          <td onclick='window.location="<%= users_post_path(id: post.id) %>"'><%= post.created_at.strftime('%Y/%m/%d') %></td> 
+          <td>
+            <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
+            <ul class="dropdown-menu">
+              <% if post.user_id == current_user.id %>
+                <li><%= link_to '閲覧', users_post_path(post), class:"nav-link" %></li>
+                <li><%= link_to '編集', edit_users_post_path(post), class:"nav-link" %></li>
+                <li><%= link_to '削除', users_post_path(post), method: :delete, class:"nav-link", data: {confirm: "#{post.title}を削除してもよろしいですか？"} %></li>
+              <% else %>
+                <li><%= link_to '閲覧', users_post_path(post), class:"nav-link" %></li>
+            </ul>
+              <% end %>
+          </td> 
+        </tr>
+      <% end %>
+    <% else %>
+      <%= render 'users/shared/table_without_record' %>
+    <% end %>
+  </tbody>
+</table>
+<%= paginate @posts, theme: 'bootstrap-5' %>      
