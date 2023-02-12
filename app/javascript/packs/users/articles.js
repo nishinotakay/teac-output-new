@@ -58,9 +58,9 @@ window.resize_img = function(parent){
     $(this).bind("load", function(){
       var parent_wide = $(this).parent().width()
       if($(this).width() >= $(this).height()){
-        $(this).width(parent_wide)
+        $(this).width() > parent_wide ? $(this).width(parent_wide) : $(this).width()
       }else{
-        $(this).height(parent_wide)
+        $(this).height() > parent_wide ? $(this).height(parent_wide) : $(this).height()
       }
     })
   })
