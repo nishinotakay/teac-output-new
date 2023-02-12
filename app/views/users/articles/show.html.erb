@@ -22,7 +22,6 @@
       <hr>
       <div class="m-4 article-content" data-article="<%= @article.content %>"></div>
 
-
       <div class="code-copy" style="display: none;">
         <div class="code-copy__message" style="display: none;">
           Copied!
@@ -36,12 +35,13 @@
 </div>
 
 <div class="modal fade" id="zoominImgModal" tabindex="-1" aria-labelledby="zoominImgModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
-      <button type="button" class="text-right modal-close btn-close mr-3" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="text-right mt-3">
+        <button type="button" class="modal-close btn-close mr-3" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
       <div class="modal-body text-center align-middle">
-        <div class="zoomin-modal">
-        </div>
+        <div class="zoomin-modal"></div>
       </div>
     </div>
   </div>
