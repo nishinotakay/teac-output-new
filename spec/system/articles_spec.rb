@@ -64,7 +64,7 @@ RSpec.describe 'Articles', type: :system do
 
       after do
         expect(page).to have_content "新規記事"
-        # expect(page).to have_content "エディター"
+        expect(page).to have_content "エディター"
         expect(page).to have_content "プレビュー"
         expect(page).to have_content text
       end
@@ -109,15 +109,13 @@ RSpec.describe 'Articles', type: :system do
       fill_in 'article[content]', with: 'content'
       click_button '投稿'
       expect(current_path).to eq users_article_path(Article.last)
-      expect(page).to have_content '記事を作成しました。'
-      # expect(page).to have_content '記事を投稿しました。'
+      expect(page).to have_content '記事を投稿しました。'
     end
 
     it 'failure' do
       visit new_users_article_path
       click_button '投稿'
-      expect(page).to have_content '記事の作成に失敗しました。'
-      # expect(page).to have_content '記事の投稿に失敗しました。'
+      expect(page).to have_content '記事の投稿に失敗しました。'
     end
   end
 
@@ -179,49 +177,32 @@ RSpec.describe 'Articles', type: :system do
 
   describe 'upload image' do
     it 'success', js: true do
-      # png = fixture_file_upload("spec/fixtures/ruby.png", 'image/png')
-      # png = File.new("spec/fixtures/ruby.png")
       png = file_fixture("ruby.png")
-
-      # assert_equal 2, png 
-
       visit new_users_article_path
-
       source = page.find('.markdown-editor')
-      source.click
-
-      # source.drop(png)
-
-      # page.execute_script <<-JS
-      #   dataTransfer = new DataTransfer()
-      #   dataTransfer.files.add(fakeFileInput.get(0).files[0])
-      #   testEvent = new DragEvent('drop', {bubbles:true, dataTransfer: dataTransfer })
-      #   $('.markdown-editor').dispatchEvent(testEvent)
-      # JS      
-
-      # var dragSource = document.querySelector('#item_#{item2_list1.id}');
-      # var dropTarget = document.querySelector('#item_#{item1_list2.id}');
-
-      page.execute_script <<-EOS
-        var dragSource = $('.article-img');
-        var dropTarget = $('.markdown-editor');
-        window.dragMock.dragStart(dragSource).delay(100).dragOver(dropTarget).delay(100).drop(dropTarget);
-      EOS
-      puts page.driver.browser.manage.logs.get(:browser)
-      # puts page.driver.browser.manage.logs.get(:browser).collect(&:message)
-
-      # dragMock.dragStart(dragSource).drop(dropTarget);      
-      # dragMock.dragStart('#{png}').delay(100).dragOver(dropTarget).delay(100).drop('#{source}');      
-      # windows.dragMock.dragStart("#{png}").delay(100).dragOver("#{source}").delay(100).drop("#{source}");
-      # window.dragMock.dragStart(dragSource).delay(100).dragOver(dropTarget).delay(100).drop(dropTarget);
-
-      puts '0'
-      # drop_file png, 'markdown-editor'
-      puts '1'
-
+      source.drop(png)
       page.save_screenshot 'ruby画像添付.png'
+    end
+  end
+
+  describe 'code copy' do
+    it 'success' do
+      visit new_users_article_path
+      fill_in 'article[title]', with: 'タイトル'
+      fill_in 'article[content]', with: '```ruby:qiita.rb\r\nputs "The best way to log and share programmers knowledge."\r\n```\r\n\r\n'
+      click_button '投稿'
+      expect(current_path).to eq users_article_path(Article.last)
+      expect(page).to have_selector '.code-copy__button'
+      page.save_screenshot 'article-show-code-block.png'
     end
   end
 end
 
+# 以下、参考コードのため終わり次第の削除
 # page.save_screenshot '記事投稿.png'
+# page.execute_script <<-JS
+#   dataTransfer = new DataTransfer()
+#   dataTransfer.files.add(fakeFileInput.get(0).files[0])
+#   testEvent = new DragEvent('drop', {bubbles:true, dataTransfer: dataTransfer })
+#   $('.markdown-editor').dispatchEvent(testEvent)
+# JS      
