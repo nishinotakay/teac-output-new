@@ -13,12 +13,14 @@ Rails.application.routes.draw do
   
   namespace :admins do
     resources :dash_boards, only: [:index]
+    resources :admins, only: [:show]
     resources :articles
     namespace :articles do
       post 'image'
     end
     resources :profiles do
       collection do
+        get 'admins_show'
         get 'users_show'
         get 'users_edit'
         delete 'user_destroy'
