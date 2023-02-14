@@ -14,12 +14,30 @@ before_action :authenticate_user!, only: [:create, :destroy]
 
     def destroy
       @tweet = Tweet.find(params[:tweet_id])
-      @comment = Comment.find(params[:id])
+      @comment = current_user.comments.find_by(tweet_id: @tweet.id)
       if @comment.destroy
         redirect_to users_tweet_path(@tweet), notice: "コメントを削除しました。"
       else
         flash.now[:alert] = 'コメント削除に失敗しました'
         render users_tweet_path(@tweet)
+      end
+    end
+
+    def edit
+      @tweet = Tweet.find(params[:tweet_id])
+      @comment = current_user.comments.find(params[:id])
+    end
+
+    def update
+      @tweet = Tweet.find(params[:tweet_id])
+      @comment = current_user.comments.find(params[:id])
+      if @comment.update(comment_params)
+        @comment.save
+        flash[:success] = "Comment updated"
+        redirect_to users_tweet_path(@tweet)
+      else
+        flash[:danger] = "Comment failed"
+        render 'edit'
       end
     end
 

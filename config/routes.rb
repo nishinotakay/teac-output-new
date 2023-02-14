@@ -73,7 +73,7 @@ Rails.application.routes.draw do
       member do
         get 'index_user'
       end
-      resources :comments, only: [:create, :destroy]
+      resources :comments, only: [:create, :destroy, :edit, :update]
     end
     resources :inquiries #問い合わせ
   end

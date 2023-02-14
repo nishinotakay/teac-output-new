@@ -1,0 +1,21 @@
+<% provide(:class_text, 'basic-info') %>
+<% provide(:button_text, '更新') %>
+
+<div class="modal-dialog modal-lg modal-dialog-center">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h1 class="modal-title">コメントの編集</h1>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <%= form_with(model: [@tweet, @comment], url: users_tweet_comment_path(@tweet, @comment),local: true, method: :patch) do |f| %>
+            <%= f.text_area :comment_content, class: "form-control mt-5" %>
+            <%= f.submit 'コメントする', class: "comment-submit" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

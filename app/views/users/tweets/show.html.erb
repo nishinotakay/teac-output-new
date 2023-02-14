@@ -2,17 +2,7 @@
 <h1>つぶやき詳細</h1>
 <%= form_with(model: [@tweet, @comment], url: users_tweet_comments_path(@tweet, @comment), method: :post) do |f| %>
 <%= render 'layouts/error_messages', model: f.object %>
-
-<div id="dialog">
-  <p>ボタンをクリックしてください</p>
-  <button id="yes">はい</button>
-  <button id="no">いいえ</button>
-  <button id="cancel">キャンセル</button>
-</div>
- 
-<a id="btn">ボタン</a>
-
-
+<div id="edit-comment" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <div class="container">
   <div class="col-8 offset-2">
     <div class="row row-cols-auto">
@@ -53,8 +43,9 @@
                 <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
                 <ul class="dropdown-menu test-color">
                   <% if comment.user == current_user %>
-                    <li><%= link_to '編集', "#", class:"dropdown-item" %></li>
+                    <li><%= link_to '編集', edit_users_tweet_comment_path(@tweet, comment), remote: true, class:"dropdown-item" %></li>
                     <li><%= link_to '削除', users_tweet_comment_path(@tweet, comment), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
+                    <li><%= link_to '編集', edit_users_tweet_comment_path(@tweet, comment), class:"dropdown-item" %></li>
                   <% end %>
                 </ul>
               </td>

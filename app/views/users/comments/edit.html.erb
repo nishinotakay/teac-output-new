@@ -1,0 +1,6 @@
+<p>コメントの編集</p>
+<%= form_with(model: [@tweet, @comment], url: users_tweet_comment_path(@tweet, @comment), method: :patch) do |f| %>
+  <%= f.text_area :comment_content, class: "form-control mt-5" %>
+  <%= f.hidden_field :tweet_id, value: @tweet.id %>
+  <%= f.submit 'コメントする', class: "comment-submit" %>
+<% end %>
