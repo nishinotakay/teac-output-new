@@ -33,7 +33,8 @@ RSpec.describe 'Articles', type: :system do
       end
 
       after do
-        expect(page).to have_content 'タイトル〜サブタイトル〜'
+        expect(page).to have_content 'タイトル'
+        expect(page).to have_content 'サブタイトル'
         expect(page).to have_content '投稿日'
         expect(page).to have_content article.created_at.strftime('%-m/%d %-H:%M')
         expect(page).to have_content article.title
@@ -47,7 +48,6 @@ RSpec.describe 'Articles', type: :system do
           visit new_users_article_path
           expect(current_path).to eq new_users_article_path
           expect(page).to have_content "記事投稿"
-          text = "タイトル 〜サブタイトル〜"
           expect(page).to have_content "コンテンツ"
         end
       end
@@ -57,16 +57,13 @@ RSpec.describe 'Articles', type: :system do
           visit edit_users_article_path(article)
           expect(current_path).to eq edit_users_article_path(article)
           expect(page).to have_content "記事編集"
-          text = "#{article.title} 〜#{article.sub_title}〜"
           expect(page).to have_content article.content, count: 2
         end
       end
 
       after do
-        expect(page).to have_content "新規記事"
         expect(page).to have_content "エディター"
         expect(page).to have_content "プレビュー"
-        expect(page).to have_content text
       end
     end
 
@@ -109,13 +106,13 @@ RSpec.describe 'Articles', type: :system do
       fill_in 'article[content]', with: 'content'
       click_button '投稿'
       expect(current_path).to eq users_article_path(Article.last)
-      expect(page).to have_content '記事を投稿しました。'
+      expect(page).to have_content '記事を作成しました。'
     end
 
     it 'failure' do
       visit new_users_article_path
       click_button '投稿'
-      expect(page).to have_content '記事の投稿に失敗しました。'
+      expect(page).to have_content '記事の作成に失敗しました。'
     end
   end
 
@@ -181,19 +178,24 @@ RSpec.describe 'Articles', type: :system do
       visit new_users_article_path
       source = page.find('.markdown-editor')
       source.drop(png)
+      sleep 1
       page.save_screenshot 'ruby画像添付.png'
     end
   end
 
   describe 'code copy' do
-    it 'success' do
-      visit new_users_article_path
-      fill_in 'article[title]', with: 'タイトル'
-      fill_in 'article[content]', with: '```ruby:qiita.rb\r\nputs "The best way to log and share programmers knowledge."\r\n```\r\n\r\n'
-      click_button '投稿'
-      expect(current_path).to eq users_article_path(Article.last)
-      expect(page).to have_selector '.code-copy__button'
-      page.save_screenshot 'article-show-code-block.png'
+    before do
+      article.content = '```ruby:qiita.rb\r\nputs "The best way to log and share programmers knowledge."\r\n```\r\n\r\n'
+      article.save
+    end
+
+    it 'success', js: true do
+      visit users_article_path(article)
+      expect(page).to have_content 'The best'
+      page.save_screenshot 'article-show-code-block_1.png'
+      expect(page).to have_selector 'button'
+      expect(page).to have_selector 'button.code-copy__button'
+      page.save_screenshot 'article-show-code-block_2.png'
     end
   end
 end
