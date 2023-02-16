@@ -28,14 +28,14 @@
           <tbody>
             <% if hover.present? %>
               <% @articles.each_with_index do |a, i| %>
-                <tr class="link-tr" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'>
-                  <td><%= a.title %></td>
-                  <td><%= a.sub_title %></td>
+                <tr>
+                  <td class="link-td" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'><%= a.title %></td>
+                  <td class="link-td" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'><%= a.sub_title %></td>
                   <% if !dashboard %>
-                    <td><%= a.user.name %></td>
+                    <td class="link-td" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'><%= a.user.name %></td>
                   <% end %>
-                  <td><%= l(a.created_at, format: :long) %></td>
-                  <td onclick='window.location="#"'>
+                  <td class="link-td" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'><%= l(a.created_at, format: :long) %></td>
+                  <td>
                     <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
                     <ul class="dropdown-menu">
                       <% if a.user_id == current_user.id %>
