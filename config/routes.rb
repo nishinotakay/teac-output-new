@@ -13,7 +13,6 @@ Rails.application.routes.draw do
   
   namespace :admins do
     resources :dash_boards, only: [:index]
-    resources :admins, only: [:show]
     resources :articles
     namespace :articles do
       post 'image'
