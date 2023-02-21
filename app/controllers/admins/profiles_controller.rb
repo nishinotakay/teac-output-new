@@ -2,7 +2,7 @@ module Admins
   class ProfilesController < Admins::Base
     require 'date'
     before_action :authenticate_admin!, only: %i[new create edit update destroy users_show user_edit user_destroy admins_show]
-    before_action :find_profile, only: %i[show edit update destroy ]
+    before_action :find_profile, only: %i[edit update destroy ]
     
     def users_show
       @user = User.find(params[:format]) 
