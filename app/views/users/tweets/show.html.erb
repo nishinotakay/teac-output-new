@@ -1,8 +1,5 @@
 <%= javascript_pack_tag "users/tweets" %> <%# cssを反映させる%>
 <h1>つぶやき詳細</h1>
-<%= form_with(model: [@tweet, @comment], url: users_tweet_comments_path(@tweet, @comment), method: :post) do |f| %>
-<%= render 'layouts/error_messages', model: f.object %>
-<div id="edit-comment" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <div class="container">
   <div class="col-8 offset-2">
     <div class="row row-cols-auto">
@@ -14,16 +11,44 @@
       </div>
     </div>
     <div class="row">
-      <div class="text-wrap rounded-2 tweet-bgcolor mb-5 fs-3" style="width: auto;">
-        <%= @tweet.post %>
+      <div class="text-wrap rounded-2 tweet-bgcolor mb-5 fs-4 break-all" style="width: auto;">
+        <%= safe_join(@tweet.post.split("\n"),tag(:br)) %>
       </div>
     </div>
-    <div class="row"></div>
+    <div class="comment-create-form form-group">
+      <%= form_with(model: [@tweet, @comment], url: users_tweet_comments_path(@tweet, @comment), method: :post) do |form| %>
+        <%= form.text_area :comment_content, class: "form-control mt-5" %>
+        <%= form.hidden_field :tweet_id, value: @tweet.id %>
+        <%= form.submit 'コメントする', class: "btn btn-primary comment-submit" %>
+      <% end %>
+    </div>
     <% if @comments.exists? %>
-      <div class="fw-bold">〜コメント一覧〜</div>
+      <p class="fw-bold">〜コメント一覧〜</p>
     <% end %>
     <% @comments.each do |comment| %>
-      <div class="comment-contents my-2 ">
+      <!-- モーダルの設定 -->
+      <div class="modal fade" id="commentUpdateModal-<%= comment.id %>" tabindex="-1" aria-labelledby="commentUpdateModalLabel">
+        <div class="modal-dialog modal-lg form-group">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="commentUpdateModal<%= comment.id %>">コメントの編集</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+            </div>
+            <%= form_with(model: comment, url: users_tweet_comment_path(@tweet, comment), local: true, method: :patch) do |f| %>
+              <div class="modal-body">
+                <%= f.text_area :comment_content, class: "form-control" %>
+                <%= f.hidden_field :tweet_id, value: @tweet.id %>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                <button type="submit" class="btn btn-primary">変更を保存</button>
+              </div><!-- /.modal-footer -->
+            <% end %>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+      <div class="comment-contents mb-5 ">
         <div class="row row-cols-auto">
           <div class="col">
             <%= comment.user.name %>
@@ -39,13 +64,15 @@
                 <%= safe_join(comment.comment_content.split("\n"),tag(:br)) %>
               </td>
               <td class="dropdown col-1 rounded-2">
-                <span style="margin-right: 1em;"></span>
                 <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
                 <ul class="dropdown-menu test-color">
                   <% if comment.user == current_user %>
-                    <li><%= link_to '編集', edit_users_tweet_comment_path(@tweet, comment), remote: true, class:"dropdown-item" %></li>
-                    <li><%= link_to '削除', users_tweet_comment_path(@tweet, comment), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
-                    <li><%= link_to '編集', edit_users_tweet_comment_path(@tweet, comment), class:"dropdown-item" %></li>
+                    <li>
+                      <button type="button" class="btn btn-primary dropdown-item rounded-0" data-bs-toggle="modal" data-bs-target="#commentUpdateModal-<%= comment.id %>">編集</button>
+                    </li>
+                    <li>
+                      <%= link_to '削除', users_tweet_comment_path(@tweet, comment), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %>
+                    </li>
                   <% end %>
                 </ul>
               </td>
@@ -53,11 +80,6 @@
           </tbody>
         </table>
       </div>
-      <% end %>
-      <%= f.text_area :comment_content, class: "form-control mt-5" %>
-      <%= f.hidden_field :tweet_id, value: @tweet.id %>
-      <%= f.submit 'コメントする', class: "comment-submit" %>
-    </div>
+    <% end %>
   </div>
 </div>
-<% end %>
