@@ -11,7 +11,6 @@ $(function(){
       content = marked(content)
     }
     article.html(content);
-    // MathJax.Hub.Typeset(["Typeset",MathJax.Hub, "posts-preview"]); 
     var pre = article.find("pre")
     pre.each(function(){
       makecodeblock($(this))
@@ -31,7 +30,8 @@ $(function(){
       if(img.length){
         img.remove()
       }
-      $('.zoomin-modal').append($(this).children('img').clone())
+      var src = $(this).children('img').attr('src') 
+      $('.zoomin-modal').append('<img src="' + src + '" width="100%" height="100%">')
     })
   });
 

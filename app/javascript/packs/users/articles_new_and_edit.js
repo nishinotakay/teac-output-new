@@ -1,6 +1,20 @@
 import { marked } from 'marked'
 import "./articles"
 
+function markdown_preview(content){
+  if($.type(content) == "string"){
+    content = mathtodollars(content);
+    content = marked(content)
+  }
+  var preview = $('.preview')
+  preview.html(content);
+  var pre = preview.find('pre')
+  pre.each(function(){
+    makecodeblock($(this))
+  })
+  resize_img(preview)
+}
+
 $(function(){
   
   var editor = $(".markdown-editor");
@@ -10,34 +24,14 @@ $(function(){
   
   if($(".markdown-editor").val()){
     var content = $(".markdown-editor").text()
-    if($.type(content) == "string"){
-      content = mathtodollars(content);
-      content = marked(content)
-    }
-    var preview = $('.preview')
-    preview.html(content);
-    var pre = preview.find('pre');
-    pre.each(function(){
-      makecodeblock($(this))
-    })
-    resize_img(preview)
+    markdown_preview(content)
   }
 
   $('.markdown-editor').keyup(function(event){
     var content = $(this).val()
-    if($.type(content) == "string"){
-      content = mathtodollars(content);
-      content = marked(content)
-    }
-    var preview = $('.preview')
-    preview.html(content);
-    preview = preview.find('pre');
-    preview.each(function(){
-      makecodeblock($(this))
-    })
-    resize_img(preview)
+    markdown_preview(content)
   });
-  
+
   $('.markdown-editor').on('drop', function(e) { //dropのイベントをハンドル
     e.preventDefault(); //元の動きを止める処理
     var image = e.originalEvent.dataTransfer.files[0]; //ドロップされた画像の1件目を取得
