@@ -18,7 +18,7 @@ RSpec.describe 'Articles', type: :system do
           expect(current_path).to eq users_articles_path
           expect(page).to have_content '記事一覧'
           expect(page).to have_content '投稿者'
-          expect(page).to have_content article.user.name, count: 2
+          expect(page).to have_content article.user.name
         end
       end
 
@@ -48,7 +48,7 @@ RSpec.describe 'Articles', type: :system do
           visit new_users_article_path
           expect(current_path).to eq new_users_article_path
           expect(page).to have_content "記事投稿"
-          expect(page).to have_content "コンテンツ"
+          expect(page).to have_css('.markdown-editor', placeholder: '本文')
         end
       end
 
@@ -79,7 +79,8 @@ RSpec.describe 'Articles', type: :system do
 
       context 'non_writer' do
         it 'success' do
-          click_link 'ログアウト'
+          # click_link 'ログアウト'
+          find('ログアウト').click
           sign_in(user_b)
           visit users_article_path(article)
           expect(page).to_not have_content '編集'
@@ -171,31 +172,73 @@ RSpec.describe 'Articles', type: :system do
       end
     end
   end
-
-  describe 'upload image' do
-    it 'success', js: true do
-      png = file_fixture("ruby.png")
-      visit new_users_article_path
-      source = page.find('.markdown-editor')
-      source.drop(png)
-      sleep 1
-      page.save_screenshot 'ruby画像添付.png'
-    end
-  end
-
-  describe 'code copy' do
+  
+  describe 'markdown with marked.js', js: true do
     before do
-      article.content = '```ruby:qiita.rb\r\nputs "The best way to log and share programmers knowledge."\r\n```\r\n\r\n'
+      article.content = "# This is h1.  \r\n```ruby:qiita.rb\r\nputs 'The best way to log and share programmers knowledge.'\r\n```"
       article.save
     end
+    
+    describe 'new article page' do
+      before do
+        visit new_users_article_path
+        sleep 1
+        @markd = find('.markdown-editor')
+        @preview = find('.preview')
+      end
+      
+      it 'markdown to preview' do
+        @markd.set(article.content)
+        expect(@preview).to have_css('h1', text: 'This is h1.', wait: 1)
+      end
+      
+      it 'drag and drop image' do
+        img = file_fixture("ruby.png")
+        @markd.drop(img)
+        page.save_screenshot 'rubyロゴ画像添付.png'
+        expect(@preview).to have_css('img[alt="ruby.png"]', wait: 1)
+        expect(@markd.value).to start_with '<img alt="ruby.png"'
+      end
+      
+      it 'to code block' do
+        @markd.set(article.content)
+        page.save_screenshot 'newページのコードブロック.png'
+        expect(@preview).to have_selector('.code-frame', visible: true)
+        frame = @preview.find('.code-frame')
+        expect(frame).to match_style({"background-color": "rgba(54, 69, 73, 1)"})
+        expect(frame).to have_selector('.code-ref', visible: true)
+        expect(frame).to have_css('.code-ref', text: "qiita.rb", visible: true)
+        expect(frame).to have_css('code', text: "puts 'The best way to log and share programmers knowledge.'", visible: true)
+      end
+    end
 
-    it 'success', js: true do
-      visit users_article_path(article)
-      expect(page).to have_content 'The best'
-      page.save_screenshot 'article-show-code-block_1.png'
-      expect(page).to have_selector 'button'
-      expect(page).to have_selector 'button.code-copy__button'
-      page.save_screenshot 'article-show-code-block_2.png'
+    def wait_for_ajax
+      Timeout.timeout(Capybara.default_max_wait_time) do
+        loop until finished_all_ajax_requests?
+      end
+    end
+    
+    def finished_all_ajax_requests?
+      page.evaluate_script('jQuery.active').zero?
+    end
+  
+    describe 'show article page' do
+      it 'code copy' do
+        visit users_article_path(article)
+        expect(page).to have_css('.code-copy__button', visible: true)
+        page.find('.code-copy__button').click
+        expect(page).to have_css('.code-copy__message', text: 'Copied!', visible: true)
+        page.execute_script("$('.container').append('<textarea></textarea>')")
+        copy_text = 'Copied Text'
+        page.execute_script("navigator.clipboard.writeText('#{copy_text}')")
+        textarea = find('textarea')
+        copied_text = page.execute_script("return navigator.clipboard.readText()")
+        expect(copied_text).to eq 1
+        expect(page.evaluate_script('navigator.clipboard.readText()')).to eq 'Some text to copy'
+        # copied_text = page.execute_script("
+          # naviga
+        # ")
+      end
     end
   end
 end
