@@ -32,8 +32,7 @@
                       <%= safe_join(tweet.post.split("\n"),tag(:br)) %>
                     <% end %>
                   </td>
-                  <td class="dropdown"> 
-                    <span style="margin-right: 1em;"></span>
+                  <td class="dropdown">
                     <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
                     <ul class="dropdown-menu test-color">
                       <li><%= link_to '詳細', index_user_users_tweet_path(tweet.user_id), class:"dropdown-item" %></li>
