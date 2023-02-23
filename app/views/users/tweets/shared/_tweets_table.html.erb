@@ -4,60 +4,69 @@
       <% @tweets.each do |tweet| %>
         <div class="tweets-index-item">
           <div class="fw-bold col-6 offset-3">
-            <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
-            <%= image_tag image , class: "rounded-circle", size: "30x30" %><b class="caret"></b>          
-              <%= link_to index_user_users_tweet_path(tweet.user_id), style: "text-decoration: underline;" do %>
-                <%= tweet.user.name %>
-              <% end %>
-            <span style="margin-right: 1em;"></span>
-          <div class="fw-bold">
-            <%= tweet.user.name %>
-              <span style="margin-right: 1em;"></span>
-            <%= tweet.created_at.strftime("%Y年%m月%d日").to_s %>
+          <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
+            <table>
+              <tbody>
+                <tr>
+                  <td><%= image_tag image , class: "rounded-circle", size: "30x30" %><b class="caret"></td>
+                  <td>
+                    <%= link_to index_user_users_tweet_path(tweet.user_id), style: "text-decoration: underline;" do %>
+                      <%= tweet.user.name %>
+                    <% end %>
+                  </td>
+                  <td style="padding-left: 20px;">
+                    <%= tweet.created_at.strftime("%Y年%m月%d日").to_s %>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
         <div class="row">
           <div class="col-6 offset-3">
             <table class= "table table-borderless">
-              <tr>
-                <td class="text-wrap col-6 fs-4" style="width: 28rem;">
-                  <%= link_to users_tweet_path(tweet.id), style: "color: black; text-decoration: none;" do %>
-                    <%= tweet.post %>
-                  <% end %>
-                </td>
-                <td class="dropdown"> 
-                  <span style="margin-right: 1em;"></span>
-                  <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
-                  <ul class="dropdown-menu test-color">
-                    <li><%= link_to '詳細', index_user_users_tweet_path(tweet.user_id), class:"dropdown-item" %></li>
-                    <% if tweet.user.name == current_user.name %>
-                      <li><%= link_to '編集', edit_users_tweet_path(tweet), remote: true, class:"dropdown-item" %></li>
-                      <li><%= link_to '削除', users_tweet_path(tweet), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
+              <tbody>
+                <tr>
+                  <td class="text-wrap col-6 fs-5 break-all" style="width: 40rem;">
+                    <%= link_to users_tweet_path(tweet.id), style: "color: black; text-decoration: none;" do %>
+                      <%= safe_join(tweet.post.split("\n"),tag(:br)) %>
                     <% end %>
-                  </ul>
-                </td>  
-              </tr>
-              <tr class="row row-cols-4 pb-5">
-                <td class="pl-5 pt-0">
-                  <%= link_to users_tweet_path(tweet.id), style: "color: black; text-decoration: none;" do %>
-                  <i class="fa-regular fa-comment fa-lg"></i>
-                  <% if tweet.comments.count > 0 %>
-                    &nbsp;<%= tweet.comments.count %>
-                  <% end %>
-                <% end %>
-                </td>
-                <td></td>
-                <td class="pl-5 pt-0">
-                  <i class="fa-regular fa-heart fa-lg"></i>
-                </td>
-                <td></td>
-              </tr>
+                  </td>
+                  <td class="dropdown">
+                    <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
+                    <ul class="dropdown-menu test-color">
+                      <li><%= link_to '詳細', index_user_users_tweet_path(tweet.user_id), class:"dropdown-item" %></li>
+                      <% if tweet.user.name == current_user.name %>
+                        <li><%= link_to '編集', edit_users_tweet_path(tweet), remote: true, class:"dropdown-item" %></li>
+                        <li><%= link_to '削除', users_tweet_path(tweet), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
+                      <% end %>
+                    </ul>
+                  </td>  
+                </tr>
+                <tr class="row row-cols-4 pb-5">
+                  <td class="pl-5 pt-0">
+                    <%= link_to users_tweet_path(tweet.id), style: "color: black; text-decoration: none;" do %>
+                      <i class="fa-regular fa-comment fa-lg"></i>
+                      <% if tweet.comments.count > 0 %>
+                        &nbsp;<%= tweet.comments.count %>
+                      <% end %>
+                    <% end %>
+                  </td>
+                  <td></td>
+                  <td class="pl-5 pt-0">
+                    <i class="fa-regular fa-heart fa-lg"></i>
+                  </td>
+                  <td></td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
       <% end %>
     <% else %>
-      <%= render 'users/shared/table_without_record' %>
+      <table>
+        <%= render 'users/shared/table_without_record' %>
+      </table>
     <% end %>
   </div>
 </div>
