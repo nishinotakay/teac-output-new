@@ -35,36 +35,28 @@ $(function(){
     })
   });
 
-  $(".code-copy__button").click(function(){
+  $(".btn-messe").click(function(){
     var codecopy = $(this).parent(".code-copy")
-    var code = codecopy.next(".highlight").find("pre");
-    window.getSelection().selectAllChildren(code[0])
-    document.execCommand('copy');
-    window.getSelection().removeAllRanges();  
-    var btn = $(codecopy).children("div.code-copy__button")
-    btn.css("display", "none")
-    var done = btn.next("div")
-    done.show()
-    var check = done.children(".check")
-    check.show()
-    btn.delay(1500).queue(function(){
-      done.hide()
-      check.hide()
-      $(this).css("display", "block")
-    });
+    var pre = codecopy.next(".highlight").find("pre");
+    var btn = codecopy.children(".btn-messe").children(".clipboard")
+    var messe = codecopy.children(".btn-messe").children(".messe")
+    btn.hide()
+    messe.show()
+    navigator.clipboard.writeText(pre.contents().text()).then(
+      success => messe.show(),
+      error => alert('コピーに失敗しました。')
+    );
+    setTimeout(function(){
+      messe.hide()
+      btn.show()
+    },1500);    
   })
 })
 
 function copybtn(coderef){
   coderef.after('<div class="code-copy"></div>')
-  var codecopy = coderef.next("div.code-copy")
-  codecopy.css({"float": "right", "margin": "5px 20px 0 0", "cursor": "pointer"})
-  codecopy.append('<div class="code-copy__button"></div>')
-  var btn = codecopy.children("div.code-copy__button")
-  btn.append('<span class="far fa-copy clipboard"></span>')
-  codecopy.append('<div class="code-copy__message" style="display: none;"></div>')
-  codecopy.children('div.code-copy__message').append('<span class="check">Copied!</span>')
-  codecopy.children('div.code-copy__message').css({"font-size": "smaller", "margin": "0 0 0 0"})
-  btn.next("div").css({"color": "white"})
-  btn.children('span.clipboard').css({"color": "white"})
+  var codecopy = coderef.next(".code-copy")
+  codecopy.css({"float": "right", "margin": "5px 20px 0 0", "cursor": "pointer", "color": "white"})
+  codecopy.append('<div class="btn-messe"><span class="far fa-copy clipboard"></span><span class="messe" style="display: none;">Copied!</span></div>')
+  codecopy.children('.btn-messe').children('.messe').css({"font-size": "smaller", "margin": "5px"})
 }
