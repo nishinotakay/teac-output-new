@@ -42,7 +42,7 @@
                     <% if profile.user == current_user %>
                       <li><%= link_to "編集", edit_users_profile_path(profile.id), class: "nav-link" %></li>
                     <% end %>
-                      <li><%= link_to '詳細', users_profile_path(profile.id), class:"nav-link" %></li>
+                    <li><%= link_to '詳細', users_profile_path(profile.id), class:"nav-link" %></li>
                   </ul>
                 </td>
               </tr>
