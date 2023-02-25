@@ -212,32 +212,53 @@ RSpec.describe 'Articles', type: :system do
       end
     end
 
-    def wait_for_ajax
-      Timeout.timeout(Capybara.default_max_wait_time) do
-        loop until finished_all_ajax_requests?
-      end
-    end
-    
-    def finished_all_ajax_requests?
-      page.evaluate_script('jQuery.active').zero?
-    end
-  
     describe 'show article page' do
       it 'code copy' do
         visit users_article_path(article)
-        expect(page).to have_css('.code-copy__button', visible: true)
-        page.find('.code-copy__button').click
-        expect(page).to have_css('.code-copy__message', text: 'Copied!', visible: true)
-        page.execute_script("$('.container').append('<textarea></textarea>')")
-        copy_text = 'Copied Text'
-        page.execute_script("navigator.clipboard.writeText('#{copy_text}')")
-        textarea = find('textarea')
-        copied_text = page.execute_script("return navigator.clipboard.readText()")
-        expect(copied_text).to eq 1
-        expect(page.evaluate_script('navigator.clipboard.readText()')).to eq 'Some text to copy'
-        # copied_text = page.execute_script("
-          # naviga
-        # ")
+        page.execute_script("
+          $('.container').append('<button class=\"copybtn\">コードコピー</button>')
+          $('.container').append('<textarea class=\"paste\"></textarea>')
+        ")
+        wait_for_ajax
+        expect(page).to have_css('.copybtn', text: 'コードコピー', visible: true)
+        expect(page).to have_css('.paste', visible: true)
+        page.execute_script("
+          $('.copybtn').click(function(){
+            var pre = $('.code-copy').next('.highlight').find('pre');
+            navigator.permissions.query({name:\"clipboard-write\"}).then(permissionStatus => { if(permissionStatus.state == \"prompt\") { permissionStatus.prompt(); } })
+            navigator.clipboard.writeText(pre.contents().text()).then(
+              function(){
+                $('.copybtn').text(pre.contents().text())
+              },
+              function(){
+                $('.copybtn').text('error')
+                $('.container').append($('.paste').clone())
+              }
+            );
+            $('.paste').val(navigator.clipboard.readText());
+          })
+        ")
+        find('.copybtn').click
+        wait_for_ajax
+        page.accept_confirm do
+          page.save_screenshot '記事詳細copy.png'
+          expect(find('.copybtn').text).to_not eq 'コードコピー'
+          expect(page).to have_css('.copybtn', text: 'コードコピー', visible: false)
+          page.execute_script("$('.paste').val(navigator.clipboard.readText())")
+          expect(find('.paste').value).to eq 'コピー成功'
+        end
+        page.driver.browser.execute_script('navigator.permissions.query({name:"clipboard-write"}).then(permissionStatus => { if(permissionStatus.state == "prompt") { permissionStatus.prompt(); } })')
+
+        # expect(page).to have_css('.clipboard', visible: true)
+        # page.find('.clipboard').click
+        # expect(page).to have_css('.messe', text: 'Copied!', visible: true)
+        # page.execute_script("$('.container').append('<textarea></textarea>')")
+        # copy_text = 'Copied Text'
+        # page.execute_script("navigator.clipboard.writeText('#{copy_text}')")
+        # textarea = find('textarea')
+        # copied_text = page.execute_script("return navigator.clipboard.readText()")
+        # expect(copied_text).to eq 1
+        # expect(page.evaluate_script('navigator.clipboard.readText()')).to eq 'Some text to copy'
       end
     end
   end
