@@ -68,7 +68,8 @@
                 <ul class="dropdown-menu test-color">
                   <% if comment.user == current_user %>
                     <li>
-                      <button type="button" class="btn btn-primary dropdown-item rounded-0" data-bs-toggle="modal" data-bs-target="#commentUpdateModal-<%= comment.id %>">編集</button>
+                      <button type="button" class="btn btn-primary dropdown-item rounded-0" data-bs-toggle="modal" data-bs-target="#commentUpdateModal-<%= comment.id %>">
+                      編集</button>
                     </li>
                     <li>
                       <%= link_to '削除', users_tweet_comment_path(@tweet, comment), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %>
