@@ -4,7 +4,7 @@
       <% @tweets.each do |tweet| %>
         <div class="tweets-index-item">
           <div class="fw-bold col-6 offset-3">
-          <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
+            <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
             <table>
               <tbody>
                 <tr>

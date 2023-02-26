@@ -20,12 +20,8 @@ module Users
 
     def create
       @tweet =current_user.tweets.new(tweet_params)
-      if @tweet.save
-        flash[:success] = "つぶやきを作成しました。"
-        redirect_back(fallback_location: root_path)
-      else
-        redirect_back(fallback_location: root_path)
-      end
+      flash[:success] = "つぶやきを作成しました。" if @tweet.save
+      redirect_back(fallback_location: root_path)
     end
 
     def edit

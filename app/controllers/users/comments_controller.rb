@@ -1,6 +1,7 @@
 module Users
   class CommentsController < Users::Base
-before_action :authenticate_user!, only: [:create, :destroy, :update]
+    before_action :authenticate_user!, only: [:create, :destroy, :update]
+    
     def create
       @comment = current_user.comments.new(comment_params)
       if @comment.save
