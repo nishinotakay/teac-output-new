@@ -31,7 +31,8 @@ module Admins
     end
 
     def index
-      @users = User.all.page(params[:page]).per(30)
+      order = {name: params[:ord_name], email: params[:ord_email], articles: params[:ord_article], posts: params[:ord_post]}.compact
+      @users = order.count == 1 ? User.sort_by_params(order.first).page(params[:page]).per(30) : User.all.page(params[:page]).per(30)
       @profiles = Profile.all
     end
 
