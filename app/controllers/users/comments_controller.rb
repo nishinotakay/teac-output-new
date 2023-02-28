@@ -27,16 +27,12 @@ module Users
       @comment = current_user.comments.find_by(id: params[:id], tweet_id: @tweet.id)
       if @comment.nil?
         flash[:alert] = "コメントが見つかりませんでした。"
-        redirect_to users_tweet_path(@tweet)
+      elsif @comment.update(comment_params)
+        flash[:success] = "コメントを更新しました。"
       else
-        if @comment.update(comment_params)
-          flash[:success] = "コメントを更新しました。"
-          redirect_to users_tweet_path(@tweet)
-        else
-          flash[:danger] = "コメントの更新に失敗しました。"
-          redirect_to users_tweet_path(@tweet)
-        end
+        flash[:danger] = "コメントの更新に失敗しました。"
       end
+      redirect_to users_tweet_path(@tweet)
     end
 
     private
