@@ -63,4 +63,17 @@ $(function(){
     })
     window.location.search = search
   })
+
+  $('.submit-btn-admin').on('click', function(){
+    var search = "order=DESC"
+    var values = ['author', 'title', 'subtitle', 'content', 'start', 'finish']
+    $.each(values, function(index, value){
+      var input = $('#input-' + value).val()
+      if(input){
+        search += '&' + value + '=' + input
+        search += search.indexOf('reset=') != -1 ? '' : '&reset=true'
+      }
+    })
+    window.location.search = search
+  })
 })
