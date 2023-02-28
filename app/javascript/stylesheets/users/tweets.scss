@@ -1,0 +1,25 @@
+.tweet-bgcolor {
+  background-color: rgb(255, 255, 255);
+}
+
+.comment-contents {
+  padding-bottom: 10px;
+}
+
+.break-all {
+  word-break: break-all;
+}
+
+.table > tbody > tr > td.comment-bgcolor {
+  background-color:#ffffff;
+}
+
+.comment-submit {
+  margin-top: 5px;
+  // margin-bottom: 20px;
+}
+
+.form-group textarea {
+  height: 200px;
+  max-width: 800px;
+}

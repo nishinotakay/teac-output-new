@@ -1,0 +1,86 @@
+<%= javascript_pack_tag "users/tweets" %> <%# cssを反映させる%>
+<h1>つぶやき詳細</h1>
+<div class="container">
+  <div class="col-8 offset-2">
+    <div class="row row-cols-auto">
+      <div class="col fs-1">
+        <%= @tweet.user.name %>
+      </div>
+      <div class="col mt-4">
+        <%= l(@tweet.user.created_at, format: :long) %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="text-wrap rounded-2 tweet-bgcolor mb-5 fs-4 break-all" style="width: auto;">
+        <%= safe_join(@tweet.post.split("\n"),tag(:br)) %>
+      </div>
+    </div>
+    <div class="comment-create-form form-group">
+      <%= form_with(model: [@tweet, @comment], url: users_tweet_comments_path(@tweet, @comment), method: :post) do |form| %>
+        <%= form.text_area :comment_content, class: "form-control mt-5" %>
+        <%= form.hidden_field :tweet_id, value: @tweet.id %>
+        <%= form.submit 'コメントする', class: "btn btn-primary comment-submit" %>
+      <% end %>
+    </div>
+    <% if @comments.exists? %>
+      <p class="fw-bold">〜コメント一覧〜</p>
+    <% end %>
+    <% @comments.each do |comment| %>
+      <!-- モーダルの設定 -->
+      <div class="modal fade" id="commentUpdateModal-<%= comment.id %>" tabindex="-1" aria-labelledby="commentUpdateModalLabel">
+        <div class="modal-dialog modal-lg form-group">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="commentUpdateModal<%= comment.id %>">コメントの編集</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+            </div>
+            <%= form_with(model: comment, url: users_tweet_comment_path(@tweet, comment), local: true, method: :patch) do |f| %>
+              <div class="modal-body">
+                <%= f.text_area :comment_content, class: "form-control" %>
+                <%= f.hidden_field :tweet_id, value: @tweet.id %>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                <button type="submit" class="btn btn-primary">変更を保存</button>
+              </div><!-- /.modal-footer -->
+            <% end %>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+      <div class="comment-contents mb-5 ">
+        <div class="row row-cols-auto">
+          <div class="col">
+            <%= comment.user.name %>
+          </div>
+          <div class="col">
+            <%= l(comment.created_at, format: :long) %>
+          </div>
+        </div>
+        <table class="table table-borderless">
+          <tbody>
+            <tr>
+              <td class="text-wrap rounded-2 comment-bgcolor break-all" style="width: 30rem;">
+                <%= safe_join(comment.comment_content.split("\n"),tag(:br)) %>
+              </td>
+              <td class="dropdown col-1 rounded-2">
+                <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
+                <ul class="dropdown-menu test-color">
+                  <% if comment.user == current_user %>
+                    <li>
+                      <button type="button" class="btn btn-primary dropdown-item rounded-0" data-bs-toggle="modal" data-bs-target="#commentUpdateModal-<%= comment.id %>">
+                      編集</button>
+                    </li>
+                    <li>
+                      <%= link_to '削除', users_tweet_comment_path(@tweet, comment), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %>
+                    </li>
+                  <% end %>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  </div>
+</div>

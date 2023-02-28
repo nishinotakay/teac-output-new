@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     end
     resources :profiles do
       collection do
+        get 'admins_show'
         get 'users_show'
         get 'users_edit'
         delete 'user_destroy'
@@ -73,6 +74,7 @@ Rails.application.routes.draw do
       member do
         get 'index_user'
       end
+      resources :comments, only: [:create, :destroy, :update] #コメント機能
     end
     resources :inquiries #問い合わせ
   end
