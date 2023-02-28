@@ -31,8 +31,13 @@ module Admins
     end
 
     def index
-      order = {name: params[:ord_name], email: params[:ord_email], articles: params[:ord_article], posts: params[:ord_post]}.compact
-      @users = order.count == 1 ? User.sort_by_params(order.first).page(params[:page]).per(30) : User.all.page(params[:page]).per(30)
+      order = {id: params[:ord_id], name: params[:ord_name], email: params[:ord_email], articles: params[:ord_articles], posts: params[:ord_posts]}.compact
+      filter = {
+        name: params[:flt_name], email: params[:flt_email],
+        articles_min: params[:flt_articles_min], articles_max: params[:flt_articles_max],
+        posts_min: params[:flt_posts_min], posts_max: params[:flt_posts_max]
+      }
+      @users = order.count == 1 ? User.sort_filter(order.first, filter)&.page(params[:page]).per(30) : User.all&.page(params[:page]).per(30)
       @profiles = Profile.all
     end
 
