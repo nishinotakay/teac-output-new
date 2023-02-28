@@ -14,7 +14,7 @@
           <div style="text-align:center;"> 
             <div class="field">
               <%= form.label :post, "#{yield(:label_text)}", class: "tweet-form" %><br>
-              <%= form.text_area :post, id:"tweet_post", size: "50x5" %>
+              <%= form.text_area :post, class: "form-control", id:"tweet_post", size: "50x5" %>
             </div>
             <div class="actions">
               <br><%= form.submit "#{yield(:btn_text)}", class: "btn btn-lg btn-primary" %>
