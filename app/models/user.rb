@@ -22,11 +22,19 @@ class User < ApplicationRecord
 
   enum gender: { male: 0, female: 1, other: 2 }
 
-  def self.sort_by_params(order)
-    if order[0] == :name || order[0] == :email
-      order(order[0] => order[1])
+  def self.sort_filter(order, filter)
+    artcl_min = filter[:articles_min].blank? ? 0 : filter[:articles_min]
+    artcl_max = filter[:articles_max].blank? ? Article.count : filter[:articles_max]
+    posts_min = filter[:posts_min].blank? ? 0 : filter[:posts_min]
+    posts_max = filter[:posts_max].blank? ? Post.count : filter[:posts_max]
+    users = where(["name like ? and email like ?", "%#{filter[:name]}%", "%#{filter[:email]}%"])
+      .left_joins(:articles).left_joins(:posts).group("users.id")
+      .having("count(articles.id) between ? and ?", artcl_min, artcl_max)
+      .having("count(posts.id) between ? and ?", posts_min, posts_max)
+    if order[0] == :articles || order[0] == :posts
+      users.order("COUNT(#{order[0].to_s}.id) #{order[1]}")
     else
-      left_joins(order[0]).group("users.id").order("COUNT(#{order[0].to_s}.id) #{order[1]}") || all
+      users.order(order[0] => order[1])
     end
   end
 end

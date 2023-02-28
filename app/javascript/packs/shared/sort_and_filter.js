@@ -5,12 +5,10 @@ window.make_page = function(){
   ttl_btns.parent().removeClass('col-sm-6')
   ttl_btns.parent().addClass('col-sm-8')
   var reset = $('.reset-btn')
-  // フィルター実装時解放
-  // var filter = $('.filter-modal-btn')
+  var filter = $('.filter-modal-btn')
   var sort = $('.sort-modal-btn')
   title.after(reset)
-  // フィルター実装時解放
-  // title.after(filter)
+  title.after(filter)
   title.after(sort)
   ttl_btns.children().css({'display': 'inline'})
 
@@ -20,16 +18,14 @@ window.make_page = function(){
     $('.sort-modal').show()
   })
 
-  // フィルター実装時解放
-  // filter.on('click', function(){
-  //   $('.modal-title').text('絞り込み検索')
-  //   $('.submit-btn').text('検索する')
-  //   $('.filter-modal').show()
-  // })
+  filter.on('click', function(){
+    $('.modal-title').text('絞り込み検索')
+    $('.submit-btn').text('検索する')
+    $('.filter-modal').show()
+  })
 
   $('.modal-close').on('click', function(){
     $('.sort-modal').hide()
-    // フィルター実装時解放
-    // $('.filter-modal').hide()
+    $('.filter-modal').hide()
   })
 }
