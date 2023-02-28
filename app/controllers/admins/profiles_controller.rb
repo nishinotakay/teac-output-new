@@ -1,8 +1,8 @@
 module Admins
   class ProfilesController < Admins::Base
     require 'date'
-    before_action :authenticate_admin!, only: %i[new create edit update destroy users_show user_edit user_destroy]
-    before_action :find_profile, only: %i[show edit update destroy ]
+    before_action :authenticate_admin!, only: %i[new create edit update destroy users_show user_edit user_destroy admins_show]
+    before_action :find_profile, only: %i[edit update destroy ]
     
     def users_show
       @user = User.find(params[:format]) 
@@ -35,10 +35,7 @@ module Admins
       @profiles = Profile.all
     end
 
-    def show
-      @d1 = Date.current.to_time
-      @d2 = @profile.learning_start.to_time if @profile.learning_start.to_time
-      @sa = @d1 - @d2
+    def admins_show
     end
 
     def new

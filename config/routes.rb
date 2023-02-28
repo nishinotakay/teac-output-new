@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     end
     resources :profiles do
       collection do
+        get 'admins_show'
         get 'users_show'
         get 'users_edit'
         delete 'user_destroy'

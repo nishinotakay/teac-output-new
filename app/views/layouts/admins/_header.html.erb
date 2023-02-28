@@ -17,13 +17,12 @@
   </ul>
   <div class="dropdown navbar-nav" style="padding-bottom:6px">
     <div class="nav-link" id="dropdownMenuButton button_group" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <% image = current_user.present? && current_user.image.present? ? current_user&.image : "admin.png" %>
-      <%= image_tag image , size: "30x30" %><b class="caret"></b> 
+      <%= image_tag "admin.png" , size: "30x30" %><b class="caret"></b> 
     </div>
     <ul class="dropdown-menu dropdown-menu-right dropdown-menu-header">
       <li style="padding-left:3px"><%= current_admin.name %></li>
       <hr style="height:0.5px">
-      <li style="padding-left:3px"><%= link_to "詳細画面", edit_admin_registration_url, method: :get, class: "d-block" %></li>
+      <li style="padding-left:3px"><%= link_to "詳細画面", admins_show_admins_profiles_path, method: :get %></li>
       <li style="padding-left:3px"><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
     </ul>
   </div>
