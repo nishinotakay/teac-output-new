@@ -10,3 +10,5 @@ ja:
         updateed_at: '更新日'
         age: '年齢'
         gender: '性別'
+        article: '記事投稿数'
+        post: '動画投稿数'
