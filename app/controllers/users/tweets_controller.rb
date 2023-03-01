@@ -68,7 +68,15 @@ module Users
 
     def correct_tweet_user
       @tweet = Tweet.find(params[:id])
-      redirect_to root_url if @tweet.user != current_user
+      if @tweet.user != current_user
+        if authenticate_user!
+          flash[:alart] = "アクセスできません"
+          redirect_to users_dash_boards_path
+        else
+          redirect_to root_path
+        end
+      end
     end
+    
   end
 end
