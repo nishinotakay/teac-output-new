@@ -3,7 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe Article, type: :model do
-  let(:article) { build(:article) }
+  let(:user_a) { build(:user, :a, confirmed_at: Date.today) }
+  let(:article) { build(:article, user: user_a) }
   
   describe 'バリデーションについて' do
     subject do
@@ -26,7 +27,7 @@ RSpec.describe Article, type: :model do
 
         it 'バリデーションのエラーが正しいこと' do
           subject.valid?
-          expect(subject.errors.full_messages).to include('Titleを入力してください')
+          expect(subject.errors.full_messages).to include('タイトルを入力してください')
         end
       end
 
@@ -40,9 +41,9 @@ RSpec.describe Article, type: :model do
         end
       end
 
-      context '文字数が20文字の場合' do
+      context '文字数が40文字の場合' do
         before :each do
-          subject.title = 'a' * 20
+          subject.title = 'a' * 40
         end
 
         it 'バリデーションが通ること' do
@@ -50,9 +51,9 @@ RSpec.describe Article, type: :model do
         end
       end
 
-      context '文字数が21文字の場合' do
+      context '文字数が41文字の場合' do
         before :each do
-          subject.title = 'a' * 21
+          subject.title = 'a' * 41
         end
 
         it 'バリデーションに落ちること' do
@@ -61,7 +62,7 @@ RSpec.describe Article, type: :model do
 
         it 'バリデーションのエラーが正しいこと' do
           subject.valid?
-          expect(subject.errors.full_messages).to include('Titleは20文字以内で入力してください')
+          expect(subject.errors.full_messages).to include('タイトルは40文字以内で入力してください')
         end
       end
     end
@@ -87,9 +88,9 @@ RSpec.describe Article, type: :model do
         end
       end
 
-      context '文字数が40文字の場合' do
+      context '文字数が50文字の場合' do
         before :each do
-          subject.sub_title = 'a' * 40
+          subject.sub_title = 'a' * 50
         end
 
         it 'バリデーションが通ること' do
@@ -97,9 +98,9 @@ RSpec.describe Article, type: :model do
         end
       end
 
-      context '文字数が41文字の場合' do
+      context '文字数が51文字の場合' do
         before :each do
-          subject.sub_title = 'a' * 41
+          subject.sub_title = 'a' * 51
         end
 
         it 'バリデーションに落ちること' do
@@ -108,7 +109,7 @@ RSpec.describe Article, type: :model do
 
         it 'バリデーションのエラーが正しいこと' do
           subject.valid?
-          expect(subject.errors.full_messages).to include('Sub titleは40文字以内で入力してください')
+          expect(subject.errors.full_messages).to include('サブタイトルは50文字以内で入力してください')
         end
       end
     end
@@ -125,7 +126,7 @@ RSpec.describe Article, type: :model do
 
         it 'バリデーションのエラーが正しいこと' do
           subject.valid?
-          expect(subject.errors.full_messages).to include('Contentを入力してください')
+          expect(subject.errors.full_messages).to include('本文を入力してください')
         end
       end
     end
