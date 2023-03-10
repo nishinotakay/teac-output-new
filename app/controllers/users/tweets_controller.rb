@@ -8,11 +8,12 @@ module Users
 
     def index
       @users = User.all
-      @tweets = Tweet.all
+      @tweets = Tweet.all.order(created_at: :desc)
     end
 
     def show
-      @comments = @tweet.comments.all
+      @tweet = Tweet.find(params[:id])
+      @comments = @tweet.comments.all.order(created_at: :desc)
       @comment = current_user.comments.new
     end
 
