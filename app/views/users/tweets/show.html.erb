@@ -50,11 +50,11 @@
 
       <div class="comment-contents mb-5 ">
         <div class="row row-cols-auto">
-          <div class="col">
-            <%= comment.user.name %>
-          </div>
-          <div class="col">
-            <%= l(comment.created_at, format: :long) %>
+          <div class="comment-header">
+            <strong><%= comment.user.name %></strong>
+            <span class="timestamp" data-time="<%= comment.created_at.to_i %>">
+              <%= time_ago_in_words(comment.created_at) %>前
+            </span>
           </div>
         </div>
         <table class="table table-borderless">
