@@ -40,3 +40,16 @@ const updateTimestamps = () => {
 document.addEventListener('DOMContentLoaded', () => {
   setInterval(updateTimestamps, 1000); // 1秒ごとに更新する
 });
+
+// notification-linkクラスを持つリンクがクリックされたときにフォームが送信される
+document.addEventListener('DOMContentLoaded', () => {
+  const notificationLinks = document.querySelectorAll('.notification-link');
+
+  notificationLinks.forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      const form = link.closest('.notification-form');
+      form.submit();
+    });
+  });
+});

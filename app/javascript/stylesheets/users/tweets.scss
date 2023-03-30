@@ -16,10 +16,52 @@
 
 .comment-submit {
   margin-top: 5px;
-  // margin-bottom: 20px;
 }
 
 .form-group textarea {
   height: 200px;
   max-width: 800px;
+}
+
+// bootstrap5のモーダル
+.modal {
+  z-index: 2000;
+}
+
+.modal-dialog-slideout {
+  max-width: 750px;
+  position: fixed;
+  top: -25px;// 上側の位置を調整
+  // right: 0;
+  bottom: 0;
+  left: 250px;//サイドバーの右側に表示
+  z-index: 1050;
+  overflow: hidden;
+  outline: 0;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-out;
+}
+
+.modal.fade .modal-dialog-slideout {
+  transform: translateX(-100%);
+}
+
+.modal.show .modal-dialog-slideout {
+  transform: translateX(0);
+}
+
+.modal-backdrop {
+  z-index: 1000;
+}
+
+// コメント通知一覧のモーダル内のクラス 
+.notification-link {
+  text-decoration: none;
+  color: black;
+}
+
+.notification-link:hover {
+  text-decoration: none;
+  color: black;
+  background-color: #d1c5c5;
 }
