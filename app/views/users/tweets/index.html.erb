@@ -1,5 +1,24 @@
 <%= javascript_pack_tag "users/tweets" %>
 <% provide(:title, "つぶやき一覧") %>
+<% number_of_comment_notifications = @comment_notifications.count %>
+<% if number_of_comment_notifications > 0 %>
+  <span class="dropdown">
+  <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+  <%= number_of_comment_notifications %>件のコメント通知があります。
+  </a>
+    <ul class="dropdown-menu">
+      <% @comment_notifications.each do |notification| %>
+        <%= form_with url: confirmed_notification_users_tweet_comment_path(notification.tweet, notification), method: :patch, local: true do |form| %>
+          <li>
+            <strong><%= notification.user.name %>さんからのコメント</strong>
+            <p><%= form.submit "#{notification.comment_content}" %></p>
+            
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
+  </span>
+<% end %>
 <%= render "users/tweets/shared/tweets_table" %>
 <div id="new" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   add_flash_types :success, :info, :warning, :danger
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :set_comment_notifiations
 
   def after_sign_in_path_for(resource)
     case resource
@@ -18,5 +19,15 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit :sign_up, keys: added_attrs
     devise_parameter_sanitizer.permit :account_update, keys: added_attrs
     devise_parameter_sanitizer.permit :sign_in, keys: added_attrs
+  end
+
+  private
+  # コメント通知件数を表示するためのメソッド
+  def set_comment_notifiations
+    if user_signed_in?
+      @comment_notifications = Comment.where(confirmed: false, recipient_id: current_user.id)
+                                      .where.not(user_id: current_user.id) #user_idがログインユーザーの場合はカウントしない。
+                                      .order(created_at: :desc)
+    end
   end
 end
