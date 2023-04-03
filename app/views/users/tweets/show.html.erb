@@ -19,6 +19,8 @@
       <%= form_with(model: [@tweet, @comment], url: users_tweet_comments_path(@tweet, @comment), method: :post) do |form| %>
         <%= form.text_area :comment_content, class: "form-control mt-5" %>
         <%= form.hidden_field :tweet_id, value: @tweet.id %>
+        <%= form.hidden_field :recipient_id, value: @tweet.user_id %> <%# コメントを受け取るtweetユーザーのID %>
+        <%= form.hidden_field :confirmed, value: false %> <%# コメント確認フラグ。コメントを受け取るユーザーが未確認の場合はfalse,確認するとtrue。%>
         <%= form.submit 'コメントする', class: "btn btn-primary comment-submit" %>
       <% end %>
     </div>

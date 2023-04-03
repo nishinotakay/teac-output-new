@@ -38,6 +38,9 @@
             <i class="nav-icon fa-brands fa-twitter"></i> 
             <p>
               つぶやき一覧
+              <% if @comment_notifications.count > 0 %>
+                <span class="badge rounded-pill badge-success"><%= @comment_notifications.count %></span> <%# コメント通知件数をバッジ通知する %>
+              <% end %>
             </p>
           <% end %>
         </li>

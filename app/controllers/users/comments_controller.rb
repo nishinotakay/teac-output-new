@@ -35,10 +35,18 @@ module Users
       redirect_to users_tweet_path(@tweet)
     end
 
+    # 未確認の通知を確認するアクション
+    def confirmed_notification
+      @tweet = Tweet.find(params[:tweet_id])
+      @tweet.comments.where(confirmed: false, recipient_id: current_user.id).update_all(confirmed: true)
+      redirect_to users_tweet_path(@tweet)
+    end
+    
+
     private
 
     def comment_params
-      params.require(:comment).permit(:comment_content, :tweet_id)  #formにてtweet_idパラメータを送信して、コメントへtweet_idを格納するようにする必要がある。
+      params.require(:comment).permit(:comment_content, :tweet_id, :recipient_id, :confirmed)  #formにてtweet_idパラメータを送信して、コメントへtweet_idを格納するようにする必要がある。
     end
   end
 end
