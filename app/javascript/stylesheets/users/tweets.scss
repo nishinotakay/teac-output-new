@@ -1,3 +1,11 @@
+.tweet-content {
+  word-break: break-all;
+  font-size: 20px; /* 文字の大きさを20pxに設定 */
+  background-color: white; /* 背景色を白に設定 */
+  border-radius: 10px; /* 角を丸くする */
+  padding: 20px;
+}
+
 .tweet-bgcolor {
   background-color: rgb(255, 255, 255);
 }
