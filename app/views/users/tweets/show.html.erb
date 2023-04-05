@@ -48,7 +48,7 @@
         </div><!-- /.modal-dialog -->
       </div><!-- /.modal -->
 
-      <div class="comment-contents mb-5 ">
+      <div class="comment-contents">
         <div class="row row-cols-auto">
           <div class="comment-header">
             <strong><%= comment.user.name %></strong>
@@ -60,8 +60,8 @@
         <table class="table table-borderless">
           <tbody>
             <tr>
-              <td class="text-wrap rounded-2 comment-bgcolor break-all" style="width: 30rem;">
-                <%= safe_join(comment.comment_content.split("\n"),tag(:br)) %>
+              <td class="comment-content">
+                <%= raw Rinku.auto_link(simple_format(comment.comment_content.gsub(/ /, '&nbsp;')), :all, 'target="_blank"') %>
               </td>
               <td class="dropdown col-1 rounded-2">
                 <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
