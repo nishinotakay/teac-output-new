@@ -2,9 +2,8 @@ import { marked } from 'marked'
 import "./articles"
 
 function resize_img(article){
-  article.find("img").each(function(){ //取得されたimg要素に対してeachメソッドで繰り返し処理
-    $(this).before('<br><br>'); //繰り返し処理中のimg要素の前に<br>要素を挿入
-    $(this).after('<br><br>'); //繰り返し処理中のimg要素の後に<br>要素を挿入
+  article.find("img").each(function(){ // 取得されたimg要素に対してeachメソッドで繰り返し処理
+    $(this).addClass('img-margin'); // img要素に対してimg-marginクラスを追加
   })
 }
 
