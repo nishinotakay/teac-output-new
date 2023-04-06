@@ -36,7 +36,7 @@
 }
 
 .table > tbody > tr > td.comment-bgcolor {
-  background-color:#ffffff;
+  background-color: #ffffff;
 }
 
 .comment-submit {
@@ -56,10 +56,10 @@
 .modal-dialog-slideout {
   max-width: 750px;
   position: fixed;
-  top: -25px;// 上側の位置を調整
+  top: -25px; // 上側の位置を調整
   // right: 0;
   bottom: 0;
-  left: 250px;//サイドバーの右側に表示
+  left: 250px; //サイドバーの右側に表示
   z-index: 1050;
   overflow: hidden;
   outline: 0;
@@ -79,7 +79,7 @@
   z-index: 1000;
 }
 
-// コメント通知一覧のモーダル内のクラス 
+// コメント通知一覧のモーダル内のクラス
 .notification-link {
   text-decoration: none;
   color: black;
