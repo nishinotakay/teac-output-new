@@ -53,3 +53,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+// つぶやき一覧でつぶやきを押下した際につぶやき詳細画面に遷移するメソッド
+$(document).on('turbolinks:load', function() { //Turbolinks がページをロードした後に実行されるイベントリスナー。要はリンクをクリックしてページがロードした後に実行される。
+  $('.tweet-post').on('click', function(e) { //tweet-postクラスが適用された要素がクリックされるときに実行されるイベントリスナー
+    if (!$(e.target).is('a')) { // クリックされた要素が<a>タグでない場合の条件式
+      window.location.href = $(this).data('tweet-url'); // 現在のページのURLを、クリックされたtweet-post要素のdata-tweet-url属性に設定されたURLに変更
+    }
+  });
+});
