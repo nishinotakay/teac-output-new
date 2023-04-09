@@ -1,3 +1,5 @@
+require 'rinku'
+
 module Users
   class TweetsController < Users::Base
     # Userがログインしていないと、投稿を作成・編集・削除できない
