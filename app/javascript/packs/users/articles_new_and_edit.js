@@ -1,50 +1,38 @@
 import { marked } from 'marked'
 import "./articles"
 
+function markdown_preview(content){
+  if($.type(content) == "string"){
+    content = mathtodollars(content);
+    content = marked(content)
+  }
+  var preview = $('.preview')
+  preview.html(content);
+  var pre = preview.find('pre')
+  pre.each(function(){
+    makecodeblock($(this))
+  })
+  resize_img(preview)
+}
+
 $(function(){
   
-  var m_editor = $(".markdown-editor");
+  var editor = $(".markdown-editor");
   var preview = $(".preview");
-  preview.height(m_editor.height());
-  preview.html(preview.data("preview-content"));
+  preview.height(editor.height());
   $('.editor-side .card').height($('.preview-side .card').height())
   
   if($(".markdown-editor").val()){
     var content = $(".markdown-editor").text()
-    content ||= ''
-    content = mathtodollars(content);
-    content = marked(content)
-    var elem = $('.preview')
-    elem.html(content);
-    var pre = elem.find('pre');
-    pre.each(function(){
-      makecodeblock($(this))
-    })
-    elem.find("img").each(function(){
-      $(this).width("60%")
-      $(this).height("60%")
-    })
+    markdown_preview(content)
   }
 
   $('.markdown-editor').keyup(function(event){
     var content = $(this).val()
-    content ||= preview.data("preview-content")
-    content = marked(content);
-    content ||= preview.data("preview-content")
-    var pre = $('.preview')
-    pre.html(content);
-    pre.find("img").each(function(){
-      $(this).width("60%")
-      $(this).height("60%")
-    })
-    pre = pre.find('pre');
-    pre.each(function(){
-      makecodeblock($(this))
-    })
+    markdown_preview(content)
   });
-  
+
   $('.markdown-editor').on('drop', function(e) { //dropのイベントをハンドル
-    console.warn('a')
     e.preventDefault(); //元の動きを止める処理
     var image = e.originalEvent.dataTransfer.files[0]; //ドロップされた画像の1件目を取得
     var formData = new FormData();
@@ -62,6 +50,7 @@ $(function(){
     })
     .done(function(data, textStatus, jqXHR){
       setImage(data['name'], data['url'])
+      resize_img($(".preview"))
     })
     .fail(function(jqXHR, textStatus, errorThrown){
       alert("画像の挿入に失敗しました。");
@@ -81,7 +70,6 @@ $(function(){
     textarea.value = sentence;
     var content = marked(textarea.value)
     $(".preview").html(content);
-    resize_img($(".preview"))
   }
 
 });

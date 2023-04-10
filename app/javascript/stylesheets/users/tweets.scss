@@ -1,0 +1,92 @@
+.tweet-post {
+  word-break: break-all;
+  font-size: 20px; /* 文字の大きさを20pxに設定 */
+  background-color: white; /* 背景色を白に設定 */
+  border-radius: 10px; /* 角を丸くする */
+  padding: 10px;
+  cursor: pointer;
+}
+
+.tweet-content {
+  word-break: break-all;
+  font-size: 20px; /* 文字の大きさを20pxに設定 */
+  background-color: white; /* 背景色を白に設定 */
+  border-radius: 10px; /* 角を丸くする */
+  padding: 10px;
+}
+
+.table > tbody > tr > td.comment-content {
+  word-break: break-all;
+  font-size: 20px; /* 文字の大きさを20pxに設定 */
+  background-color: white; /* 背景色を白に設定 */
+  border-radius: 10px; /* 角を丸くする */
+  padding: 10px;
+}
+
+.tweet-bgcolor {
+  background-color: rgb(255, 255, 255);
+}
+
+.comment-contents {
+  padding-bottom: 5px;
+}
+
+.break-all {
+  word-break: break-all;
+}
+
+.table > tbody > tr > td.comment-bgcolor {
+  background-color: #ffffff;
+}
+
+.comment-submit {
+  margin-top: 5px;
+}
+
+.form-group textarea {
+  height: 200px;
+  max-width: 800px;
+}
+
+// bootstrap5のモーダル
+.modal {
+  z-index: 2000;
+}
+
+.modal-dialog-slideout {
+  max-width: 750px;
+  position: fixed;
+  top: -25px; // 上側の位置を調整
+  // right: 0;
+  bottom: 0;
+  left: 250px; //サイドバーの右側に表示
+  z-index: 1050;
+  overflow: hidden;
+  outline: 0;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-out;
+}
+
+.modal.fade .modal-dialog-slideout {
+  transform: translateX(-100%);
+}
+
+.modal.show .modal-dialog-slideout {
+  transform: translateX(0);
+}
+
+.modal-backdrop {
+  z-index: 1000;
+}
+
+// コメント通知一覧のモーダル内のクラス
+.notification-link {
+  text-decoration: none;
+  color: black;
+}
+
+.notification-link:hover {
+  text-decoration: none;
+  color: black;
+  background-color: #d1c5c5;
+}

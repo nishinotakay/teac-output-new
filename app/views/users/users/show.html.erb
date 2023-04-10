@@ -3,7 +3,7 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col align-self-start"><!--左余白--></div><!--左余白-->
-    <div class="col-4 align-self-center"><!--中央余白-->
+    <div class="align-self-center profile-title-form"><!--中央余白-->
       <div class="card card-outline card-primary">
         <div class="card-header text-center"><h2>ユーザー詳細画面</h2></div>
         <section class="content">
@@ -12,13 +12,13 @@
               <div class="col-md-12"></div>
               <div class="card-body">
                 <div class="user-about">
-                  <% @profile.image%>
-                    <div class="image text-center">
-                      <p class="text-muted"><%= image_tag @profile.image, class: "rounded-circle", size: "120x120" %></p>
-                    </div>
+                  <div class="image text-center">
+                    <% image = @profile.present? && @profile.image.present? ? @profile.image : "user_default.png" %>
+                    <%= image_tag image , class: "rounded-circle", size: "120x120" %>
+                  </div>
                   <div class="profile-indent text-center">
                     <i class="fas fa-user"></i>
-                    <span><%= @profile.name %></span>
+                    <span><%= current_user.name %></span>
                   </div>
                     <hr>
                   <div class="profile-indent text-center">
@@ -29,25 +29,30 @@
                   <div class="profile-indent" style="padding-left:30px">
                     <i class="fas fa-heart"></i>
                     性別
-                    <span class="profile-indent"><%= @profile.gender_i18n %></span>
+                    <% gender = @profile.present? && @profile.gender_i18n.present? ? @profile.gender_i18n : "―" %>
+                    <span class="profile-indent"><%= gender %></span>
                   </div>
                     <hr>
                   <div class="profile-indent" style="padding-left:30px">
                     <i class="fas fa-gift"></i>
                     誕生日
-                    <span class="profile-indent" style="padding-right:10px"><%= @profile.birthday %></span>
+                    <span class="profile-indent" style="padding-right:10px">
+                    <% birthday = @profile.present? && @profile.birthday.present? ? @profile.birthday : "―" %>
+                    <%= birthday %></span>
                   </div>
                     <hr>
                   <div class="profile-indent" style="padding-left:30px">
                    <i class="fas fa-book-open"></i>
                    プログラミング学習開始日
-                    <td><%= @profile.learning_start %></td>
+                    <% learning_start = @profile.present? && @profile.learning_start.present? ? @profile.learning_start : "―" %>
+                    <%= learning_start %>
                   </div>
                     <hr style="height:0.5px">
                   <div class="profile-indent" style="padding-left:30px">
                     <i class="fas fa-flag"></i>
                     プログラミング学習の目的
-                    <td class="text-muted"><%= @profile.purpose %></td>
+                    <% purpose = @profile.present? && @profile.purpose.present? ? @profile.purpose : "―" %>
+                    <td class="text-muted"><%= purpose %></td>
                   </div>
                     <hr>
                   <div class="content">

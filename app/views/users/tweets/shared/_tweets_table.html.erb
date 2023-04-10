@@ -3,39 +3,72 @@
     <% if @tweets.exists? %>
       <% @tweets.each do |tweet| %>
         <div class="tweets-index-item">
-          <div class="fw-bold">
+          <div class="col-6 offset-3">
             <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
-            <%= image_tag image , class: "rounded-circle", size: "30x30" %><b class="caret"></b>          
-            <%= link_to index_user_users_tweet_path(tweet.user_id), style: "text-decoration: underline;" do %>
-              <%= tweet.user.name %>
-            <% end %>
-            <span style="margin-right: 1em;"></span>
-            <%= tweet.created_at.strftime("%Y年%m月%d日").to_s %>
+            <table>
+              <tbody>
+                <tr>
+                  <td><%= image_tag image , class: "rounded-circle", size: "30x30" %><b class="caret"></td>
+                  <td>
+                    <%= link_to index_user_users_tweet_path(tweet.user_id), style: "text-decoration: underline;" do %>
+                      <strong><%= tweet.user.name %>&nbsp;</strong>
+                    <% end %>
+                  </td>
+                  <td>
+                    <span class="timestamp" data-time="<%= tweet.created_at.to_i %>">
+                      <%= time_ago_in_words(tweet.created_at) %>前
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
         <div class="row">
-          <div class="col-12">
+          <div class="col-6 offset-3">
             <table class= "table table-borderless">
-              <td class="text-wrap col-6" style="width: 28rem;">
-                <%= tweet.post %>
-              </td> 
-              <td class="dropdown"> 
-                <span style="margin-right: 1em;"></span>
-                <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
-                <ul class="dropdown-menu">
-                  <li><%= link_to '詳細', index_user_users_tweet_path(tweet.user_id), class:"dropdown-item" %></li>
-                  <% if tweet.user.name == current_user.name %>
-                    <li><%= link_to '編集', edit_users_tweet_path(tweet), remote: true, class:"dropdown-item" %></li>
-                    <li><%= link_to '削除', users_tweet_path(tweet), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
-                  <% end %>            
-                </ul>
-              </td>                  
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="tweet-post" data-tweet-url="<%= users_tweet_path(tweet.id) %>">
+                      <%= raw Rinku.auto_link(simple_format(tweet.post.gsub(/ /, '&nbsp;')), :all, 'target="_blank"') %>
+                    </div>
+                  </td>
+                  <td class="dropdown">
+                    <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
+                    <ul class="dropdown-menu test-color">
+                      <li><%= link_to '詳細', index_user_users_tweet_path(tweet.user_id), class:"dropdown-item" %></li>
+                      <% if tweet.user.name == current_user.name %>
+                        <li><%= link_to '編集', edit_users_tweet_path(tweet), remote: true, class:"dropdown-item" %></li>
+                        <li><%= link_to '削除', users_tweet_path(tweet), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
+                      <% end %>
+                    </ul>
+                  </td>  
+                </tr>
+                <tr class="row row-cols-4 pb-5">
+                  <td class="pl-5 pt-0">
+                    <%= link_to users_tweet_path(tweet.id), style: "color: black; text-decoration: none;" do %>
+                      <i class="fa-regular fa-comment fa-lg"></i>
+                      <% if tweet.comments.count > 0 %>
+                        &nbsp;<%= tweet.comments.count %>
+                      <% end %>
+                    <% end %>
+                  </td>
+                  <td></td>
+                  <td class="pl-5 pt-0">
+                    <i class="fa-regular fa-heart fa-lg"></i>
+                  </td>
+                  <td></td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
       <% end %>
     <% else %>
-      <%= render 'users/shared/table_without_record' %>
+      <table>
+        <%= render 'users/shared/table_without_record' %>
+      </table>
     <% end %>
   </div>
 </div>

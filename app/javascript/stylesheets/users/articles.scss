@@ -1,6 +1,13 @@
-//以下new
-.preview {
-  overflow: scroll;
+//show
+.article-show {
+  background-color: white;
+  border-radius: 5px;
+}
+
+// article_show.jsのresize_img関数にimg-marginクラスを追加
+.img-margin {
+  display: block; //ブロック要素として扱う。つまり新しい行で開始し次の要素は新しい行で始まる。
+  margin: 1em auto; //上下のマージンを1em,左右のマージンを自動（中央寄せ）で配置。
 }
 
 //以下index
@@ -8,17 +15,7 @@
   tr td {
     padding-left: 2rem;
   }
-  .link-tr:hover {
+  .link-td:hover {
     cursor: pointer;
   }
-  .span-subtitle {
-    font-size: small;
-  }
 }
-
-//共通(show&index&dashboard)
-.hr {
-  border: 1px solid #adb5bd;
-  margin: 10px 0;
-}
-

@@ -2,6 +2,7 @@
 @import "admin-lte";
 @import '@fortawesome/fontawesome-free';
 @import './users/custom';
+@import './users/articles.scss';
 
 // 平野追加
 // アコーディオンメニューデザイン
@@ -163,4 +164,12 @@
 .Editlink:hover {
   text-decoration: none;
   color: white ;
+}
+
+.div-title-form {
+  width: 650px;
+}
+
+.profile-title-form {
+  width: 450px;
 }

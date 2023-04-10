@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     end
     resources :profiles do
       collection do
+        get 'admins_show'
         get 'users_show'
         get 'users_edit'
         delete 'user_destroy'
@@ -54,6 +55,7 @@ Rails.application.routes.draw do
       # 全ユーザー詳細ページ（/users/posts/:id/show_1）
       member do # id付与
         get 'show_1'
+        get 'show'
         # 全ユーザー編集ページ（/users/posts/:id/edit_1）
         get 'edit_1'
         # 全ユーザー編集ページの更新（/users/posts/:id/update_1(）
@@ -72,7 +74,13 @@ Rails.application.routes.draw do
       member do
         get 'index_user'
       end
+      resources :comments, only: [:create, :destroy, :update] do #コメント機能
+        member do # 個々のコメントに対してアクセスできるカスタムアクションを定義する
+          patch 'confirmed_notification' #confirmed_notificationアクションに対するRESTfulなルーティングを定義
+        end
+      end
     end
+    resources :inquiries #問い合わせ
   end
   # =================================================================
 

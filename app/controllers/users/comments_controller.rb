@@ -1,0 +1,52 @@
+module Users
+  class CommentsController < Users::Base
+    before_action :authenticate_user!, only: [:create, :destroy, :update]
+    
+    def create
+      @comment = current_user.comments.new(comment_params)
+      if @comment.save
+        redirect_to users_tweet_path(@comment.tweet), notice: "コメントを投稿しました。"
+      else
+        redirect_to users_tweet_path(@comment.tweet), alert: @comment.errors.full_messages.join("\n")
+      end
+    end
+
+    def destroy
+      @tweet = Tweet.find(params[:tweet_id])
+      @comment = current_user.comments.find_by(tweet_id: @tweet.id)
+      if @comment.destroy
+        redirect_to users_tweet_path(@tweet), notice: "コメントを削除しました。"
+      else
+        flash.now[:alert] = 'コメント削除に失敗しました'
+        render users_tweet_path(@tweet)
+      end
+    end
+
+    def update
+      @tweet = Tweet.find(params[:tweet_id])
+      @comment = current_user.comments.find_by(id: params[:id], tweet_id: @tweet.id)
+      if @comment.nil?
+        flash[:alert] = "コメントが見つかりませんでした。"
+      elsif @comment.update(comment_params)
+        flash[:success] = "コメントを更新しました。"
+      else
+        flash[:danger] = "コメントの更新に失敗しました。"
+      end
+      redirect_to users_tweet_path(@tweet)
+    end
+
+    # 未確認の通知を確認するアクション
+    def confirmed_notification
+      @tweet = Tweet.find(params[:tweet_id])
+      @tweet.comments.where(confirmed: false, recipient_id: current_user.id).update_all(confirmed: true)
+      redirect_to users_tweet_path(@tweet)
+    end
+    
+
+    private
+
+    def comment_params
+      params.require(:comment).permit(:comment_content, :tweet_id, :recipient_id, :confirmed)  #formにてtweet_idパラメータを送信して、コメントへtweet_idを格納するようにする必要がある。
+    end
+  end
+end

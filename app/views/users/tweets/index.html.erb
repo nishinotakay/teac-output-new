@@ -1,5 +1,35 @@
-<%= javascript_pack_tag "users/index_articles_and_dashboards" %>
-<% provide(:title,  "つぶやき一覧") %>
-<%= render "users/tweets/shared/tweets_table", dashboard: false %>
+<%= javascript_pack_tag "users/tweets" %>
+<% provide(:title, "つぶやき一覧") %>
+<% number_of_comment_notifications = @comment_notifications.count %>
+<% if number_of_comment_notifications > 0 %>
+  <!-- モーダルのトリガー -->
+  <a href="#" data-bs-toggle="modal" data-bs-target="#commentNotificationModal">
+    <%= number_of_comment_notifications %>件のコメント通知があります。
+  </a>
+  <!-- モーダルの設定 -->
+  <div class="modal fade" id="commentNotificationModal" tabindex="-1" aria-labelledby="commentNotificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-slideout">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="commentNotificationModalLabel">コメント通知一覧</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="list-group">
+            <% @comment_notifications.each do |notification| %>
+              <%= form_with url: confirmed_notification_users_tweet_comment_path(notification.tweet, notification), method: :patch, local: true, html: {class: "notification-form"} do |form| %>
+                <li class="list-group-item">
+                  <strong><%= notification.user.name %>さんからのコメント</strong>
+                  <p><%= link_to "#{notification.comment_content}", "#", class: "notification-link" %></p>
+                </li>
+              <% end %>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+<%= render "users/tweets/shared/tweets_table" %>
 <div id="new" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
