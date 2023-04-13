@@ -1,10 +1,10 @@
 import { marked } from 'marked'
 import "./articles"
 
-function resize_img(article){
-  article.find("img").each(function(){ // 取得されたimg要素に対してeachメソッドで繰り返し処理
-    $(this).addClass('img-margin'); // img要素に対してimg-marginクラスを追加
-  })
+function auto_line_break_img(article) {
+  article.find("img").each(function () { // 取得されたimg要素に対してeachメソッドで繰り返し処理
+    $(this).addClass("img-margin"); // img要素に対してimg-marginクラスを追加
+  });
 }
 
 $(function(){
@@ -24,6 +24,7 @@ $(function(){
       copybtn(coderef)
     })
     resize_img(article)
+    auto_line_break_img(article)
   }
 
   $(window).on('load', function () {
