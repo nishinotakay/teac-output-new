@@ -13,7 +13,6 @@
           </tr>
         </thead>
         <tbody>
-          <% if @inquiry.exists? %>
             <% @inquiry.each do |inquiry| %>
               <tr>
                 <td><%= inquiry.subject %></td>
@@ -23,13 +22,11 @@
                   <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
                   <ul class="dropdown-menu">
                     <li><%= link_to 'やり取り', users_inquiry_path(inquiry), class:"nav-link" %></li>
-                    <li><%= link_to '非表示', users_inquiry_path(inquiry),class:"nav-link" %></li>
-                    <!-- ↑↑↑↑↑↑↑↑↑↑非表示のPathに一旦、users_inquiry_path(inquiry)のpathを使用しています。-->
+                    <li><%= link_to '非表示', users_inquiry_path(inquiry), method: :patch, class:"nav-link",  data: { confirm: '本当に非表示にしますか？' } %></li>
                   </ul>
                 </td>
               </tr>
             <% end %>
-          <% end %>
         </tbody>
       </table>
     </div>

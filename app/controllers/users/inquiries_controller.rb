@@ -1,7 +1,11 @@
 module Users
   class InquiriesController < Users::Base
     def index
-      @inquiry = Inquiry.all
+      @inquiry = Inquiry.where(hidden: false)
+    end
+
+    def hide_index
+      @inquiry = Inquiry.where(hidden: true)
     end
 
     def show
@@ -20,8 +24,19 @@ module Users
         render :new
       end
     end
+
+    def update
+      @inquiry = Inquiry.find(params[:id])
+      if @inquiry.update(hidden: true)
+        flash[:notice] = 'お問い合わせを非表示にしました'
+        redirect_to users_inquiries_path
+      else
+        flash[:notice] = 'お問い合わせを表示しました'
+      end
+    end
   
     private
+
 
     def inquiry_params
       params.require(:inquiry).permit(:subject, :content)
