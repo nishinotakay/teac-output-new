@@ -7,18 +7,18 @@
         <%= @tweet.user.name %>
       </div>
       <div class="col mt-4">
-        <%= l(@tweet.user.created_at, format: :long) %>
+        <%= l(@tweet.created_at, format: :long) %>
       </div>
     </div>
-    <div class="row">
-      <div class="text-wrap rounded-2 tweet-bgcolor mb-5 fs-4 break-all" style="width: auto;">
-        <%= safe_join(@tweet.post.split("\n"),tag(:br)) %>
-      </div>
+    <div class="tweet-content">
+      <%= raw Rinku.auto_link(simple_format(@tweet.post.gsub(/ /, '&nbsp;')), :all, 'target="_blank"') %>
     </div>
     <div class="comment-create-form form-group">
       <%= form_with(model: [@tweet, @comment], url: users_tweet_comments_path(@tweet, @comment), method: :post) do |form| %>
         <%= form.text_area :comment_content, class: "form-control mt-5" %>
         <%= form.hidden_field :tweet_id, value: @tweet.id %>
+        <%= form.hidden_field :recipient_id, value: @tweet.user_id %> <%# コメントを受け取るtweetユーザーのID %>
+        <%= form.hidden_field :confirmed, value: false %> <%# コメント確認フラグ。コメントを受け取るユーザーが未確認の場合はfalse,確認するとtrue。%>
         <%= form.submit 'コメントする', class: "btn btn-primary comment-submit" %>
       <% end %>
     </div>
@@ -48,20 +48,20 @@
         </div><!-- /.modal-dialog -->
       </div><!-- /.modal -->
 
-      <div class="comment-contents mb-5 ">
+      <div class="comment-contents">
         <div class="row row-cols-auto">
-          <div class="col">
-            <%= comment.user.name %>
-          </div>
-          <div class="col">
-            <%= l(comment.created_at, format: :long) %>
+          <div class="comment-header">
+            <strong><%= comment.user.name %></strong>
+            <span class="timestamp" data-time="<%= comment.created_at.to_i %>">
+              <%= time_ago_in_words(comment.created_at) %>前
+            </span>
           </div>
         </div>
         <table class="table table-borderless">
           <tbody>
             <tr>
-              <td class="text-wrap rounded-2 comment-bgcolor break-all" style="width: 30rem;">
-                <%= safe_join(comment.comment_content.split("\n"),tag(:br)) %>
+              <td class="comment-content">
+                <%= raw Rinku.auto_link(simple_format(comment.comment_content.gsub(/ /, '&nbsp;')), :all, 'target="_blank"') %>
               </td>
               <td class="dropdown col-1 rounded-2">
                 <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>

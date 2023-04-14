@@ -125,6 +125,21 @@ docker-compose run web rails new . --force --database=mysql --skip-bundle
 ## DockerでMy SQL立ち上げ
 docker-compose exec db mysql -u root -p
 
+## いやこちらでMySQL立ち上がった
+docker exec -it docker-db-service bash
+
+## 因みにパスワードはdocker-compose.ymlにある
+MySQL_ROOT_PASSWORD: password
+
+## アドマイナーの概要
+ローカル環境URL
+http://localhost:8080/
+⇓
+サーバー db
+ユーザー名 root
+パスワード: password
+データベース: development_db
+
 ## テストコマンド(gem 'rspec')
 ```ruby
 # rspec(全部実行)

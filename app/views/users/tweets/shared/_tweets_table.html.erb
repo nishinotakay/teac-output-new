@@ -3,7 +3,7 @@
     <% if @tweets.exists? %>
       <% @tweets.each do |tweet| %>
         <div class="tweets-index-item">
-          <div class="fw-bold col-6 offset-3">
+          <div class="col-6 offset-3">
             <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
             <table>
               <tbody>
@@ -11,11 +11,13 @@
                   <td><%= image_tag image , class: "rounded-circle", size: "30x30" %><b class="caret"></td>
                   <td>
                     <%= link_to index_user_users_tweet_path(tweet.user_id), style: "text-decoration: underline;" do %>
-                      <%= tweet.user.name %>
+                      <strong><%= tweet.user.name %>&nbsp;</strong>
                     <% end %>
                   </td>
-                  <td style="padding-left: 20px;">
-                    <%= tweet.created_at.strftime("%Y年%m月%d日").to_s %>
+                  <td>
+                    <span class="timestamp" data-time="<%= tweet.created_at.to_i %>">
+                      <%= time_ago_in_words(tweet.created_at) %>前
+                    </span>
                   </td>
                 </tr>
               </tbody>
@@ -27,10 +29,10 @@
             <table class= "table table-borderless">
               <tbody>
                 <tr>
-                  <td class="text-wrap col-6 fs-5 break-all" style="width: 40rem;">
-                    <%= link_to users_tweet_path(tweet.id), style: "color: black; text-decoration: none;" do %>
-                      <%= safe_join(tweet.post.split("\n"),tag(:br)) %>
-                    <% end %>
+                  <td>
+                    <div class="tweet-post" data-tweet-url="<%= users_tweet_path(tweet.id) %>">
+                      <%= raw Rinku.auto_link(simple_format(tweet.post.gsub(/ /, '&nbsp;')), :all, 'target="_blank"') %>
+                    </div>
                   </td>
                   <td class="dropdown">
                     <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>

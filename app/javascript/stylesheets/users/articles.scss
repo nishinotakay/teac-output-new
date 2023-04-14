@@ -4,6 +4,39 @@
   border-radius: 5px;
 }
 
+/* auto_line_break_img関数にimg-marginクラスを追加 */
+.img-margin {
+  display: block; //ブロック要素として扱う。つまり新しい行で開始し次の要素は新しい行で始まる。
+  margin: 1em auto; //上下のマージンを1em,左右のマージンを自動（中央寄せ）で配置。
+}
+
+/* 記事詳細とプレビューのh1〜h6タグ下に動的に罫線を追加 */
+.article-content h1, .article-content h2, .article-content h3, .article-content h4, .article-content h5, .article-content h6,
+.card-body h1, .card-body h2, .card-body h3, .card-body h4, .card-body h5, .card-body h6 {
+  position: relative; // 親要素を基準に下の擬似要素の位置を決めるために記述。
+}
+
+.article-content h1::after,
+.article-content h2::after,
+.article-content h3::after,
+.article-content h4::after,
+.article-content h5::after,
+.article-content h6::after,
+.card-body h1::after,
+.card-body h2::after,
+.card-body h3::after,
+.card-body h4::after,
+.card-body h5::after,
+.card-body h6::after {
+  content: "";
+  position: absolute; // 疑似要素を親要素を基準に位置を決めるために記述。
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  height: 1px; // 罫線の高さ
+  background: #d0cece; //罫線の色
+}
+
 //以下index
 .articles-table {
   tr td {
