@@ -53,6 +53,7 @@
         <li style="padding-left:3px"><%= current_user.name %></li>
         <hr style="height:0.5px">
         <li style="padding-left:3px"><%= link_to "詳細画面", users_user_path(current_user), method: :get, class: "d-block" %></li>
+        <li style="padding-left:3px"><%= link_to "問い合わせ一覧", users_inquiries_path(current_user), method: :get, class: "d-block" %></li>
         <li style="padding-left:3px"><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
     </ul>
   </div>
