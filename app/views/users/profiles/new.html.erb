@@ -15,7 +15,6 @@
             <i class="fas fa-user"></i>
             <label class="profile-indent">名前</label>
             <%= f.fields_for :user do |user_fields| %>
-              <%= user_fields.label :name, "Name" %>
               <%= user_fields.text_field :name, class: "form-control", style:"width:300px" %>
             <% end %>
           </div>
