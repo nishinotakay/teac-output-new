@@ -12,7 +12,7 @@ module Users
 
     def show
       today = Date.today.strftime('%Y%m%d').to_i
-      learning_startday = @profile.learning_start.strftime('%Y%m%d').to_i if @profile.present? && @profile.learning_start? 
+      learning_startday = @profile.learning_start.strftime('%Y%m%d').to_i if @profile.present? && @profile.learning_start?
       @study_period = (today - learning_startday) / 10000 if learning_startday.present?
       birthday = @profile.birthday.strftime('%Y%m%d').to_i if @profile.present? && @profile.birthday?
       @age = (today - birthday) / 10000 if birthday.present?
@@ -32,7 +32,7 @@ module Users
       @profile = current_user.build_profile(profile_params)
       @profile.name = current_user.name
       if @profile.save
-        redirect_to users_profiles_path, notice: 'プロフィール情報の入力が完了しました'        
+        redirect_to users_profiles_path, notice: 'プロフィール情報の入力が完了しました'
       else
         render :new
       end
@@ -75,7 +75,7 @@ module Users
     #   else
     #     # render :show
     #   end
-    # end  
+    # end
 
     def profile_params
       params.require(:profile).permit(
