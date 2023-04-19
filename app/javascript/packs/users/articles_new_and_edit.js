@@ -1,6 +1,12 @@
 import { marked } from 'marked'
 import "./articles"
 
+function auto_line_break_img(article) {
+  article.find("img").each(function () { // 取得されたimg要素に対してeachメソッドで繰り返し処理
+    $(this).addClass("img-margin"); // img要素に対してimg-marginクラスを追加
+  });
+}
+
 function markdown_preview(content){
   if($.type(content) == "string"){
     content = mathtodollars(content);
@@ -13,6 +19,7 @@ function markdown_preview(content){
     makecodeblock($(this))
   })
   resize_img(preview)
+  auto_line_break_img(preview)
 }
 
 $(function(){
