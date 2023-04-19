@@ -1,2 +1,20 @@
-<h1>Inquiries#show</h1>
-<p>Find me in app/views/inquiries/show.html.erb</p>
+<% provide(:title,  "Chatroomへようこそ!") %></span>
+
+<% @inquiry.each do |i| %>
+        <div>
+            <li><%= i.user.name %></li>
+            <li>内容：<%= i.content %></li>
+        </div>
+        <hr>
+<% end %>
+
+<%= form_with(model: @inquiry, url: users_inquiry_path, local: true, method: :get) do |form| %>
+  <div style="text-align:center;">
+    <div class="field">
+
+      <%= form.label :content, "内容" %><br>
+      <%= form.text_area :content, id:"content", placeholder:"", maxlength: 50, size: "90x12" %>
+    </div>
+    <%= form.submit "投稿", class: "btn btn-md btn-success" %>
+  </div>
+<% end %>
