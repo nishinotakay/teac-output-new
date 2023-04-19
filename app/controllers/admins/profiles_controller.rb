@@ -2,25 +2,25 @@ module Admins
   class ProfilesController < Admins::Base
     require 'date'
     before_action :authenticate_admin!, only: %i[new create edit update destroy users_show user_edit user_destroy admins_show]
-    before_action :find_profile, only: %i[edit update destroy]
-
+    before_action :find_profile, only: %i[edit update destroy ]
+    
     def users_show
-      @user = User.find(params[:format])
+      @user = User.find(params[:format]) 
       @profile = @user.profile
       today = Date.today.strftime('%Y%m%d').to_i
-      learning_startday = @profile.learning_start.strftime('%Y%m%d').to_i if @profile.present? && @profile.learning_start?
+      learning_startday = @profile.learning_start.strftime('%Y%m%d').to_i if @profile.present? && @profile.learning_start? 
       @study_period = (today - learning_startday) / 10000 if learning_startday.present?
       birthday = @profile.birthday.strftime('%Y%m%d').to_i if @profile.present? && @profile.birthday?
       @age = (today - birthday) / 10000 if birthday.present?
     end
-
+    
     def users_edit
-      @user = User.find(params[:format])
+      @user = User.find(params[:format]) 
     end
-
+    
     def user_destroy
       # データの削除
-      @user = User.find(params[:format])
+      @user = User.find(params[:format]) 
       if @user.destroy
         flash[:success] = "#{@user.name}のデータを削除しました。"
         # 一覧ページへリダイレクト
@@ -31,23 +31,18 @@ module Admins
     end
 
     def index
-      order = { id: params[:ord_id], name: params[:ord_name], email: params[:ord_email], articles: params[:ord_articles],
-posts: params[:ord_posts] }.compact
+      order = {id: params[:ord_id], name: params[:ord_name], email: params[:ord_email], articles: params[:ord_articles], posts: params[:ord_posts]}.compact
       filter = {
         name: params[:flt_name], email: params[:flt_email],
         articles_min: params[:flt_articles_min], articles_max: params[:flt_articles_max],
         posts_min: params[:flt_posts_min], posts_max: params[:flt_posts_max]
       }
-      @users = if order.count == 1
-                 User.sort_filter(order.first,
-                   filter)&.page(params[:page])&.per(30)
-               else
-                 User.all&.page(params[:page])&.per(30)
-               end
+      @users = order.count == 1 ? User.sort_filter(order.first, filter)&.page(params[:page]).per(30) : User.all&.page(params[:page]).per(30)
       @profiles = Profile.all
     end
 
-    def admins_show; end
+    def admins_show
+    end
 
     def new
       @profile = Profile.new
