@@ -12,7 +12,7 @@ module Users
 
     def show
       today = Date.today.strftime('%Y%m%d').to_i
-      learning_startday = @profile.learning_start.strftime('%Y%m%d').to_i if @profile.present? && @profile.learning_start? 
+      learning_startday = @profile.learning_start.strftime('%Y%m%d').to_i if @profile.present? && @profile.learning_start?
       @study_period = (today - learning_startday) / 10000 if learning_startday.present?
       birthday = @profile.birthday.strftime('%Y%m%d').to_i if @profile.present? && @profile.birthday?
       @age = (today - birthday) / 10000 if birthday.present?
@@ -75,7 +75,7 @@ module Users
     #   else
     #     # render :show
     #   end
-    # end  
+    # end
 
     def profile_params
       params.require(:profile).permit(
