@@ -12,6 +12,11 @@
     </div>
     <div class="tweet-content">
       <%= raw Rinku.auto_link(simple_format(@tweet.post.gsub(/ /, '&nbsp;')), :all, 'target="_blank"') %>
+        <% @tweet.images.each do |image| %>
+          <% if image.persisted? %>
+            <%= image_tag image, class: "tweet-image" %>
+          <% end %>
+        <% end %>
     </div>
     <div class="comment-create-form form-group">
       <%= form_with(model: [@tweet, @comment], url: users_tweet_comments_path(@tweet, @comment), method: :post) do |form| %>

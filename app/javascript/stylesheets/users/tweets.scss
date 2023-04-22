@@ -15,6 +15,11 @@
   padding: 10px;
 }
 
+.tweet-image {
+  max-width: 100%;
+  height: auto;
+}
+
 .table > tbody > tr > td.comment-content {
   word-break: break-all;
   font-size: 20px; /* 文字の大きさを20pxに設定 */

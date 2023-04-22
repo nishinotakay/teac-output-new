@@ -32,6 +32,11 @@
                   <td>
                     <div class="tweet-post" data-tweet-url="<%= users_tweet_path(tweet.id) %>">
                       <%= raw Rinku.auto_link(simple_format(tweet.post.gsub(/ /, '&nbsp;')), :all, 'target="_blank"') %>
+                      <% tweet.images.each do |image| %>
+                        <% if image.persisted? %>
+                          <%= image_tag image, class: "tweet-image" %>
+                        <% end %>
+                      <% end %>
                     </div>
                   </td>
                   <td class="dropdown">

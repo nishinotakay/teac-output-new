@@ -60,7 +60,7 @@ module Users
     private
 
     def tweet_params
-      params.require(:tweet).permit(:post)
+      params.require(:tweet).permit(:post, images: [])
     end
 
     # beforeフィルター
