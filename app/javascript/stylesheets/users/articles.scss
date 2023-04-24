@@ -46,3 +46,35 @@
     cursor: pointer;
   }
 }
+
+
+// 以下new
+.editor-side {
+  padding: 0;
+  margin-left: 0;
+}
+
+.preview-side { 
+  padding: 0;
+  margin-right: 0; 
+}
+
+.preview {
+  margin: 0;
+}
+
+
+.div-title-form, .div-subtitle-form {
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0; 
+}
+
+.markdown-editor {
+  padding: 6px 12px;
+}
+
+.card-body, .editor-body {
+  padding: 0;
+}
