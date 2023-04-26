@@ -28,7 +28,7 @@ $(function(){
     })
     window.location.search = search
   })
-  
+
   function search_order(search){
     var keys = ["ord_name", "ord_email", "ord_articles", "ord_posts"]
     var order = 'ord_id=DESC'
