@@ -41,3 +41,10 @@ $(function(){
     return order
   }
 })
+
+$(function() {
+  $.datepicker.setDefaults($.datepicker.regional["ja"]);
+  $("#input-created_at").datepicker({
+    dateFormat: "yy/mm/dd"
+  });
+});
