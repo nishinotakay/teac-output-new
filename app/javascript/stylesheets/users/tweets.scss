@@ -20,6 +20,15 @@
   height: auto;
 }
 
+.tweets-index-item {
+  padding-top: 5px;
+}
+
+.timestamp {
+  font-size: small;
+  color: #a2a2a2;
+}
+
 .table > tbody > tr > td.comment-content {
   word-break: break-all;
   font-size: 20px; /* 文字の大きさを20pxに設定 */
@@ -48,12 +57,11 @@
   margin-top: 5px;
 }
 
-.form-group textarea {
-  height: 200px;
-  max-width: 800px;
+// bootstrap5のモーダル
+.modalTrriger {
+  padding: 20px;
 }
 
-// bootstrap5のモーダル
 .modal {
   z-index: 2000;
 }

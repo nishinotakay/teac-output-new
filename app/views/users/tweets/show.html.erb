@@ -1,36 +1,37 @@
 <%= javascript_pack_tag "users/tweets" %> <%# cssを反映させる%>
-<h1>つぶやき詳細</h1>
+<% provide(:title, "つぶやき詳細") %>
 <div class="container">
-  <div class="col-8 offset-2">
-    <div class="row row-cols-auto">
-      <div class="col fs-1">
-        <%= @tweet.user.name %>
+  <div class="row">
+    <div class="co-12 col-lg-10 offset-lg-1">
+      <div class="d-flex align-items-center">
+        <strong>
+          <%= @tweet.user.name %>
+        </strong>
+        <div>・
+          <%= l(@tweet.created_at, format: :long) %>
+        </div>
       </div>
-      <div class="col mt-4">
-        <%= l(@tweet.created_at, format: :long) %>
-      </div>
-    </div>
-    <div class="tweet-content">
-      <%= raw Rinku.auto_link(simple_format(@tweet.post.gsub(/ /, '&nbsp;')), :all, 'target="_blank"') %>
-        <% @tweet.images.each do |image| %>
-          <% if image.persisted? %>
-            <%= image_tag image, class: "tweet-image" %>
+      <div class="tweet-content">
+        <%= raw Rinku.auto_link(simple_format(@tweet.post.gsub(/ /, '&nbsp;')), :all, 'target="_blank"') %>
+          <% @tweet.images.each do |image| %>
+            <% if image.persisted? %>
+              <%= image_tag image, class: "tweet-image" %>
+            <% end %>
           <% end %>
+      </div>
+      <div class="comment-create-form form-group">
+        <%= form_with(model: [@tweet, @comment], url: users_tweet_comments_path(@tweet, @comment), method: :post) do |form| %>
+          <%= form.text_area :comment_content, class: "form-control mt-5" %>
+          <%= form.hidden_field :tweet_id, value: @tweet.id %>
+          <%= form.hidden_field :recipient_id, value: @tweet.user_id %> <%# コメントを受け取るtweetユーザーのID %>
+          <%= form.hidden_field :confirmed, value: false %> <%# コメント確認フラグ。コメントを受け取るユーザーが未確認の場合はfalse,確認するとtrue。%>
+          <%= form.submit 'コメントする', class: "btn btn-primary comment-submit" %>
         <% end %>
-    </div>
-    <div class="comment-create-form form-group">
-      <%= form_with(model: [@tweet, @comment], url: users_tweet_comments_path(@tweet, @comment), method: :post) do |form| %>
-        <%= form.text_area :comment_content, class: "form-control mt-5" %>
-        <%= form.hidden_field :tweet_id, value: @tweet.id %>
-        <%= form.hidden_field :recipient_id, value: @tweet.user_id %> <%# コメントを受け取るtweetユーザーのID %>
-        <%= form.hidden_field :confirmed, value: false %> <%# コメント確認フラグ。コメントを受け取るユーザーが未確認の場合はfalse,確認するとtrue。%>
-        <%= form.submit 'コメントする', class: "btn btn-primary comment-submit" %>
+      </div>
+      <% if @comments.exists? %>
+        <p class="fw-bold">〜コメント一覧〜</p>
       <% end %>
-    </div>
-    <% if @comments.exists? %>
-      <p class="fw-bold">〜コメント一覧〜</p>
-    <% end %>
-    <% @comments.each do |comment| %>
+      <% @comments.each do |comment| %>
       <!-- モーダルの設定 -->
       <div class="modal fade" id="commentUpdateModal-<%= comment.id %>" tabindex="-1" aria-labelledby="commentUpdateModalLabel">
         <div class="modal-dialog modal-lg form-group">
@@ -86,6 +87,7 @@
           </tbody>
         </table>
       </div>
-    <% end %>
+      <% end %>
+    </div>
   </div>
 </div>

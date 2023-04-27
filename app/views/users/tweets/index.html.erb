@@ -3,7 +3,7 @@
 <% number_of_comment_notifications = @comment_notifications.count %>
 <% if number_of_comment_notifications > 0 %>
   <!-- モーダルのトリガー -->
-  <a href="#" data-bs-toggle="modal" data-bs-target="#commentNotificationModal">
+  <a class= "modalTrriger" href="#" data-bs-toggle="modal" data-bs-target="#commentNotificationModal">
     <%= number_of_comment_notifications %>件のコメント通知があります。
   </a>
   <!-- モーダルの設定 -->

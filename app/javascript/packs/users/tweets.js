@@ -15,7 +15,7 @@ const updateTimeAgo = (timestamp) => {
     const day = ("0" + date.getDate()).slice(-2);
     const hour = ("0" + date.getHours()).slice(-2);
     const minutes = ("0" + date.getMinutes()).slice(-2);
-    return `・${year}年${month}月${day}日 ${hour}:${minutes}`;
+    return `${year}年${month}月${day}日 ${hour}:${minutes}`;
   } else if (hoursAgo >= 1) {
     return `・${hoursAgo}時間前`;
   } else if (minutesAgo >= 1) {
