@@ -15,7 +15,7 @@ const updateTimeAgo = (timestamp) => {
     const day = ("0" + date.getDate()).slice(-2);
     const hour = ("0" + date.getHours()).slice(-2);
     const minutes = ("0" + date.getMinutes()).slice(-2);
-    return `${year}年${month}月${day}日 ${hour}:${minutes}`;
+    return `・${year}年${month}月${day}日 ${hour}:${minutes}`;
   } else if (hoursAgo >= 1) {
     return `・${hoursAgo}時間前`;
   } else if (minutesAgo >= 1) {
@@ -38,7 +38,7 @@ const updateTimestamps = () => {
 
 // コメント一覧のページが読み込まれた時に実行される関数
 document.addEventListener('DOMContentLoaded', () => {
-  setInterval(updateTimestamps, 1000); // 1秒ごとに更新する
+  setInterval(updateTimestamps); // 「1000分の1秒」ごとに更新する
 });
 
 // notification-linkクラスを持つリンクがクリックされたときにフォームが送信される

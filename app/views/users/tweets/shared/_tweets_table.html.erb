@@ -3,12 +3,12 @@
     <div class="row">
       <% if @tweets.exists? %>
         <% @tweets.each do |tweet| %>
-          <div class="tweets-index-item">
-            <div class="card col-12 col-lg-8 offset-lg-2">
-              <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
+          <div class="col-12 col-sm-8 offset-sm-2">
+            <div class="card tweets-index-item">
+            <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
               <div class="d-flex align-items-center">
                 <%= image_tag image , class: "rounded-circle", size: "60x60" %>
-                <div class="d-flex align-items-start flex-column justify-content-start">
+                <div class="d-flex align-items-start flex-column justify-content-start"> <%# flex-colmunは縦並び %>
                   <div class="px-0">
                     <%= link_to index_user_users_tweet_path(tweet.user_id), style: "text-decoration: underline;" do %>
                       <strong><%= tweet.user.name %>&nbsp;</strong>

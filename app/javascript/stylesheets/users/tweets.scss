@@ -1,8 +1,5 @@
 .tweet-post {
   word-break: break-all;
-  font-size: 20px; /* 文字の大きさを20pxに設定 */
-  background-color: white; /* 背景色を白に設定 */
-  border-radius: 10px; /* 角を丸くする */
   padding: 10px;
   cursor: pointer;
 }
@@ -24,17 +21,34 @@
   padding-top: 5px;
 }
 
+.collapse-body {
+  margin-bottom: 20px;
+}
+
+.tweets-index-item:hover {
+  background-color: #f0f0f0; // グレーに変わる
+}
+
 .timestamp {
   font-size: small;
   color: #a2a2a2;
 }
 
-.table > tbody > tr > td.comment-content {
+.comment-content {
   word-break: break-all;
-  font-size: 20px; /* 文字の大きさを20pxに設定 */
-  background-color: white; /* 背景色を白に設定 */
-  border-radius: 10px; /* 角を丸くする */
-  padding: 10px;
+}
+
+.comment-box::after, .comment-list::after {
+  content: "";
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  height: 1px;
+  background: #d0cece; //罫線の色
+}
+
+.notification-label {
+  padding-bottom: 10px;
 }
 
 .tweet-bgcolor {
@@ -42,7 +56,7 @@
 }
 
 .comment-contents {
-  padding-bottom: 5px;
+  padding-bottom: 0px;
 }
 
 .break-all {
@@ -70,7 +84,7 @@
   max-width: 750px;
   position: fixed;
   top: -25px; // 上側の位置を調整
-  // right: 0;
+  right: 0;
   bottom: 0;
   left: 250px; //サイドバーの右側に表示
   z-index: 1050;
@@ -93,13 +107,11 @@
 }
 
 // コメント通知一覧のモーダル内のクラス
-.notification-link {
-  text-decoration: none;
-  color: black;
+.notification-link:hover {
+  background-color: #d1c5c5;
 }
 
-.notification-link:hover {
-  text-decoration: none;
-  color: black;
-  background-color: #d1c5c5;
+
+.list-group-item:hover {
+  background-color: #f0f0f0; // グレーに変わる
 }

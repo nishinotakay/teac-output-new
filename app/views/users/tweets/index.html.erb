@@ -2,30 +2,22 @@
 <% provide(:title, "つぶやき一覧") %>
 <% number_of_comment_notifications = @comment_notifications.count %>
 <% if number_of_comment_notifications > 0 %>
-  <!-- モーダルのトリガー -->
-  <a class= "modalTrriger" href="#" data-bs-toggle="modal" data-bs-target="#commentNotificationModal">
-    <%= number_of_comment_notifications %>件のコメント通知があります。
-  </a>
-  <!-- モーダルの設定 -->
-  <div class="modal fade" id="commentNotificationModal" tabindex="-1" aria-labelledby="commentNotificationModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-slideout">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="commentNotificationModalLabel">コメント通知一覧</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
-        </div>
-        <div class="modal-body">
-          <ul class="list-group">
-            <% @comment_notifications.each do |notification| %>
-              <%= form_with url: confirmed_notification_users_tweet_comment_path(notification.tweet, notification), method: :patch, local: true, html: {class: "notification-form"} do |form| %>
-                <li class="list-group-item">
-                  <strong><%= notification.user.name %>さんからのコメント</strong>
-                  <p><%= link_to "#{notification.comment_content}", "#", class: "notification-link" %></p>
-                </li>
-              <% end %>
+  <div class="col-12 col-sm-8 offset-sm-2">
+    <div class="notification-label">
+      <a href="#notification1" data-toggle="collapse"><%= number_of_comment_notifications %>件のコメント通知があります。</a><br>
+    </div>
+    <div id="notification1" class="collapse">
+      <div class="collapse-body">
+        <ul class="list-group">
+          <% @comment_notifications.each do |notification| %>
+            <%= form_with url: confirmed_notification_users_tweet_comment_path(notification.tweet, notification), method: :patch, local: true, html: {class: "notification-form"} do |form| %>
+              <li class="list-group-item">
+                <strong><%= notification.user.name %>さんからのコメント</strong>
+                <p><%= link_to "#{notification.comment_content}", "#", class: "notification-link" %></p>
+              </li>
             <% end %>
-          </ul>
-        </div>
+          <% end %>
+        </ul>
       </div>
     </div>
   </div>
