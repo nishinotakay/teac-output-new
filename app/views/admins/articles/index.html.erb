@@ -1,2 +1,11 @@
-<h1>管理者の投稿記事一覧</h1>
-<p>Find me in app/views/admins/articles/index.html.erb</p>
+<%= javascript_pack_tag "users/index_articles_and_dashboards" %>
+<% provide(:title,  "記事一覧") %>
+<div class="content">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <%= render "admins/articles/shared/articles_table", dashboard: true %>
+      </div>
+    </div>
+  </div>
+</div>
