@@ -38,7 +38,7 @@ const updateTimestamps = () => {
 
 // コメント一覧のページが読み込まれた時に実行される関数
 document.addEventListener('DOMContentLoaded', () => {
-  setInterval(updateTimestamps, 1000); // 1秒ごとに更新する
+  setInterval(updateTimestamps); // 「1000分の1秒」ごとに更新する
 });
 
 // notification-linkクラスを持つリンクがクリックされたときにフォームが送信される

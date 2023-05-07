@@ -1,69 +1,71 @@
 <%= javascript_pack_tag "users/tweets" %> <%# cssを反映させる%>
-<h1>つぶやき詳細</h1>
+<% provide(:title, "つぶやき詳細") %>
 <div class="container">
-  <div class="col-8 offset-2">
-    <div class="row row-cols-auto">
-      <div class="col fs-1">
-        <%= @tweet.user.name %>
-      </div>
-      <div class="col mt-4">
-        <%= l(@tweet.created_at, format: :long) %>
-      </div>
-    </div>
-    <div class="tweet-content">
-      <%= raw Rinku.auto_link(simple_format(@tweet.post.gsub(/ /, '&nbsp;')), :all, 'target="_blank"') %>
-    </div>
-    <div class="comment-create-form form-group">
-      <%= form_with(model: [@tweet, @comment], url: users_tweet_comments_path(@tweet, @comment), method: :post) do |form| %>
-        <%= form.text_area :comment_content, class: "form-control mt-5" %>
-        <%= form.hidden_field :tweet_id, value: @tweet.id %>
-        <%= form.hidden_field :recipient_id, value: @tweet.user_id %> <%# コメントを受け取るtweetユーザーのID %>
-        <%= form.hidden_field :confirmed, value: false %> <%# コメント確認フラグ。コメントを受け取るユーザーが未確認の場合はfalse,確認するとtrue。%>
-        <%= form.submit 'コメントする', class: "btn btn-primary comment-submit" %>
-      <% end %>
-    </div>
-    <% if @comments.exists? %>
-      <p class="fw-bold">〜コメント一覧〜</p>
-    <% end %>
-    <% @comments.each do |comment| %>
-      <!-- モーダルの設定 -->
-      <div class="modal fade" id="commentUpdateModal-<%= comment.id %>" tabindex="-1" aria-labelledby="commentUpdateModalLabel">
-        <div class="modal-dialog modal-lg form-group">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="commentUpdateModal<%= comment.id %>">コメントの編集</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+  <div class="row">
+    <div class="co-12 col-lg-8 offset-lg-2">
+      <div class="card">
+       <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
+        <div class="d-flex align-items-center">
+          <%= image_tag image , class: "rounded-circle", size: "60x60" %>
+          <div class="d-flex align-items-start justify-content-start">
+            <strong>
+              <%= @tweet.user.name %>
+            </strong>
+            <div>・<%= l(@tweet.created_at, format: :long) %>
             </div>
-            <%= form_with(model: comment, url: users_tweet_comment_path(@tweet, comment), local: true, method: :patch) do |f| %>
-              <div class="modal-body">
-                <%= f.text_area :comment_content, class: "form-control" %>
-                <%= f.hidden_field :tweet_id, value: @tweet.id %>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
-                <button type="submit" class="btn btn-primary">変更を保存</button>
-              </div><!-- /.modal-footer -->
-            <% end %>
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div><!-- /.modal -->
-
-      <div class="comment-contents">
-        <div class="row row-cols-auto">
-          <div class="comment-header">
-            <strong><%= comment.user.name %></strong>
-            <span class="timestamp" data-time="<%= comment.created_at.to_i %>">
-              <%= time_ago_in_words(comment.created_at) %>前
-            </span>
           </div>
         </div>
-        <table class="table table-borderless">
-          <tbody>
-            <tr>
-              <td class="comment-content">
-                <%= raw Rinku.auto_link(simple_format(comment.comment_content.gsub(/ /, '&nbsp;')), :all, 'target="_blank"') %>
-              </td>
-              <td class="dropdown col-1 rounded-2">
+        <div class="tweet-content">
+          <%= raw Rinku.auto_link(simple_format(@tweet.post.gsub(/ /, '&nbsp;')), :all, 'target="_blank"') %>
+            <% @tweet.images.each do |image| %>
+              <% if image.persisted? %>
+                <%= image_tag image, class: "tweet-image" %>
+              <% end %>
+            <% end %>
+        </div>
+      </div>
+      <div class="comment-create-form form-group">
+        <%= form_with(model: [@tweet, @comment], url: users_tweet_comments_path(@tweet, @comment), method: :post) do |form| %>
+          <%= form.text_area :comment_content, placeholder: "コメントしましょう！", class: "form-control mt-2" %>
+          <%= form.hidden_field :tweet_id, value: @tweet.id %>
+          <%= form.hidden_field :recipient_id, value: @tweet.user_id %> <%# コメントを受け取るtweetユーザーのID %>
+          <%= form.hidden_field :confirmed, value: false %> <%# コメント確認フラグ。コメントを受け取るユーザーが未確認の場合はfalse,確認するとtrue。%>
+          <%= form.submit 'コメントする', class: "btn btn-primary comment-submit" %>
+        <% end %>
+      </div>
+      <% if @comments.exists? %>
+        <p class="comment-list fw-bold">〜コメント一覧〜</p>
+      <% end %>
+      <% @comments.each do |comment| %>
+        <div class="comment-box">
+          <!-- モーダルの設定 -->
+          <div class="modal fade" id="commentUpdateModal-<%= comment.id %>" tabindex="-1" aria-labelledby="commentUpdateModalLabel">
+            <div class="modal-dialog modal-lg form-group">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="commentUpdateModal<%= comment.id %>">コメントの編集</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+                </div>
+                <%= form_with(model: comment, url: users_tweet_comment_path(@tweet, comment), local: true, method: :patch) do |f| %>
+                  <div class="modal-body">
+                    <%= f.text_area :comment_content, class: "form-control" %>
+                    <%= f.hidden_field :tweet_id, value: @tweet.id %>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                    <button type="submit" class="btn btn-primary">変更を保存</button>
+                  </div><!-- /.modal-footer -->
+                <% end %>
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div><!-- /.modal -->
+          <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
+          <div class="comment-contents">
+            <div class="comment-header d-flex align-items-center">
+              <%= image_tag image , class: "rounded-circle", size: "30x30" %>
+              <strong><%= comment.user.name %></strong>
+              <span class="timestamp" data-time="<%= comment.created_at.to_i %>"></span>
+              <div class="dropdown d-flex align-items-center ms-auto">
                 <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
                 <ul class="dropdown-menu test-color">
                   <% if comment.user == current_user %>
@@ -76,11 +78,14 @@
                     </li>
                   <% end %>
                 </ul>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    <% end %>
+              </div>
+            </div>
+            <div class="comment-content">
+              <%= raw Rinku.auto_link(simple_format(comment.comment_content.gsub(/ /, '&nbsp;')), :all, 'target="_blank"') %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>

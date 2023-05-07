@@ -28,6 +28,6 @@ module App
         helper_specs:     false, # helper specは作らない
         routing_specs:    false      # routing specは作らない
     end
-    config.autoload_paths += %W(#{config.root}/lib)
+    config.autoload_paths += %W[#{config.root}/lib]
   end
 end

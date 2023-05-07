@@ -5,12 +5,12 @@ Rails.application.routes.draw do
 
   # admin関連=========================================================
   devise_for :admins, controllers: {
-    sessions: 'admins/sessions',
+    sessions:      'admins/sessions',
     passwords:     'admins/passwords',
     confirmations: 'admins/confirmations',
     registrations: 'admins/registrations'
   }
-  
+
   namespace :admins do
     resources :dash_boards, only: [:index]
     resources :articles
@@ -25,8 +25,8 @@ Rails.application.routes.draw do
         delete 'user_destroy'
       end
     end
+    resources :inquiries 
   end
-
 
   # =================================================================
 
@@ -44,13 +44,13 @@ Rails.application.routes.draw do
 
   namespace :users do
     resources :dash_boards, only: [:index]
-    resources :articles #, only: %i[index show]
+    resources :articles # , only: %i[index show]
     resources :posts
     resources :users, only: [:show]
     resources :posts do
       collection do # idを外す
-      # 全ユーザー投稿一覧（/users/posts/index_1）
-      get 'index_1'
+        # 全ユーザー投稿一覧（/users/posts/index_1）
+        get 'index_1'
       end
       # 全ユーザー詳細ページ（/users/posts/:id/show_1）
       member do # id付与
@@ -67,20 +67,20 @@ Rails.application.routes.draw do
       post 'image'
     end
     namespace :users do
-    resources :users, only: [:index]
+      resources :users, only: [:index]
     end
     resources :profiles
-    resources :tweets do #つぶやき機能
+    resources :tweets do # つぶやき機能
       member do
         get 'index_user'
       end
-      resources :comments, only: [:create, :destroy, :update] do #コメント機能
+      resources :comments, only: %i[create destroy update] do # コメント機能
         member do # 個々のコメントに対してアクセスできるカスタムアクションを定義する
-          patch 'confirmed_notification' #confirmed_notificationアクションに対するRESTfulなルーティングを定義
+          patch 'confirmed_notification' # confirmed_notificationアクションに対するRESTfulなルーティングを定義
         end
       end
     end
-    resources :inquiries #問い合わせ
+    resources :inquiries
   end
   # =================================================================
 
