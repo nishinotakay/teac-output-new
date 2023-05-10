@@ -7,10 +7,19 @@ function auto_line_break_img(article) {
   });
 }
 
+// 特定の要素をsanitizeするメソッド
+function sanitizeContent(content) {
+  content = content.replace(/<style[\s\S]*?<\/style>/gi, ''); //style要素を空欄に置き換える。
+  content = content.replace(/<script[\s\S]*?<\/script>/gi, ''); //script要素を空欄に置き換える。
+  content = content.replace(/<iframe[\s\S]*?<\/iframe>/gi, ''); //iframe要素を空欄に置き換える。
+  return content;
+}
+
 function markdown_preview(content){
   if($.type(content) == "string"){
+    content = sanitizeContent(content); //contentからstyleタグ,scriptタグ,iframeタグを除去。
     content = mathtodollars(content);
-    content = marked(content)
+    content = marked(content);
   }
   var preview = $('.preview')
   preview.html(content);
