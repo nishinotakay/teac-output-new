@@ -28,7 +28,6 @@ module Users
       # @posts = Post.all.search(params[:search]).page(params[:page]).per(30)
     end
 
-    
     # GET /posts/1 or /posts/1.json
     def show; end
 

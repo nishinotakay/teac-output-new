@@ -3,7 +3,6 @@ class Tweet < ApplicationRecord
   has_many :comments, dependent: :destroy # この行を追加
   has_many_attached :images
 
-
   validates :post, presence: true, length: { maximum: 280 }
   validate :image_count_validation, :image_size_varidation, :image_type_validation
 

@@ -16,7 +16,7 @@ RSpec.describe 'Profileモデルのテスト', type: :model do
 
     it 'is invalid without a purpose' do
       profile = Profile.new(
-        purpose: nil,
+        purpose: nil
       )
       profile.valid?
       expect(profile.errors[:purpose]).to include('を入力してください')

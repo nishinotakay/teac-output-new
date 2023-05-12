@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Article, type: :model do
   let(:user_a) { build(:user, :a, confirmed_at: Date.today) }
   let(:article) { build(:article, user: user_a) }
-  
+
   describe 'バリデーションについて' do
     subject do
       article

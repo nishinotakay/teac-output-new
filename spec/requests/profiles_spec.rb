@@ -15,8 +15,8 @@ RSpec.describe 'Profiles', type: :request do
         sign_in user
         profile = Profile.create(
           learning_start: '2020/01/01',
-          purpose: 'test',
-          user_id: 1
+          purpose:        'test',
+          user_id:        1
         )
         get users_profiles_path(profile)
         expect(response).to be_truthy

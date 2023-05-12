@@ -25,7 +25,7 @@ Rails.application.routes.draw do
         delete 'user_destroy'
       end
     end
-    resources :inquiries 
+    resources :inquiries
   end
 
   # =================================================================
