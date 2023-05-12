@@ -1,0 +1,7 @@
+<%= javascript_pack_tag "admins/articles_new_and_edit" %>
+<% provide(:title, "記事投稿") %>
+<div class="content">
+  <div class="container-fluid">
+    <%= render "admins/articles/shared/article_form_and_preview", btn_name: "投稿", url: admins_articles_path(dashboard: @dashboard, page: params[:page]), method: :post %>
+  </div>
+</div>

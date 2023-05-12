@@ -1,6 +1,5 @@
 module Admins
   class ArticlesController < Admins::Base
-
     protect_from_forgery
     before_action :set_article, except: %i[index show new create image]
     before_action :set_dashboard, only: %i[show new create edit update destroy]
@@ -9,7 +8,7 @@ module Admins
       params[:order] ||= 'DESC'
       filter = { author: params[:author], title: params[:title], subtitle: params[:subtitle],
         content: params[:content], start: params[:start], finish: params[:finish] }
-      if @paginate = filter.compact.blank?
+      if (@paginate = filter.compact.blank?)
         @articles = Article.order(created_at: params[:order]).page(params[:page]).per(30)
       else
         filter[:order] = params[:order]
@@ -80,7 +79,7 @@ module Admins
 
     def set_dashboard
       params[:dashboard] ||= 'false'
-      @dashboard = !(params[:dashboard] == 'false')
+      @dashboard = (params[:dashboard] != 'false')
     end
   end
 end
