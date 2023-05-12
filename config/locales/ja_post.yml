@@ -6,7 +6,8 @@ ja:
       post:
         id: 'id'
         title: 'タイトル'
-        body: '投稿内容'
+        body: '内容'
         youtube_url: 'Youtube_URL'
         created_at: '投稿日時'
         updated_at: '編集日時'
+        user_id:  '投稿者'

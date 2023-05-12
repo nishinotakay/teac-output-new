@@ -11,4 +11,16 @@ class Post < ApplicationRecord
       all # 全て表示させる
     end
   end
+
+  # 絞り込み検索(モーダル)
+  def self.sort_filter(filter)
+    result = all
+    result = result.where("user_id LIKE ?", "%#{filter[:user_id]}%") if filter[:user_id].present?
+    result = result.where("title LIKE ?", "%#{filter[:title]}%") if filter[:title].present?
+    result = result.where("body LIKE ?", "%#{filter[:body]}%") if filter[:body].present?
+    result = result.where(created_at: filter[:start]..filter[:finish]) if filter[:start].present? && filter[:finish].present?
+    result.order(created_at: filter[:order])
+  end
+  
+
 end

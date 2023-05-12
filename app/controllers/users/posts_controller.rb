@@ -8,10 +8,27 @@ module Users
 
     # 投稿動画一覧ページ
     def index
+      params[:order] ||= 'DESC'
+      filter = { user_id: params[:user_id], body: params[:body],
+        title: params[:title], start: params[:start], finish: params[:finish] }
+      if @paginate = filter.compact.blank?
+        @posts = Post.order(created_at: params[:order]).page(params[:page]).per(30)
+      else
+        filter[:order] = params[:order]
+        @posts = Post.sort_filter(filter)
+      end
+
+      if @paginate
+        @posts = Post.order(created_at: params[:order]).page(params[:page]).per(30)
+      else
+        filter[:order] = params[:order]
+        @posts = Post.sort_filter(filter).page(params[:page]).per(30)
+      end
       # ログインしていなかった場合は401ページを表示して終了（※ 401用のテンプレートファイルを作っていないと動きません）
-      @posts = Post.all.search(params[:search]).page(params[:page]).per(30)
+      # @posts = Post.all.search(params[:search]).page(params[:page]).per(30)
     end
 
+    
     # GET /posts/1 or /posts/1.json
     def show; end
 

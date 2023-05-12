@@ -1,9 +1,80 @@
+<%= javascript_pack_tag "users/post" %>
 <% provide(:title,  "動画投稿一覧") %>
-<div style="text-align:le;">
+<div id="new" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+<!-- 既にあった絞り込みでない検索機能(佐藤) -->
+<%# <div style="text-align:le;">
   <%= form_tag(users_posts_path, :method => "get") do %>
-    <%= text_field_tag :search %>
-    <%= submit_tag "検索" ,:title => nil, :body => nil, class: "button is-info"%> 
-  <% end %> 
+    <%# <%= text_field_tag :search %>
+    <%# <%= submit_tag "検索" ,:title => nil, :body => nil, class: "button is-info"%> 
+  <%# <% end %>
+<%# </div> %>
+<button type="button" class="btn btn-success filter-modal-btn ml-3" data-bs-toggle="modal" data-bs-target="#sortFilterModal" style="display: none;">
+  絞り込み検索
+</button>
+
+<div class="modal fade" id="sortFilterModal" tabindex="-1" aria-labelledby="sortFilterModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="form-inline">
+        <h5 class="modal-title text-center flex-grow-1 mt-4" id="sortFilterModalLabel"></h5>
+        <button type="button" class="modal-close btn-close mr-3" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-right">
+        <div class="sort-modal" style="display: none;">
+          <div class="form-group row my-5">
+            <label for="sort-select" class="col-sm-3 col-form-label"><%= Post.human_attribute_name(:created_at) %></label>
+            <div class="col-md-9">
+              <% order = {'DESC': '新しい順', 'ASC': '古い順'} %>
+              <% params[:order] ||= 'DESC' %>
+              <select id="sort-select" class="form-select" aria-label="Default select desc">
+                <option value="<%= params[:order] %>" selected><%= order.delete(:"#{params[:order]}") %></option>
+                <option value="<%= order.keys[0] %>"><%= order[order.keys[0]] %></option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="filter-modal" style="display: none;">
+          
+          <div class="form-group row my-4">
+            <label for="input-user_id" class="col-sm-4 col-form-label"><%= Post.human_attribute_name(:user_id) %></label>
+            <div class="col-md-8">
+              <input type="text" aria-label="user_id" id="input-user_id" class="form-control" value="<%= params[:user_id] %>">
+            </div>
+          </div>
+          <div class="form-group row my-4">
+            <label for="input-title" class="col-sm-4 col-form-label"><%= Post.human_attribute_name(:title) %></label>
+            <div class="col-md-8">
+              <input type="text" aria-label="title" id="input-title" class="form-control" value="<%= params[:title] %>">
+            </div>
+          </div>
+          <div class="form-group row my-4">
+            <label for="input-body" class="col-sm-4 col-form-label"><%= Post.human_attribute_name(:body) %></label>
+            <div class="col-md-8">
+              <input type="text" aria-label="body" id="input-body" class="form-control" value="<%= params[:body] %>">
+            </div>
+          </div>
+          <div class="form-group row my-4">
+            <label for="input-created" class="col-sm-3 col-form-label"><%= Post.human_attribute_name(:created_at) %></label>
+            <div class="col-md-9 form-inline">
+              <div class="col-md-5">
+                <input type="date" aria-label="created" id="input-start" class="form-control" value="<%= params[:start] %>">
+              </div>
+              <div class="offset-1 align-bottom">〜</div>
+              <div class="col-md-5">
+                <input type="date" aria-label="created" id="input-finish" class="form-control" value="<%= params[:finish] %>">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <button type="button" class="btn btn-primary submit-btn"></button>
+          <button type="button" class="modal-close btn btn-secondary" data-bs-dismiss="modal">戻る</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <table class="table table-hover">
