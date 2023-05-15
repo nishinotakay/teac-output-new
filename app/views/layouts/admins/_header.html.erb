@@ -16,7 +16,7 @@
   <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto">
     <li class="dropdown">
-      <% if request.fullpath == "/admins/articles" || request.fullpath == "/admins/dash_boards" %>
+      <% if request.fullpath.include?("/admins/articles") || request.fullpath.include?("/admins/dash_boards") %>
         <li class="nav-item">
           <%= link_to new_admins_article_path, class: "nav-link", method: :get do %>
             <p>記事投稿</p>
