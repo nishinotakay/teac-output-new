@@ -7,15 +7,30 @@ function auto_line_break_img(article) {
   });
 }
 
-$(function(){
+function applyScopedStyles(article) {
+  const styles = article.find("style"); // styleタグとその内容を取得。
+  styles.each(function() {
+    const styleContent = $(this).html(); // 現在処理中の<style>タグの内容を取得。例えば、li { font-size: 40px; }
+    const scopedStyleContent = styleContent.replace(/(^|\})\s*([^{]+)/g, '$1.article-content $2'); // 例えば「li」を「.article-content li」に置き換える。
+    $(this).html(scopedStyleContent);
+  });
+}
 
+$(function(){
   if($(".article-content").length){
     var article = $(".article-content")
     var content = article.data("article")
     if($.type(content) == "string"){
       content = mathtodollars(content);
-      content = marked(content)
+      // 新しい仮想DOM要素を作成し、マークダウンをHTMLに変換する前のコンテンツを適用します。
+      var virtualArticle = $("<div>");
+      virtualArticle.html(content);
+      // applyScopedStyles関数を適用します。
+      applyScopedStyles(virtualArticle);
+      // 次にmarkedでマークダウンをHTMLに変換します。
+      content = marked(virtualArticle.html());
     }
+    // 実際の.article-content要素の中身を置き換えます。
     article.html(content);
     var pre = article.find("pre")
     pre.each(function(){
