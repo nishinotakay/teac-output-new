@@ -54,7 +54,7 @@ $(function(){
   $('.submit-btn').on('click', function(){
     var sort = $('#sort-select option:selected').val()
     var search = "order=" + sort
-    var values = ['user_id', 'title', 'body', 'start', 'finish']
+    var values = ['name', 'title', 'body', 'start', 'finish']
     $.each(values, function(index, value){
       var input = $('#input-' + value).val()
       if(input){
@@ -67,7 +67,7 @@ $(function(){
 
   $('.submit-btn-admin').on('click', function(){
     var search = "order=DESC"
-    var values = ['user_id', 'title', 'body', 'start', 'finish']
+    var values = ['name', 'title', 'body', 'start', 'finish']
     $.each(values, function(index, value){
       var input = $('#input-' + value).val()
       if(input){

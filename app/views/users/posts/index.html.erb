@@ -1,4 +1,4 @@
-<%= javascript_pack_tag "users/post" %>
+<%= javascript_pack_tag "users/post", "users/index_articles_and_dashboards" %>
 <% provide(:title,  "動画投稿一覧") %>
 <div id="new" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
@@ -38,11 +38,11 @@
         <div class="filter-modal" style="display: none;">
           
           <div class="form-group row my-4">
-            <label for="input-user_id" class="col-sm-4 col-form-label"><%= Post.human_attribute_name(:user_id) %></label>
-            <div class="col-md-8">
-              <input type="text" aria-label="user_id" id="input-user_id" class="form-control" value="<%= params[:user_id] %>">
+              <label for="input-author" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:user) %></label>
+              <div class="col-md-8">
+                <input type="text" aria-label="author" id="input-author" class="form-control" value="<%= params[:author] %>">
+              </div>
             </div>
-          </div>
           <div class="form-group row my-4">
             <label for="input-title" class="col-sm-4 col-form-label"><%= Post.human_attribute_name(:title) %></label>
             <div class="col-md-8">
@@ -90,7 +90,7 @@
   </thead>
 
   <tbody>      
-    <% if @posts.exists? %>
+    <% if @posts&.exists? %>
       <% @posts.each do |post| %>
         <tr>
           <td onclick='window.location="<%= users_post_path(id: post.id) %>"'><%= post.title %></td>
@@ -119,4 +119,6 @@
     <% end %>
   </tbody>
 </table>
-<%= paginate @posts, theme: 'bootstrap-5' %>      
+<% if @posts %>
+  <%= paginate @posts, theme: 'bootstrap-5' %>
+<% end %>      
