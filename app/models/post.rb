@@ -20,5 +20,5 @@ class Post < ApplicationRecord
     result = result.where('body LIKE ?', "%#{filter[:body]}%") if filter[:body].present?
     result = result.where(created_at: filter[:start]..filter[:finish]) if filter[:start].present? && filter[:finish].present?
     result.order(created_at: filter[:order])
-  end  
+  end
 end
