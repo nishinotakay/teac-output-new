@@ -20,11 +20,12 @@
         </div>
       </div>
       <hr>
-      <div class="m-4 article-content" data-article="<%= @article.content %>"></div>
+      <%# scriptタグ、iframeタグがgsubメソッドにより除去される。 %>
+      <% content = @article.content.gsub(/<script>.*<\/script>/m, '').gsub(/<iframe[\s\S]*?<\/iframe>/m, '') %>
+      <div class="m-4 article-content" data-article="<%= content %>"></div>
     </div>
   </div>
 </div>
-
 <div class="modal fade" id="zoominImgModal" tabindex="-1" aria-labelledby="zoominImgModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
