@@ -33,7 +33,11 @@ module Users
       redirect_back(fallback_location: root_path)
     end
 
-    def edit; end
+    def edit
+      respond_to do |format|
+        format.js
+      end
+    end
 
     def update
       if @tweet.update(tweet_params)
