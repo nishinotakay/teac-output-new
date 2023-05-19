@@ -7,31 +7,54 @@ function auto_line_break_img(article) {
   });
 }
 
-function markdown_preview(content){
-  if($.type(content) == "string"){
-    content = mathtodollars(content);
-    content = marked(content)
-  }
-  var preview = $('.preview')
-  preview.html(content);
-  var pre = preview.find('pre')
-  pre.each(function(){
-    makecodeblock($(this))
-  })
-  resize_img(preview)
-  auto_line_break_img(preview)
+// 特定の要素をsanitizeするメソッド
+function sanitizeContent(content) {
+  content = content.replace(/<script[\s\S]*?<\/script>/gi, ''); //script要素を空欄に置き換える。
+  content = content.replace(/<iframe[\s\S]*?<\/iframe>/gi, ''); //iframe要素を空欄に置き換える。
+  return content;
 }
+
+function markdown_preview(content) {
+  if ($.type(content) == "string") {
+    content = sanitizeContent(content); //contentからscriptタグ,iframeタグを除去。
+    content = mathtodollars(content);
+    content = marked(content); // マークダウン形式のテキストHTMLに変換。
+  }
+
+  var virtualPreview = $("<div>"); // 新しい仮想DOM要素を作成
+  virtualPreview.html(content);
+
+  // プレビューコンテンツから<style>タグを抽出し、プレビュー用の<div>要素に適用する
+  const styles = virtualPreview.find("style");
+  styles.each(function () {
+    const styleContent = $(this).html(); // thisはstyles.each()関数の中で現在の反復（イテレーション）の対象となっている<style>タグ要素を指しています
+    const scopedStyleContent = styleContent.replace(/(^|\})\s*([^{]+)/g, '$1.preview $2');
+    $(this).html(scopedStyleContent);
+  });
+
+  var pre = virtualPreview.find("pre");
+  pre.each(function () {
+    makecodeblock($(this));
+  });
+  resize_img(virtualPreview);
+  auto_line_break_img(virtualPreview);
+
+  // 最後にプレビュー用のdiv要素の中身を置き換えます。
+  $(".preview").html(virtualPreview.html());
+};
+
+
 
 $(function(){
   
   var editor = $(".markdown-editor");
   var preview = $(".preview");
   preview.height(editor.height());
-  $('.editor-side .card').height($('.preview-side .card').height())
+  $('.editor-side .card').height($('.preview-side .card').height());
   
   if($(".markdown-editor").val()){
     var content = $(".markdown-editor").text()
-    markdown_preview(content)
+    markdown_preview(content);
   }
 
   $('.markdown-editor').keyup(function(event){
