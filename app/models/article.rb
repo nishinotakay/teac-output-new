@@ -2,8 +2,12 @@
 
 class Article < ApplicationRecord
   mount_uploader :image, ImageUploader # ようせい追加（画像保存）
+  validates :user_id, presence: true, if: -> { admin_id.blank? }
+  validates :admin_id, presence: true, if: -> { user_id.blank? }
+  
+  belongs_to :admin, optional: true
+  belongs_to :user, optional: true
 
-  belongs_to :user
   validates :title, presence: true, length: { in: 1..40 }
   validates :sub_title, allow_nil: true, length: { maximum: 50 }
   validates :content, presence: true

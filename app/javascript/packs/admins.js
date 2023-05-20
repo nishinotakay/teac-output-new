@@ -9,6 +9,8 @@ require("@rails/activestorage").start()
 require("channels")
 require('admin-lte');
 require("jquery");
+require ("./admins/auth");
+require ("./admins/sample");
 
 import 'bootstrap';
 import '../stylesheets/admins'; // This file will contain your custom CSS

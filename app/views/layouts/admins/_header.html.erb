@@ -9,10 +9,38 @@
     <li class="nav-item">
       <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
     </li>
+    <li class="nav-item d-none d-sm-inline-block">
+      <%= link_to "投稿した記事一覧", admins_dash_boards_path, class:"nav-link", method: :get %>
+    </li>
   </ul>
   <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto">
     <li class="dropdown">
+      <% if request.fullpath.include?("/admins/articles") || request.fullpath.include?("/admins/dash_boards") %>
+        <li class="nav-item">
+          <%= link_to new_admins_article_path, class: "nav-link", method: :get do %>
+            <p>記事投稿</p>
+          <% end %>
+        </li> 
+      <% elsif request.fullpath == "/admins/profiles" %>
+        <li class="nav-item">
+          <%= link_to new_admins_profile_path, class: "nav-link", method: :get do %>
+            <p>プロフィール投稿</p>
+          <% end %>
+        </li>
+      <% elsif request.fullpath == "/admins/posts" %>
+        <li class="nav-item">
+          <%= link_to new_admins_post_path, class: "nav-link", method: :get do %>
+            <p>動画投稿</p>
+          <% end %>
+        </li>
+      <% elsif request.fullpath == "/admins/tweets" %>
+        <li class="nav-item">
+          <%= link_to new_admins_tweet_path, class: "nav-link", remote: true, method: :get do %>
+            <p>つぶやき投稿</p>
+          <% end %>
+        </li>
+      <% end %>
     </li>    
   </ul>
   <div class="dropdown navbar-nav" style="padding-bottom:6px">
