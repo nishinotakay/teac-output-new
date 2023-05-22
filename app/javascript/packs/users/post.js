@@ -1,4 +1,3 @@
-import '../../stylesheets/users/articles'
 
 $(function(){
   var title = $('h1')

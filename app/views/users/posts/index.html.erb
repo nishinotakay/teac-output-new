@@ -34,9 +34,9 @@
         <div class="filter-modal" style="display: none;">
           
           <div class="form-group row my-4">
-            <label for="input-user_id" class="col-sm-4 col-form-label"><%= Post.human_attribute_name(:user_id) %></label>
-            <div class="col-md-8">
-              <input type="text" aria-label="user_id" id="input-user_id" class="form-control" value="<%= params[:user_id] %>">
+            <label for="input-author" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:user) %></label>
+              <div class="col-md-8">
+                <input type="text" aria-label="author" id="input-author" class="form-control" value="<%= params[:author] %>">
             </div>
           </div>
           <div class="form-group row my-4">
@@ -118,3 +118,4 @@
 <% if @posts %>
   <%= paginate @posts, theme: 'bootstrap-5' %>
 <% end %>      
+<% end %>
