@@ -16,7 +16,7 @@ module Users
         start:  params[:start],
         finish: params[:finish]
       }
-    
+
       if filter.compact.blank?
         @paginate = true
         @posts = Post.order(created_at: params[:order]).page(params[:page]).per(30)
@@ -25,33 +25,32 @@ module Users
         filter[:order] = params[:order]
         post_query = Post.all
         article_query = Article.all
-    
+
         if filter[:author].present?
           post_query = post_query.joins(:user).where('name LIKE ?', "%#{filter[:author]}%")
           article_query = article_query.joins(:user).where('name LIKE ?', "%#{filter[:author]}%")
         end
-    
+
         if filter[:title].present?
           post_query = post_query.where('title LIKE ?', "%#{filter[:title]}%")
           article_query = article_query.where('title LIKE ?', "%#{filter[:title]}%")
         end
-    
+
         if filter[:body].present?
           post_query = post_query.where('body LIKE ?', "%#{filter[:body]}%")
           article_query = article_query.where('body LIKE ?', "%#{filter[:body]}%")
         end
-    
+
         if filter[:start].present? && filter[:finish].present?
           start_date = Time.zone.parse(filter[:start]).beginning_of_day
           finish_date = Time.zone.parse(filter[:finish]).end_of_day
           post_query = post_query.where('created_at >= ?', start_date).where('created_at <= ?', finish_date)
           article_query = article_query.where('created_at >= ?', start_date).where('created_at <= ?', finish_date)
         end
-    
+
         @posts = post_query.page(params[:page]).per(30)
         @articles = article_query.page(params[:page]).per(30)
       end
-    
 
       # ログインしていなかった場合は401ページを表示して終了
       # ※ 401用のテンプレートファイルを作っていないと動きません
