@@ -34,7 +34,7 @@
             <% if btn_name == "更新" && @show %>
               <%= link_to 'キャンセル', admins_article_path(@article, dashboard: @dashboard, page: params[:page]), class: "btn btn-outline-dark" %>
             <% elsif btn_name == "更新" && !@show %>
-              <%= link_to 'キャンセル', admins_dash_boards_path(page: params[:page]), class: "btn btn-outline-dark" if @dashboard %>
+              <%= link_to 'キャンセル', admins_dash_boards_path(page: params[:page]), method: :get, class: "btn btn-outline-dark" if @dashboard %>
               <%= link_to 'キャンセル', admins_articles_path(page: params[:page]), class: "btn btn-outline-dark" unless @dashboard %>
             <% else %>
               <%= link_to 'キャンセル', :back, class: "btn btn-outline-dark" if request.referer %>

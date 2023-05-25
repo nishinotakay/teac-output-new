@@ -1,6 +1,7 @@
+<head><script src="https://kit.fontawesome.com/c3f6f3c4db.js" crossorigin="anonymous"></script></head>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
-  <%= link_to admins_dash_boards_path, class:"brand-link" do %>
+  <%= link_to admins_dash_boards_path, class:"brand-link", method: :get do %>
     <%= image_tag "AdminLTELogo.png", class:"brand-image img-circle elevation-3", style: "opacity: .8" %>
     <span class="brand-text font-weight-light">TecPutt管理画面</span>
   <% end %>
@@ -17,7 +18,7 @@
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item">
-          <%= link_to admins_articles_path, class:"nav-link" do %>
+          <%= link_to admins_articles_path, class:"nav-link", method: :get do %>
             <i class="nav-icon fas fa-th"></i> <!-- <i class="nav-icon fas fa-newspaper"></i> user使用のアイコン -->
             <p>
               記事一覧
