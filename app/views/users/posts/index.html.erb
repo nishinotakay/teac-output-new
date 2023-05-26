@@ -1,11 +1,6 @@
 <%= javascript_pack_tag "users/post", "users/index_articles_and_dashboards" %>
 <% provide(:title,  "動画投稿一覧") %>
-<div style="text-align:le;">
   <%= form_tag(users_posts_path, :method => "get") do %>
-    <%# <%= text_field_tag :search %>
-    <%# <%= submit_tag "検索" ,:title => nil, :body => nil, class: "button is-info"%> 
-  <%# <% end %>
-<%# </div> %>
 <button type="button" class="btn btn-success filter-modal-btn ml-3" data-bs-toggle="modal" data-bs-target="#sortFilterModal" style="display: none;">
   絞り込み検索
 </button>
@@ -31,8 +26,7 @@
             </div>
           </div>
         </div>
-        <div class="filter-modal" style="display: none;">
-          
+        <div class="filter-modal" style="display: none;"> 
           <div class="form-group row my-4">
             <label for="input-author" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:user) %></label>
               <div class="col-md-8">
