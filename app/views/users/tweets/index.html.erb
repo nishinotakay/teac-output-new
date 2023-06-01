@@ -2,22 +2,37 @@
 <% provide(:title, "つぶやき一覧") %>
 <% number_of_comment_notifications = @comment_notifications.count %>
 <% if number_of_comment_notifications > 0 %>
-  <div class="col-12 col-sm-8 offset-sm-2">
-    <div class="notification-label">
-      <a href="#notification1" data-toggle="collapse"><%= number_of_comment_notifications %>件のコメント通知があります。</a><br>
-    </div>
-    <div id="notification1" class="collapse">
-      <div class="collapse-body">
-        <ul class="list-group">
-          <% @comment_notifications.each do |notification| %>
-            <%= form_with url: confirmed_notification_users_tweet_comment_path(notification.tweet, notification), method: :patch, local: true, html: {class: "notification-form"} do |form| %>
-              <li class="list-group-item">
-                <strong><%= notification.user.name %>さんからのコメント</strong>
-                <p><%= link_to "#{notification.comment_content}", "#", class: "notification-link" %></p>
-              </li>
+  <!-- モーダルのトリガー -->
+  <a class= "modalTrriger" href="#" data-bs-toggle="modal" data-bs-target="#commentNotificationModal">
+    <%= number_of_comment_notifications %>件の未確認のコメントがあります。
+  </a>
+  <!-- モーダルの設定 -->
+  <div class="modal fade" id="commentNotificationModal" tabindex="-1" aria-labelledby="commentNotificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="commentNotificationModalLabel">コメント通知一覧</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="list-group">
+            <% @comment_notifications.each do |notification| %>
+              <%= form_with url: confirmed_notification_users_tweet_comment_path(notification.tweet, notification), method: :patch, local: true, html: {class: "notification-form", id: "comment-#{notification.id}"} do |form| %>
+                <li class="list-group-item">
+                  <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
+                  <div class="d-flex align-items-center">
+                    <%= image_tag image , class: "rounded-circle", size: "60x60" %>
+                    <div class="d-flex flex-column align-items-start">
+                      <strong><%= notification.user.name %>さんがあなたのつぶやきにコメントしました。</strong>
+                      <p><%= link_to "#{truncate(notification.comment_content, omission: '...')}", "#", class: "notification-link" %></p>
+                      <time class="timestamp" data-time="<%= notification.created_at.to_i %>"></time>
+                    </div>
+                  </div>
+                </li>
+              <% end %>
             <% end %>
-          <% end %>
-        </ul>
+          </ul>
+        </div>
       </div>
     </div>
   </div>

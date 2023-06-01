@@ -38,8 +38,9 @@ module Users
     # 未確認の通知を確認するアクション
     def confirmed_notification
       @tweet = Tweet.find(params[:tweet_id])
-      @tweet.comments.where(confirmed: false, recipient_id: current_user.id).update_all(confirmed: true)
-      redirect_to users_tweet_path(@tweet)
+      @comment = @tweet.comments.find(params[:id])
+      @comment.update(confirmed: true)
+      redirect_to users_tweet_path(@tweet, anchor: "comment-#{@comment.id}")
     end
 
     private
