@@ -4,7 +4,7 @@ class Article < ApplicationRecord
   mount_uploader :image, ImageUploader # ようせい追加（画像保存）
   validates :user_id, presence: true, if: -> { admin_id.blank? }
   validates :admin_id, presence: true, if: -> { user_id.blank? }
-  
+
   belongs_to :admin, optional: true
   belongs_to :user, optional: true
 
@@ -15,7 +15,7 @@ class Article < ApplicationRecord
   def self.sort_filter(filter)
     start = Time.zone.parse(filter[:start].presence || '2022-01-01').beginning_of_day
     finish = Time.zone.parse(filter[:finish].presence || Date.current.to_s).end_of_day
-  
+
     articles = left_joins(:user, :admin)
     articles = articles
       .where(['title LIKE ? AND sub_title LIKE ? AND content LIKE ?',
