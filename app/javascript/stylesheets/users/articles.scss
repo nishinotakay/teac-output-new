@@ -78,3 +78,20 @@
 .card-body, .editor-body {
   padding: 0;
 }
+
+@media (max-width: 768px) {
+  .div-btns {
+    position: fixed;
+    bottom: 5px;
+    width: 100%;
+  }
+}
+
+// display: block;とすることでtable要素だけをスクロールの対象にできる。
+@media (max-width: 768px) {
+  .table-scroll {
+    overflow-x: auto;
+    display: block;
+    white-space: nowrap;
+  }
+}
