@@ -84,7 +84,7 @@
   padding: 0;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .div-btns {
     position: fixed;
     bottom: 5px;
@@ -93,7 +93,7 @@
 }
 
 // display: block;とすることでtable要素だけをスクロールの対象にできる。
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .table-scroll {
     overflow-x: auto;
     display: block;
