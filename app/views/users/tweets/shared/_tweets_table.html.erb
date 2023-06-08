@@ -1,40 +1,23 @@
 <div class="content">
   <div class="container">
-    <% if @tweets.exists? %>
-      <% @tweets.each do |tweet| %>
-        <div class="tweets-index-item">
-          <div class="col-6 offset-3">
+    <div class="row">
+      <% if @tweets.exists? %>
+        <% @tweets.each do |tweet| %>
+          <div class="col-12 col-sm-8 offset-sm-2">
+            <div class="card tweets-index-item">
             <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
-            <table>
-              <tbody>
-                <tr>
-                  <td><%= image_tag image , class: "rounded-circle", size: "30x30" %><b class="caret"></td>
-                  <td>
+              <div class="d-flex align-items-center">
+                <%= image_tag image , class: "rounded-circle", size: "60x60" %>
+                <div class="d-flex align-items-start flex-column justify-content-start"> <%# flex-colmunは縦並び %>
+                  <div class="px-0">
                     <%= link_to index_user_users_tweet_path(tweet.user_id), style: "text-decoration: underline;" do %>
                       <strong><%= tweet.user.name %>&nbsp;</strong>
                     <% end %>
-                  </td>
-                  <td>
-                    <span class="timestamp" data-time="<%= tweet.created_at.to_i %>">
-                      <%= time_ago_in_words(tweet.created_at) %>前
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-6 offset-3">
-            <table class= "table table-borderless">
-              <tbody>
-                <tr>
-                  <td>
-                    <div class="tweet-post" data-tweet-url="<%= users_tweet_path(tweet.id) %>">
-                      <%= raw Rinku.auto_link(simple_format(tweet.post.gsub(/ /, '&nbsp;')), :all, 'target="_blank"') %>
-                    </div>
-                  </td>
-                  <td class="dropdown">
+                  </div>
+                  <time class="timestamp" data-time="<%= tweet.created_at.to_i %>"></time>
+                </div>
+                <div class="d-flex align-items-center ms-auto">
+                  <div class="dropdown">
                     <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
                     <ul class="dropdown-menu test-color">
                       <li><%= link_to '詳細', index_user_users_tweet_path(tweet.user_id), class:"dropdown-item" %></li>
@@ -43,32 +26,38 @@
                         <li><%= link_to '削除', users_tweet_path(tweet), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
                       <% end %>
                     </ul>
-                  </td>  
-                </tr>
-                <tr class="row row-cols-4 pb-5">
-                  <td class="pl-5 pt-0">
-                    <%= link_to users_tweet_path(tweet.id), style: "color: black; text-decoration: none;" do %>
-                      <i class="fa-regular fa-comment fa-lg"></i>
-                      <% if tweet.comments.count > 0 %>
-                        &nbsp;<%= tweet.comments.count %>
-                      <% end %>
+                  </div>
+                </div>
+              </div>
+              <div class="tweet-post" data-tweet-url="<%= users_tweet_path(tweet.id) %>">
+                <%= raw Rinku.auto_link(sanitize(simple_format(tweet.post.gsub(/ /, '&nbsp;'))), :all, 'target="_blank"') %>
+                <% tweet.images.each do |image| %>
+                  <% if image.persisted? %>
+                    <%= image_tag image, class: "tweet-image" %>
+                  <% end %>
+                <% end %>
+              </div>
+              <div class="d-flex align-items-center">
+                <div class="commentIcon px-2">
+                  <%= link_to users_tweet_path(tweet.id), style: "color: black; text-decoration: none;" do %>
+                    <i class="fa-regular fa-comment fa-lg"></i>
+                    <% if tweet.comments.count > 0 %>
+                      &nbsp;<%= tweet.comments.count %>
                     <% end %>
-                  </td>
-                  <td></td>
-                  <td class="pl-5 pt-0">
-                    <i class="fa-regular fa-heart fa-lg"></i>
-                  </td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
+                  <% end %>
+                </div>
+                <div class="goodIcon px-2">
+                  <i class="fa-regular fa-heart fa-lg"></i>
+                </div>
+              </div>
+            </div>
           </div>
+        <% end %>
+      <% else %>
+        <div>
+          <%= render 'users/shared/table_without_record' %>
         </div>
       <% end %>
-    <% else %>
-      <table>
-        <%= render 'users/shared/table_without_record' %>
-      </table>
-    <% end %>
+    </div>
   </div>
 </div>

@@ -7,42 +7,41 @@
       <%= f.text_field :sub_title, placeholder: Article.human_attribute_name(:sub_title), class: "form-control subtitle-form" %>
     </div>
     
-    <div class="col-12 col-md-6 editor-side">
+    <div class="col-6 editor-side">
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title text-center">エディター</h3>
         </div>
         <div class="card-body">
-          <div class="editor-body">
+          <div class="col-12 editor-body">
             <%= f.text_area :content, placeholder: Article.human_attribute_name(:content), cols: 30, rows: 100,
-              class: "form-control markdown-editor", data: {user_id: current_user.id} %>
+              class: "form-control markdown-editor", data: {admin_id: current_admin.id} %>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col-12 col-md-6 d-none d-md-block preview-side">
+    <div class="col-6 preview-side">
       <div class="card card-outline card-info d-flex flex-column justify-content-start">
         <div class="card-header">
           <h3 class="card-title">プレビュー</h3>
         </div>
-        <div class="card-body">
+        <div class="card-body col-12">
           <% content = @article.content ? @article.content : "" %>
           <div class="preview form-control" style="overflow: scroll;"></div>
+          <div class="text-center div-btns my-3">
+            <%= f.submit btn_name, class: "btn btn-primary" %>
+            <% if btn_name == "更新" && @show %>
+              <%= link_to 'キャンセル', admins_article_path(@article, dashboard: @dashboard, page: params[:page]), class: "btn btn-outline-dark" %>
+            <% elsif btn_name == "更新" && !@show %>
+              <%= link_to 'キャンセル', admins_dash_boards_path(page: params[:page]), method: :get, class: "btn btn-outline-dark" if @dashboard %>
+              <%= link_to 'キャンセル', admins_articles_path(page: params[:page]), class: "btn btn-outline-dark" unless @dashboard %>
+            <% else %>
+              <%= link_to 'キャンセル', :back, class: "btn btn-outline-dark" if request.referer %>
+            <% end %>
+          </div>
         </div>
       </div>
-    </div>
-  
-    <div class="col-12 text-center my-3 div-btns">
-      <%= f.submit btn_name, class: "btn btn-primary" %>
-      <% if btn_name == "更新" && @show %>
-        <%= link_to 'キャンセル', users_article_path(@article, dashboard: @dashboard, page: params[:page]), class: "btn btn-outline-dark" %>
-      <% elsif btn_name == "更新" && !@show %>
-        <%= link_to 'キャンセル', users_dash_boards_path(page: params[:page]), class: "btn btn-outline-dark" if @dashboard %>
-        <%= link_to 'キャンセル', users_articles_path(page: params[:page]), class: "btn btn-outline-dark" unless @dashboard %>
-      <% else %>
-        <%= link_to 'キャンセル', :back, class: "btn btn-outline-dark" if request.referer %>
-      <% end %>
     </div>
   </div>
 <% end %>

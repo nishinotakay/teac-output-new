@@ -13,8 +13,10 @@
         <div class="form-group">
           <div class="form-inline">
             <i class="fas fa-user"></i>
-              <label class="profile-indent">名前</label>
-                <h4 class="profile-indent-name"><%= current_user.name %></h4><br>
+            <label class="profile-indent">名前</label>
+            <%= f.fields_for :user do |user_fields| %>
+              <%= user_fields.text_field :name, class: "form-control", style:"width:300px" %>
+            <% end %>
           </div>
         </div>
         <div class="form-group">

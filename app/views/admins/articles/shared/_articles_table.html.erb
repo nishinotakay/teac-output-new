@@ -12,33 +12,58 @@
   <div class="container">
     <div class="row">
       <div class="col-12">
-        <table class="table table-hover articles-table">
+        <% hover = @articles.present? ? "table-hover" : "" %>
+        <table class="table articles-table <%= hover %> table-scroll">
           <thead>
             <tr>
               <th class="px-5"><%= Article.human_attribute_name(:title) %></th>
               <th class="px-5"><%= Article.human_attribute_name(:sub_title) %></th>
-              <th class="px-5"><%= Article.human_attribute_name(:user) %></th>
+              <% unless dashboard %>
+                <th class="px-5"><%= Article.human_attribute_name(:user) %></th>
+              <% end %>
               <th class="px-5"><%= Article.human_attribute_name(:created_at) %></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
-            <% if @articles.exists? %>
-              <% @articles.each do |a| %>
-                <tr class="link-tr" onclick='window.location="<%= users_article_path(a.id) %>"'>
-                  <td><%= a.title %></td>
-                  <td><%= a.sub_title %></td>
-                  <td><%= a.user.name %></td>
-                  <td><%= l(a.created_at, format: :long) %></td>
+            <% if hover.present? %>
+              <% @articles.each_with_index do |a, i| %>
+                <tr>
+                <% if a.admin.present? %>
+                  <td class="link-td" onclick='window.location="<%= admins_article_path(id: a.id, dashboard: dashboard) %>"'><%= a.title %></td>
+                  <td class="link-td" onclick='window.location="<%= admins_article_path(id: a.id, dashboard: dashboard) %>"'><%= a.sub_title %></td>
+                <% else %>
+                  <td class="link-td" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'><%= a.title %></td>
+                  <td class="link-td" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'><%= a.sub_title %></td>
+                <% end %>
+                  <% if !dashboard %>
+                    <% if a.admin.present? %>
+                      <td class="link-td" onclick='window.location="<%= admins_article_path(id: a.id, dashboard: dashboard) %>"'><%= a.admin.name %></td>
+                    <% else %>
+                      <td class="link-td" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'><%= a.user.name %></td>
+                    <% end %>
+                  <% end %>
+                  <td class="link-td" onclick='window.location="<%= admins_article_path(id: a.id, dashboard: dashboard) %>"'><%= l(a.created_at, format: :long) %></td>
+                  <td>
+                    <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
+                    <ul class="dropdown-menu">
+                      <% if a.admin_id == current_admin.id %>
+                        <li><%= link_to '閲覧', admins_article_path(id: a.id, dashboard: dashboard, page: params[:page]), method: :get, class: "nav-link" %></li>
+                        <li><%= link_to '編集', edit_admins_article_path(id: a.id, dashboard: dashboard, page: params[:page]), method: :get, class: "nav-link" %></li>
+                        <li><%= link_to '削除', admins_article_path(id: a.id, dashboard: dashboard, page: params[:page]), method: :delete, data: {confirm: "選択した記事を削除します。"}, class: "nav-link" %></li>
+                      <% else %>
+                        <li><%= link_to '閲覧', users_article_path(id: a.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
+                      <% end %>
+                    </ul>
+                  </td>
                 </tr>
               <% end %>
             <% else %>
-              <tr>
-                <td colspan="100" class="text-center py-5">投稿なし</tr>
-              </tr>                
+              <%= render 'users/shared/table_without_record' %>
             <% end %>
           </tbody>
         </table>
-        <%= paginate @articles, theme: 'bootstrap-5' if @paginate %>        
+        <%= paginate @articles, theme: 'bootstrap-5' if @paginate %>
       </div>
     </div>
   </div>
@@ -52,13 +77,28 @@
         <button type="button" class="modal-close btn-close mr-3" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body text-right">
-        <div class="filter-modal" style="display: none;">
-          <div class="form-group row my-4">
-            <label for="input-author" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:user) %></label>
-            <div class="col-md-8">
-              <input type="text" aria-label="author" id="input-author" class="form-control" value="<%= params[:author] %>">
+        <div class="sort-modal" style="display: none;">
+          <div class="form-group row my-5">
+            <label for="sort-select" class="col-sm-3 col-form-label"><%= Article.human_attribute_name(:created_at) %></label>
+            <div class="col-md-9">
+              <% order = {'DESC': '新しい順', 'ASC': '古い順'} %>
+              <% params[:order] ||= 'DESC' %>
+              <select id="sort-select" class="form-select" aria-label="Default select desc">
+                <option value="<%= params[:order] %>" selected><%= order.delete(:"#{params[:order]}") %></option>
+                <option value="<%= order.keys[0] %>"><%= order[order.keys[0]] %></option>
+              </select>
             </div>
           </div>
+        </div>
+        <div class="filter-modal" style="display: none;">
+          <% if !dashboard %>
+            <div class="form-group row my-4">
+              <label for="input-author" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:user) %></label>
+              <div class="col-md-8">
+                <input type="text" aria-label="author" id="input-author" class="form-control" value="<%= params[:author] %>">
+              </div>
+            </div>
+          <% end %>
           <div class="form-group row my-4">
             <label for="input-title" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:title) %></label>
             <div class="col-md-8">
@@ -91,36 +131,6 @@
           </div>
         </div>
         <div class="text-center">
-          <button type="button" class="btn btn-primary submit-btn-admin">検索する</button>
-          <button type="button" class="modal-close btn btn-secondary" data-bs-dismiss="modal">戻る</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="sortFilterModal" tabindex="-1" aria-labelledby="sortFilterModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="form-inline">
-        <h5 class="modal-title text-center flex-grow-1 mt-4" id="sortFilterModalLabel"></h5>
-        <button type="button" class="modal-close btn-close mr-3" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-right">
-        <div class="sort-modal" style="display: none;">
-          <div class="form-group row my-5">
-            <label for="sort-select" class="col-sm-3 col-form-label"><%= Article.human_attribute_name(:created_at) %></label>
-            <div class="col-md-9">
-              <% order = {'DESC': '新しい順', 'ASC': '古い順'} %>
-              <% params[:order] ||= 'DESC' %>
-              <select id="sort-select" class="form-select" aria-label="Default select desc">
-                <option value="<%= params[:order] %>" selected><%= order.delete(:"#{params[:order]}") %></option>
-                <option value="<%= order.keys[0] %>"><%= order[order.keys[0]] %></option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="text-center">
           <button type="button" class="btn btn-primary submit-btn"></button>
           <button type="button" class="modal-close btn btn-secondary" data-bs-dismiss="modal">戻る</button>
         </div>
@@ -128,4 +138,3 @@
     </div>
   </div>
 </div>
-

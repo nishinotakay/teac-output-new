@@ -3,6 +3,7 @@
 <div class="modal-dialog modal-lg modal-dialog-center">
   <div class="modal-content">
     <div class="modal-header">
+      <h1 class="modal-title fs-5">投稿を作成</h1>
       <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">×</span>
       </button>
@@ -15,7 +16,7 @@
               <%= render 'layouts/error_messages', model: form.object %>
               <div style="text-align:center;">
                 <div class="field">
-                  <%= form.label :post, "#{yield(:label_text)}", class: "tweet-form" %><br>
+                  <%= form.file_field :images, accept: 'image/png, image/jpeg, image/gif', multiple: true, class: "form-control" %>
                   <%= form.text_area :post, class: "form-control", id:"tweet_post", size: "50x5" %>
                 </div>
                 <div class="actions">

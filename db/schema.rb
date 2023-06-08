@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_19_123918) do
+ActiveRecord::Schema.define(version: 2023_05_01_122548) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -71,11 +71,25 @@ ActiveRecord::Schema.define(version: 2023_01_19_123918) do
     t.string "title", null: false
     t.string "sub_title"
     t.text "content", null: false
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "image"
+    t.bigint "admin_id"
+    t.index ["admin_id"], name: "index_articles_on_admin_id"
     t.index ["user_id"], name: "index_articles_on_user_id"
+  end
+
+  create_table "comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "comment_content"
+    t.bigint "user_id", null: false
+    t.bigint "tweet_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.boolean "confirmed", default: false
+    t.integer "recipient_id", null: false
+    t.index ["tweet_id"], name: "index_comments_on_tweet_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "inquiries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -84,6 +98,7 @@ ActiveRecord::Schema.define(version: 2023_01_19_123918) do
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "hidden", default: false, null: false
     t.index ["user_id"], name: "index_inquiries_on_user_id"
   end
 
@@ -180,6 +195,8 @@ ActiveRecord::Schema.define(version: 2023_01_19_123918) do
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "articles", "users"
+  add_foreign_key "comments", "tweets"
+  add_foreign_key "comments", "users"
   add_foreign_key "inquiries", "users"
   add_foreign_key "posts", "users"
   add_foreign_key "profiles", "users"

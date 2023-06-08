@@ -33,7 +33,11 @@ module Users
       redirect_back(fallback_location: root_path)
     end
 
-    def edit; end
+    def edit
+      respond_to do |format|
+        format.js
+      end
+    end
 
     def update
       if @tweet.update(tweet_params)
@@ -60,7 +64,7 @@ module Users
     private
 
     def tweet_params
-      params.require(:tweet).permit(:post)
+      params.require(:tweet).permit(:post, images: [])
     end
 
     # beforeフィルター
