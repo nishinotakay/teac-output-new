@@ -13,7 +13,7 @@
     <div class="row">
       <div class="col-12">
         <% hover = @articles.present? ? "table-hover" : "" %>
-        <table class="table articles-table <%= hover %>">
+        <table class="table articles-table <%= hover %> table-scroll">
           <thead>
             <tr>
               <th class="px-5"><%= Article.human_attribute_name(:title) %></th>
@@ -38,7 +38,7 @@
                 <% end %>
                   <% if !dashboard %>
                     <% if a.admin.present? %>
-                      <td class="link-td" onclick='window.location="<%= admins_article_path(id: a.id, dashboard: dashboard) %>"'><%= current_admin.name %></td>
+                      <td class="link-td" onclick='window.location="<%= admins_article_path(id: a.id, dashboard: dashboard) %>"'><%= a.admin.name %></td>
                     <% else %>
                       <td class="link-td" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'><%= a.user.name %></td>
                     <% end %>

@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="tweet-content">
-          <%= raw Rinku.auto_link(simple_format(@tweet.post.gsub(/ /, '&nbsp;')), :all, 'target="_blank"') %>
+          <%= raw Rinku.auto_link(sanitize(simple_format(@tweet.post.gsub(/ /, '&nbsp;'))), :all, 'target="_blank"') %>
             <% @tweet.images.each do |image| %>
               <% if image.persisted? %>
                 <%= image_tag image, class: "tweet-image" %>
@@ -37,7 +37,7 @@
         <p class="comment-list fw-bold">〜コメント一覧〜</p>
       <% end %>
       <% @comments.each do |comment| %>
-        <div class="comment-box">
+        <div class="comment-box" id="comment-<%= comment.id %>">
           <!-- モーダルの設定 -->
           <div class="modal fade" id="commentUpdateModal-<%= comment.id %>" tabindex="-1" aria-labelledby="commentUpdateModalLabel">
             <div class="modal-dialog modal-lg form-group">
@@ -81,7 +81,7 @@
               </div>
             </div>
             <div class="comment-content">
-              <%= raw Rinku.auto_link(simple_format(comment.comment_content.gsub(/ /, '&nbsp;')), :all, 'target="_blank"') %>
+              <%= raw Rinku.auto_link(sanitize(simple_format(comment.comment_content.gsub(/ /, '&nbsp;'))), :all, 'target="_blank"') %>
             </div>
           </div>
         </div>
