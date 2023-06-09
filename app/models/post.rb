@@ -1,5 +1,10 @@
 class Post < ApplicationRecord
-  belongs_to :user
+
+  validates :user_id, presence: true, if: -> { admin_id.blank? }
+  validates :admin_id, presence: true, if: -> { user_id.blank? }
+
+  belongs_to :admin, optional: true
+  belongs_to :user, optional: true
 
   validates :title, presence: true, length: { maximum: 30 }
   validates :body, presence: true, length: { maximum: 240 }
@@ -20,5 +25,5 @@ class Post < ApplicationRecord
     result = result.where('body LIKE ?', "%#{filter[:body]}%") if filter[:body].present?
     result = result.where(created_at: filter[:start]..filter[:finish]) if filter[:start].present? && filter[:finish].present?
     result.order(created_at: filter[:order])
-  end  
+  end
 end

@@ -25,12 +25,12 @@ module Users
         filter[:order] = params[:order]
         post_query = Post.all
         article_query = Article.all
-    
+        
         if filter[:author].present?
           post_query = post_query.joins(:user).where('name LIKE ?', "%#{filter[:author]}%")
           article_query = article_query.joins(:user).where('name LIKE ?', "%#{filter[:author]}%")
         end
-    
+        
         if filter[:title].present?
           post_query = post_query.where('title LIKE ?', "%#{filter[:title]}%")
           article_query = article_query.where('title LIKE ?', "%#{filter[:title]}%")

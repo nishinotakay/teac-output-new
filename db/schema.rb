@@ -134,8 +134,10 @@ ActiveRecord::Schema.define(version: 2023_05_01_122548) do
     t.text "body"
     t.string "youtube_url"
     t.bigint "user_id", null: false
+    t.integer "admin_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["admin_id"], name: "index_posts_on_admin_id"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
@@ -193,7 +195,9 @@ ActiveRecord::Schema.define(version: 2023_05_01_122548) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "articles", "admins"
   add_foreign_key "articles", "users"
   add_foreign_key "comments", "tweets"
   add_foreign_key "comments", "users"

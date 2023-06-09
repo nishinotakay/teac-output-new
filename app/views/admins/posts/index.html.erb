@@ -1,0 +1,115 @@
+<%= javascript_pack_tag "users/post", "users/index_articles_and_dashboards" %>
+<% provide(:title,  "動画投稿一覧") %>
+  <%= form_tag(admins_posts_path, :method => "get") do %>
+<button type="button" class="btn btn-success filter-modal-btn ml-3" data-bs-toggle="modal" data-bs-target="#sortFilterModal" style="display: none;">
+  絞り込み検索
+</button>
+
+<div class="modal fade" id="sortFilterModal" tabindex="-1" aria-labelledby="sortFilterModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="form-inline">
+        <h5 class="modal-title text-center flex-grow-1 mt-4" id="sortFilterModalLabel"></h5>
+        <button type="button" class="modal-close btn-close mr-3" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-right">
+        <div class="sort-modal" style="display: none;">
+          <div class="form-group row my-5">
+            <label for="sort-select" class="col-sm-3 col-form-label"><%= Post.human_attribute_name(:created_at) %></label>
+            <div class="col-md-9">
+              <% order = {'DESC': '新しい順', 'ASC': '古い順'} %>
+              <% params[:order] ||= 'DESC' %>
+              <select id="sort-select" class="form-select" aria-label="Default select desc">
+                <option value="<%= params[:order] %>" selected><%= order.delete(:"#{params[:order]}") %></option>
+                <option value="<%= order.keys[0] %>"><%= order[order.keys[0]] %></option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="filter-modal" style="display: none;"> 
+          <div class="form-group row my-4">
+            <label for="input-author" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:user) %></label>
+              <div class="col-md-8">
+                <input type="text" aria-label="author" id="input-author" class="form-control" value="<%= params[:author] %>">
+            </div>
+          </div>
+          <div class="form-group row my-4">
+            <label for="input-title" class="col-sm-4 col-form-label"><%= Post.human_attribute_name(:title) %></label>
+            <div class="col-md-8">
+              <input type="text" aria-label="title" id="input-title" class="form-control" value="<%= params[:title] %>">
+            </div>
+          </div>
+          <div class="form-group row my-4">
+            <label for="input-body" class="col-sm-4 col-form-label"><%= Post.human_attribute_name(:body) %></label>
+            <div class="col-md-8">
+              <input type="text" aria-label="body" id="input-body" class="form-control" value="<%= params[:body] %>">
+            </div>
+          </div>
+          <div class="form-group row my-4">
+            <label for="input-created" class="col-sm-3 col-form-label"><%= Post.human_attribute_name(:created_at) %></label>
+            <div class="col-md-9 form-inline">
+              <div class="col-md-5">
+                <input type="date" aria-label="created" id="input-start" class="form-control" value="<%= params[:start] %>">
+              </div>
+              <div class="offset-1 align-bottom">〜</div>
+              <div class="col-md-5">
+                <input type="date" aria-label="created" id="input-finish" class="form-control" value="<%= params[:finish] %>">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <button type="button" class="btn btn-primary submit-btn"></button>
+          <button type="button" class="modal-close btn btn-secondary" data-bs-dismiss="modal">戻る</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>タイトル</th>
+      <th>内容</th>
+      <th>Youtube</th>
+      <th>投稿者</th>
+      <th>投稿日</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>      
+    <% if @posts&.exists? %>
+      <% @posts.each do |post| %>
+        <tr>
+          <td onclick='window.location="<%= admins_post_path(id: post.id) %>"'><%= post.title %></td>
+          <td onclick='window.location="<%= admins_post_path(id: post.id) %>"'><%= simple_format(post.body) %></td>
+          <td width="150" onclick='window.location="<%= admins_post_path(id: post.id) %>"'>
+            <iframe width="289" height="180" src="https://www.youtube.com/embed/<%=post.youtube_url %>"  frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </td>
+          <td onclick='window.location="<%= admins_post_path(id: post.id) %>"'><%= post.admin ? post.admin.name : post.user.name %></td>
+          <td onclick='window.location="<%= admins_post_path(id: post.id) %>"'><%= post.created_at.strftime('%Y/%m/%d') %></td> 
+          <td>
+            <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
+            <ul class="dropdown-menu">
+              <% if post.admin_id == current_admin.id %>
+                <li><%= link_to '閲覧', admins_post_path(post), class:"nav-link" %></li>
+                <li><%= link_to '編集', edit_admins_post_path(post), class:"nav-link" %></li>
+                <li><%= link_to '削除', admins_post_path(post), method: :delete, class:"nav-link", data: {confirm: "#{post.title}を削除してもよろしいですか？"} %></li>
+              <% else %>
+                <li><%= link_to '閲覧', admins_post_path(post), class:"nav-link" %></li>
+            </ul>
+              <% end %>
+          </td> 
+        </tr>
+      <% end %>
+    <% else %>
+      <%= render 'users/shared/table_without_record' %>
+    <% end %>
+  </tbody>
+</table>
+<% if @posts %>
+  <%= paginate @posts, theme: 'bootstrap-5' %>
+<% end %>
+<% end %>
