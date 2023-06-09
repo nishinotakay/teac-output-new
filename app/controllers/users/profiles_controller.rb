@@ -23,7 +23,7 @@ module Users
     end
 
     def edit
-      if @user != @current_user
+      if @profile.id != current_user.profile.id
         redirect_to users_profiles_path, notice: '編集権限がありません'
       end
     end
@@ -79,7 +79,7 @@ module Users
 
     def profile_params
       params.require(:profile).permit(
-        :purpose, :image, :created_at, :learning_start, :birthday, :gender, user_attributes: [:name]
+        :name, :purpose, :image, :created_at, :learning_start, :birthday, :gender, user_attributes: [:name]
       ).merge(user_id: current_user.id)
     end
   end
