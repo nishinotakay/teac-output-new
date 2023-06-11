@@ -1,60 +1,59 @@
 module Admins
-    class PostsController < Admins::Base
-      # Userがログインしていないと、投稿を作成・編集・削除できない
-      before_action :authenticate_admin!, only: %i[show index new create edit update destroy]
-      before_action :set_post, only: %i[show edit edit_1 update update_1 destroy]
-      # 投稿したユーザーと現在のユーザーのidが違えばトップページに飛ばす
-      before_action :prevent_url, only: %i[edit update destroy]
+  class PostsController < Admins::Base
+    # Userがログインしていないと、投稿を作成・編集・削除できない
+    before_action :authenticate_admin!, only: %i[show index new create edit update destroy]
+    before_action :set_post, only: %i[show edit edit_1 update update_1 destroy]
+    # 投稿したユーザーと現在のユーザーのidが違えばトップページに飛ばす
+    before_action :prevent_url, only: %i[edit update destroy]
       
-      # 投稿動画一覧ページ
-      def index
-        params[:order] ||= 'DESC'
-        filter = {
-          author: params[:author],
-          body: params[:body],
-          title: params[:title],
-          start: params[:start],
-          finish: params[:finish]
-        }
+    # 投稿動画一覧ページ
+    def index
+      params[:order] ||= 'DESC'
+      filter = {
+        author: params[:author],
+        body: params[:body],
+        title: params[:title],
+        start: params[:start],
+        finish: params[:finish]
+      }
       
-        if filter.compact.blank?
-          @paginate = true
-          @posts = Post.order(created_at: params[:order]).page(params[:page]).per(30)
-          @articles = Article.order(created_at: params[:order]).page(params[:page]).per(30)
-        else
-          filter[:order] = params[:order]
-          post_query = Post.all
-          article_query = Article.all
+      if filter.compact.blank?
+        @paginate = true
+        @posts = Post.order(created_at: params[:order]).page(params[:page]).per(30)
+        @articles = Article.order(created_at: params[:order]).page(params[:page]).per(30)
+      else
+        filter[:order] = params[:order]
+        post_query = Post.all
+        article_query = Article.all
       
-          if filter[:author].present?
-            post_query = post_query.left_joins(:user, :admin)
-                                   .where('users.name LIKE ? OR admins.name LIKE ?', "%#{filter[:author]}%", "%#{filter[:author]}%")
-            article_query = article_query.left_joins(:user, :admin)
-                                         .where('users.name LIKE ? OR admins.name LIKE ?', "%#{filter[:author]}%", "%#{filter[:author]}%")
-          end
+        if filter[:author].present?
+          post_query = post_query.left_joins(:user, :admin)
+                                  .where('users.name LIKE ? OR admins.name LIKE ?', "%#{filter[:author]}%", "%#{filter[:author]}%")
+          article_query = article_query.left_joins(:user, :admin)
+                                        .where('users.name LIKE ? OR admins.name LIKE ?', "%#{filter[:author]}%", "%#{filter[:author]}%")
+        end
       
-          if filter[:title].present?
-            post_query = post_query.where('title LIKE ?', "%#{filter[:title]}%")
-            article_query = article_query.where('title LIKE ?', "%#{filter[:title]}%")
-          end
+        if filter[:title].present?
+          post_query = post_query.where('title LIKE ?', "%#{filter[:title]}%")
+          article_query = article_query.where('title LIKE ?', "%#{filter[:title]}%")
+        end
       
-          if filter[:body].present?
-            post_query = post_query.where('body LIKE ?', "%#{filter[:body]}%")
-            article_query = article_query.where('body LIKE ?', "%#{filter[:body]}%")
-          end
+        if filter[:body].present?
+          post_query = post_query.where('body LIKE ?', "%#{filter[:body]}%")
+          article_query = article_query.where('body LIKE ?', "%#{filter[:body]}%")
+        end
       
-          if filter[:start].present? && filter[:finish].present?
-            start_date = Time.zone.parse(filter[:start]).beginning_of_day
-            finish_date = Time.zone.parse(filter[:finish]).end_of_day
-            post_query = post_query.where('created_at >= ?', start_date).where('created_at <= ?', finish_date)
-            article_query = article_query.where('created_at >= ?', start_date).where('created_at <= ?', finish_date)
-          end
+        if filter[:start].present? && filter[:finish].present?
+          start_date = Time.zone.parse(filter[:start]).beginning_of_day
+          finish_date = Time.zone.parse(filter[:finish]).end_of_day
+          post_query = post_query.where('created_at >= ?', start_date).where('created_at <= ?', finish_date)
+          article_query = article_query.where('created_at >= ?', start_date).where('created_at <= ?', finish_date)
+        end
       
           @posts = post_query.page(params[:page]).per(30)
           @articles = article_query.page(params[:page]).per(30)
         end
       
-  
         # ログインしていなかった場合は401ページを表示して終了
         # ※ 401用のテンプレートファイルを作っていないと動きません
         # @posts = Post.all.search(params[:search]).page(params[:page]).per(30)
