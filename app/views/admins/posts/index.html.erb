@@ -66,50 +66,49 @@
       </div>
     </div>
   </div>
+<% end %>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>タイトル</th>
+      <th>内容</th>
+      <th>Youtube</th>
+      <th>投稿者</th>
+      <th>投稿日</th>
+      <th></th>
+    </tr>
+  </thead>
 
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>タイトル</th>
-        <th>内容</th>
-        <th>Youtube</th>
-        <th>投稿者</th>
-        <th>投稿日</th>
-        <th></th>
-      </tr>
-    </thead>
-
-    <tbody>      
-      <% if @posts&.exists? %>
-        <% @posts.each do |post| %>
-          <tr>
-            <td onclick='window.location="<%= admins_post_path(id: post.id) %>"'><%= post.title %></td>
-            <td onclick='window.location="<%= admins_post_path(id: post.id) %>"'><%= simple_format(post.body) %></td>
-            <td width="150" onclick='window.location="<%= admins_post_path(id: post.id) %>"'>
-              <iframe width="289" height="180" src="https://www.youtube.com/embed/<%=post.youtube_url %>"  frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </td>
-            <td onclick='window.location="<%= admins_post_path(id: post.id) %>"'><%= post.admin ? post.admin.name : post.user.name %></td>
-            <td onclick='window.location="<%= admins_post_path(id: post.id) %>"'><%= post.created_at.strftime('%Y/%m/%d') %></td> 
-            <td>
-              <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
-              <ul class="dropdown-menu">
-                <% if post.admin_id == current_admin.id %>
-                  <li><%= link_to '閲覧', admins_post_path(post), class:"nav-link" %></li>
-                  <li><%= link_to '編集', edit_admins_post_path(post), class:"nav-link" %></li>
-                  <li><%= link_to '削除', admins_post_path(post), method: :delete, class:"nav-link", data: {confirm: "#{post.title}を削除してもよろしいですか？"} %></li>
-                <% else %>
-                  <li><%= link_to '閲覧', admins_post_path(post), class:"nav-link" %></li>
-              </ul>
-                <% end %>
-            </td> 
-          </tr>
-        <% end %>
-      <% else %>
-        <%= render 'users/shared/table_without_record' %>
+  <tbody>      
+    <% if @posts&.exists? %>
+      <% @posts.each do |post| %>
+        <tr>
+          <td onclick='window.location="<%= admins_post_path(id: post.id) %>"'><%= post.title %></td>
+          <td onclick='window.location="<%= admins_post_path(id: post.id) %>"'><%= simple_format(post.body) %></td>
+          <td width="150" onclick='window.location="<%= admins_post_path(id: post.id) %>"'>
+            <iframe width="289" height="180" src="https://www.youtube.com/embed/<%=post.youtube_url %>"  frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </td>
+          <td onclick='window.location="<%= admins_post_path(id: post.id) %>"'><%= post.admin ? post.admin.name : post.user.name %></td>
+          <td onclick='window.location="<%= admins_post_path(id: post.id) %>"'><%= post.created_at.strftime('%Y/%m/%d') %></td> 
+          <td>
+            <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
+            <ul class="dropdown-menu">
+              <% if post.admin_id == current_admin.id %>
+                <li><%= link_to '閲覧', admins_post_path(post), class:"nav-link" %></li>
+                <li><%= link_to '編集', edit_admins_post_path(post), class:"nav-link" %></li>
+                <li><%= link_to '削除', admins_post_path(post), method: :delete, class:"nav-link", data: {confirm: "#{post.title}を削除してもよろしいですか？"} %></li>
+              <% else %>
+                <li><%= link_to '閲覧', admins_post_path(post), class:"nav-link" %></li>
+            </ul>
+              <% end %>
+          </td> 
+        </tr>
       <% end %>
-    </tbody>
-  </table>
-  <% if @posts %>
-    <%= paginate @posts, theme: 'bootstrap-5' %>
-  <% end %>
+    <% else %>
+      <%= render 'users/shared/table_without_record' %>
+    <% end %>
+  </tbody>
+</table>
+<% if @posts %>
+  <%= paginate @posts, theme: 'bootstrap-5' %>
 <% end %>
