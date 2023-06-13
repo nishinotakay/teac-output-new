@@ -8,6 +8,7 @@ class Admin < ApplicationRecord
     :confirmable
 
   has_many :articles, dependent: :destroy
+  has_many :posts, dependent: :destroy
 
   enum gender: { male: 0, female: 1, other: 2 }
 

@@ -26,6 +26,14 @@
           <% end %>
         </li>
         <li class="nav-item">
+          <%= link_to admins_posts_path, class:"nav-link", method: :get do %>
+            <i class="nav-icon fa-brands fa-youtube"></i>
+            <p>
+              動画投稿一覧
+            </p>
+          <% end %>
+        </li>
+        <li class="nav-item">
           <%= link_to admins_profiles_path, class:"nav-link", method: :get do  %>
             <i class="nav-icon fas fa-list"></i>
             <p>

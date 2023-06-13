@@ -1,0 +1,42 @@
+<h1 style="text-align:center;">動画投稿一覧（全ユーザー）</h1>
+<div style="text-align:center;">
+  <%= form_tag(index_1_users_posts_path, :method => "get") do %>
+    <%= text_field_tag :search %>
+    <%= submit_tag "検索" ,:title => nil, :body => nil, class: "button is-info"%> 
+  <% end %> 
+</div>
+
+<br><table class="table_sticky posts_table">
+      <thead>
+        <tr>
+          <th width="100">タイトル</th>
+          <th>内容</th>
+          <th>Youtube</th>
+          <th width="300" colspan="3"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% if @posts.exists? %>
+          <% @posts.each do |post| %>
+            <tr>
+              <td><%= "↓（#{post.user.name}さんの投稿）" %></td>
+            </tr>
+            <tr>
+              <td width="230"><br><%= post.title %></td>
+              <td width="230"><%= simple_format(post.body) %></td>
+              <td><iframe width="600" height="315" src="https://www.youtube.com/embed/<%=post.youtube_url%>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
+              <td>
+                <%= button_to '動画詳細', show_1_users_post_path(post), method: :get, class: "btn btn-warning" %><br>
+                <%= button_to '削除', users_post_path(post.user.id, post.id), method: :delete, class: "btn btn-danger" %>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <%= render 'users/shared/table_without_record' %>
+        <% end %>
+      </tbody>
+    </table>
+    <%= paginate @posts, theme: 'bootstrap-5' %>        
+
+<br>
