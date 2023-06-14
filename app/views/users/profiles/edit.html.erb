@@ -27,7 +27,9 @@
             <i class="fas fa-user"></i>
             <label class="profile-indent">名前</label>
             <label class="profile-indent-gender">
-              <%= f.text_field :name, class: 'form-control' %>
+              <%= f.fields_for :user do |user_fields| %>
+                <%= user_fields.text_field :name, class: "form-control", style: "width:300px" %>
+              <% end %>
             </label>
           </div>
         </div>
@@ -36,7 +38,7 @@
             <i class="fas fa-gift"></i>
             <label class="profile-indent">誕生日</label>
             <label class="profile-indent-birthday">
-              <%= f.date_field :birthday, use_month_numbers: true , class: 'form-control', style:"width:300px"%>
+              <%= f.date_field :birthday, use_month_numbers: true , class: 'form-control', style: "width:300px" %>
             </label>
           </div>
         </div>
@@ -45,7 +47,7 @@
             <i class="fas fa-heart"></i>
             <label class="profile-indent">性別</label>
             <label class="profile-indent-gender">
-              <%= f.select :gender, Profile.genders_i18n.keys.map {|k| [Profile.genders_i18n[k], k]}, {include_blank: '選択してください'}, class: 'form-control', style:"width:300px" %>
+              <%= f.select :gender, Profile.genders_i18n.keys.map {|k| [Profile.genders_i18n[k], k]}, {include_blank: '選択してください'}, class: 'form-control', style: "width:300px" %>
             </label>
           </div>
         </div>
@@ -54,7 +56,7 @@
             <i class="fas fa-book-open"></i>
             <label class="profile-indent">プログラミング学習開始日</label>
             <label class="profile-indent-input">
-              <%= f.date_field :learning_start, use_month_numbers: true , class: 'form-control', style:"width:300px" %>
+              <%= f.date_field :learning_start, use_month_numbers: true , class: 'form-control', style: "width:300px" %>
             </label>
           </div>
         </div>
@@ -63,15 +65,14 @@
             <i class="fas fa-flag"></i>
             <label class="profile-indent">プログラミング学習の目的</label>
             <label class="profile-indent-purpose">
-              <%= f.text_area :purpose, class: "form-control", style:"width:300px" %>
+              <%= f.text_area :purpose, class: "form-control", style: "width:300px" %>
             </label>
           </div>
         </div>
       </div>
       <div class="text-center form-group">
-        <%= f.submit "更新", class: "btn btn-primary" , style:"width:150px" %>
+        <%= f.submit "更新", class: "btn btn-primary" , style: "width:150px" %>
       </div>
     <% end %>
   </div>
 </div>
-
