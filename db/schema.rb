@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_05_01_122548) do
+ActiveRecord::Schema.define(version: 2023_06_14_014943) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -143,7 +143,6 @@ ActiveRecord::Schema.define(version: 2023_05_01_122548) do
 
   create_table "profiles", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.string "name"
     t.integer "learning_history"
     t.string "purpose"
     t.datetime "created_at", precision: 6, null: false
