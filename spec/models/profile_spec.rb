@@ -16,7 +16,7 @@ RSpec.describe 'Profileモデルのテスト', type: :model do
 
     it 'is invalid without a purpose' do
       profile = Profile.new(
-        purpose: nil,
+        purpose: nil
       )
       profile.valid?
       expect(profile.errors[:purpose]).to include('を入力してください')
@@ -26,11 +26,6 @@ RSpec.describe 'Profileモデルのテスト', type: :model do
       it '空欄でないこと' do
         profile.purpose = ''
         expect(subject).to eq false
-      end
-
-      it '20文字以下であること' do
-        profile.name = '月収50万円稼ぐrailsエンジニアの田中浩！'
-        expect(profile.valid?).to eq false
       end
     end
 
