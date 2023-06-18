@@ -44,7 +44,9 @@ Rails.application.routes.draw do
 
   namespace :users do
     resources :dash_boards, only: [:index]
-    resources :articles # , only: %i[index show]
+    resources :articles do
+      resources :article_comments, only: %i[create destroy update] # 記事コメント機能
+    end
     resources :posts
     resources :users, only: [:show]
     resources :posts do

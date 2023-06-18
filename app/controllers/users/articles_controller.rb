@@ -20,6 +20,8 @@ module Users
 
     def show
       @article = Article.find(params[:id])
+      @article_comments = @article.article_comments.all.order(created_at: 'DESC')
+      @article_comment = current_user.article_comments.new
     end
 
     def new
