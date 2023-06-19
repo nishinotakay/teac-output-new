@@ -27,27 +27,34 @@
           </thead>
           <tbody>
             <% if hover.present? %>
-              <% @articles.each_with_index do |a, i| %>
+              <% @articles.each_with_index do |article, i| %>
                 <tr>
-                  <td class="link-td" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'><%= a.title %></td>
-                  <td class="link-td" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'><%= a.sub_title %></td>
+                  <td class="link-td" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'>
+                    <div class="d-flex align-items-center">
+                      <%= article.title %>
+                      <%if article.article_comments.present? %>
+                        <i class="fa-regular fa-comment fa-sm ms-auto">&nbsp<%= article.article_comments.count %></i>
+                      <% end %>
+                    </div>
+                  </td>
+                  <td class="link-td" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'><%= article.sub_title %></td>
                   <% if !dashboard %>
-                    <% if a.admin.present? %>
-                      <td class="link-td" onclick='window.location="<%= admins_article_path(id: a.id, dashboard: dashboard) %>"'><%= a.admin.name %></td>
+                    <% if article.admin.present? %>
+                      <td class="link-td" onclick='window.location="<%= admins_article_path(id: article.id, dashboard: dashboard) %>"'><%= article.admin.name %></td>
                     <% else %>
-                      <td class="link-td" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'><%= a.user.name %></td>
+                      <td class="link-td" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'><%= article.user.name %></td>
                     <% end %>
                   <% end %>
-                  <td class="link-td" onclick='window.location="<%= users_article_path(id: a.id, dashboard: dashboard) %>"'><%= l(a.created_at, format: :long) %></td>
+                  <td class="link-td" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'><%= l(article.created_at, format: :long) %></td>
                   <td>
                     <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
                     <ul class="dropdown-menu">
-                      <% if a.user_id == current_user.id %>
-                        <li><%= link_to '閲覧', users_article_path(id: a.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
-                        <li><%= link_to '編集', edit_users_article_path(id: a.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
-                        <li><%= link_to '削除', users_article_path(id: a.id, dashboard: dashboard, page: params[:page]), method: :delete, data: {confirm: "選択した記事を削除します。"}, class: "nav-link" %></li>
+                      <% if article.user_id == current_user.id %>
+                        <li><%= link_to '閲覧', users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
+                        <li><%= link_to '編集', edit_users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
+                        <li><%= link_to '削除', users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), method: :delete, data: {confirm: "選択した記事を削除します。"}, class: "nav-link" %></li>
                       <% else %>
-                        <li><%= link_to '閲覧', users_article_path(id: a.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
+                        <li><%= link_to '閲覧', users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
                       <% end %>
                     </ul>
                   </td>
