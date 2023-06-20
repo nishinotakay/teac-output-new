@@ -4,7 +4,7 @@
   <div class="row">
     <div class="co-12 col-lg-8 offset-lg-2">
       <div class="card">
-       <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
+       <% image = @tweet.user.profile.present? && @tweet.user.profile.image.present? ? @tweet.user.profile&.image : "user_default.png" %>
         <div class="d-flex align-items-center">
           <%= image_tag image , class: "rounded-circle", size: "60x60" %>
           <div class="d-flex align-items-start justify-content-start">
@@ -59,7 +59,7 @@
               </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
           </div><!-- /.modal -->
-          <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
+          <% image = comment.user.profile.present? && comment.user.profile.image.present? ? comment.user.profile&.image : "user_default.png" %>
           <div class="comment-contents">
             <div class="comment-header d-flex align-items-center">
               <%= image_tag image , class: "rounded-circle", size: "30x30" %>
