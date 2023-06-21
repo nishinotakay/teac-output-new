@@ -31,7 +31,7 @@ class User < ApplicationRecord
       .left_joins(:articles).left_joins(:posts).group("users.id")
       .having("count(articles.id) between ? and ?", artcl_min, artcl_max)
       .having("count(posts.id) between ? and ?", posts_min, posts_max)
-    if order[0] == :articles || order[0] == :posts
+    if order[0] == :articles || order[0] == :posts || order[0] == :profiles
       users.order("COUNT(#{order[0].to_s}.id) #{order[1]}")
     else
       users.order(order[0] => order[1])
