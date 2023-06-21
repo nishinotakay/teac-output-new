@@ -1,16 +1,14 @@
 ja:
   activerecord:
     models:
-      user: "ユーザー"
+      user: 'ユーザー'
     attributes:
       user:
-        name: "名前"
-        email: "メールアドレス"
-        created_at: "作成日"
-        updateed_at: "更新日"
-        age: "年齢"
-        gender: "性別"
-        articles: "記事投稿数"
-        posts: "動画投稿数"
-        purpose: "プログラミング学習の目的"
-        learning_start: "プログラミング学習開始日"
+        name: '名前'
+        email: 'メールアドレス'
+        created_at: '作成日'
+        updateed_at: '更新日'
+        age: '年齢'
+        gender: '性別'
+        articles: '記事投稿数'
+        posts: '動画投稿数'

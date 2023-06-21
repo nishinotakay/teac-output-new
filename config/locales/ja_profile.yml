@@ -1,9 +1,8 @@
 ja:
   activerecord:
     models:
-      profile: "プロフィール"
+      profile: 'プロフィール'
     attributes:
       profile:
-        name: "名前"
-        purpose: "プログラミング学習の目的"
-        learning_start: "プログラミング学習開始日"
+        name: '名前'
+        purpose: 'プログラミング学習の目的'
