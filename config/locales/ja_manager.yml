@@ -4,3 +4,5 @@ ja:
       manager: 'マネージャー'
     attributes:
       manager:
+        name: '名前'
+        email: 'メールアドレス'
