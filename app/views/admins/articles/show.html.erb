@@ -10,12 +10,8 @@
         <div class="d-flex justify-content-between">
           <h4 class="ml-5"><%= @article.sub_title %></h4>
           <div>
-            <% if @article.admin == current_admin %>
-              <%= link_to "編集", edit_admins_article_path(dashboard: @dashboard, page: params[:page], show: true), class: "btn btn-success" %>
-              <%= link_to "削除", admins_article_path(dashboard: @dashboard, page: params[:page]), method: :delete, data: {confirm: "表示中の記事を削除します。"}, class: "btn btn-danger ml-1" %>
-            <% else %>
-              <%= Article.human_attribute_name(:admin) %>：<%= @article.current_admin.name %>
-            <% end %>
+            <%= link_to "編集", edit_admins_article_path(dashboard: @dashboard, page: params[:page], show: true), class: "btn btn-success" %>
+            <%= link_to "削除", admins_article_path(dashboard: @dashboard, page: params[:page]), method: :delete, data: {confirm: "表示中の記事を削除します。"}, class: "btn btn-danger ml-1" %>
           </div>
         </div>
       </div>
