@@ -31,25 +31,7 @@
           <div class="preview form-control" style="overflow: scroll;"></div>
           <div class="text-center div-btns my-3">
             <%= f.submit btn_name, class: "btn btn-primary" %>
-            <% if @article.admin %>
-              <% if btn_name == "更新" && @show %>
-                <%= link_to 'キャンセル', admins_article_path(@article, dashboard: @dashboard, page: params[:page]), class: "btn btn-outline-dark" %>
-              <% elsif btn_name == "更新" && !@show %>
-                <%= link_to 'キャンセル', admins_dash_boards_path(page: params[:page]), method: :get, class: "btn btn-outline-dark" if @dashboard %>
-                <%= link_to 'キャンセル', admins_articles_path(page: params[:page]), class: "btn btn-outline-dark" unless @dashboard %>
-              <% else %>
-                <%= link_to 'キャンセル', :back, method: :get, class: "btn btn-outline-dark" if request.referer %>
-              <% end %>
-            <% elsif @article.user %>
-              <% if btn_name == "更新" && @show %>
-                <%= link_to 'キャンセル', users_show_admins_articles_path(@article, dashboard: @dashboard, page: params[:page]), class: "btn btn-outline-dark" %>
-              <% elsif btn_name == "更新" && !@show %>
-                <%= link_to 'キャンセル', admins_dash_boards_path(page: params[:page]), method: :get, class: "btn btn-outline-dark" if @dashboard %>
-                <%= link_to 'キャンセル', admins_articles_path(page: params[:page]), class: "btn btn-outline-dark" unless @dashboard %>
-              <% else %>
-                <%= link_to 'キャンセル', :back, method: :get, class: "btn btn-outline-dark" if request.referer %>
-              <% end %>
-            <% end %>
+            <%= link_to 'キャンセル', :back, method: :get, class: "btn btn-outline-dark" if request.referer %>
           </div>
         </div>
       </div>

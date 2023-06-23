@@ -58,11 +58,9 @@ module Admins
     end
 
     def edit
-      @show = params[:show].present?
     end
 
     def users_edit
-      @show = params[:show].present?
       @user = @article.user
     end
 
