@@ -25,7 +25,6 @@ Rails.application.routes.draw do
         delete 'user_destroy'
       end
     end
-    resources :inquiries 
   end
 
 
@@ -77,7 +76,7 @@ Rails.application.routes.draw do
       end
       resources :comments, only: [:create, :destroy, :update] #コメント機能
     end
-    resources :inquiries
+    resources :inquiries #問い合わせ
   end
   # =================================================================
 
