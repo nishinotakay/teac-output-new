@@ -20,7 +20,7 @@
   </head>
 
   <body class="hold-transition sidebar-mini" id="<%= page_body_id(params) %>">
-    <% if params[:controller] != "admins/sessions" && params[:action] != "new" %>
+    <% if params[:controller] != "admins/sessions" %>
       <div class="wrapper">
           <%= render "layouts/admins/header" %>
           <%= render "layouts/admins/side" %>

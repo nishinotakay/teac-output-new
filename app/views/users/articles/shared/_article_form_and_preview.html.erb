@@ -1,19 +1,19 @@
 <%= form_with(model: @article, url: url, method: method, local: true) do |f| %>
   <div class="row mt-4">
-    <div class="col-10 offset-1 div-title-form">
+    <div class="col-12 div-title-form">
       <%= f.text_field :title, placeholder: Article.human_attribute_name(:title), class: "form-control title-form" %>
     </div>
-    <div class="col-10 offset-1 my-2">
+    <div class="col-12 my-2 div-subtitle-form">
       <%= f.text_field :sub_title, placeholder: Article.human_attribute_name(:sub_title), class: "form-control subtitle-form" %>
     </div>
     
-    <div class="col-5 offset-1 editor-side">
+    <div class="col-12 col-md-6 editor-side">
       <div class="card card-outline card-info">
         <div class="card-header">
           <h3 class="card-title text-center">エディター</h3>
         </div>
         <div class="card-body">
-          <div class="col-12">
+          <div class="editor-body">
             <%= f.text_area :content, placeholder: Article.human_attribute_name(:content), cols: 30, rows: 100,
               class: "form-control markdown-editor", data: {user_id: current_user.id} %>
           </div>
@@ -21,28 +21,28 @@
       </div>
     </div>
 
-    <div class="col-5 preview-side">
+    <div class="col-12 col-md-6 d-none d-md-block preview-side">
       <div class="card card-outline card-info d-flex flex-column justify-content-start">
         <div class="card-header">
           <h3 class="card-title">プレビュー</h3>
         </div>
-        <div class="card-body col-12">
+        <div class="card-body">
           <% content = @article.content ? @article.content : "" %>
           <div class="preview form-control" style="overflow: scroll;"></div>
-          <div class="text-center div-btns mt-3">
-            <%= f.submit btn_name, class: "btn btn-primary" %>
-            <% if btn_name == "更新" && @show %>
-              <%= link_to 'キャンセル', users_article_path(@article, dashboard: @dashboard, page: params[:page]), class: "btn btn-outline-dark" %>
-            <% elsif btn_name == "更新" && !@show %>
-              <%= link_to 'キャンセル', users_dash_boards_path(page: params[:page]), class: "btn btn-outline-dark" if @dashboard %>
-              <%= link_to 'キャンセル', users_articles_path(page: params[:page]), class: "btn btn-outline-dark" unless @dashboard %>
-            <% else %>
-              <%= link_to 'キャンセル', :back, class: "btn btn-outline-dark" if request.referer %>
-            <% end %>
-          </div>
         </div>
       </div>
     </div>
+  
+    <div class="col-12 text-center my-3 div-btns">
+      <%= f.submit btn_name, class: "btn btn-primary" %>
+      <% if btn_name == "更新" && @show %>
+        <%= link_to 'キャンセル', users_article_path(@article, dashboard: @dashboard, page: params[:page]), class: "btn btn-outline-dark" %>
+      <% elsif btn_name == "更新" && !@show %>
+        <%= link_to 'キャンセル', users_dash_boards_path(page: params[:page]), class: "btn btn-outline-dark" if @dashboard %>
+        <%= link_to 'キャンセル', users_articles_path(page: params[:page]), class: "btn btn-outline-dark" unless @dashboard %>
+      <% else %>
+        <%= link_to 'キャンセル', :back, class: "btn btn-outline-dark" if request.referer %>
+      <% end %>
+    </div>
   </div>
 <% end %>
-

@@ -13,60 +13,65 @@
         <div class="form-group">
           <div class="form-inline">
             <i class="fas fa-user"></i>
-              <label class="profile-indent">名前</label>
-                <h4 class="profile-indent-name"><%= current_user.name %></h4><br>
+            <label class="profile-indent">名前</label>
+            <label class="profile-indent-name">
+              <%= f.fields_for :user do |user_fields| %>
+                <%= user_fields.text_field :name, class: "form-control", style: "width:300px" %>
+              <% end %>
+            </label>
           </div>
         </div>
         <div class="form-group">
           <div class="form-inline">
             <i class="fas fa-gift"></i>
-              <label class="profile-indent">誕生日</label>
-                <label class="profile-indent-birthday">
-                  <%= f.date_field :birthday, use_month_numbers: true , class: 'form-control', style:"width:300px"%>
-                </label>
+            <label class="profile-indent">誕生日</label>
+            <label class="profile-indent-birthday">
+              <%= f.date_field :birthday, use_month_numbers: true , class: 'form-control', style: "width:300px"%>
+            </label>
           </div>
         </div>
         <div class="form-group">
           <div class="form-inline">
             <i class="fas fa-heart"></i>
-              <label class="profile-indent">性別</label>
-                <label class="profile-indent-gender">
-                  <%= f.select :gender, Profile.genders_i18n.keys.map {|k| [Profile.genders_i18n[k], k]}, {include_blank: '選択してください'}, class: 'form-control', style:"width:300px" %>
-                </label>
+            <label class="profile-indent">性別</label>
+            <label class="profile-indent-gender">
+              <%= f.select :gender, Profile.genders_i18n.keys.map {|k| [Profile.genders_i18n[k], k]}, {include_blank: '選択してください'}, class: 'form-control', style: "width:300px" %>
+            </label>
           </div>
         </div>
         <div class="form-group">
           <div class="form-inline">
             <i class="fas fa-book-open"></i>
-              <label class="profile-indent">プログラミング学習開始日</label>
-                <label class="profile-indent-input">
-                  <%= f.date_field :learning_start, use_month_numbers: true , class: 'form-control', style:"width:300px" %>
-                </label>
+            <label class="profile-indent">プログラミング学習開始日</label>
+            <label class="profile-indent-input">
+              <%= f.date_field :learning_start, use_month_numbers: true , class: 'form-control', style: "width:300px" %>
+            </label>
           </div>
         </div>
         <div class="form-group">
           <div class="form-inline">
             <i class="fas fa-flag"></i>
-              <label class="profile-indent">プログラミング学習の目的</label>
-                <label class="profile-indent-purpose">
-                  <%= f.text_area :purpose, class: "form-control", style:"width:300px" %>
-                </label>
+            <label class="profile-indent">プログラミング学習の目的</label>
+            <label class="profile-indent-purpose">
+              <%= f.text_area :purpose, class: "form-control", style: "width:300px" %>
+            </label>
           </div>
         </div>
         <div class="form-group">
           <div class="form-inline">
             <i class="fas fa-image"></i>
-              <label class="profile-indent">プロフィール画像</label>
-                <label class="profile-indent-image">
-                  <%= f.file_field :image %>
-                </label>
+            <label class="profile-indent">プロフィール画像</label>
+            <label class="profile-indent-image">
+              <%= f.file_field :image %>
+            </label>
           </div>
         </div>
-    </div>
+      </div>
       <p class="text-center" style="font-size:13px">※プログラミング学習開始日と、プログラミング学習の目的は必須項目です。</p>
       <div class="text-center form-group">
-        <%= f.submit class: "btn btn-primary" , style:"width:150px"%>
+        <%= f.submit class: "btn btn-primary" , style: "width:150px"%>
       </div>
-    <% end %>
+      <% end %>
+    </div>
   </div>
 </div>

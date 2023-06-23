@@ -12,13 +12,13 @@ class User < ApplicationRecord
   has_one :profile, dependent: :destroy
   has_many :tweets, dependent: :destroy
   has_many :inquiries, dependent: :destroy
-  has_many :comments #この行を追加  
+  has_many :comments # この行を追加
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
   validates :name,  presence: true, length: { in: 1..10 }
   validates :age,   allow_nil: true, numericality: { greater_than_or_equal_to: 10 }
-  validates :profile, length: { maximum: 200 } #追記
+  validates :profile, length: { maximum: 200 } # 追記
 
   enum gender: { male: 0, female: 1, other: 2 }
 
@@ -27,6 +27,7 @@ class User < ApplicationRecord
     artcl_max = filter[:articles_max].blank? ? Article.count : filter[:articles_max]
     posts_min = filter[:posts_min].blank? ? 0 : filter[:posts_min]
     posts_max = filter[:posts_max].blank? ? Post.count : filter[:posts_max]
+
     users = where(["name like ? and email like ?", "%#{filter[:name]}%", "%#{filter[:email]}%"])
       .left_joins(:articles).left_joins(:posts).group("users.id")
       .having("count(articles.id) between ? and ?", artcl_min, artcl_max)

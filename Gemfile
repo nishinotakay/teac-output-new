@@ -4,8 +4,8 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 # ページネーション
-gem 'kaminari', '~> 1.2', '>= 1.2.1'
 gem 'bootstrap5-kaminari-views', '~> 0.0.1'
+gem 'kaminari', '~> 1.2', '>= 1.2.1'
 
 gem 'enum_help'
 
@@ -47,6 +47,7 @@ gem 'devise-i18n'
 gem 'rails-i18n', '~> 6.0'
 
 gem 'dotenv-rails'
+gem 'rinku'
 
 group :development, :test do
   # ERD生成
