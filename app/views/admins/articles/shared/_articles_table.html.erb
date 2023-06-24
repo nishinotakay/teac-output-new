@@ -27,36 +27,36 @@
           </thead>
           <tbody>
             <% if hover.present? %>
-              <% @articles.each_with_index do |a, i| %>
+              <% @articles.each_with_index do |article, index| %>
                 <tr>
-                  <% if a.admin %>
-                    <td class="link-td" onclick='window.location="<%= admins_article_path(a.id, dashboard: dashboard) %>"'><%= a.title %></td>
-                    <td class="link-td" onclick='window.location="<%= admins_article_path( a.id, dashboard: dashboard) %>"'><%= a.sub_title %></td>
-                  <% elsif a.user %>
-                    <td class="link-td" onclick='window.location="<%= users_show_admins_article_path(a.id) %>"'><%= a.title %></td>
-                    <td class="link-td" onclick='window.location="<%= users_show_admins_article_path(a.id) %>"'><%= a.sub_title %></td>
+                  <% if article.admin %>
+                    <td class="link-td" onclick='window.location="<%= admins_article_path(article.id, dashboard: dashboard) %>"'><%= article.title %></td>
+                    <td class="link-td" onclick='window.location="<%= admins_article_path(article.id, dashboard: dashboard) %>"'><%= article.sub_title %></td>
+                  <% elsif article.user %>
+                    <td class="link-td" onclick='window.location="<%= users_show_admins_article_path(article.id) %>"'><%= article.title %></td>
+                    <td class="link-td" onclick='window.location="<%= users_show_admins_article_path(article.id) %>"'><%= article.sub_title %></td>
                   <% end %>
-                  <% if !dashboard && a.admin %>
-                    <td class="link-td" onclick='window.location="<%= admins_article_path(a.id, dashboard: dashboard) %>"'><%= a.admin.name %></td>
-                  <% elsif a.user %>
-                    <td class="link-td" onclick='window.location="<%= users_show_admins_article_path(a.id) %>"'><%= a.user.name %></td>
+                  <% if !dashboard && article.admin %>
+                    <td class="link-td" onclick='window.location="<%= admins_article_path(article.id, dashboard: dashboard) %>"'><%= article.admin.name %></td>
+                  <% elsif article.user %>
+                    <td class="link-td" onclick='window.location="<%= users_show_admins_article_path(article.id) %>"'><%= article.user.name %></td>
                   <% end %>
-                  <% if a.admin %>
-                    <td class="link-td" onclick='window.location="<%= admins_article_path(a.id, dashboard: dashboard) %>"'><%= l(a.created_at, format: :long) %></td>
-                  <% elsif a.user %>
-                    <td class="link-td" onclick='window.location="<%= users_show_admins_article_path(a.id, dashboard: dashboard) %>"'><%= l(a.created_at, format: :long) %></td>
+                  <% if article.admin %>
+                    <td class="link-td" onclick='window.location="<%= admins_article_path(article.id, dashboard: dashboard) %>"'><%= l(article.created_at, format: :long) %></td>
+                  <% elsif article.user %>
+                    <td class="link-td" onclick='window.location="<%= users_show_admins_article_path(article.id, dashboard: dashboard) %>"'><%= l(article.created_at, format: :long) %></td>
                   <% end %>
                   <td>
                     <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
                     <ul class="dropdown-menu">
-                      <% if a.admin %>
-                        <li><%= link_to '閲覧', admins_article_path(a.id, dashboard: true, page: params[:page]), method: :get, class: "nav-link" %></li>
-                        <li><%= link_to '編集', edit_admins_article_path(a.id, dashboard: dashboard, page: params[:page]), method: :get, class: "nav-link" %></li>
-                        <li><%= link_to '削除', admins_article_path(a.id, dashboard: dashboard, page: params[:page]), method: :delete, data: {confirm: "選択した記事を削除します。"}, class: "nav-link" %></li>
-                      <% elsif a.user %>
-                        <li><%= link_to '閲覧', users_show_admins_article_path(a.id), method: :get, class: "nav-link", method: :get %></li>
-                        <li><%= link_to '編集', users_edit_admins_article_path(a.id), method: :get, class: "nav-link" %></li>
-                        <li><%= link_to '削除', users_destroy_admins_article_path(a.id), method: :delete, data: {confirm: "選択した記事を削除します。"}, class: "nav-link" %></li>
+                      <% if article.admin %>
+                        <li><%= link_to '閲覧', admins_article_path(article.id, dashboard: true, page: params[:page]), method: :get, class: "nav-link" %></li>
+                        <li><%= link_to '編集', edit_admins_article_path(article.id, dashboard: dashboard, page: params[:page]), method: :get, class: "nav-link" %></li>
+                        <li><%= link_to '削除', admins_article_path(article.id, dashboard: dashboard, page: params[:page]), method: :delete, data: {confirm: "選択した記事を削除します。"}, class: "nav-link" %></li>
+                      <% elsif article.user %>
+                        <li><%= link_to '閲覧', users_show_admins_article_path(article.id), method: :get, class: "nav-link", method: :get %></li>
+                        <li><%= link_to '編集', users_edit_admins_article_path(article.id), method: :get, class: "nav-link" %></li>
+                        <li><%= link_to '削除', users_destroy_admins_article_path(article.id), method: :delete, data: {confirm: "選択した記事を削除します。"}, class: "nav-link" %></li>
                       <% end %>
                     </ul>
                   </td>
