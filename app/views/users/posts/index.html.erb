@@ -29,9 +29,9 @@
           <div class="filter-modal" style="display: none;"> 
             <div class="form-group row my-4">
               <label for="input-author" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:user) %></label>
-                <div class="col-md-8">
-                  <input type="text" aria-label="author" id="input-author" class="form-control" value="<%= params[:author] %>">
-                </div>
+              <div class="col-md-8">
+                <input type="text" aria-label="author" id="input-author" class="form-control" value="<%= params[:author] %>">
+              </div>
             </div>
             <div class="form-group row my-4">
               <label for="input-title" class="col-sm-4 col-form-label"><%= Post.human_attribute_name(:title) %></label>
@@ -99,8 +99,8 @@
                 <li><%= link_to '削除', users_post_path(post), method: :delete, class:"nav-link", data: {confirm: "#{post.title}を削除してもよろしいですか？"} %></li>
               <% else %>
                 <li><%= link_to '閲覧', users_post_path(post), class:"nav-link" %></li>
-            </ul>
               <% end %>
+            </ul>
           </td> 
         </tr>
       <% end %>
