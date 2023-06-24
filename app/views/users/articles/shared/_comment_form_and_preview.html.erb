@@ -1,0 +1,22 @@
+<%= form_with(model: [@article, @article_comment], url: users_article_article_comments_path(@article, @article_comment), method: :post) do |form| %>
+<div class="article-comment-post-box">
+  <div class="article-comment-post-header d-flex align-items-center">
+    <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
+    <%=image_tag image, class: 'rounded-circle', size: '60x60' %>
+    <strong class="article-new-comment-post">投稿する</strong>
+  </div>
+  <div class="article-comment-form">
+    <%= form.text_area :article_comment_content, placeholder: "コメントしましょう！", class: "form-control", id: "markdown-editor" %>
+    <div class="btn-submit">
+      <%= form.submit "投稿", class: "btn btn-success" %>
+    </div>
+  </div>
+</div>
+<% end %>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  var textarea = document.getElementById('markdown-editor');
+  var easyMDE = new EasyMDE({element: document.getElementById('markdown-editor')});rea.classList.add('easy-mde');
+});
+</script>
