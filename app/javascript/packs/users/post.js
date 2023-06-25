@@ -1,3 +1,5 @@
+import '../../stylesheets/admins/posts'
+import '../../stylesheets/users/posts'
 
 $(function(){
   var title = $('h1')
