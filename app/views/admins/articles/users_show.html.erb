@@ -1,0 +1,36 @@
+<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<%= javascript_pack_tag "users/articles_show" %>
+<div class="container">
+  <div class="row">
+    <div class="offset-1 col-10 article-show">
+      <div class="col-12">
+        <div class="mx-2 mt-4 mb-3">
+          <h1><%= @article.title %></h1>
+        </div>
+        <div class="d-flex justify-content-between">
+          <h4 class="ml-5"><%= @article.sub_title %></h4>
+          <div>
+            <%= link_to "編集", users_edit_admins_article_path(@article, dashboard: true), method: :get, class: "btn btn-success" %>
+            <%= link_to "削除", users_destroy_admins_article_path(@article), method: :delete, data: {confirm: "表示中の記事を削除します。"}, class: "btn btn-danger ml-1" %>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <%# scriptタグ、iframeタグがgsubメソッドにより除去される。 %>
+      <% content = @article.content.gsub(/<script>.*<\/script>/m, '').gsub(/<iframe[\s\S]*?<\/iframe>/m, '') %>
+      <div class="m-4 article-content" data-article="<%= content %>"></div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="zoominImgModal" tabindex="-1" aria-labelledby="zoominImgModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="text-right mt-3">
+        <button type="button" class="modal-close btn-close mr-3" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center align-middle">
+        <div class="zoomin-modal"></div>
+      </div>
+    </div>
+  </div>
+</div>
