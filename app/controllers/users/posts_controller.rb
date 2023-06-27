@@ -16,7 +16,7 @@ module Users
         start: params[:start],
         finish: params[:finish]
       }
-    
+
       if filter.compact.blank?
         @paginate = true
         @posts = Post.order(created_at: params[:order]).page(params[:page]).per(30)
