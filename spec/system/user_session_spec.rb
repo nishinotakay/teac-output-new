@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.xdescribe 'UserSessions', type: :system do
+RSpec.describe 'UserSessions', type: :system do
   context 'ログインできることを確認' do
     let!(:user) { FactoryBot.create(:user, :a) }
 
