@@ -14,7 +14,14 @@ Rails.application.routes.draw do
   namespace :admins do
     resources :posts, only: [:destroy]
     resources :dash_boards, only: [:index]
-    resources :articles
+    resources :articles do
+      member do
+        get 'users_show'
+        get 'users_edit'
+        patch 'users_update'
+        delete 'users_destroy'
+      end
+    end
     resources :posts do
       collection do # idを外す
         # 全ユーザー投稿一覧（/admins/posts/index_1）
