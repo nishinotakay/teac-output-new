@@ -10,8 +10,8 @@
 
 50.times do |i|
   user = User.new(
-    email: "test_user#{i}@gmail.com", # sample: test_user1@gmail.com
-    name: "テストuser#{i}",
+    email:    "test_user#{i}@gmail.com", # sample: test_user1@gmail.com
+    name:     "テストuser#{i}",
     password: 'password'
   )
 
@@ -19,14 +19,14 @@
   user.save!
 end
 
-names = %i(生澤智史 菅原靖人 養性光明 元永真広 西野鷹也 江草誠)
-emails = %i(ikezawa@test.com sugawara@test.com yosei@test.com motonaga@test.com nishino@test.com egusa@test.com)
+names = %i[生澤智史 菅原靖人 養性光明 元永真広 西野鷹也 江草誠]
+emails = %i[ikezawa@test.com sugawara@test.com yosei@test.com motonaga@test.com nishino@test.com egusa@test.com]
 
 6.times do |i|
   user = User.new(
-    name: names[i],
-    email: emails[i],
-    password: "password"
+    name:     names[i],
+    email:    emails[i],
+    password: 'password'
   )
 
   user.skip_confirmation! # deviseの確認メールをスキップ
@@ -36,17 +36,17 @@ end
 User.all.each do |u|
   50.times do |i|
     article = u.articles.new(
-      title: "たいとる#{i} author #{u.name}",
+      title:     "たいとる#{i} author #{u.name}",
       sub_title: "さぶたいとる#{i} author #{u.name}",
-      content: "こんてんつ#{i} author #{u.name}"
+      content:   "こんてんつ#{i} author #{u.name}"
     )
     article.save!
   end
 end
 
 manager = Manager.new(
-  email: 'test_manager@gmail.com',
-  name: 'テストmanager1',
+  email:    'test_manager@gmail.com',
+  name:     'テストmanager1',
   password: 'password'
 )
 
@@ -54,10 +54,23 @@ manager.skip_confirmation! # deviseの確認メールをスキップ
 manager.save!
 
 admin = Admin.new(
-  email: 'test_admin@gmail.com',
-  name: 'テストadmin1',
+  email:    'test_admin@gmail.com',
+  name:     'テストadmin1',
   password: 'password'
 )
 
 admin.skip_confirmation! # deviseの確認メールをスキップ
 admin.save!
+
+300.times do
+  user = User.order('RAND()').first
+
+  post = Post.new(
+    title:       'たいとる',
+    body:        'ないよう',
+    youtube_url: 'https://www.youtube.com/watch?v=MQG-xF7bv1I&t=4s', # seedで作った動画見られない。手動は見られる。
+    user:        user
+  )
+
+  post.save!
+end
