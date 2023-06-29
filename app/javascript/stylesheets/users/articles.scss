@@ -4,6 +4,55 @@
   border-radius: 5px;
 }
 
+.article-comment-box::after{
+  content: "";
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  height: 1px;
+  background: #d0cece;
+}
+
+.article-comment-content {
+  padding: 0px 10px;
+  word-break: break-all;
+}
+
+.article-comment-info {
+  padding-left: 5px;
+}
+
+.article-comment-post-box {
+  margin-top: 20px;
+}
+
+.article-new-comment-post {
+  margin-left: 5px;
+}
+
+.article-comment-post-header {
+  margin-bottom: 5px;
+}
+
+.article-comment-form {
+  background-color: white;
+  border: 1px solid;
+  border-color: #d0cece;
+  border-radius: 8px;
+  margin: 10px 30px;
+  padding: 10px;
+}
+
+.btn-submit {
+  margin-top: 5px;
+  text-align: right;
+}
+
+.has_no_comments {
+  margin-top: 30px;
+  text-align: center;
+}
+
 /* auto_line_break_img関数にimg-marginクラスを追加 */
 .img-margin {
   display: block; //ブロック要素として扱う。つまり新しい行で開始し次の要素は新しい行で始まる。
@@ -38,6 +87,7 @@
 }
 
 .article-comments-card {
+  padding: 5px 0px;
   background-color: white;
   border-radius: 5px;
 }

@@ -25,4 +25,9 @@ class Article < ApplicationRecord
       .order("articles.created_at #{filter[:order]}")
     articles.presence || []
   end
+
+  # scriptタグとiframeタグを取り除くメソッド
+  def sanitized_content
+    self.content.gsub(/<script>.*<\/script>/m, '').gsub(/<iframe[\s\S]*?<\/iframe>/m, '')
+  end
 end

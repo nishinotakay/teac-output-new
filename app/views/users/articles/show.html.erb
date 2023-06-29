@@ -25,17 +25,13 @@
           </div>
         </div>
         <hr>
-        <%# scriptタグ、iframeタグがgsubメソッドにより除去される。 %>
-        <% content = @article.content.gsub(/<script>.*<\/script>/m, '').gsub(/<iframe[\s\S]*?<\/iframe>/m, '') %>
-        <div class="m-4 article-content" data-article="<%= content %>"></div>
+        <div class="m-4 article-content" data-article="<%= @article.sanitized_content %>"></div>
       </div>
       <div class="article-comments-card mt-2">
         <div class="article-comments-list">
-          <% if @article_comments.blank? %>
-            <p>no comments</p>
-          <% else %>
+          <% if @article_comments.present? %>
             <% @article_comments.each do |article_comment| %>
-              <!-- Modal -->
+              <!-- コメント編集Modal -->
               <%= form_with model: [@article, article_comment], url: users_article_article_comment_path(@article, article_comment), method: :patch do |form| %>
                 <div class="modal fade" id="articleCommentUpdateModal-<%=article_comment.id %>" tabindex="-1" aria-labelledby="articleCommentUpdateModalLabel" aria-hidden="true">
                   <div class="modal-dialog">
@@ -45,7 +41,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                        <%= form.text_area :article_comment_content %>
+                        <%= form.text_area :article_comment_content, class:"form-control" %>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -55,44 +51,45 @@
                   </div>
                 </div>
               <% end %>
-              <!-- Modalここまで -->
-              <div class='article-comment-info d-flex align-items-center'> <%# 投稿者の名前、プロフィール写真、投稿日時 %>
-                <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
-                <%=image_tag image, class: 'rounded-circle', size: '60x60' %>
-                <strong><%= article_comment.user.name %></strong>
-                <div class='article-comment-info-rightside d-flex align-items-center ms-auto'>
-                  <time><%= l(article_comment.created_at, format: :long) %></time>
-                  <div class="dropdown">
-                    <button class="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">︙</button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <% if article_comment.user == current_user %>
-                        <li>
-                          <!-- Button trigger modal -->
-                          <button type="button" class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#articleCommentUpdateModal-<%=article_comment.id %>">編集</button>
-                          <!-- Button trigger modalここまで -->
-                        </li>
-                        <li>
-                          <%= link_to '削除', users_article_article_comment_path(@article, article_comment), method: :delete, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
-                        </li>
-                      <% else %>
-                        <li>
-                          <%= link_to 'このコメントを報告する', '#', class: 'dropdown-item' %></li>
-                        <li>
-                      <% end %>
-                    </ul>
+              <!-- コメント編集Modalここまで -->
+              <div class="article-comment-box">
+                <div class='article-comment-info d-flex align-items-center'> <%# 投稿者の名前、プロフィール写真、投稿日時 %>
+                  <% image = article_comment.user.profile.present? && article_comment.user.profile.image.present? ? article_comment.user.profile&.image : "user_default.png" %>
+                  <%=image_tag image, class: 'rounded-circle', size: '30x30' %>
+                  <strong><%= article_comment.user.name %></strong>
+                  <div class='article-comment-info-rightside d-flex align-items-center ms-auto'>
+                    <time><%= l(article_comment.created_at, format: :long) %></time>
+                    <div class="dropdown">
+                      <button class="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">︙</button>
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <% if article_comment.user == current_user %>
+                          <li>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#articleCommentUpdateModal-<%=article_comment.id %>">編集</button>
+                            <!-- Button trigger modalここまで -->
+                          </li>
+                          <li>
+                            <%= link_to '削除', users_article_article_comment_path(@article, article_comment), method: :delete, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
+                          </li>
+                        <% else %>
+                          <li>
+                            <%= link_to 'このコメントを報告する', '#', class: 'dropdown-item' %></li>
+                          <li>
+                        <% end %>
+                      </ul>
+                    </div>
                   </div>
                 </div>
+                <div class='article-comment-content'>
+                  <%= article_comment.article_comment_content %>
+                </div>
               </div>
-              <div class='article-comment-content'><%= article_comment.article_comment_content %></div>
             <% end %>
+          <% else %>
+            <p class="has_no_comments">コメントがありません</p>
           <% end %>
         </div>
-        <%= form_with(model: [@article, @article_comment], url: users_article_article_comments_path(@article, @article_comment), method: :post) do |form| %>
-        <div class="article-comment-form">
-          <%= form.text_area :article_comment_content, placeholder: "コメントしましょう！", class: "form-control" %>
-          <%= form.submit "投稿", class: "btn btn-success" %>
-        </div>
-        <% end %>
+        <%= render "users/articles/shared/comment_form_and_preview", dashboard: false %>
       </div>
     </div>
   </div>
