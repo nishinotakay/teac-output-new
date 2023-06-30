@@ -41,7 +41,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                        <%= form.text_area :article_comment_content, class:"form-control" %>
+                        <%= form.text_area :content, class:"form-control" %>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -81,7 +81,7 @@
                   </div>
                 </div>
                 <div class='article-comment-content'>
-                  <%= format_and_linkify_text(article_comment.article_comment_content) %>
+                  <%= format_and_linkify_text(article_comment.content) %>
                 </div>
               </div>
             <% end %>

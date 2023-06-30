@@ -42,11 +42,11 @@ module Users
     private
 
     def article_comment_params
-      params.require(:article_comment).permit(:article_comment_content, :article_id)
+      params.require(:article_comment).permit(:content, :article_id)
     end
 
     def article_comment_update_params
-      params.require(:article_comment).permit(:article_comment_content)
+      params.require(:article_comment).permit(:content)
     end
   end
 end
