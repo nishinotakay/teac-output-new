@@ -81,7 +81,7 @@
                   </div>
                 </div>
                 <div class='article-comment-content'>
-                  <%= article_comment.article_comment_content %>
+                  <%= format_and_linkify_text(article_comment.article_comment_content) %>
                 </div>
               </div>
             <% end %>
