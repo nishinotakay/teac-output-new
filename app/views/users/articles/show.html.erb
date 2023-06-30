@@ -44,8 +44,8 @@
                         <%= form.text_area :content, class:"form-control" %>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <%= form.submit "Save changes", class: "btn btn-primary" %>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                        <%= form.submit "更新する", class: "btn btn-primary" %>
                       </div>
                     </div>
                   </div>
@@ -69,7 +69,7 @@
                             <!-- Button trigger modalここまで -->
                           </li>
                           <li>
-                            <%= link_to '削除', users_article_article_comment_path(@article, article_comment), method: :delete, data: { confirm: 'Are you sure?' }, class: 'dropdown-item' %>
+                            <%= link_to '削除', users_article_article_comment_path(@article, article_comment), method: :delete, data: { confirm: '削除してよろしいですか?' }, class: 'dropdown-item' %>
                           </li>
                         <% else %>
                           <li>
