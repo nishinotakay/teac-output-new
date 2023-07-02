@@ -7,7 +7,6 @@ class Article < ApplicationRecord
 
   belongs_to :admin, optional: true
   belongs_to :user, optional: true
-  has_many :article_comments, dependent: :destroy
 
   validates :title, presence: true, length: { in: 1..40 }
   validates :sub_title, allow_nil: true, length: { maximum: 50 }
@@ -18,16 +17,11 @@ class Article < ApplicationRecord
     finish = Time.zone.parse(filter[:finish].presence || Date.current.to_s).end_of_day
 
     articles = left_joins(:user, :admin)
-      .where(['title LIKE ? AND sub_title LIKE ? AND content LIKE ?',
+              .where(['title LIKE ? AND sub_title LIKE ? AND content LIKE ?',
               "%#{filter[:title]}%", "%#{filter[:subtitle]}%", "%#{filter[:content]}%"])
-      .where('articles.created_at BETWEEN ? AND ?', start, finish)
-      .where('users.name LIKE :author OR admins.name LIKE :author', author: "%#{filter[:author]}%")
-      .order("articles.created_at #{filter[:order]}")
+              .where('articles.created_at BETWEEN ? AND ?', start, finish)
+              .where('users.name LIKE :author OR admins.name LIKE :author', author: "%#{filter[:author]}%")
+              .order("articles.created_at #{filter[:order]}")
     articles.presence || []
-  end
-
-  # scriptタグとiframeタグを取り除くメソッド
-  def sanitized_content
-    self.content.gsub(/<script>.*<\/script>/m, '').gsub(/<iframe[\s\S]*?<\/iframe>/m, '')
   end
 end
