@@ -12,7 +12,8 @@ class User < ApplicationRecord
   has_one :profile, dependent: :destroy
   has_many :tweets, dependent: :destroy
   has_many :inquiries, dependent: :destroy
-  has_many :comments # この行を追加
+  has_many :comments, dependent: :destroy
+  has_many :article_comments, dependent: :destroy
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
