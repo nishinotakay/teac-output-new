@@ -1,6 +1,6 @@
 class Tweet < ApplicationRecord
   belongs_to :user
-  has_many :comments, dependent: :destroy # この行を追加
+  has_many :tweet_comments, dependent: :destroy # この行を追加
   has_many_attached :images
 
 

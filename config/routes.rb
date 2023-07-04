@@ -100,7 +100,7 @@ Rails.application.routes.draw do
       member do
         get 'index_user'
       end
-      resources :comments, only: %i[create destroy update] do # コメント機能
+      resources :tweet_comments, only: %i[create destroy update] do # コメント機能
         member do # 個々のコメントに対してアクセスできるカスタムアクションを定義する
           patch 'confirmed_notification' # confirmed_notificationアクションに対するRESTfulなルーティングを定義
         end

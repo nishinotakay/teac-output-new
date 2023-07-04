@@ -15,8 +15,8 @@ module Users
 
     def show
       @tweet = Tweet.find(params[:id])
-      @comments = @tweet.comments.all.order(created_at: :desc)
-      @comment = current_user.comments.new
+      @tweet_comments = @tweet.tweet_comments.all.order(created_at: :desc)
+      @tweet_comment = current_user.tweet_comments.new
     end
 
     def new
