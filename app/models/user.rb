@@ -12,7 +12,6 @@ class User < ApplicationRecord
   has_one :profile, dependent: :destroy
   has_many :tweets, dependent: :destroy
   has_many :inquiries, dependent: :destroy
-  has_many :comments
   has_many :comments, dependent: :destroy
   has_many :article_comments, dependent: :destroy
 
