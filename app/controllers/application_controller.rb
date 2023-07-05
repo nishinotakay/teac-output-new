@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
   # コメント通知件数を表示するためのメソッド
   def set_comment_notifiations
     if user_signed_in?
-      @comment_notifications = Comment.where(confirmed: false, recipient_id: current_user.id)
+      @comment_notifications = TweetComment.where(confirmed: false, recipient_id: current_user.id)
         .where.not(user_id: current_user.id) # user_idがログインユーザーの場合はカウントしない。
         .order(created_at: :desc)
     end

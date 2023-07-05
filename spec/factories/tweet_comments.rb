@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :comment do
+  factory :tweet_comment do
     comment_content { "MyString" }
     user { nil }
     tweet { nil }
