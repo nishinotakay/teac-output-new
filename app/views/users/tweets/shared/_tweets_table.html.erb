@@ -5,7 +5,7 @@
         <% @tweets.each do |tweet| %>
           <div class="col-12 col-sm-8 offset-sm-2">
             <div class="card tweets-index-item">
-            <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
+            <% image = tweet.user.profile.present? && tweet.user.profile.image.present? ? tweet.user.profile&.image : "user_default.png" %>
               <div class="d-flex align-items-center">
                 <%= image_tag image , class: "rounded-circle", size: "60x60" %>
                 <div class="d-flex align-items-start flex-column justify-content-start"> <%# flex-colmunは縦並び %>
@@ -41,8 +41,8 @@
                 <div class="commentIcon px-2">
                   <%= link_to users_tweet_path(tweet.id), style: "color: black; text-decoration: none;" do %>
                     <i class="fa-regular fa-comment fa-lg"></i>
-                    <% if tweet.comments.count > 0 %>
-                      &nbsp;<%= tweet.comments.count %>
+                    <% if tweet.tweet_comments.count > 0 %>
+                      &nbsp;<%= tweet.tweet_comments.count %>
                     <% end %>
                   <% end %>
                 </div>
