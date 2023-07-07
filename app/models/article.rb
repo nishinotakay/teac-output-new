@@ -7,6 +7,7 @@ class Article < ApplicationRecord
 
   belongs_to :admin, optional: true
   belongs_to :user, optional: true
+  has_many :article_comments, dependent: :destroy
 
   validates :title, presence: true, length: { in: 1..40 }
   validates :sub_title, allow_nil: true, length: { maximum: 50 }
@@ -24,4 +25,10 @@ class Article < ApplicationRecord
               .order("articles.created_at #{filter[:order]}")
     articles.presence || []
   end
+
+  # scriptタグとiframeタグを取り除くメソッド
+  def sanitized_content
+    self.content.gsub(/<script>.*<\/script>/m, '').gsub(/<iframe[\s\S]*?<\/iframe>/m, '')
+  end
+  
 end

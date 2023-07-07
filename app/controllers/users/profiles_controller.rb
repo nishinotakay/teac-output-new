@@ -6,8 +6,10 @@ module Users
     # before_action :double_registration, only: %i[create]
 
     def index
-      @users = User.all
-      @profiles = Profile.all.page(params[:page]).per(30)
+      order = {name: params[:ord_name], purpose: params[:ord_purpose], learning_start: params[:ord_learning_start]}.compact
+      filter = {name: params[:flt_name], purpose: params[:flt_purpose], learning_start: params[:flt_learning_start]}.compact
+      @users = order.count == 1 ? User.sort_filter(order.first, filter)&.page(params[:page]).per(30) : User.all&.page(params[:page]).per(30)
+      @profiles = Profile.sort_filter(order, filter).page(params[:page]).per(30)
     end
 
     def show
