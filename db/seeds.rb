@@ -74,3 +74,10 @@ admin.save!
 
   post.save!
 end
+
+50.times do |n| # テナント作成
+  Tenant.create!(name: "テナント#{n+1}")
+end
+
+
+

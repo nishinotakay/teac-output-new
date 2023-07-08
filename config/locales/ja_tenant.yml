@@ -1,0 +1,8 @@
+ja:
+  activerecord:
+    models:
+      tenant: 'テナント'
+    attributes:
+      tenant:
+        name: 'テナント名'
+        created_at: '登録日'
