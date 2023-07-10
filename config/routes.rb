@@ -97,11 +97,10 @@ Rails.application.routes.draw do
     confirmations: 'users/confirmations',
     registrations: 'managers/registrations'
   }
-  # =================================================================
 
-  # tenant関連========================================================
-  resources :tenants, only: [:index]
-
+  namespace :managers do
+    resources :tenants, only: [:index, :new, :create, :destroy]
+  end
   # =================================================================
 
   # 共通==============================================================
