@@ -38,8 +38,8 @@
                 <li><%= link_to '削除', admins_post_path(post), method: :delete, class:"nav-link", data: {confirm: "#{post.title}を削除してもよろしいですか？"} %></li>
               <% else %>
                 <li><%= link_to '閲覧', admins_post_path(post), class:"nav-link" %></li>
-            </ul>
               <% end %>
+            </ul>
           </td> 
         </tr>
       <% end %>
