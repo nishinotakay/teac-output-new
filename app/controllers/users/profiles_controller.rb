@@ -79,7 +79,7 @@ module Users
 
     def profile_params
       params.require(:profile).permit(
-        :name, :image, :learning_start, :birthday, :gender, :purpose,
+        :name, :image, :birthday, :gender, :registration_date, :hobby,
         user_attributes: %i[id name]
       ).merge(user_id: current_user.id)
     end
