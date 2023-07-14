@@ -1,9 +1,9 @@
 <head><script src="https://kit.fontawesome.com/c3f6f3c4db.js" crossorigin="anonymous"></script></head>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
-  <%= link_to admins_dash_boards_path, class:"brand-link", method: :get do %>
+  <%= link_to "#", class:"brand-link", method: :get do %>
     <%= image_tag "AdminLTELogo.png", class:"brand-image img-circle elevation-3", style: "opacity: .8" %>
-    <span class="brand-text font-weight-light">TecPutt管理画面</span>
+    <span class="brand-text font-weight-light">TecPutt</span>
   <% end %>
   <!-- Sidebar -->
   <div class="sidebar">
@@ -18,34 +18,18 @@
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item">
-          <%= link_to admins_articles_path, class:"nav-link", method: :get do %>
+          <%= link_to managers_tenants_path	, class:"nav-link", method: :get do %>
             <i class="nav-icon fas fa-th"></i> <!-- <i class="nav-icon fas fa-newspaper"></i> user使用のアイコン -->
             <p>
-              記事一覧
+              テナント一覧
             </p>
           <% end %>
         </li>
         <li class="nav-item">
-          <%= link_to admins_posts_path, class:"nav-link", method: :get do %>
-            <i class="nav-icon fa-brands fa-youtube"></i>
+          <%= link_to "#", class:"nav-link", method: :get do %>
+            <i class="nav-icon far fa-plus-square"></i>
             <p>
-              動画投稿一覧
-            </p>
-          <% end %>
-        </li>
-        <li class="nav-item">
-          <%= link_to admins_profiles_path, class:"nav-link", method: :get do  %>
-            <i class="nav-icon fas fa-list"></i>
-            <p>
-              登録ユーザー一覧
-            </p>
-          <% end %>
-        </li>
-        <li class="nav-item">
-          <%= link_to admins_inquiries_path, class:"nav-link", method: :get do  %>
-            <i class="nav-icon fas fa-list"></i>
-            <p>
-              問い合わせ一覧
+              テナント登録
             </p>
           <% end %>
         </li>
