@@ -14,17 +14,16 @@ module Admins
         start:    params[:start],
         finish:   params[:finish]
       }
-      #binding.pry
       if (@paginate = filter.compact.blank?)
         @articles = Article.order(created_at: params[:order]).page(params[:page]).per(30)
-      else(@paginate = filter.compact.present?)
+      else
+        (@paginate = filter.compact.present?)
         filter[:order] = params[:order]
         @articles = Article.sort_filter(filter).page(params[:page]).per(30)
       end
     end
 
-    def show
-    end
+    def show; end
 
     def users_show
       @user = @article.user
@@ -55,8 +54,7 @@ module Admins
       end
     end
 
-    def edit
-    end
+    def edit; end
 
     def users_edit
       @user = @article.user
