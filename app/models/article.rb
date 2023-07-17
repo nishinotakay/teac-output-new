@@ -17,18 +17,17 @@ class Article < ApplicationRecord
     start = Time.zone.parse(filter[:start].presence || '2022-01-01').beginning_of_day
     finish = Time.zone.parse(filter[:finish].presence || Date.current.to_s).end_of_day
 
-    articles = left_joins(:user, :admin)
-              .where(['title LIKE ? AND sub_title LIKE ? AND content LIKE ?',
+    left_joins(:user, :admin)
+      .where(['title LIKE ? AND sub_title LIKE ? AND content LIKE ?',
               "%#{filter[:title]}%", "%#{filter[:subtitle]}%", "%#{filter[:content]}%"])
-              .where('articles.created_at BETWEEN ? AND ?', start, finish)
-              .where('users.name LIKE :author OR admins.name LIKE :author', author: "%#{filter[:author]}%")
-              .order("articles.created_at #{filter[:order]}")
-    articles.presence || []
+      .where('articles.created_at BETWEEN ? AND ?', start, finish)
+      .where('users.name LIKE :author OR admins.name LIKE :author', author: "%#{filter[:author]}%")
+      .order("articles.created_at #{filter[:order]}")
+      .presence || Article.none
   end
 
   # scriptタグとiframeタグを取り除くメソッド
   def sanitized_content
     self.content.gsub(/<script>.*<\/script>/m, '').gsub(/<iframe[\s\S]*?<\/iframe>/m, '')
   end
-  
 end
