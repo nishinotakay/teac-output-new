@@ -42,18 +42,18 @@
         <div class="form-group">
           <div class="form-inline">
             <i class="fas fa-book-open"></i>
-            <label class="profile-indent">プログラミング学習開始日</label>
+            <label class="profile-indent">登録日</label>
             <label class="profile-indent-input">
-              <%= f.date_field :learning_start, use_month_numbers: true , class: 'form-control', style: "width:300px" %>
+              <%= f.date_field :registration_date, use_month_numbers: true , class: 'form-control', style: "width:300px" %>
             </label>
           </div>
         </div>
         <div class="form-group">
           <div class="form-inline">
             <i class="fas fa-flag"></i>
-            <label class="profile-indent">プログラミング学習の目的</label>
-            <label class="profile-indent-purpose">
-              <%= f.text_area :purpose, class: "form-control", style: "width:300px" %>
+            <label class="profile-indent">趣味</label>
+            <label class="profile-indent-hobby">
+              <%= f.text_area :hobby, class: "form-control", style: "width:300px" %>
             </label>
           </div>
         </div>
@@ -67,7 +67,6 @@
           </div>
         </div>
       </div>
-      <p class="text-center" style="font-size:13px">※プログラミング学習開始日と、プログラミング学習の目的は必須項目です。</p>
       <div class="text-center form-group">
         <%= f.submit class: "btn btn-primary" , style: "width:150px"%>
       </div>
