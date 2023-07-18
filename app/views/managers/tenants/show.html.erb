@@ -1,0 +1,23 @@
+<%= javascript_pack_tag "users/profiles" %>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<div class="div-title-form">
+  <div class="card card-outline card-primary">
+    <div class="card-header text-center">
+      <h2><%= "#{@tenant.name}の詳細" %></h2>
+    </div>
+    <br>
+      <div style="padding-left:50px">
+        <div class="form-group">
+          <div class="form-inline">
+            <i class="fas fa-building"></i>
+            <label class="tenant-name">　テナント名：：</label>
+              <%= "#{@tenant.name}" %>
+          </div>
+        </div>
+        
+      <div class="text-center form-group">
+        <%= link_to '戻る', :back, class: "btn btn-outline-dark" %>
+      </div>
+  </div>
+</div>

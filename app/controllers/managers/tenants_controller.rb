@@ -1,8 +1,9 @@
 module Managers
   class TenantsController < Managers::Base
+    before_action :set_tenant, only: %i[show destroy]
 
     def index
-      @tenants = Tenant.all
+      @tenants = Tenant.page(params[:page]).per(30)
     end
 
     def new
@@ -12,20 +13,21 @@ module Managers
     def create
       @tenant = Tenant.new(tenant_params)
       if @tenant.save
-        flash.now[:success] = "#{@tenant.name}を登録しました。"
-        redirect_to :index
+        flash[:notice] = "#{@tenant.name}を登録しました。"
+        redirect_to managers_tenants_url
       else
-        flash.now[:danger] = '登録できませんでした。やり直してください。'
+        flash.now[:notice] = '登録できませんでした。やり直してください。'
         render :new
       end
     end
 
+    def show; end
+
     def destroy
-      @tenant = Tenant.find(params[:id])
       if @tenant.destroy!
-        flash.now[:warning] = "#{@tenant.name}を削除しました。"
+        flash[:notice] = "#{@tenant.name}を削除しました。"
       end
-      render :index
+      redirect_to managers_tenants_url
     end
 
     private
@@ -33,6 +35,9 @@ module Managers
       def tenant_params
         params.require(:tenant).permit(:name)
       end
+
+      def set_tenant
+        @tenant = Tenant.find(params[:id])
+      end
   end
 end
-
