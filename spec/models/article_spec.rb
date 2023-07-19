@@ -4,131 +4,79 @@ require 'rails_helper'
 
 RSpec.describe Article, type: :model do
   let(:user_a) { build(:user, :a, confirmed_at: Date.today) }
-  let(:article) { build(:article, user: user_a) }
-  
-  describe 'バリデーションについて' do
-    subject do
-      article
+  let(:user_article) { build(:article, user: user_a) }
+  let(:admin) { create(:admin, confirmed_at: Date.today) }
+  let(:admin_article) { build(:article, admin: admin) }
+  let(:user) { create(:user, confirmed_at: Date.today) }
+  #let!(:user_articles) { create_list(:article, 10, user: user) }
+
+  describe '条件検索について' do
+    subject { user_articles }
+    before do # before(:each) do
+      # 10個の記事を作成します
+      10.times { create(:article, user: user) } # FactoryBot省略可
     end
 
-    it 'バリデーションが通ること' do
-      expect(subject).to be_valid
-    end
-
-    describe '#title' do
-      context '存在しない場合' do
-        before :each do
-          subject.title = nil
-        end
-
-        it 'バリデーションに落ちること' do
-          expect(subject).to be_invalid
-        end
-
-        it 'バリデーションのエラーが正しいこと' do
-          subject.valid?
-          expect(subject.errors.full_messages).to include('タイトルを入力してください')
-        end
+    context "正常系" do
+      it '条件を満たす記事を抽出できる' do # 10番目に生成された記事を条件検索します。_10
+        filter = {
+          start:    '2023-01-01',
+          finish:   '2023-12-31',
+          title:    '_10',
+          subtitle: '_10',
+          content:  '_10',
+          author:   '山田太郎',
+          order:    'desc'
+        }
+        articles = Article.sort_filter(filter)
+        expect(articles.count).to eq(1)
       end
 
-      context '文字数が1文字の場合' do
-        before :each do
-          subject.title = 'a' * 1
-        end
-
-        it 'バリデーションが通ること' do
-          expect(subject).to be_valid
-        end
-      end
-
-      context '文字数が40文字の場合' do
-        before :each do
-          subject.title = 'a' * 40
-        end
-
-        it 'バリデーションが通ること' do
-          expect(subject).to be_valid
-        end
-      end
-
-      context '文字数が41文字の場合' do
-        before :each do
-          subject.title = 'a' * 41
-        end
-
-        it 'バリデーションに落ちること' do
-          expect(subject).to be_invalid
-        end
-
-        it 'バリデーションのエラーが正しいこと' do
-          subject.valid?
-          expect(subject.errors.full_messages).to include('タイトルは40文字以内で入力してください')
-        end
+      it '指定した日付範囲で抽出できる' do
+        filter = {
+          start:  Date.current.to_s, # Date.today.to_s だと×
+          finish: Date.current.to_s,
+          order:  'ASC'
+        }
+        articles = Article.sort_filter(filter)
+        expect(articles.count).to eq(10)
+          # 必要に応じて他の期待を設定します。例えば、特定の記事が結果に含まれていること、または含まれていないことなど
       end
     end
 
-    describe '#sub_title' do
-      context '存在しない場合' do
-        before :each do
-          subject.sub_title = nil
-        end
-
-        it 'バリデーションが通ること' do
-          expect(subject).to be_valid
-        end
+    context "異常系" do
+      it '条件を満たすタイトルが存在しない場合は空のリストが返る' do
+        filter = { title: '存在しないタイトル', order: 'ASC' }
+        articles = Article.sort_filter(filter)
+        expect(articles).to be_empty # be_falsy では×
       end
-
-      context '文字数が1文字の場合' do
-        before :each do
-          subject.sub_title = 'a' * 1
-        end
-
-        it 'バリデーションが通ること' do
-          expect(subject).to be_valid
-        end
-      end
-
-      context '文字数が50文字の場合' do
-        before :each do
-          subject.sub_title = 'a' * 50
-        end
-
-        it 'バリデーションが通ること' do
-          expect(subject).to be_valid
-        end
-      end
-
-      context '文字数が51文字の場合' do
-        before :each do
-          subject.sub_title = 'a' * 51
-        end
-
-        it 'バリデーションに落ちること' do
-          expect(subject).to be_invalid
-        end
-
-        it 'バリデーションのエラーが正しいこと' do
-          subject.valid?
-          expect(subject.errors.full_messages).to include('サブタイトルは50文字以内で入力してください')
-        end
-      end
-    end
-
-    describe '#content' do
-      context '存在しない場合' do
-        before :each do
-          subject.content = nil
-        end
-
-        it 'バリデーションに落ちること' do
-          expect(subject).to be_invalid
-        end
-
-        it 'バリデーションのエラーが正しいこと' do
-          subject.valid?
-          expect(subject.errors.full_messages).to include('本文を入力してください')
-        end
+      #binding.pry
+      it 'フォーム未入力の場合、全ての記事が抽出される' do
+        filter = { title: '', sub_title: '', content: '', order: 'ASC' }
+        articles = Article.sort_filter(filter)
+        expect(articles.count).to eq(10)
       end
     end
   end
+
+  # chatGPT
+  shared_examples '投稿テスト' do |user_type|
+
+    user_type_jp = {
+      user: 'ユーザー',
+      admin: '管理者'
+    }
+  
+    context "#{user_type_jp[user_type]}が記事を投稿する場合" do
+      subject { send("#{user_type}_article") }
+  
+      it_behaves_like '正常な記事投稿について'
+      it_behaves_like 'タイトルについて'
+      it_behaves_like 'サブタイトルについて'
+      it_behaves_like '本文について'
+    end
+  end
+  
+  include_examples '投稿テスト', :user
+  include_examples '投稿テスト', :admin
 end

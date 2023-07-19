@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :article do
-    sequence(:title, 'railsエンジニアのブログ記事_1')
-    sequence(:sub_title, 'railsエンジニアのためのブログ記事を書きました！_1')
-    sequence(:content, 'MyText_1')
+    sequence(:title) { |n| "railsエンジニアのブログ記事_#{n}" }
+    sequence(:sub_title) { |n| "railsエンジニアのためのブログ記事を書きました！_#{n}" }
+    sequence(:content) { |n| "MyText_#{n}" }
   end
 end
