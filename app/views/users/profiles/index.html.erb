@@ -77,8 +77,8 @@
       </div>
       <div class="modal-body text-right">
         <div class="sort-modal" style="display: none;">
-          <% selects = [['五十音順', '逆順'], ['アルファベット順', '逆順'], ['多い順', '少ない順']] %>
-          <% order = {'五十音順': 'ASC', 'アルファベット順': 'ASC', '逆順': 'DESC', '多い順': 'DESC', '少ない順': 'ASC'}.with_indifferent_access %>
+          <% selects = [['五十音順', '逆順'], ['昇順', '降順'], ['昇順', '降順']] %>
+          <% order = {'五十音順': 'ASC', '逆順': 'DESC', '昇順': 'ASC', '降順': 'DESC'}.with_indifferent_access %>
           <% {'name': selects[0], 'registration_date': selects[1], 'hobby': selects[2]}.each do |k, v| %>
             <div class="form-group row my-5">
               <label for="sort-<%= k %>" class="col-sm-4 col-form-label"><%= Profile.human_attribute_name(k) %></label>
@@ -106,7 +106,7 @@
             </div>
           </div>
          <div class="form-group row my-4">
-            <label for="input-hobby" class="col-sm-4 col-form-label"><%= Profile.human_attribute_name(:hobby) %></label>
+            <label for="input-purpose" class="col-sm-4 col-form-label"><%= Profile.human_attribute_name(:hobby) %></label>
             <div class="col-md-8">
               <input type="text" aria-label="hobby" id="input-hobby" class="form-control" value="<%= params[:flt_hobby] %>">
             </div>
