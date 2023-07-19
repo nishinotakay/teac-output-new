@@ -59,24 +59,25 @@ RSpec.describe Article, type: :model do
     end
   end
 
-  # chatGPT
+  # 西野さんから文字列ver
   shared_examples '投稿テスト' do |user_type|
 
     user_type_jp = {
-      user: 'ユーザー',
-      admin: '管理者'
+    'user' => 'ユーザー',
+    'admin' => '管理者'
     }
-  
+
+
     context "#{user_type_jp[user_type]}が記事を投稿する場合" do
+
       subject { send("#{user_type}_article") }
-  
       it_behaves_like '正常な記事投稿について'
       it_behaves_like 'タイトルについて'
       it_behaves_like 'サブタイトルについて'
       it_behaves_like '本文について'
     end
   end
-  
-  include_examples '投稿テスト', :user
-  include_examples '投稿テスト', :admin
+
+  include_examples '投稿テスト', 'user'
+  include_examples '投稿テスト', 'admin'
 end
