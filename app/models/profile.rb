@@ -26,8 +26,6 @@ class Profile < ApplicationRecord
     return sort_and_filter_params
   end
 
-
-
   def self.sort_filter(order, filter)
     profiles = self.joins(:user)
     filter.each do |ord, fit|
