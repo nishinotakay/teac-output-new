@@ -59,25 +59,21 @@ RSpec.describe Article, type: :model do
     end
   end
 
-  # 西野さんから文字列ver
-  shared_examples '投稿テスト' do |user_type|
-
-    user_type_jp = {
-    'user' => 'ユーザー',
-    'admin' => '管理者'
-    }
-
-
-    context "#{user_type_jp[user_type]}が記事を投稿する場合" do
-
-      subject { send("#{user_type}_article") }
-      it_behaves_like '正常な記事投稿について'
-      it_behaves_like 'タイトルについて'
-      it_behaves_like 'サブタイトルについて'
-      it_behaves_like '本文について'
-    end
+  # ユーザーと管理者動的にしてないver
+  RSpec.shared_examples '記事投稿について' do
+    it_behaves_like '正常な記事投稿について'
+    it_behaves_like 'タイトルについて'
+    it_behaves_like 'サブタイトルについて'
+    it_behaves_like '本文について'
   end
-
-  include_examples '投稿テスト', 'user'
-  include_examples '投稿テスト', 'admin'
+  
+  context 'ユーザーが記事を投稿する場合' do
+    subject { user_article }
+    it_behaves_like '記事投稿について'
+  end
+  
+  context '管理者が記事を投稿する場合' do
+    subject { admin_article }
+    it_behaves_like '記事投稿について'
+  end
 end
