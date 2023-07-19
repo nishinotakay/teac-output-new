@@ -53,31 +53,31 @@ RSpec.shared_examples 'サブタイトルについて' do
     before :each do
       subject.sub_title = nil
     end
-    
+
     it 'バリデーションが通ること' do
       expect(subject).to be_valid
     end
   end
-  
+
   context '文字数が50文字の場合' do
     before :each do
       subject.sub_title = 'a' * 50
     end
-    
+
     it 'バリデーションが通ること' do
       expect(subject).to be_valid
     end
   end
-  
+
   context '文字数が51文字の場合' do
     before :each do
       subject.sub_title = 'a' * 51
     end
-    
+
     it 'バリデーションに落ちること' do
       expect(subject).to be_invalid
     end
-    
+
     it 'バリデーションのエラーが正しいこと' do
       subject.valid?
       expect(subject.errors.full_messages).to include('サブタイトルは50文字以内で入力してください')
@@ -90,11 +90,11 @@ RSpec.shared_examples '本文について' do
     before :each do
       subject.content = nil
     end
-    
+
     it 'バリデーションに落ちること' do
       expect(subject).to be_invalid
     end
-    
+
     it 'バリデーションのエラーが正しいこと' do
       subject.valid?
       expect(subject.errors.full_messages).to include('本文を入力してください')
