@@ -3,11 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe Article, type: :model do
-  let(:user_a) { build(:user, :a, confirmed_at: Date.today) }
-  let(:user_article) { build(:article, user: user_a) }
+  #let(:user_a) { build(:user, :a, confirmed_at: Date.today) }
+  let(:user) { create(:user, confirmed_at: Date.today) }
+  let(:user_article) { build(:article, user: user) }
   let(:admin) { create(:admin, confirmed_at: Date.today) }
   let(:admin_article) { build(:article, admin: admin) }
-  let(:user) { create(:user, confirmed_at: Date.today) }
+  #let(:user) { create(:user, confirmed_at: Date.today) }
   #let!(:user_articles) { create_list(:article, 10, user: user) }
 
   describe '条件検索について' do
@@ -59,21 +60,24 @@ RSpec.describe Article, type: :model do
     end
   end
 
-  # ユーザーと管理者動的にしてないver
-  RSpec.shared_examples '記事投稿について' do
-    it_behaves_like '正常な記事投稿について'
-    it_behaves_like 'タイトルについて'
-    it_behaves_like 'サブタイトルについて'
-    it_behaves_like '本文について'
+  # 西野さんから文字列ver
+  shared_examples '投稿テスト' do |user_type|
+
+    user_type_jp = {
+    'user' => 'ユーザー',
+    'admin' => '管理者'
+    }
+
+    context "#{user_type_jp[user_type]}が記事を投稿する場合" do
+
+      subject { send("#{user_type}_article") }
+      it_behaves_like '正常な記事投稿について'
+      it_behaves_like 'タイトルについて'
+      it_behaves_like 'サブタイトルについて'
+      it_behaves_like '本文について'
+    end
   end
-  
-  context 'ユーザーが記事を投稿する場合' do
-    subject { user_article }
-    it_behaves_like '記事投稿について'
-  end
-  
-  context '管理者が記事を投稿する場合' do
-    subject { admin_article }
-    it_behaves_like '記事投稿について'
-  end
+
+  include_examples '投稿テスト', 'user'
+  include_examples '投稿テスト', 'admin'
 end
