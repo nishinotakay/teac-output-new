@@ -48,3 +48,9 @@ $(function() {
     dateFormat: "yy/mm/dd"
   });
 });
+
+$(document).ready(function(){
+  $("#input-registration_date").datepicker({
+    dateFormat: 'yy-mm-dd'
+  });
+});
