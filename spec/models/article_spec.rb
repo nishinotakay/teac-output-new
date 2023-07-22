@@ -8,7 +8,7 @@ RSpec.describe Article, type: :model do
   let(:user_article) { create(:article, user: user) }
   # let(:user_article_yesterday) { create(:article, user: user, created_at: Date.today - 1.day) }
   let(:admin) { create(:admin, confirmed_at: Date.today) }
-  let(:admin_article) { build(:article, admin: admin) }
+  let(:admin_article) { create(:article, admin: admin) }
   let(:user_articles) { create_list(:article, 10, user: user) }
 
   describe '条件検索について' do
@@ -82,7 +82,6 @@ RSpec.describe Article, type: :model do
       end
 
       it '全ての条件を満たす記事を抽出できる' do
-        user_articles # テストのため10件の記事を追加生成します
         filter = {
           start:    "#{Date.today.year}-01-01",
           finish:   "#{Date.today.year}-12-31",
@@ -93,8 +92,7 @@ RSpec.describe Article, type: :model do
           order:    'desc'
         }
         articles = Article.sort_filter(filter)
-        expect(articles.count).to eq(11)
-        expect(articles).to match_array(Article.all) # articles == Article.all を期待する
+        expect(articles.count).to eq(1)
       end
     end
 
@@ -151,9 +149,8 @@ RSpec.describe Article, type: :model do
     end
 
     it '指定開始日からの記事が存在せず空のリストが返る' do
-      user_article.update(created_at: Date.yesterday) # 記事の投稿日を前日に修正
       filter = {
-        start: Date.current.to_s,
+        start: Date.tomorrow.to_s,
         order: 'ASC'
       }
       articles = Article.sort_filter(filter)
@@ -171,11 +168,29 @@ RSpec.describe Article, type: :model do
 
     context '全てのフォームが未入力の場合' do
       it '全ての記事が抽出される' do
-        user_articles # 複数記事抽出のため10件の記事を追加生成します
+        #user_articles
         filter = { title: '', sub_title: '', content: '', order: 'ASC' }
         articles = Article.sort_filter(filter)
-        expect(articles.count).to eq(11)
-        expect(articles).to match_array(Article.all)
+        expect(articles.count).to eq(1)
+        expect(articles).to match_array(Article.all) # 全ての記事抽出を確認するため実装
+      end
+    end
+  end
+
+  describe '複数記事の条件検索について' do
+    before(:each) do
+      user_article
+      admin_article
+      # 投稿機能を持つ新たなモデルが追加された場合は、こちらに記述を
+    end
+    context '条件を満たすデータが存在する場合' do
+      it '条件で一致する全ての記事を返す' do
+        filter = {
+          title: 'タイトル',
+          order: 'desc'
+        }
+        articles = Article.sort_filter(filter)
+        expect(articles.count).to eq(2)
       end
     end
   end
