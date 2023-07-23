@@ -7,3 +7,5 @@ ja:
         name: "名前"
         purpose: "プログラミング学習の目的"
         learning_start: "プログラミング学習開始日"
+        registration_date: "登録日"
+        hobby: "趣味"

@@ -94,7 +94,7 @@ Rails.application.routes.draw do
   }
 
   namespace :managers do
-    resources :tenants, only: %i[index new create destroy]
+    resources :tenants, only: [:index, :show, :new, :create, :destroy]
   end
   # =================================================================
 

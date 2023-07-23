@@ -14,7 +14,6 @@ module Admins
         start:    params[:start],
         finish:   params[:finish]
       }
-
       if (@paginate = filter.compact.blank?)
         @articles = Article.order(created_at: params[:order]).page(params[:page]).per(30)
       else
@@ -24,8 +23,7 @@ module Admins
       end
     end
 
-    def show
-    end
+    def show; end
 
     def users_show
       @user = @article.user
@@ -56,8 +54,7 @@ module Admins
       end
     end
 
-    def edit
-    end
+    def edit; end
 
     def users_edit
       @user = @article.user
