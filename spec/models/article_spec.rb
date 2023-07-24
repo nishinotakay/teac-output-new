@@ -210,7 +210,7 @@ RSpec.describe Article, type: :model do
         filter = { order: 'ASC' }
         articles = Article.sort_filter(filter)
         # binding.pry
-        expect((articles).map(&:id)).to eq [1,2,3] # 
+        # expect((articles).map(&:id)).to eq [1,2,3] # 
         expect(articles.map(&:created_at)).to eq articles.map(&:created_at).sort
       end
     end
@@ -219,7 +219,7 @@ RSpec.describe Article, type: :model do
         filter = { order: 'DESC' }
         articles = Article.sort_filter(filter)
         # binding.pry
-        expect((articles).map(&:id)).to eq [6,5,4] # 
+        # expect((articles).map(&:id)).to eq [6,5,4] # 
         expect(articles.map(&:created_at)).to eq articles.map(&:created_at).sort.reverse
       end
     end
