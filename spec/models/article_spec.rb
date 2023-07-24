@@ -209,8 +209,8 @@ RSpec.describe Article, type: :model do
       it '昇順で記事を返す' do
         filter = { order: 'ASC' }
         articles = Article.sort_filter(filter)
-        # binding.pry
-        # expect((articles).map(&:id)).to eq [1,2,3] # 
+        ids = articles.map(&:id)
+        expect(ids).to eq ids.sort
         expect(articles.map(&:created_at)).to eq articles.map(&:created_at).sort
       end
     end
@@ -218,8 +218,8 @@ RSpec.describe Article, type: :model do
       it '昇順で記事を返す' do
         filter = { order: 'DESC' }
         articles = Article.sort_filter(filter)
-        # binding.pry
-        # expect((articles).map(&:id)).to eq [6,5,4] # 
+        ids = articles.map(&:id)
+        expect(ids).to eq ids.sort.reverse
         expect(articles.map(&:created_at)).to eq articles.map(&:created_at).sort.reverse
       end
     end
