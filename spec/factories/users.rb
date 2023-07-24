@@ -16,7 +16,7 @@ FactoryBot.define do
     trait :b do
       id { 2 }
       email { 'email@2.com' }
-      name { 'name2' }
+      name { '田中実' }
       password { 'password2' }
     end
 
