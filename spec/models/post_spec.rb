@@ -4,7 +4,7 @@ RSpec.describe Post, type: :model do
   before(:each) do
     # 成功した場合のpostデータを定義
     @user = FactoryBot.create(:user)
-    @admin = FactoryBot.create(:admin) # 管理者モデルとファクトリが存在する前提です
+    @admin = FactoryBot.create(:admin)
     @post = FactoryBot.build(:post, user: @user, admin: @admin, title: 'Rspecテスト集', body: 'Rspecに関する解説動画', youtube_url: 'youtube.com/watch?v=qpiKb0mdbr0&t=496s')
   end
 
