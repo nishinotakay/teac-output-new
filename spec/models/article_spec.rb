@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe Article, type: :model do
-  let(:user) { create(:user, confirmed_at: Date.today) }
+  let(:user) { create(:user) }
   let(:user_article) { create(:article, user: user) }
-  let(:admin) { create(:admin, confirmed_at: Date.today) }
+  let(:admin) { create(:admin) }
   let(:admin_article) { create(:article, admin: admin) }
   let(:user_and_admin_articles) { [create(:article, user: user), create(:article, admin: admin)] }
   # let(:user_articles) { create_list(:article, 10, user: user) }
