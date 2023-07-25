@@ -3,14 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe Article, type: :model do
-  let(:user_b) { create(:user, :b, confirmed_at: Date.today) }
   let(:user) { create(:user, confirmed_at: Date.today) }
   let(:user_article) { create(:article, user: user) }
-  let(:user_b_article) { create(:article, user: user_b) }
-  # let(:user_article_yesterday) { create(:article, user: user, created_at: Date.today - 1.day) }
   let(:admin) { create(:admin, confirmed_at: Date.today) }
   let(:admin_article) { create(:article, admin: admin) }
-  let(:user_articles) { create_list(:article, 10, user: user) }
+  let(:user_and_admin_articles) { [create(:article, user: user), create(:article, admin: admin)] }
+  # let(:user_articles) { create_list(:article, 10, user: user) }
 
   describe '条件検索について' do
     before(:each) do # 各itの前に１件の記事データを生成する
@@ -181,10 +179,7 @@ RSpec.describe Article, type: :model do
 
   describe '複数記事の条件検索' do
     before(:each) do
-      user_article
-      user_b_article
-      admin_article
-      # 投稿機能を持つ新たなモデルが追加された場合は、こちらに記述を
+      user_and_admin_articles
     end
     context '条件を満たすデータが存在する場合' do
       it '条件で部分一致する全ての記事を返す' do
@@ -193,17 +188,14 @@ RSpec.describe Article, type: :model do
           order: 'desc'
         }
         articles = Article.sort_filter(filter)
-        expect(articles.count).to eq(3)
+        expect(articles.count).to eq(2)
       end
     end
   end
 
   describe '並び替え機能について' do
     before(:each) do
-      user_article
-      user_b_article
-      admin_article
-      # 投稿機能を持つ新たなモデルが追加された場合は、こちらに記述を
+      user_and_admin_articles
     end
     context '古い順を押下した場合' do
       it '昇順で記事を返す' do
