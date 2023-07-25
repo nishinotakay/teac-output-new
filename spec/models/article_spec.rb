@@ -211,7 +211,7 @@ RSpec.describe Article, type: :model do
         articles = Article.sort_filter(filter)
         ids = articles.map(&:id)
         expect(ids).to eq ids.sort
-        expect(articles.map(&:created_at)).to eq articles.map(&:created_at).sort
+        expect(articles.map(&:created_at)).to eq articles.map(&:created_at).sort # map → pluckメソッドも使用可
       end
     end
     context '新しい順を押下した場合' do
