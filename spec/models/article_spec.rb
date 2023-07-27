@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-# 2023/07/27 時点、ユーザーと管理者は同じロジックの投稿機能を持つ。どちらかの投稿機能ロジックを修正した場合は、ユーザーと管理者を分けたテストを作成して下さい。長嶺
+
+# 2023/07/27 時点、ユーザーと管理者は同じロジックの投稿機能を持つ。どちらかの投稿機能ロジックを修正した場合は、ユーザーと管理者を分けたテストを作成して下さい。
 
 require 'rails_helper'
 
@@ -20,7 +21,7 @@ RSpec.describe Article, type: :model do
       it 'タイトルで部分一致する記事を返す' do
         filter = {
           title: 'タイトル',
-          order:    'desc'
+          order: 'desc'
         }
         articles = Article.sort_filter(filter)
         expect(articles.count).to eq(1) # 検索結果が1つを期待する
@@ -171,7 +172,7 @@ RSpec.describe Article, type: :model do
       it '全ての記事が抽出される' do
         filter = { title: '', sub_title: '', content: '', order: 'desc' }
         articles = Article.sort_filter(filter)
-        #expect(articles.count).to eq(1)
+        # expect(articles.count).to eq(1)
         expect(articles).to match_array(Article.all) # 全ての記事抽出を確認するためallで実装
       end
     end
@@ -181,6 +182,7 @@ RSpec.describe Article, type: :model do
     before(:each) do
       user_and_admin_articles # ユーザーと管理者の投稿記事を生成　計２件
     end
+
     context '条件を満たすデータが存在する場合' do
       it '条件で部分一致する全ての記事を返す' do
         filter = {
@@ -197,6 +199,7 @@ RSpec.describe Article, type: :model do
     before(:each) do
       user_and_admin_articles
     end
+
     context '古い順を押下した場合' do
       it '昇順で記事を返す' do
         filter = { order: 'ASC' }
@@ -206,6 +209,7 @@ RSpec.describe Article, type: :model do
         expect(articles.map(&:created_at)).to eq articles.map(&:created_at).sort # map → pluckメソッドも使用可
       end
     end
+
     context '新しい順を押下した場合' do
       it '昇順で記事を返す' do
         filter = { order: 'DESC' }
