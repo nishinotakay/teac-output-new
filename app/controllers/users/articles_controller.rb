@@ -7,7 +7,7 @@ module Users
     before_action :set_dashboard, only: %i[show new create edit update destroy]
 
     def index
-      # params[:order] ||= 'DESC'
+      params[:order] ||= 'DESC'
       filter = {
         author:   params[:author],
         title:    params[:title],

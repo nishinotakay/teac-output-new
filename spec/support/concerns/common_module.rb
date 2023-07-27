@@ -7,7 +7,7 @@ RSpec.shared_examples '正常な記事投稿について' do # RSpecの記述無
 end
 
 RSpec.shared_examples 'タイトルについて' do
-  context '存在しない場合' do
+  context '未入力の場合' do
     before :each do # itの前に実行
       subject.title = nil
     end
@@ -49,7 +49,7 @@ RSpec.shared_examples 'タイトルについて' do
 end
 
 RSpec.shared_examples 'サブタイトルについて' do
-  context '存在しない場合' do
+  context '未入力の場合' do
     before :each do
       subject.sub_title = nil
     end
@@ -86,7 +86,7 @@ RSpec.shared_examples 'サブタイトルについて' do
 end
 
 RSpec.shared_examples '本文について' do
-  context '存在しない場合' do
+  context '未入力の場合' do
     before :each do
       subject.content = nil
     end
