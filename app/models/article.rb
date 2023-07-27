@@ -14,6 +14,7 @@ class Article < ApplicationRecord
   validates :content, presence: true
 
   def self.sort_filter(filter)
+    order = filter[:order].presence || 'DESC'
     start = Time.zone.parse(filter[:start].presence || '2022-01-01').beginning_of_day
     finish = Time.zone.parse(filter[:finish].presence || Date.current.to_s).end_of_day
 
@@ -22,7 +23,7 @@ class Article < ApplicationRecord
               "%#{filter[:title]}%", "%#{filter[:subtitle]}%", "%#{filter[:content]}%"])
       .where('articles.created_at BETWEEN ? AND ?', start, finish)
       .where('users.name LIKE :author OR admins.name LIKE :author', author: "%#{filter[:author]}%")
-      .order("articles.created_at #{filter[:order]}")
+      .order("articles.created_at #{order}")
       .presence || Article.none
   end
 

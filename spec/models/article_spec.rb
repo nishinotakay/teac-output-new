@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# 2023/07/27 時点、ユーザーと管理者は同じロジックの投稿機能を持つ。どちらかの投稿機能ロジックを修正した場合は、ユーザーと管理者を分けたテストを作成して下さい。長嶺
 
 require 'rails_helper'
 
@@ -18,8 +19,7 @@ RSpec.describe Article, type: :model do
     context '条件を満たすデータが存在する場合' do
       it 'タイトルで部分一致する記事を返す' do
         filter = {
-          title: 'タイトル',
-          order: 'desc'
+          title: 'タイトル'
         }
         articles = Article.sort_filter(filter)
         expect(articles.count).to eq(1) # 検索結果が1つを期待する
@@ -27,8 +27,7 @@ RSpec.describe Article, type: :model do
 
       it 'サブタイトルで部分一致する記事を返す' do
         filter = {
-          subtitle: 'サブタイトル',
-          order:    'desc'
+          subtitle: 'サブタイトル'
         }
         articles = Article.sort_filter(filter)
         expect(articles.count).to eq(1)
@@ -36,8 +35,7 @@ RSpec.describe Article, type: :model do
 
       it '本文で部分一致する記事を返す' do
         filter = {
-          content: '本文',
-          order:   'desc'
+          content: '本文'
         }
         articles = Article.sort_filter(filter)
         expect(articles.count).to eq(1)
@@ -45,8 +43,7 @@ RSpec.describe Article, type: :model do
 
       it '投稿者で部分一致する記事を返す' do
         filter = {
-          author: '山田太郎',
-          order:  'desc'
+          author: '山田太郎'
         }
         articles = Article.sort_filter(filter)
         expect(articles.count).to eq(1)
@@ -55,8 +52,7 @@ RSpec.describe Article, type: :model do
       it '指定日付範囲内の記事を返す' do
         filter = {
           start:  Date.current.to_s, # Date.today.to_s だと×
-          finish: Date.current.to_s,
-          order:  'ASC'
+          finish: Date.current.to_s
         }
         articles = Article.sort_filter(filter)
         expect(articles.count).to eq(1)
@@ -64,8 +60,7 @@ RSpec.describe Article, type: :model do
 
       it '指定開始日以降の記事を返す' do # 終了日は指定なし
         filter = {
-          start: Date.current.to_s,
-          order: 'ASC'
+          start: Date.current.to_s
         }
         articles = Article.sort_filter(filter)
         expect(articles.count).to eq(1)
@@ -74,7 +69,6 @@ RSpec.describe Article, type: :model do
       it '指定終了日までの記事を返す' do # 開始日は指定なし
         filter = {
           finish: Date.current.to_s,
-          order:  'ASC'
         }
         articles = Article.sort_filter(filter)
         expect(articles.count).to eq(1)
@@ -87,8 +81,7 @@ RSpec.describe Article, type: :model do
           title:    'タイトル',
           subtitle: 'サブタイトル',
           content:  '本文',
-          author:   '山田太郎',
-          order:    'desc'
+          author:   '山田太郎'
         }
         articles = Article.sort_filter(filter)
         expect(articles.count).to eq(1)
@@ -98,8 +91,7 @@ RSpec.describe Article, type: :model do
     context '条件を満たすデータが存在しない場合' do
       it 'タイトルが一致せず空のリストを返す' do
         filter = {
-          title: '存在しない',
-          order: 'desc'
+          title: '存在しない'
         }
         articles = Article.sort_filter(filter)
         expect(articles).to be_empty # be_falsy では×
@@ -107,8 +99,7 @@ RSpec.describe Article, type: :model do
 
       it 'サブタイトルが一致せず空のリストを返す' do
         filter = {
-          subtitle: '存在しない',
-          order:    'desc'
+          subtitle: '存在しない'
         }
         articles = Article.sort_filter(filter)
         expect(articles).to be_empty
@@ -116,8 +107,7 @@ RSpec.describe Article, type: :model do
 
       it '本文が一致せず空のリストを返す' do
         filter = {
-          content: '存在しない',
-          order:   'desc'
+          content: '存在しない'
         }
         articles = Article.sort_filter(filter)
         expect(articles).to be_empty
@@ -125,8 +115,7 @@ RSpec.describe Article, type: :model do
 
       it '投稿者が一致せず空のリストを返す' do
         filter = {
-          author: '存在しない',
-          order:  'desc'
+          author: '存在しない'
         }
         articles = Article.sort_filter(filter)
         expect(articles).to be_empty
@@ -139,8 +128,7 @@ RSpec.describe Article, type: :model do
           title:    '存在しない',
           subtitle: '存在しない',
           content:  '存在しない',
-          author:   '存在しない',
-          order:    'desc'
+          author:   '存在しない'
         }
         articles = Article.sort_filter(filter)
         expect(articles).to be_empty
@@ -149,10 +137,8 @@ RSpec.describe Article, type: :model do
 
     it '指定開始日からの記事が存在せず空のリストが返る' do
       user_article.update(created_at: Date.yesterday) # 記事を前日投稿に修正
-      admin_article.update(created_at: Date.yesterday) # 二つの処理、letでメソッド化すべき？
       filter = {
-        start: Date.current.to_s,
-        order: 'ASC'
+        start: Date.current.to_s
       }
       articles = Article.sort_filter(filter)
       expect(articles).to be_empty
@@ -160,8 +146,7 @@ RSpec.describe Article, type: :model do
 
     it '指定終了日までの記事が存在せず空のリストが返る' do
       filter = {
-        finish: Date.yesterday.to_s, # 終了日を前日に指定
-        order:  'ASC'
+        finish: Date.yesterday.to_s # 終了日を前日に指定
       }
       articles = Article.sort_filter(filter)
       expect(articles).to be_empty
@@ -169,7 +154,7 @@ RSpec.describe Article, type: :model do
 
     context '全てのフォームが未入力の場合' do
       it '全ての記事が抽出される' do
-        filter = { title: '', sub_title: '', content: '', order: 'ASC' }
+        filter = { title: '', sub_title: '', content: ''}
         articles = Article.sort_filter(filter)
         #expect(articles.count).to eq(1)
         expect(articles).to match_array(Article.all) # 全ての記事抽出を確認するためallで実装
@@ -184,8 +169,7 @@ RSpec.describe Article, type: :model do
     context '条件を満たすデータが存在する場合' do
       it '条件で部分一致する全ての記事を返す' do
         filter = {
-          title: 'タイトル',
-          order: 'desc'
+          title: 'タイトル'
         }
         articles = Article.sort_filter(filter)
         expect(articles.count).to eq(2)
@@ -195,7 +179,7 @@ RSpec.describe Article, type: :model do
 
   describe '並び替え機能について' do
     before(:each) do
-      user_and_admin_articles
+      user_and_admin_articles # ユーザーと管理者の投稿記事を生成　計２件
     end
     context '古い順を押下した場合' do
       it '昇順で記事を返す' do
@@ -211,8 +195,8 @@ RSpec.describe Article, type: :model do
         filter = { order: 'DESC' }
         articles = Article.sort_filter(filter)
         ids = articles.map(&:id)
-        expect(ids).to eq ids.sort.reverse
-        expect(articles.map(&:created_at)).to eq articles.map(&:created_at).sort.reverse
+        expect(ids).to eq ids.sort.reverse # id が昇順を期待
+        expect(articles.map(&:created_at)).to eq articles.map(&:created_at).sort.reverse # created_at が昇順を期待
       end
     end
   end
