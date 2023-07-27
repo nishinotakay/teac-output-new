@@ -61,13 +61,8 @@ Rails.application.routes.draw do
     resources :articles do
       resources :article_comments, only: %i[create destroy update] # 記事コメント機能
     end
-    resources :posts
     resources :users, only: [:show]
-    resources :posts do
-      member do # id付与
-        get 'show'
-      end
-    end
+    resources :posts
     resources :articles
     namespace :articles do
       post 'image'
