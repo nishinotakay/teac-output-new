@@ -227,7 +227,7 @@ RSpec.describe Article, type: :model do
     it_behaves_like 'タイトルについて'
     it_behaves_like 'サブタイトルについて'
     it_behaves_like '本文について'
-    it_behaves_like 'アソシエーションについて' # このテスト不要ですか？
+    it_behaves_like 'アソシエーションについて'
   end
 
   context 'ユーザーが記事を投稿する場合' do

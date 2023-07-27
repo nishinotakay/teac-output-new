@@ -102,7 +102,28 @@ RSpec.shared_examples '本文について' do
   end
 end
 
-RSpec.shared_examples 'アソシエーションについて' do # このテスト不要ですか？
+RSpec.shared_examples 'アソシエーションについて' do
+  context 'ユーザーidが設定されている場合' do
+    before :each do
+      subject.user_id = 1
+      subject.admin_id = nil
+    end
+
+    it '記事が有効であること' do
+      expect(subject).to be_valid
+    end
+  end
+
+  context '管理者idが設定されている場合' do
+    before :each do
+      subject.user_id = nil
+      subject.admin_id = 1
+    end
+
+    it '記事が有効であること' do
+      expect(subject).to be_valid
+    end
+  end
   context '投稿者のidがない場合' do
     before :each do
       subject.user_id = nil
