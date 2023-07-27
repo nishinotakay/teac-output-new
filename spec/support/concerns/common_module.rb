@@ -101,3 +101,21 @@ RSpec.shared_examples '本文について' do
     end
   end
 end
+
+RSpec.shared_examples 'アソシエーションについて' do # このテスト不要ですか？
+  context '投稿者のidがない場合' do
+    before :each do
+      subject.user_id = nil
+      subject.admin_id = nil
+    end
+
+    it 'バリデーションに落ちること' do
+      expect(subject).to be_invalid
+    end
+
+    it 'バリデーションのエラーが正しいこと' do
+      subject.valid?
+      expect(subject.errors.full_messages).to include("Userを入力してください", "Adminを入力してください")
+    end
+  end
+end
