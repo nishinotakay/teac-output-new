@@ -16,9 +16,9 @@
       <%= image_tag "admin.png", size: "30x30" %><b class="caret"></b>
     </div>
     <ul class="dropdown-menu dropdown-menu-right dropdown-menu-header">
-      <li style="padding-left:3px"><%= "マネージャーの名前" %></li>
+      <li style="padding-left:3px"><%= current_manager.name %></li>
       <hr style="height:0.5px">
-      <li style="padding-left:3px"><%= link_to "詳細画面", "#" , method: :get %></li>
+      <li style="padding-left:3px"><%= link_to "詳細画面", managers_show_managers_profiles_path , method: :get %></li>
       <li style="padding-left:3px"><%= link_to "ログアウト", destroy_manager_session_path, method: :delete %></li>
     </ul>
   </div>

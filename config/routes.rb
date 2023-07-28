@@ -95,7 +95,12 @@ Rails.application.routes.draw do
 
   namespace :managers do
     resources :tenants, only: [:index, :show, :new, :create, :destroy]
-  end
+    resources :profiles do
+      collection do
+        get 'managers_show'
+      end
+    end
+  end    
   # =================================================================
 
   # 共通==============================================================

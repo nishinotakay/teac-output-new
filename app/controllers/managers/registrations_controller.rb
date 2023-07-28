@@ -2,6 +2,7 @@
 
 module Managers
   class RegistrationsController < Devise::RegistrationsController
+    layout 'users_auth'
     # before_action :configure_sign_up_params, only: [:create]
     # before_action :configure_account_update_params, only: [:update]
 
@@ -39,7 +40,11 @@ module Managers
     #   super
     # end
 
-    # protected
+    protected
+
+    def after_update_path_for(_resource)
+      managers_show_managers_profiles_path
+    end
 
     # If you have extra params to permit, append them to the sanitizer.
     # def configure_sign_up_params
