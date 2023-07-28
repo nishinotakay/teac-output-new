@@ -77,9 +77,9 @@
       </div>
       <div class="modal-body text-right">
         <div class="sort-modal" style="display: none;">
-          <% selects = [['五十音順', '逆順'], ['アルファベット順', '逆順'], ['多い順', '少ない順']] %>
-          <% order = {'五十音順': 'ASC', 'アルファベット順': 'ASC', '逆順': 'DESC', '多い順': 'DESC', '少ない順': 'ASC'}.with_indifferent_access %>
-          <% {'name': selects[0], 'learning_start': selects[1], 'purpose': selects[2]}.each do |k, v| %>
+          <% selects = [['五十音順', '逆順'], ['昇順', '降順'], ['昇順', '降順']] %>
+          <% order = {'五十音順': 'ASC', '逆順': 'DESC', '昇順': 'ASC', '降順': 'DESC'}.with_indifferent_access %>
+          <% {'name': selects[0], 'registration_date': selects[1], 'hobby': selects[2]}.each do |k, v| %>
             <div class="form-group row my-5">
               <label for="sort-<%= k %>" class="col-sm-4 col-form-label"><%= Profile.human_attribute_name(k) %></label>
               <div class="col-md-8">
@@ -100,15 +100,15 @@
             </div>
           </div>
           <div class="form-group row my-">
-            <label for="input-learning_start" class="col-sm-4 col-form-label"><%= Profile.human_attribute_name(:learning_start) %></label>
+            <label for="input-learning_start" class="col-sm-4 col-form-label"><%= Profile.human_attribute_name(:registration_date) %></label>
             <div class="col-md-8">
-              <input type="text" aria-label="learning_start" id="input-learning_start" class="form-control" value="<%= params[:flt_learning_start] %>">
+              <input type="text" aria-label="registration_date" id="input-registration_date" class="form-control" value="<%= params[:registration_date] %>">
             </div>
           </div>
          <div class="form-group row my-4">
-            <label for="input-purpose" class="col-sm-4 col-form-label"><%= Profile.human_attribute_name(:purpose) %></label>
+            <label for="input-purpose" class="col-sm-4 col-form-label"><%= Profile.human_attribute_name(:hobby) %></label>
             <div class="col-md-8">
-              <input type="text" aria-label="purpose" id="input-purpose" class="form-control" value="<%= params[:flt_purpose] %>">
+              <input type="text" aria-label="hobby" id="input-hobby" class="form-control" value="<%= params[:flt_hobby] %>">
             </div>
           </div>
         </div>
@@ -120,3 +120,7 @@
     </div>
   </div>
 </div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>

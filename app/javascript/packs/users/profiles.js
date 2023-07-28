@@ -10,3 +10,10 @@ $('.lesson-hover').hover(
     $(this).find('.text-contents').removeClass('text-active');
   }
 );
+
+
+$(document).ready(function(){
+  $("#input-registration_date").datepicker({
+    dateFormat: 'yy-mm-dd'
+  });
+});
