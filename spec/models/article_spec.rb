@@ -223,7 +223,7 @@ RSpec.describe Article, type: :model do
 
   # chatGPT
   RSpec.shared_examples '記事投稿について' do
-    it_behaves_like '正常な記事投稿について'
+    it_behaves_like '正常な記事投稿について' # it_behaves_like の内容は spec/support/concerns/common_module.rb へ
     it_behaves_like 'タイトルについて'
     it_behaves_like 'サブタイトルについて'
     it_behaves_like '本文について'
