@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# 2023/07/27 時点、ユーザーと管理者は同じロジックの投稿機能を持つ。どちらかの投稿機能ロジックを修正した場合は、ユーザーと管理者を分けたテストを作成して下さい。
-
 require 'rails_helper'
 
 RSpec.describe Article, type: :model do
