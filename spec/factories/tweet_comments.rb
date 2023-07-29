@@ -1,7 +1,8 @@
 FactoryBot.define do
   factory :tweet_comment do
     content { 'MyString' }
-    user { nil }
-    tweet { nil }
+    association :user
+    association :tweet
+    recipient_id { tweet.user_id }
   end
 end
