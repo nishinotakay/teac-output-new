@@ -17,32 +17,32 @@ class Inquiry < ApplicationRecord
     return sort_and_filter_params
   end
   
-    def self.get_inquiries(sort_and_filter_params)
-      if sort_and_filter_params[:filter][:hidden] == "1"
-        inquiries = where(hidden: false)
-      elsif sort_and_filter_params[:filter][:hidden] == "2"
-        hidden = where(hidden: true)
-      elsif sort_and_filter_params[:filter][:hidden] == "3"
-        both = where(hidden: [true, false])
-      else
-        inquiries = where(hidden: false)
-      end
-      [inquiries, hidden, both]
+  def self.get_inquiries(sort_and_filter_params)
+    if sort_and_filter_params[:filter][:hidden] == "1"
+      inquiries = where(hidden: false)
+    elsif sort_and_filter_params[:filter][:hidden] == "2"
+      hidden = where(hidden: true)
+    elsif sort_and_filter_params[:filter][:hidden] == "3"
+      both = where(hidden: [true, false])
+    else
+      inquiries = where(hidden: false)
     end
+    [inquiries, hidden, both]
+  end
   
-    def self.apply_sort_and_filter(inquiry_scope, sort_and_filter_params)
-      inquiry_scope = inquiry_scope.order(sort_and_filter_params[:order])
-      if sort_and_filter_params[:filter][:subject].present?
-        inquiry_scope = inquiry_scope.where("subject LIKE ?", "%#{sort_and_filter_params[:filter][:subject]}%")
-      end
-      if sort_and_filter_params[:filter][:content].present?
-        inquiry_scope = inquiry_scope.where("content LIKE ?", "%#{sort_and_filter_params[:filter][:content]}%")
-      end
-      if sort_and_filter_params[:filter][:created_at].present?
-        created_at_date = Date.parse(sort_and_filter_params[:filter][:created_at]).strftime('%Y-%m-%d')
-        inquiry_scope = inquiry_scope.where("DATE(created_at) = ?", created_at_date)
-      end
-      
-      inquiry_scope
+  def self.apply_sort_and_filter(inquiry_scope, sort_and_filter_params)
+    inquiry_scope = inquiry_scope.order(sort_and_filter_params[:order])
+    if sort_and_filter_params[:filter][:subject].present?
+      inquiry_scope = inquiry_scope.where("subject LIKE ?", "%#{sort_and_filter_params[:filter][:subject]}%")
     end
+    if sort_and_filter_params[:filter][:content].present?
+      inquiry_scope = inquiry_scope.where("content LIKE ?", "%#{sort_and_filter_params[:filter][:content]}%")
+    end
+    if sort_and_filter_params[:filter][:created_at].present?
+      created_at_date = Date.parse(sort_and_filter_params[:filter][:created_at]).strftime('%Y-%m-%d')
+      inquiry_scope = inquiry_scope.where("DATE(created_at) = ?", created_at_date)
+    end
+    
+    inquiry_scope
+  end
 end
