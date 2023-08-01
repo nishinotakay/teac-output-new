@@ -1,65 +1,58 @@
-<h2><%= t('.title', resource: resource.model_name.human) %></h2>
+<%= javascript_pack_tag "users/profiles" %>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-<div class="register-box">
+<div class="div-title-form">
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <a href="" class="h2"><b>TecPutt</a>
+      <h2>マネージャーアカウントの編集</h2>
     </div>
-    <div class="card-body1">
-      <p class="login-box-msg">アカウントの編集を行えます。</p>
-
-      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-        <div class="input-group mb-3">
-          <%= f.text_field :name, autofocus: true, class:"form-control", placeholder:"名前（フルネーム）" %>
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-user"></span>
-            </div>
-          </div>
-        </div>
-        <div class="input-group mb-3">
-          <%= f.email_field :email, autocomplete: "email", class:"form-control", placeholder:"メールアドレス", required: true %>
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-envelope"></span>
-            </div>
-          </div>
-        </div>
-        <div class="input-group mb-3">
-          
-          <%= f.password_field :password, autocomplete: "new-password", class:"form-control", placeholder:"変更後パスワード(変更したい場合)" %>
-          
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
-            </div>
-          </div>
-        </div>
-        <div class="input-group mb-3">
-          <%= f.password_field :password_confirmation, autocomplete: "new-password", class:"form-control", placeholder:"変更後パスワード確認用" %>
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
-            </div>
-          </div>
-        </div>
-        <div class="input-group mb-3">
-          <%= f.password_field :current_password, autocomplete: "new-password", class:"form-control", placeholder:"現在のパスワード（必須）", required: true %>
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div>
-            <%= f.submit t('.update'), class:"btn btn-primary btn-block" %>
-          </div>
-        </div>
-      <% end %>
+    <br>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+      <div style="padding-left:100px">
+        <table class="manager-account-edit">
+          <tr>
+            <th><i class="fas fa-user"></i></th>
+            <th class="manager-name">マネージャー名</th>
+            <td>
+              <%= f.text_field :name, autofocus: true, class:"form-control", style: "width:350px" %>
+            </td>
+          </tr>
+          <tr>
+            <th><i class="fas fa-envelope"></i></th>
+            <th class="manager-email">メールアドレス</th>
+            <td>
+              <%= f.email_field :email, autocomplete: "email", class:"form-control", required: true, style: "width:350px" %>
+            </td>
+          </tr>
+          <tr>
+            <th><i class="fas fa-lock"></i></th>
+            <th class="manager-password">現在のパスワード（必ず入力してください）</th>
+            <td>
+              <%= f.password_field :current_password, autocomplete: "new-password", class:"form-control", required: true, style: "width:350px" %>
+            </td>
+          </tr>
+          <tr>
+            <th><i class="fas fa-lock"></i></th>
+            <th class="manager-password">新パスワード（変更したい場合）</th>
+            <td>
+              <%= f.password_field :password, autocomplete: "new-password", class:"form-control", style: "width:350px" %>
+            </td>
+          </tr>
+          <tr>
+            <th><i class="fas fa-lock"></i></th>
+            <th class="manager-password">新パスワード（確認用）</th>
+            <td>
+              <%= f.password_field :password_confirmation, autocomplete: "new-password", class:"form-control", style: "width:350px" %>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="btn-manager--edit">
+        <%= f.submit t('.update'), class:"btn btn-primary" %>
+      </div>
+    <% end %>
+    <div style="padding-left:100px">
+      <%= link_to "戻る", managers_show_managers_profiles_path %>
     </div>
-  </div>
-  <div>
-    <%= link_to "戻る", managers_show_managers_profiles_path %>
   </div>
 </div>
