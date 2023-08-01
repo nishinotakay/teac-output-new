@@ -140,3 +140,16 @@ RSpec.shared_examples 'アソシエーションについて' do
     end
   end
 end
+
+RSpec.shared_examples 'sanitized_contentメソッドについて' do
+  context '本文にscriptタグとiframeタグが含まれている場合' do
+
+    it '取り除かれること' do
+      subject.content = '<script>スクリプトタグ</script>、<iframe>インラインフレームタグ</iframe>'
+      expect(subject.sanitized_content).not_to include('<script>')
+      expect(subject.sanitized_content).not_to include('</script>')
+      expect(subject.sanitized_content).not_to include('<iframe>')
+      expect(subject.sanitized_content).not_to include('</iframe>')
+    end
+  end
+end

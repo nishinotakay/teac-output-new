@@ -8,7 +8,6 @@ RSpec.describe Article, type: :model do
   let(:admin) { create(:admin) }
   let(:admin_article) { create(:article, admin: admin) }
   let(:user_and_admin_articles) { [create(:article, user: user), create(:article, admin: admin)] }
-  # let(:user_articles) { create_list(:article, 10, user: user) }
 
   describe '条件検索について' do
     before(:each) do # 各itの前に１件の記事データを生成する
@@ -219,12 +218,13 @@ RSpec.describe Article, type: :model do
     end
   end
 
-  RSpec.shared_examples '記事投稿について' do
-    it_behaves_like '正常な記事投稿について' # it_behaves_like の内容は spec/support/concerns/common_module.rb へ
+  RSpec.shared_examples '記事投稿について' do # 各テストの内容は spec/support/concerns/common_module.rb へ
+    it_behaves_like '正常な記事投稿について'
     it_behaves_like 'タイトルについて'
     it_behaves_like 'サブタイトルについて'
     it_behaves_like '本文について'
     it_behaves_like 'アソシエーションについて'
+    it_behaves_like 'sanitized_contentメソッドについて'
   end
 
   context 'ユーザーが記事を投稿する場合' do
