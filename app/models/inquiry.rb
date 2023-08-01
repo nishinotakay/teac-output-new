@@ -1,21 +1,22 @@
 class Inquiry < ApplicationRecord
   belongs_to :user
 
-    def self.get_sort_and_filter_params(params)
-      order = {
-        subject: params[:ord_subject], 
-        content: params[:ord_content], 
-        created_at: params[:ord_created_at]
-      }.compact
-      filter = {
-        subject: params[:flt_subject], 
-        content: params[:flt_content],
-        created_at: params[:fit_created_at],
-        hidden: params[:flt_hidden]
-      }.compact
-      sort_and_filter_params = {order: order, filter: filter}
-      return sort_and_filter_params
-    end
+  def self.get_sort_and_filter_params(params)
+    order = {
+      subject: params[:ord_subject], 
+      content: params[:ord_content], 
+      created_at: params[:ord_created_at]
+    }.compact
+    filter = {
+      subject: params[:flt_subject], 
+      content: params[:flt_content],
+      created_at: params[:flt_created_at],
+      hidden: params[:flt_hidden]
+    }.compact
+    sort_and_filter_params = {order: order, filter: filter}
+    return sort_and_filter_params
+  end
+  
   
     def self.get_inquiries(sort_and_filter_params)
       if sort_and_filter_params[:filter][:hidden] == "1"
@@ -42,8 +43,10 @@ class Inquiry < ApplicationRecord
         created_at_date = Date.parse(sort_and_filter_params[:filter][:created_at]).strftime('%Y-%m-%d')
         inquiry_scope = inquiry_scope.where("DATE(created_at) = ?", created_at_date)
       end
+      
       inquiry_scope
     end
+  
 
   
   
