@@ -17,7 +17,6 @@ class Inquiry < ApplicationRecord
     return sort_and_filter_params
   end
   
-  
     def self.get_inquiries(sort_and_filter_params)
       if sort_and_filter_params[:filter][:hidden] == "1"
         inquiries = where(hidden: false)
@@ -46,8 +45,4 @@ class Inquiry < ApplicationRecord
       
       inquiry_scope
     end
-  
-
-  
-  
 end
