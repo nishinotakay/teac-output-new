@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.shared_examples '正常な記事投稿について' do # RSpecの記述無しでも可
   it 'バリデーションが通ること' do
-    expect(article).to be_valid
+    expect(article).to be_valid # 可読性高めるため、subject を article へ変更
   end
 end
 

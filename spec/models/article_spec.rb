@@ -227,7 +227,7 @@ RSpec.describe Article, type: :model do
   end
 
   context 'ユーザーが記事を投稿する場合' do
-    subject(:article) { user_article }
+    subject(:article) { user_article } # aritcle { user_article } だとエラー
 
     it_behaves_like '記事投稿について'
   end
