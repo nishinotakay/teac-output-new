@@ -124,6 +124,7 @@ RSpec.shared_examples 'アソシエーションについて' do
       expect(article).to be_valid
     end
   end
+
   context '投稿者のidがない場合' do
     before :each do
       article.user_id = nil
@@ -136,7 +137,7 @@ RSpec.shared_examples 'アソシエーションについて' do
 
     it 'バリデーションのエラーが正しいこと' do
       article.valid?
-      expect(article.errors.full_messages).to include("Userを入力してください", "Adminを入力してください")
+      expect(article.errors.full_messages).to include('Userを入力してください', 'Adminを入力してください')
     end
   end
 end
