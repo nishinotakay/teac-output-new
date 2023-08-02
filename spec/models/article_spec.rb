@@ -20,7 +20,7 @@ RSpec.describe Article, type: :model do
           title: 'タイトル',
           order: 'desc'
         }
-        articles = Article.sort_filter(filter)
+        articles = described_class.sort_filter(filter)
         expect(articles.count).to eq(1) # 検索結果が1つを期待する
       end
 
@@ -29,7 +29,7 @@ RSpec.describe Article, type: :model do
           subtitle: 'サブタイトル',
           order:    'desc'
         }
-        articles = Article.sort_filter(filter)
+        articles = described_class.sort_filter(filter)
         expect(articles.count).to eq(1)
       end
 
@@ -38,7 +38,7 @@ RSpec.describe Article, type: :model do
           content: '本文',
           order:   'desc'
         }
-        articles = Article.sort_filter(filter)
+        articles = described_class.sort_filter(filter)
         expect(articles.count).to eq(1)
       end
 
@@ -47,7 +47,7 @@ RSpec.describe Article, type: :model do
           author: '山田太郎',
           order:  'desc'
         }
-        articles = Article.sort_filter(filter)
+        articles = described_class.sort_filter(filter)
         expect(articles.count).to eq(1)
       end
 
@@ -57,7 +57,7 @@ RSpec.describe Article, type: :model do
           finish: Date.current.to_s,
           order:  'desc'
         }
-        articles = Article.sort_filter(filter)
+        articles = described_class.sort_filter(filter)
         expect(articles.count).to eq(1)
       end
 
@@ -66,7 +66,7 @@ RSpec.describe Article, type: :model do
           start: Date.current.to_s,
           order: 'desc'
         }
-        articles = Article.sort_filter(filter)
+        articles = described_class.sort_filter(filter)
         expect(articles.count).to eq(1)
       end
 
@@ -75,7 +75,7 @@ RSpec.describe Article, type: :model do
           finish: Date.current.to_s,
           order:  'desc'
         }
-        articles = Article.sort_filter(filter)
+        articles = described_class.sort_filter(filter)
         expect(articles.count).to eq(1)
       end
 
@@ -89,7 +89,7 @@ RSpec.describe Article, type: :model do
           author:   '山田太郎',
           order:    'desc'
         }
-        articles = Article.sort_filter(filter)
+        articles = described_class.sort_filter(filter)
         expect(articles.count).to eq(1)
       end
     end
@@ -100,7 +100,7 @@ RSpec.describe Article, type: :model do
           title: '存在しない',
           order: 'desc'
         }
-        articles = Article.sort_filter(filter)
+        articles = described_class.sort_filter(filter)
         expect(articles).to be_empty # be_falsy では×
       end
 
@@ -109,7 +109,7 @@ RSpec.describe Article, type: :model do
           subtitle: '存在しない',
           order:    'desc'
         }
-        articles = Article.sort_filter(filter)
+        articles = described_class.sort_filter(filter)
         expect(articles).to be_empty
       end
 
@@ -118,7 +118,7 @@ RSpec.describe Article, type: :model do
           content: '存在しない',
           order:   'desc'
         }
-        articles = Article.sort_filter(filter)
+        articles = described_class.sort_filter(filter)
         expect(articles).to be_empty
       end
 
@@ -127,7 +127,7 @@ RSpec.describe Article, type: :model do
           author: '存在しない',
           order:  'desc'
         }
-        articles = Article.sort_filter(filter)
+        articles = described_class.sort_filter(filter)
         expect(articles).to be_empty
       end
 
@@ -141,7 +141,7 @@ RSpec.describe Article, type: :model do
           author:   '存在しない',
           order:    'desc'
         }
-        articles = Article.sort_filter(filter)
+        articles = described_class.sort_filter(filter)
         expect(articles).to be_empty
       end
     end
@@ -152,7 +152,7 @@ RSpec.describe Article, type: :model do
         start: Date.current.to_s,
         order: 'desc'
       }
-      articles = Article.sort_filter(filter)
+      articles = described_class.sort_filter(filter)
       expect(articles).to be_empty
     end
 
@@ -161,16 +161,15 @@ RSpec.describe Article, type: :model do
         finish: Date.yesterday.to_s, # 終了日を前日に指定
         order:  'desc'
       }
-      articles = Article.sort_filter(filter)
+      articles = described_class.sort_filter(filter)
       expect(articles).to be_empty
     end
 
     context '全てのフォームが未入力の場合' do
       it '全ての記事が抽出される' do
         filter = { title: '', sub_title: '', content: '', order: 'desc' }
-        articles = Article.sort_filter(filter)
-        # expect(articles.count).to eq(1)
-        expect(articles).to match_array(Article.all) # 全ての記事抽出を確認するためallで実装
+        articles = described_class.sort_filter(filter)
+        expect(articles).to match_array(described_class.all) # 全ての記事抽出を確認するためallで実装
       end
     end
   end
@@ -186,7 +185,7 @@ RSpec.describe Article, type: :model do
           title: 'タイトル',
           order: 'desc'
         }
-        articles = Article.sort_filter(filter)
+        articles = described_class.sort_filter(filter)
         expect(articles.count).to eq(2)
       end
     end
@@ -200,7 +199,7 @@ RSpec.describe Article, type: :model do
     context '古い順を押下した場合' do
       it '昇順で記事を返す' do
         filter = { order: 'ASC' }
-        articles = Article.sort_filter(filter)
+        articles = described_class.sort_filter(filter)
         ids = articles.map(&:id)
         expect(ids).to eq ids.sort
         expect(articles.map(&:created_at)).to eq articles.map(&:created_at).sort # map → pluckメソッドも使用可
@@ -210,7 +209,7 @@ RSpec.describe Article, type: :model do
     context '新しい順を押下した場合' do
       it '昇順で記事を返す' do
         filter = { order: 'DESC' }
-        articles = Article.sort_filter(filter)
+        articles = described_class.sort_filter(filter)
         ids = articles.map(&:id)
         expect(ids).to eq ids.sort.reverse # id が昇順を期待
         expect(articles.map(&:created_at)).to eq articles.map(&:created_at).sort.reverse # created_at が昇順を期待
