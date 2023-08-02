@@ -224,18 +224,32 @@ RSpec.describe Article, type: :model do
     it_behaves_like 'サブタイトルについて'
     it_behaves_like '本文について'
     it_behaves_like 'アソシエーションについて'
-    it_behaves_like 'sanitized_contentメソッドについて'
   end
 
   context 'ユーザーが記事を投稿する場合' do
-    subject { user_article }
+    subject(:article) { user_article }
 
     it_behaves_like '記事投稿について'
   end
 
   context '管理者が記事を投稿する場合' do
-    subject { admin_article }
+    subject(:article) { admin_article }
 
     it_behaves_like '記事投稿について'
+  end
+
+  describe 'sanitized_contentメソッドについて' do
+    let(:article) { build(:article, content: '<script>タグを</script>、<iframe>取り除く</iframe>') }
+
+    context '本文にscriptタグとiframeタグが含まれている場合' do
+      it '取り除かれること' do
+        expect(article.sanitized_content).not_to include(
+          '<script>',
+          '</script>',
+          '<iframe>',
+          '</iframe>'
+        )
+      end
+    end
   end
 end
