@@ -237,11 +237,12 @@ RSpec.describe Article, type: :model do
     it_behaves_like '記事投稿について'
   end
 
-  describe 'sanitized_contentメソッドについて' do
-    let(:article) { build(:article, content: '<script>タグを</script>、<iframe>取り除く</iframe>') }
+  describe 'sanitized_contentメソッドについて' do # 以下はDBとのやり取り不要のため build で実装
+    let(:article) { build(:article, content: '<script>タグを</script><iframe>取り除く</iframe>') }
 
     context '本文にscriptタグとiframeタグが含まれている場合' do
       it '取り除かれること' do
+        binding.pry
         expect(article.sanitized_content).not_to include(
           '<script>',
           '</script>',
