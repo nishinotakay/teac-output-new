@@ -242,7 +242,6 @@ RSpec.describe Article, type: :model do
 
     context '本文にscriptタグとiframeタグが含まれている場合' do
       it '取り除かれること' do
-        binding.pry
         expect(article.sanitized_content).not_to include(
           '<script>',
           '</script>',
