@@ -7,7 +7,6 @@ RSpec.describe Article, type: :model do
   let(:user_article) { create(:article, title: "タイトル", sub_title: "サブタイトル", content: "本文", user: user) }
   let(:admin) { create(:admin) }
   let(:admin_article) { create(:article, title: "タイトル", sub_title: "サブタイトル", content: "本文", admin: admin) }
-  #let(:user_and_admin_articles) { [create(:article, user: user), create(:article, admin: admin)] }
 
   describe '条件検索' do
     before(:each) do # 各itの前に１件の記事データを生成する
