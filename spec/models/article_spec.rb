@@ -9,7 +9,7 @@ RSpec.describe Article, type: :model do
   let(:admin_article) { create(:article, admin: admin) }
   let(:user_and_admin_articles) { [create(:article, user: user), create(:article, admin: admin)] }
 
-  describe '条件検索について' do
+  describe '条件検索' do
     before(:each) do # 各itの前に１件の記事データを生成する
       user_article
     end
@@ -191,7 +191,7 @@ RSpec.describe Article, type: :model do
     end
   end
 
-  describe '並び替え機能について' do
+  describe '並び替え機能' do
     before(:each) do
       user_and_admin_articles
     end
@@ -217,27 +217,27 @@ RSpec.describe Article, type: :model do
     end
   end
 
-  RSpec.shared_examples '記事投稿について' do # 各テストの内容は spec/support/concerns/common_module.rb へ
-    it_behaves_like '正常な記事投稿について'
-    it_behaves_like 'タイトルについて'
-    it_behaves_like 'サブタイトルについて'
-    it_behaves_like '本文について'
-    it_behaves_like 'アソシエーションについて'
+  RSpec.shared_examples '記事投稿' do # 各テストの内容は spec/support/concerns/common_module.rb へ
+    it_behaves_like '正常な記事投稿'
+    it_behaves_like 'タイトル'
+    it_behaves_like 'サブタイトル'
+    it_behaves_like '本文'
+    it_behaves_like 'アソシエーション'
   end
 
   context 'ユーザーが記事を投稿する場合' do
     subject(:article) { user_article } # 可読性高めるため、subject を article へ変更 aritcle { user_article } だとエラー
 
-    it_behaves_like '記事投稿について'
+    it_behaves_like '記事投稿'
   end
 
   context '管理者が記事を投稿する場合' do
     subject(:article) { admin_article }
 
-    it_behaves_like '記事投稿について'
+    it_behaves_like '記事投稿'
   end
 
-  describe 'sanitized_contentメソッドについて' do # 以下はDBとのやり取り不要のため build で実装
+  describe 'sanitized_contentメソッド' do # 以下はDBとのやり取り不要のため build で実装
     let(:article) { build(:article, content: '<script>タグを</script><iframe>取り除く</iframe>') }
 
     context '本文にscriptタグとiframeタグが含まれている場合' do
