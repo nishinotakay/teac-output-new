@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-RSpec.shared_examples '正常な記事投稿について' do # RSpecの記述無しでも可
+RSpec.shared_examples '正常な記事投稿' do # RSpecの記述無しでも可
   it 'バリデーションが通ること' do
     expect(article).to be_valid # 可読性高めるため、subject を article へ変更
   end
 end
 
-RSpec.shared_examples 'タイトルについて' do
+RSpec.shared_examples 'タイトル' do
   context '未入力の場合' do
     before :each do # itの前に実行
       article.title = nil
@@ -18,7 +18,7 @@ RSpec.shared_examples 'タイトルについて' do
 
     it 'バリデーションのエラーが正しいこと' do
       article.valid?
-      expect(article.errors.full_messages).to include('タイトルを入力してください')
+      expect(article.errors.full_messages).to eq(["タイトルを入力してください", "タイトルは1文字以上で入力してください"]) # eq("タイトルを入力してください", "タイトルは1文字以上で入力してください")ではエラー！[]が必要
     end
   end
 
@@ -43,12 +43,12 @@ RSpec.shared_examples 'タイトルについて' do
 
     it 'バリデーションのエラーが正しいこと' do
       article.valid?
-      expect(article.errors.full_messages).to include('タイトルは40文字以内で入力してください')
+      expect(article.errors.full_messages).to eq(['タイトルは40文字以内で入力してください'])
     end
   end
 end
 
-RSpec.shared_examples 'サブタイトルについて' do
+RSpec.shared_examples 'サブタイトル' do
   context '未入力の場合' do
     before :each do
       article.sub_title = nil
@@ -80,12 +80,12 @@ RSpec.shared_examples 'サブタイトルについて' do
 
     it 'バリデーションのエラーが正しいこと' do
       article.valid?
-      expect(article.errors.full_messages).to include('サブタイトルは50文字以内で入力してください')
+      expect(article.errors.full_messages).to eq(['サブタイトルは50文字以内で入力してください'])
     end
   end
 end
 
-RSpec.shared_examples '本文について' do
+RSpec.shared_examples '本文' do
   context '未入力の場合' do
     before :each do
       article.content = nil
@@ -97,12 +97,12 @@ RSpec.shared_examples '本文について' do
 
     it 'バリデーションのエラーが正しいこと' do
       article.valid?
-      expect(article.errors.full_messages).to include('本文を入力してください')
+      expect(article.errors.full_messages).to eq(['本文を入力してください'])
     end
   end
 end
 
-RSpec.shared_examples 'アソシエーションについて' do
+RSpec.shared_examples 'アソシエーション' do
   context 'ユーザーidが設定されている場合' do
     before :each do
       article.user_id = 1
@@ -137,7 +137,7 @@ RSpec.shared_examples 'アソシエーションについて' do
 
     it 'バリデーションのエラーが正しいこと' do
       article.valid?
-      expect(article.errors.full_messages).to include('Userを入力してください', 'Adminを入力してください')
+      expect(article.errors.full_messages).to eq(['Userを入力してください', 'Adminを入力してください'])
     end
   end
 end
