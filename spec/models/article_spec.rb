@@ -4,10 +4,10 @@ require 'rails_helper'
 
 RSpec.describe Article, type: :model do
   let(:user) { create(:user) }
-  let(:user_article) { create(:article, user: user) }
+  let(:user_article) { create(:article, title: "タイトル", sub_title: "サブタイトル", content: "本文", user: user) }
   let(:admin) { create(:admin) }
-  let(:admin_article) { create(:article, admin: admin) }
-  let(:user_and_admin_articles) { [create(:article, user: user), create(:article, admin: admin)] }
+  let(:admin_article) { create(:article, title: "タイトル", sub_title: "サブタイトル", content: "本文", admin: admin) }
+  #let(:user_and_admin_articles) { [create(:article, user: user), create(:article, admin: admin)] }
 
   describe '条件検索' do
     before(:each) do # 各itの前に１件の記事データを生成する
@@ -176,7 +176,8 @@ RSpec.describe Article, type: :model do
 
   describe '複数記事の条件検索' do
     before(:each) do
-      user_and_admin_articles # ユーザーと管理者の投稿記事を生成　計２件
+      user_article
+      admin_article # ユーザーと管理者の投稿記事を生成　計２件
     end
 
     context '条件を満たすデータが存在する場合' do
@@ -193,7 +194,8 @@ RSpec.describe Article, type: :model do
 
   describe '並び替え機能' do
     before(:each) do
-      user_and_admin_articles
+      user_article
+      admin_article
     end
 
     context '古い順を押下した場合' do
