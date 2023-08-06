@@ -110,19 +110,16 @@ RSpec.describe Tweet, type: :model do
   end
 
   describe 'association' do
+    let(:user) { FactoryBot.create(:user) }
+    let(:tweet) { FactoryBot.create(:tweet, user: user) }
     
     context 'tweetが存在する場合' do
-      let(:user) { FactoryBot.create(:user) }
-      let(:tweet) { FactoryBot.create(:tweet, user: user) }
-      
       it 'userと関連付けられる' do
         expect(tweet.user_id).to eq(user.id)
       end
     end
 
     context '複数のtweet_commentが存在する場合' do
-      let(:user) { FactoryBot.create(:user) }
-      let(:tweet) { FactoryBot.create(:tweet, user: user) }
       let!(:tweet_comments) { FactoryBot.create_list(:tweet_comment, 3, user: user, tweet: tweet)}
 
       context 'tweetを削除する場合' do
