@@ -1,14 +1,14 @@
 require 'rails_helper'
 
-RSpec.shared_examples '正常な記事投稿' do # RSpecの記述無しでも可
+RSpec.shared_examples '正常な記事投稿' do
   it 'バリデーションが通ること' do
-    expect(article).to be_valid # 可読性高めるため、subject を article へ変更
+    expect(article).to be_valid
   end
 end
 
 RSpec.shared_examples 'タイトル' do
   context '未入力の場合' do
-    before :each do # itの前に実行
+    before :each do
       article.title = nil
     end
 
@@ -18,7 +18,7 @@ RSpec.shared_examples 'タイトル' do
 
     it 'バリデーションのエラーが正しいこと' do
       article.valid?
-      expect(article.errors.full_messages).to eq(["タイトルを入力してください", "タイトルは1文字以上で入力してください"]) # eq("タイトルを入力してください", "タイトルは1文字以上で入力してください")ではエラー！[]が必要
+      expect(article.errors.full_messages).to eq(["タイトルを入力してください", "タイトルは1文字以上で入力してください"])
     end
   end
 
