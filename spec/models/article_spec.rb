@@ -20,7 +20,7 @@ RSpec.describe Article, type: :model do
           order: 'desc'
         }
         articles = described_class.sort_filter(filter)
-        expect(articles.count).to eq(1) # 検索結果が1つを期待する
+        expect(articles.count).to eq(1)
       end
 
       it 'サブタイトルで部分一致する記事を返す' do
@@ -52,7 +52,7 @@ RSpec.describe Article, type: :model do
 
       it '指定日付範囲内の記事を返す' do
         filter = {
-          start:  Date.current.to_s, # Date.today.to_s だと×
+          start:  Date.current.to_s,
           finish: Date.current.to_s,
           order:  'desc'
         }
