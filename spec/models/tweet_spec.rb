@@ -175,14 +175,10 @@ RSpec.describe Tweet, type: :model do
         user
         tweet
       end
+
       let!(:tweet_comments) { FactoryBot.create_list(:tweet_comment, 3, user: user, tweet: tweet)}
 
       context 'tweetを削除する場合' do
-        before do
-          user
-          tweet
-        end
-
         it '3つの関連付けられたtweet_commentsが削除される' do
           expect { tweet.destroy }.to change { TweetComment.count }.by(-3)
         end
