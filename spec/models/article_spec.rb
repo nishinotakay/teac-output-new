@@ -3,131 +3,252 @@
 require 'rails_helper'
 
 RSpec.describe Article, type: :model do
-  let(:user_a) { build(:user, :a, confirmed_at: Date.today) }
-  let(:article) { build(:article, user: user_a) }
-  
-  describe 'バリデーションについて' do
-    subject do
-      article
+  let(:user) { create(:user) }
+  let(:user_article) { create(:article, title: "タイトル", sub_title: "サブタイトル", content: "本文", user: user) }
+  let(:admin) { create(:admin) }
+  let(:admin_article) { create(:article, title: "タイトル", sub_title: "サブタイトル", content: "本文", admin: admin) }
+
+  describe '条件検索' do
+    before(:each) do # 各itの前に１件の記事データを生成する
+      user_article
     end
 
-    it 'バリデーションが通ること' do
-      expect(subject).to be_valid
-    end
-
-    describe '#title' do
-      context '存在しない場合' do
-        before :each do
-          subject.title = nil
-        end
-
-        it 'バリデーションに落ちること' do
-          expect(subject).to be_invalid
-        end
-
-        it 'バリデーションのエラーが正しいこと' do
-          subject.valid?
-          expect(subject.errors.full_messages).to include('タイトルを入力してください')
-        end
+    context '条件を満たすデータが存在する場合' do
+      it 'タイトルで部分一致する記事を返す' do
+        filter = {
+          title: 'タイトル',
+          order: 'desc'
+        }
+        articles = described_class.sort_filter(filter)
+        expect(articles.count).to eq(1)
       end
 
-      context '文字数が1文字の場合' do
-        before :each do
-          subject.title = 'a' * 1
-        end
-
-        it 'バリデーションが通ること' do
-          expect(subject).to be_valid
-        end
+      it 'サブタイトルで部分一致する記事を返す' do
+        filter = {
+          subtitle: 'サブタイトル',
+          order:    'desc'
+        }
+        articles = described_class.sort_filter(filter)
+        expect(articles.count).to eq(1)
       end
 
-      context '文字数が40文字の場合' do
-        before :each do
-          subject.title = 'a' * 40
-        end
-
-        it 'バリデーションが通ること' do
-          expect(subject).to be_valid
-        end
+      it '本文で部分一致する記事を返す' do
+        filter = {
+          content: '本文',
+          order:   'desc'
+        }
+        articles = described_class.sort_filter(filter)
+        expect(articles.count).to eq(1)
       end
 
-      context '文字数が41文字の場合' do
-        before :each do
-          subject.title = 'a' * 41
-        end
-
-        it 'バリデーションに落ちること' do
-          expect(subject).to be_invalid
-        end
-
-        it 'バリデーションのエラーが正しいこと' do
-          subject.valid?
-          expect(subject.errors.full_messages).to include('タイトルは40文字以内で入力してください')
-        end
-      end
-    end
-
-    describe '#sub_title' do
-      context '存在しない場合' do
-        before :each do
-          subject.sub_title = nil
-        end
-
-        it 'バリデーションが通ること' do
-          expect(subject).to be_valid
-        end
+      it '投稿者で部分一致する記事を返す' do
+        filter = {
+          author: '山田太郎',
+          order:  'desc'
+        }
+        articles = described_class.sort_filter(filter)
+        expect(articles.count).to eq(1)
       end
 
-      context '文字数が1文字の場合' do
-        before :each do
-          subject.sub_title = 'a' * 1
-        end
-
-        it 'バリデーションが通ること' do
-          expect(subject).to be_valid
-        end
+      it '指定日付範囲内の記事を返す' do
+        filter = {
+          start:  Date.current.to_s,
+          finish: Date.current.to_s,
+          order:  'desc'
+        }
+        articles = described_class.sort_filter(filter)
+        expect(articles.count).to eq(1)
       end
 
-      context '文字数が50文字の場合' do
-        before :each do
-          subject.sub_title = 'a' * 50
-        end
-
-        it 'バリデーションが通ること' do
-          expect(subject).to be_valid
-        end
+      it '指定開始日以降の記事を返す' do # 終了日は指定なし
+        filter = {
+          start: Date.current.to_s,
+          order: 'desc'
+        }
+        articles = described_class.sort_filter(filter)
+        expect(articles.count).to eq(1)
       end
 
-      context '文字数が51文字の場合' do
-        before :each do
-          subject.sub_title = 'a' * 51
-        end
+      it '指定終了日までの記事を返す' do # 開始日は指定なし
+        filter = {
+          finish: Date.current.to_s,
+          order:  'desc'
+        }
+        articles = described_class.sort_filter(filter)
+        expect(articles.count).to eq(1)
+      end
 
-        it 'バリデーションに落ちること' do
-          expect(subject).to be_invalid
-        end
-
-        it 'バリデーションのエラーが正しいこと' do
-          subject.valid?
-          expect(subject.errors.full_messages).to include('サブタイトルは50文字以内で入力してください')
-        end
+      it '部分一致で全ての条件を満たす記事を抽出できる' do
+        filter = {
+          start:    "#{Date.today.year}-01-01",
+          finish:   "#{Date.today.year}-12-31",
+          title:    'タイトル',
+          subtitle: 'サブタイトル',
+          content:  '本文',
+          author:   '山田太郎',
+          order:    'desc'
+        }
+        articles = described_class.sort_filter(filter)
+        expect(articles.count).to eq(1)
       end
     end
 
-    describe '#content' do
-      context '存在しない場合' do
-        before :each do
-          subject.content = nil
-        end
+    context '条件を満たすデータが存在しない場合' do
+      it 'タイトルが一致せず空のリストを返す' do
+        filter = {
+          title: '存在しない',
+          order: 'desc'
+        }
+        articles = described_class.sort_filter(filter)
+        expect(articles).to be_empty # be_falsy では×
+      end
 
-        it 'バリデーションに落ちること' do
-          expect(subject).to be_invalid
-        end
+      it 'サブタイトルが一致せず空のリストを返す' do
+        filter = {
+          subtitle: '存在しない',
+          order:    'desc'
+        }
+        articles = described_class.sort_filter(filter)
+        expect(articles).to be_empty
+      end
 
-        it 'バリデーションのエラーが正しいこと' do
-          subject.valid?
-          expect(subject.errors.full_messages).to include('本文を入力してください')
-        end
+      it '本文が一致せず空のリストを返す' do
+        filter = {
+          content: '存在しない',
+          order:   'desc'
+        }
+        articles = described_class.sort_filter(filter)
+        expect(articles).to be_empty
+      end
+
+      it '投稿者が一致せず空のリストを返す' do
+        filter = {
+          author: '存在しない',
+          order:  'desc'
+        }
+        articles = described_class.sort_filter(filter)
+        expect(articles).to be_empty
+      end
+
+      it '全ての条件を満たす記事が存在せず空のリストが返る' do
+        filter = {
+          start:    "#{Date.today.year}-01-01",
+          finish:   "#{Date.today.year}-12-31",
+          title:    '存在しない',
+          subtitle: '存在しない',
+          content:  '存在しない',
+          author:   '存在しない',
+          order:    'desc'
+        }
+        articles = described_class.sort_filter(filter)
+        expect(articles).to be_empty
+      end
+    end
+
+    it '指定開始日からの記事が存在せず空のリストが返る' do
+      user_article.update(created_at: Date.yesterday) # 記事を前日投稿に修正
+      filter = {
+        start: Date.current.to_s,
+        order: 'desc'
+      }
+      articles = described_class.sort_filter(filter)
+      expect(articles).to be_empty
+    end
+
+    it '指定終了日までの記事が存在せず空のリストが返る' do
+      filter = {
+        finish: Date.yesterday.to_s, # 終了日を前日に指定
+        order:  'desc'
+      }
+      articles = described_class.sort_filter(filter)
+      expect(articles).to be_empty
+    end
+
+    context '全てのフォームが未入力の場合' do
+      it '全ての記事が抽出される' do
+        filter = { title: '', sub_title: '', content: '', order: 'desc' }
+        articles = described_class.sort_filter(filter)
+        expect(articles).to match_array(described_class.all) # 全ての記事抽出を確認するためallで実装
+      end
+    end
+  end
+
+  describe '複数記事の条件検索' do
+    before(:each) do
+      user_article
+      admin_article # ユーザーと管理者の投稿記事を生成　計２件
+    end
+
+    context '条件を満たすデータが存在する場合' do
+      it '条件で部分一致する全ての記事を返す' do
+        filter = {
+          title: 'タイトル',
+          order: 'desc'
+        }
+        articles = described_class.sort_filter(filter)
+        expect(articles.count).to eq(2)
+      end
+    end
+  end
+
+  describe '並び替え機能' do
+    before(:each) do
+      user_article
+      admin_article
+    end
+
+    context '古い順を押下した場合' do
+      it '昇順で記事を返す' do
+        filter = { order: 'ASC' }
+        articles = described_class.sort_filter(filter)
+        ids = articles.map(&:id)
+        expect(ids).to eq ids.sort
+        expect(articles.map(&:created_at)).to eq articles.map(&:created_at).sort # map → pluckメソッドも使用可
+      end
+    end
+
+    context '新しい順を押下した場合' do
+      it '昇順で記事を返す' do
+        filter = { order: 'DESC' }
+        articles = described_class.sort_filter(filter)
+        ids = articles.map(&:id)
+        expect(ids).to eq ids.sort.reverse # id が昇順を期待
+        expect(articles.map(&:created_at)).to eq articles.map(&:created_at).sort.reverse # created_at が昇順を期待
+      end
+    end
+  end
+
+  RSpec.shared_examples '記事投稿' do # 各テストの内容は spec/support/concerns/common_module.rb へ
+    it_behaves_like '正常な記事投稿'
+    it_behaves_like 'タイトル'
+    it_behaves_like 'サブタイトル'
+    it_behaves_like '本文'
+    it_behaves_like 'アソシエーション'
+  end
+
+  context 'ユーザーが記事を投稿する場合' do
+    subject(:article) { user_article } # 可読性高めるため、subject を article へ変更 aritcle { user_article } だとエラー
+
+    it_behaves_like '記事投稿'
+  end
+
+  context '管理者が記事を投稿する場合' do
+    subject(:article) { admin_article }
+
+    it_behaves_like '記事投稿'
+  end
+
+  describe 'sanitized_contentメソッド' do # 以下はDBとのやり取り不要のため build で実装
+    let(:article) { build(:article, content: '<script>タグを</script><iframe>取り除く</iframe>') }
+
+    context '本文にscriptタグとiframeタグが含まれている場合' do
+      it '取り除かれること' do
+        expect(article.sanitized_content).not_to include(
+          '<script>',
+          '</script>',
+          '<iframe>',
+          '</iframe>'
+        )
       end
     end
   end
