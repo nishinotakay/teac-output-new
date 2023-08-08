@@ -10,6 +10,7 @@
     <br>
     <div style="padding-left:50px">
       <%= form_with model: @profile, url: { controller: "profiles", action: "create" }, local: true do |f| %>
+        <%= render 'layouts/error_messages', model: f.object %>
         <div class="form-group">
           <div class="form-inline">
             <i class="fas fa-user"></i>

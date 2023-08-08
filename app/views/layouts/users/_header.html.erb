@@ -24,17 +24,19 @@
             <% end %>
           </li> 
         <% elsif request.fullpath == "/users/profiles" %>
-          <li class="nav-item">
-          <% if current_user.profile.nil? %>
-            <%= link_to new_users_profile_path, class: "nav-link", method: :get do %>
-              <p>プロフィール投稿</p>
-            <% end %>
+          <% if current_user.profile&.id.present? %>
+            <li class="nav-item">
+              <%= link_to edit_users_profile_path(current_user.profile), class: "nav-link", method: :get do %>
+                <p>プロフィールを編集</p>
+              <% end %>
+            </li>
           <% else %>
-            <%= link_to edit_users_profile_path(current_user.profile.id), class: "nav-link", method: :get do %>
-              <p>プロフィールを編集</p>
-            <% end %>
+            <li class="nav-item">
+              <%= link_to new_users_profile_path, class: "nav-link", method: :get do %>
+                <p>プロフィール投稿</p>
+              <% end %>
+            </li>
           <% end %>
-          </li>
         <% elsif request.fullpath == "/users/posts" %>
           <li class="nav-item">
             <%= link_to new_users_post_path, class: "nav-link", method: :get do %>
