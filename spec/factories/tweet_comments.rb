@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :tweet_comment do
-    sequence(:content) { |n| "tweet_comment_test#{n}" }
+    content { "tweet_comment_test" }
     association :user
     association :tweet
     recipient_id { tweet.user_id }

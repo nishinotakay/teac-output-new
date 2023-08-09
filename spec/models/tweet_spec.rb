@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Tweet, type: :model do
-  let(:user) { create(:user, name:'山田太郎', email: Faker::Internet.email, password: 'password') }
-  let(:tweet) { create(:tweet, post: "it's sunny day!", user: user) }
-  let(:tweet_comment) { FactoryBot.create_list(:tweet_comment, 3, user: user, tweet: tweet, recipient_id: tweet.user_id)}
+  let(:user) { create(:user, :a) }
+  let!(:tweet) { create(:tweet, post: "it's sunny day!", user: user) }
+  let!(:tweet_comment) { FactoryBot.create_list(:tweet_comment, 3, content: "tweet_comment_test", user: user, tweet: tweet, recipient_id: tweet.user_id)}
   describe 'validation' do
 
     context '有効な投稿が存在する場合' do
@@ -50,6 +50,7 @@ RSpec.describe Tweet, type: :model do
 
     context '4以内の画像データをアップロードする場合' do
       it 'バリデーションをパスする。' do
+        binding.pry
         4.times do |i|
           tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', "test#{i + 1}.png"),
           filename: "test#{i + 1}.png", content_type: 'image/png'))
@@ -102,30 +103,19 @@ RSpec.describe Tweet, type: :model do
     context 'pngファイルをアップロードする場合' do
       it_behaves_like 'jpeg、jpg、pngのファイルをアップロードする場合', 'test_png.png', 'image/png'
     end
-
   end
 
-  # describe 'association' do
-  #   before do
-  #     tweet
-  #     tweet_comment
-  #   end
+  describe 'association' do
+    context 'tweetが存在する場合' do
+      it 'userと関連付けられる' do
+        expect(tweet.user_id).to eq(user.id)
+      end
+    end
 
-  #   context 'tweetが存在する場合' do
-  #      it 'userと関連付けられる' do
-  #       expect(tweet.user_id).to eq(user.id)
-  #     end
-  #   end
-
-  #   context '複数のtweet_commentが存在する場合' do
-  #     before do
-  #       tweet_comment
-  #     end
-  #     context 'tweetを削除する場合' do
-  #       it '3つの関連付けられたtweet_commentsが削除される' do
-  #         expect { tweet.destroy }.to change { TweetComment.count }.by(-3)
-  #       end
-  #     end
-  #   end
-  # end
+    context 'tweetを削除する場合' do
+      it '3つの関連付けられたtweet_commentsが削除される' do
+        expect { tweet.destroy }.to change { TweetComment.count }.by(-3)
+      end
+    end
+  end
 end

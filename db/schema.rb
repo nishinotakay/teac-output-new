@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_08_07_064700) do
+ActiveRecord::Schema.define(version: 2023_08_07_080430) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -149,8 +149,8 @@ ActiveRecord::Schema.define(version: 2023_08_07_064700) do
     t.date "learning_start"
     t.date "birthday"
     t.integer "gender"
-    t.date "registration_date"
-    t.string "hobby"
+    t.date "registration_date", null: false
+    t.string "hobby", null: false
     t.index ["user_id"], name: "index_profiles_on_user_id"
   end
 
