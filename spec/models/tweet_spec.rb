@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Tweet, type: :model do
-  let(:user) { create(:user, :a) }
+  let(:user) { create(:user, name: '山田太郎', email: Faker::Internet.email, password: 'password') }
   let!(:tweet) { create(:tweet, post: "it's sunny day!", user: user) }
   let!(:tweet_comment) { FactoryBot.create_list(:tweet_comment, 3, content: "tweet_comment_test", user: user, tweet: tweet, recipient_id: tweet.user_id)}
   describe 'validation' do
@@ -15,7 +15,7 @@ RSpec.describe Tweet, type: :model do
 
     context '投稿が入力されていない場合' do
       it 'バリデーションをパスしない' do
-        tweet.post = nil
+        tweet.post = ""
         expect(tweet.valid?).not_to eq(true)
         expect(tweet.errors.full_messages).to eq(["Postを入力してください"])
       end
@@ -50,7 +50,6 @@ RSpec.describe Tweet, type: :model do
 
     context '4以内の画像データをアップロードする場合' do
       it 'バリデーションをパスする。' do
-        binding.pry
         4.times do |i|
           tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', "test#{i + 1}.png"),
           filename: "test#{i + 1}.png", content_type: 'image/png'))
