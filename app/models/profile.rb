@@ -46,4 +46,3 @@ class Profile < ApplicationRecord
     return profiles
   end
 end
-
