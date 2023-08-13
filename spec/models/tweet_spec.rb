@@ -6,7 +6,10 @@ RSpec.describe Tweet, type: :model do
   let!(:tweet_comment) { FactoryBot.create_list(:tweet_comment, 3, content: "tweet_comment_test", user: user, tweet: tweet, recipient_id: tweet.user_id)}
   describe 'validation' do
 
-    context '有効な投稿が存在する場合' do
+    context '投稿フォームに1文字入力されている場合' do
+      before do
+        tweet.post = 'c' * 1
+      end
       it 'バリデーションをパスする' do
         expect(tweet.valid?).to eq(true)
         expect(tweet.errors).to be_empty
@@ -14,78 +17,99 @@ RSpec.describe Tweet, type: :model do
     end
 
     context '投稿が入力されていない場合' do
-      it 'バリデーションをパスしない' do
+      before do
         tweet.post = ""
+      end
+      it 'バリデーションをパスしない' do
         expect(tweet.valid?).not_to eq(true)
         expect(tweet.errors.full_messages).to eq(["Postを入力してください"])
       end
     end
 
     context '投稿フォームに255文字以内で入力されている場合' do
-      it 'バリデーションをパスする' do
+      before do
         tweet.post = 'c' * 255
+      end
+      it 'バリデーションをパスする' do
         expect(tweet.valid?).to eq(true)
         expect(tweet.errors).to be_empty
       end
     end
 
     context '投稿フォームに255文字より多く入力されている場合' do
-      it 'バリデーションをパスしない' do
+      before do
         tweet.post = 'c' * 256
+      end
+      it 'バリデーションをパスしない' do
         expect(tweet.valid?).not_to eq(true)
         expect(tweet.errors.full_messages).to eq(["Postは255文字以内で入力してください"])
       end
     end
 
-    context '4つよりも多いの画像データをアップロードする場合' do
-      it 'バリデーションをパスしない' do
-        5.times do |i|
-          tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', "test#{i + 1}.png"), 
-          filename: "test#{i + 1}.png", content_type: 'image/png'))
-        end
-        expect(tweet.valid?).not_to eq(true)
-        expect(tweet.errors.full_messages).to eq(["Imagesは4つまでしかアップロードできません。"])
-      end
-    end
-
-    context '4以内の画像データをアップロードする場合' do
-      it 'バリデーションをパスする。' do
+    
+    context '4つ以内の画像データをアップロードする場合' do
+      before do
         4.times do |i|
           tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', "test#{i + 1}.png"),
           filename: "test#{i + 1}.png", content_type: 'image/png'))
         end
+      end
+      it 'バリデーションをパスする。' do
         expect(tweet.valid?).to eq(true)
         expect(tweet.errors).to be_empty
       end
     end
-
+    
+    context '4つよりも多いの画像データをアップロードする場合' do
+      before do
+        5.times do |i|
+          tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', "test#{i + 1}.png"), 
+          filename: "test#{i + 1}.png", content_type: 'image/png'))
+        end
+      end
+      it 'バリデーションをパスしない' do
+        expect(tweet.valid?).not_to eq(true)
+        expect(tweet.errors.full_messages).to eq(["Imagesは4つまでしかアップロードできません。"])
+      end
+    end
+    
     context '5MB以下の画像データをアップロードする場合' do
+      before do
+        tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'test_5mb.jpg'),
+        filename: "test5mb.jpg", content_type: 'image/jpeg'))
+      end
       it 'バリデーションをパスする' do
-        tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'test_5mb.jpg'), filename: "test5mb.jng", content_type: 'image/jpeg'))
         expect(tweet.valid?).to eq(true)
         expect(tweet.errors).to be_empty
       end
     end
 
     context '5MBよりも大きな画像データをアップロードする場合' do
+      before do
+        tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'test_6mb.jpg'),
+        filename: "test6mb.jng", content_type: 'image/jpeg'))
+      end
       it 'バリデーションをパスしない' do
-        tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'test_6mb.jpg'), filename: "test6mb.jng", content_type: 'image/jpeg'))
         expect(tweet.valid?).not_to eq(true)
         expect(tweet.errors.full_messages).to eq(["Imagesは1つのファイル5MB以内にして下さい。"])
       end
     end
 
     context 'jpeg形式、png形式以外のファイルをアップロードする場合' do
-      it 'バリデーションをパスしない' do
+      before do
         tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'test_csv.csv'), filename: 'test_csv.csv', content_type: 'text/csv'))
+      end
+      it 'バリデーションをパスしない' do
         expect(tweet.valid?).not_to eq(true)
         expect(tweet.errors.full_messages).to eq(["Imagesはpng形式またはjpeg形式でアップロードして下さい。"])
       end
     end
 
     shared_examples 'jpeg、jpg、pngのファイルをアップロードする場合' do |filename, content_type|
-      it "#{content_type}はバリデーションをパスする" do
+      before do
         tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', filename), filename: filename, content_type: content_type))
+      end
+      it "#{content_type}はバリデーションをパスする" do
         expect(tweet.valid?).to eq(true)
         expect(tweet.errors).to be_empty
       end
