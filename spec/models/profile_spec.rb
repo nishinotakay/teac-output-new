@@ -1,39 +1,32 @@
 require 'rails_helper'
-RSpec.describe 'Profileモデルのテスト', type: :model do
-  describe 'バリデーションのテスト' do
-    # factoriesで作成したダミーデータを使用します。
-    # test_postを作成し、空欄での登録ができるか確認します。
-    subject { test_profile.valid? }
 
-    let(:user) { FactoryBot.create(:user, :a) }
-    let(:test_profile) { profile }
-    let!(:profile) { build(:profile, user_id: user.id) }
+RSpec.describe Profile, type: :model do
+  describe 'バリデーション' do
+    subject { FactoryBot.build(:profile, registration_date: registration_date, hobby: hobby) }
 
-    it 'is valid with a purpose' do
-      profile = Profile.new(purpose: '月収50万円')
-      expect(profile.purpose).to eq '月収50万円'
+    context '全ての項目が入力されている場合' do
+      let(:registration_date) { "2023-08-09" }
+      let(:hobby) { "プログラミング" }
+      it { is_expected.to be_valid }
     end
 
-    it 'is invalid without a purpose' do
-      profile = Profile.new(
-        purpose: nil
-      )
-      profile.valid?
-      expect(profile.errors[:purpose]).to include('を入力してください')
-    end
+    context '登録日が入力されていない場合' do
+      let(:registration_date) { "" }
+      let(:hobby) { "プログラミング" }
 
-    context 'purposeカラム' do
-      it '空欄でないこと' do
-        profile.purpose = ''
-        expect(subject).to eq false
+      it do
+        expect(subject).not_to be_valid
+        expect(subject.errors.full_messages).to eq(['登録日を入力してください'])
       end
     end
 
-    describe 'アソシエーションのテスト' do
-      context 'custmerモデルとの関係' do
-        it 'N:1となっている' do
-          expect(Profile.reflect_on_association(:user).macro).to eq :belongs_to
-        end
+    context '趣味が入力されていない場合' do
+      let(:registration_date) { "2023-08-09" }
+      let(:hobby) { "" }
+
+      it do
+        expect(subject).not_to be_valid
+        expect(subject.errors.full_messages).to eq(['趣味を入力してください'])
       end
     end
   end
