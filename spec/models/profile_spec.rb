@@ -15,7 +15,6 @@ RSpec.describe Profile, type: :model do
     context '登録日が入力されていない場合' do
       profile = FactoryBot.build(:profile)
       profile.registration_date = ''
-      profile.hobby = 'プログラミング' 
 
       it '無効である' do
         expect(profile).to be_invalid
@@ -24,8 +23,7 @@ RSpec.describe Profile, type: :model do
     end
 
     context '趣味が入力されていない場合' do
-      profile = FactoryBot.build(:profile)
-      profile.registration_date = '2023-08-09' 
+      profile = FactoryBot.build(:profile) 
       profile.hobby = '' 
 
       it '無効である' do
