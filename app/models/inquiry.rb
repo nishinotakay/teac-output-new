@@ -43,7 +43,7 @@ class Inquiry < ApplicationRecord
     end
     if sort_and_filter_params[:filter][:created_at].present?
       created_at_date = Date.parse(sort_and_filter_params[:filter][:created_at]).strftime('%Y-%m-%d')
-      inquiry_scope = inquiry_scope.where("DATE(created_at) = ?", created_at_date)
+      inquiry_scope = inquiry_scope.where("created_at = LIKE ?", "%#{sort_and_filter_params[:filter][:created_at]}%")
     end
     
     inquiry_scope

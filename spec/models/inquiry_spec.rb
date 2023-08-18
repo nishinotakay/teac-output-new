@@ -54,32 +54,52 @@ RSpec.describe Inquiry, type: :model do
       let(:params) { { filter: { hidden: "1" } } }
       let!(:inquiry_visible) { FactoryBot.create(:inquiry, hidden: false) }
       let(:result) { Inquiry.get_inquiries(params) }
-      
       it '表示される問い合わせのみを返す' do
         expect(result.first).to include(inquiry_visible)
       end
-      
     end
+
     context 'フィルタhiddenが2の場合' do
       let(:params) { { filter: { hidden: "2" } } }
       let!(:inquiry_hidden) { FactoryBot.create(:inquiry, hidden: true) }
       let(:result) { Inquiry.get_inquiries(params) }
-      
       it '表示される問い合わせのみを返す' do
         expect(result.second).to include(inquiry_hidden)
       end
-      
     end
     context 'フィルタhiddenが3の場合' do
       let(:params) { { filter: { hidden: "3" } } }
       let!(:inquiry_both) { FactoryBot.create(:inquiry, hidden: [true, false]) }
       let(:result) { Inquiry.get_inquiries(params) }
-      
       it '表示される問い合わせのみを返す' do
         expect(result.third).to include(inquiry_both)
       end
       
     end
+
+  
+    describe ".apply_sort_and_filter" do
+      context "件名でフィルタリングする場合" do
+        let!(:inquiry1) { FactoryBot.create(:inquiry, subject: "テスト問い合わせ1", content: "問い合わせ1の内容", created_at: "2022-08-01") }
+        let!(:inquiry2) { FactoryBot.create(:inquiry, subject: "テスト問い合わせ2", content: "問い合わせ2の特定の内容", created_at: "2022-08-01") }
+        let!(:inquiry3) { FactoryBot.create(:inquiry, subject: "異なる問い合わせ", content: "問い合わせ3", created_at: "2022-08-03") }
+        it "一致する件名の問い合わせを返します" do
+            result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { subject: "テスト" } })
+            expect(result).to contain_exactly(inquiry1, inquiry2)
+        end
+        it "一致する内容の問い合わせを返します" do
+          result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { content: "内容" } })
+          expect(result).to contain_exactly(inquiry1, inquiry2)
+        end
+        it "特定の日付に作成された問い合わせを返します" do
+          result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { created_at: "2022-08-01" } })
+          expect(result).to contain_exactly(inquiry1, inquiry2)
+        end
+      end
+    end
+
+
+
   end
     
 end
