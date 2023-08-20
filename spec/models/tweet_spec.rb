@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe Tweet, type: :model do
   let(:user) { create(:user, name: '山田太郎', email: Faker::Internet.email, password: 'password') }
-  let!(:tweet) { create(:tweet, post: "it's sunny day!", user: user) }
+  let!(:tweet) { create(:tweet, post: "it's a sunny day!", user: user) }
   let!(:tweet_comment) { FactoryBot.create_list(:tweet_comment, 3, content: "tweet_comment_test", user: user, tweet: tweet, recipient_id: tweet.user_id)}
-  describe 'validation' do
+  describe '#valid?' do
 
     context '投稿フォームに1文字入力されている場合' do
       before do
@@ -21,7 +21,7 @@ RSpec.describe Tweet, type: :model do
         tweet.post = ""
       end
       it 'バリデーションをパスしない' do
-        expect(tweet.valid?).not_to eq(true)
+        expect(tweet.valid?).to eq(false)
         expect(tweet.errors.full_messages).to eq(["Postを入力してください"])
       end
     end
@@ -41,7 +41,7 @@ RSpec.describe Tweet, type: :model do
         tweet.post = 'c' * 256
       end
       it 'バリデーションをパスしない' do
-        expect(tweet.valid?).not_to eq(true)
+        expect(tweet.valid?).to eq(false)
         expect(tweet.errors.full_messages).to eq(["Postは255文字以内で入力してください"])
       end
     end
@@ -68,7 +68,7 @@ RSpec.describe Tweet, type: :model do
         end
       end
       it 'バリデーションをパスしない' do
-        expect(tweet.valid?).not_to eq(true)
+        expect(tweet.valid?).to eq(false)
         expect(tweet.errors.full_messages).to eq(["Imagesは4つまでしかアップロードできません。"])
       end
     end
@@ -87,10 +87,10 @@ RSpec.describe Tweet, type: :model do
     context '5MBよりも大きな画像データをアップロードする場合' do
       before do
         tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'test_6mb.jpg'),
-        filename: "test6mb.jng", content_type: 'image/jpeg'))
+        filename: "test6mb.jpg", content_type: 'image/jpeg'))
       end
       it 'バリデーションをパスしない' do
-        expect(tweet.valid?).not_to eq(true)
+        expect(tweet.valid?).to eq(false)
         expect(tweet.errors.full_messages).to eq(["Imagesは1つのファイル5MB以内にして下さい。"])
       end
     end
@@ -100,7 +100,7 @@ RSpec.describe Tweet, type: :model do
         tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'test_csv.csv'), filename: 'test_csv.csv', content_type: 'text/csv'))
       end
       it 'バリデーションをパスしない' do
-        expect(tweet.valid?).not_to eq(true)
+        expect(tweet.valid?).to eq(false)
         expect(tweet.errors.full_messages).to eq(["Imagesはpng形式またはjpeg形式でアップロードして下さい。"])
       end
     end
@@ -129,13 +129,15 @@ RSpec.describe Tweet, type: :model do
   end
 
   describe 'association' do
-    context 'tweetが存在する場合' do
-      it 'userと関連付けられる' do
+    context 'つぶやきが存在する場合' do
+      it 'ユーザーと関連付けられる' do
         expect(tweet.user_id).to eq(user.id)
       end
     end
+  end
 
-    context 'tweetを削除する場合' do
+  describe '#destroy' do
+    context 'つぶやきを削除する場合' do
       it '3つの関連付けられたtweet_commentsが削除される' do
         expect { tweet.destroy }.to change { TweetComment.count }.by(-3)
       end
