@@ -87,4 +87,6 @@ RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include SystemSpecSupport, type: :system
   config.include WaitForAjax, type: :system
+  # fixture_file_uploadメソッドを使用できる様に設定
+  config.include ActionDispatch::TestProcess::FixtureFile
 end
