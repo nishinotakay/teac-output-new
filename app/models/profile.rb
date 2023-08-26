@@ -11,9 +11,7 @@ class Profile < ApplicationRecord
 
   def self.get_sort_and_filter_params(params)
     order = {
-      name: params[:ord_name],
-      hobby: params[:ord_hobby],
-      registration_date: params[:ord_registration_date]
+      registration_date: params[:ord_select]
     }.compact
   
     filter = {
@@ -37,13 +35,13 @@ class Profile < ApplicationRecord
         profiles = profiles.where(ord => fit)
       end
     end
-    order.each do |ord, direction|
-      profiles = profiles.order(ord => direction) if direction.present?
+
+    if order[:registration_date] == 'ASC' # 登録日を昇順でソート
+      profiles = profiles.order("profiles.registration_date ASC")
+    elsif order[:registration_date] == 'DESC' # 登録日を降順でソート
+      profiles = profiles.order("profiles.registration_date DESC")
     end
-    if order[:name]
-      profiles = profiles.order("users.name #{order[:name]}")
-    end
+
     return profiles
   end
 end
-
