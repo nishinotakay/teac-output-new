@@ -3,12 +3,22 @@ require 'rails_helper'
 RSpec.describe Inquiry, type: :model do
   describe '新規登録' do
     let(:inquiry) { build(:inquiry) }
-    context "問い合わせ新規登録で指定文字数以上を入力したらバリデーションが通る" do
-      it "件名を30文字以上入力するとバリデーションが通る。" do
+    context "問い合わせ新規登録で指定文字数以下を入力したら場合" do
+      it "件名を30文字以下で入力するとバリデーションが通る。" do
+        inquiry.subject = Faker::Lorem.characters(number: 30)
+        expect(inquiry).to be_valid
+      end
+      it "内容を800文字以下で入力するとバリデーションが通る。" do
+        inquiry.content = Faker::Lorem.characters(number: 800)
+        expect(inquiry).to be_valid
+      end
+    end
+    context "問い合わせ新規登録で指定文字数以上を入力した場合" do
+      it "件名を30文字以上入力するとバリデーションが通らない。" do
         inquiry.subject = Faker::Lorem.characters(number: 31)
         expect(inquiry).to_not be_valid
       end
-      it "内容を800文字以上入力するとバリデーションが通る。" do
+      it "内容を800文字以上入力するとバリデーションが通らない。" do
         inquiry.content = Faker::Lorem.characters(number: 801)
         expect(inquiry).to_not be_valid
       end
@@ -21,35 +31,50 @@ RSpec.describe Inquiry, type: :model do
       @inquiry2 = FactoryBot.create(:inquiry, :second_inquiry)
       @inquiry3 = FactoryBot.create(:inquiry, :third_inquiry)
     end
-    
-    context '件名の並び替えをする。' do
-      it '五十音順で並べ替える' do
-        params = { order: { subject: 'ASC' }, filter: {} }
-        expect(Inquiry.apply_sort_and_filter(Inquiry.all, params)).to eq([@inquiry1, @inquiry2, @inquiry3])
-      end
-      it '逆順で並べ替える' do
-        params = { order: { subject: 'DESC' }, filter: {} }
-        expect(Inquiry.apply_sort_and_filter(Inquiry.all, params)).to eq([@inquiry3, @inquiry2, @inquiry1])
-      end
-    end
-    context '内容の並び替えをする。' do
-      it '五十音順で並べ替える' do
-        params = { order: { content: 'ASC' }, filter: {} }
-        expect(Inquiry.apply_sort_and_filter(Inquiry.all, params)).to eq([@inquiry1, @inquiry2, @inquiry3])
-      end
-      it '逆順で並べ替える' do
-        params = { order: { content: 'DESC' }, filter: {} }
-        expect(Inquiry.apply_sort_and_filter(Inquiry.all, params)).to eq([@inquiry3, @inquiry2, @inquiry1])
+
+    subject { Inquiry.apply_sort_and_filter(Inquiry.all, params) }
+
+    context '件名の並び替えをする時' do
+      context '五十音順(ASC)の場合' do
+        let(:params) { { order: { subject: 'ASC' }, filter: {} } }
+        it '昇順になる' do
+          is_expected.to eq([@inquiry1, @inquiry2, @inquiry3])
+        end
       end
     end
-    context '作成日時の並び替えをする。' do
-      it '昇順で並べ替える' do
-        params = { order: { created_at: 'ASC' }, filter: {} }
-        expect(Inquiry.apply_sort_and_filter(Inquiry.all, params)).to eq([@inquiry1, @inquiry2, @inquiry3])
+    context '逆順(DESC)の場合' do
+      let(:params) { { order: { subject: 'DESC' }, filter: {} } }
+      it '降順になる' do
+        is_expected.to eq([@inquiry3, @inquiry2, @inquiry1])
       end
-      it '降順で並べ替える' do
-        params = { order: { created_at: 'DESC' }, filter: {} }
-        expect(Inquiry.apply_sort_and_filter(Inquiry.all, params)).to eq([@inquiry3, @inquiry2, @inquiry1])
+    end
+
+    context '内容の並び替えをする時。' do
+      context '五十音順(ASC)の場合' do
+        let(:params) { { order: { content: 'ASC' }, filter: {} } }
+        it '昇順になる' do
+          is_expected.to eq([@inquiry1, @inquiry2, @inquiry3])
+        end
+      end
+      context '逆順(DESC)の場合' do
+        let(:params) { { order: { content: 'DESC' }, filter: {} } }
+        it '降順になる' do
+          is_expected.to eq([@inquiry3, @inquiry2, @inquiry1])
+        end
+      end
+    end
+    context '作成日時の並び替えをする時。' do
+      context '五十音順(ASC)の場合' do
+        let(:params) { { order: { created_at: 'ASC' }, filter: {} } }
+        it '昇順になる' do
+          is_expected.to eq([@inquiry1, @inquiry2, @inquiry3])
+        end
+      end
+      context '逆順(DESC)の場合' do
+        let(:params) { { order: { created_at: 'DESC' }, filter: {} } }
+        it '降順になる' do
+          is_expected.to eq([@inquiry3, @inquiry2, @inquiry1])
+        end
       end
     end
   end
@@ -83,27 +108,26 @@ RSpec.describe Inquiry, type: :model do
 
   
     describe "検索機能" do
-      let!(:inquiry1) { FactoryBot.create(:inquiry, subject: "テスト問い合わせ1", content: "問い合わせ1の内容", created_at: "2022-08-01") }
-      let!(:inquiry2) { FactoryBot.create(:inquiry, subject: "テスト問い合わせ2", content: "問い合わせ2の特定の内容", created_at: "2022-08-01") }
-      let!(:inquiry3) { FactoryBot.create(:inquiry, subject: "異なる問い合わせ", content: "問い合わせ3", created_at: "2022-08-03") }
-        context "部分検索" do
-          it "一致する件名の問い合わせを抽出する" do
-              result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { subject: "テスト" } })
-              expect(result).to contain_exactly(inquiry1, inquiry2)
-          end
-          it "一致する内容の問い合わせを抽出する" do
-            result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { content: "内容" } })
-            expect(result).to contain_exactly(inquiry1, inquiry2)
-          end
-          it "特定の日付に作成された問い合わせを抽出する" do
-            result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { created_at: "2022-08-01" } })
-            expect(result).to contain_exactly(inquiry1, inquiry2)
-          end
+      before do
+        @inquiry1 = FactoryBot.create(:inquiry, subject: "テスト問い合わせ1", content: "問い合わせ1の内容", created_at: "2022-08-01")
+        @inquiry2 = FactoryBot.create(:inquiry, subject: "テスト問い合わせ2", content: "問い合わせ2の特定の内容", created_at: "2022-08-01")
+        @inquiry3 = FactoryBot.create(:inquiry, subject: "異なる問い合わせ", content: "問い合わせ3", created_at: "2022-08-03")
+      end
+      context "部分検索" do
+        it "一致する件名の問い合わせを抽出する" do
+          result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { subject: "テスト" } })
+          expect(result).to contain_exactly(@inquiry1, @inquiry2)
         end
-    end
-
-
-
+        it "一致する内容の問い合わせを抽出する" do
+          result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { content: "内容" } })
+          expect(result).to contain_exactly(@inquiry1, @inquiry2)
+        end
+        it "特定の日付に作成された問い合わせを抽出する" do
+          result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { created_at: "2022-08-01" } })
+          expect(result).to contain_exactly(@inquiry1, @inquiry2)
+        end
+      end
+    end    
   end
     
 end
