@@ -3,18 +3,12 @@ module Users
     require 'date'
     before_action :authenticate_user!, only: %i[new create edit update destroy]
     before_action :find_profile, only: %i[show edit update destroy]
-    # before_action :double_registration, only: %i[create]
 
     def index
       sort_and_filter_params = Profile.get_sort_and_filter_params(params)
       @users = sort_and_filter_params[:order].count == 1 ? User.sort_filter(sort_and_filter_params[:order].first, sort_and_filter_params[:filter]).page(params[:page]).per(30) : User.all.page(params[:page]).per(30)
-      # @profiles = Profile.sort_filter(sort_and_filter_params[:order], sort_and_filter_params[:filter]).page(params[:page]).per(30)
-      # 並び替えのデフォルト値を設定
-      puts "Sort order received: #{sort_and_filter_params[:order]}"
       default_order = { registration_date: 'DESC' }
-      # sort_and_filter_params から並び替えのパラメータを取得、なければデフォルトを使用
       sort_order = sort_and_filter_params[:order].presence || default_order
-      # デフォルトの並び替え順でデータを取得
       @profiles = Profile.sort_filter(sort_order, sort_and_filter_params[:filter]).page(params[:page]).per(30)
 
     end

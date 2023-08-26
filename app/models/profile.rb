@@ -36,9 +36,9 @@ class Profile < ApplicationRecord
       end
     end
 
-    if order[:registration_date] == 'ASC' # 登録日を昇順でソート
+    if order[:registration_date] == 'ASC'
       profiles = profiles.order("profiles.registration_date ASC")
-    elsif order[:registration_date] == 'DESC' # 登録日を降順でソート
+    elsif order[:registration_date] == 'DESC'
       profiles = profiles.order("profiles.registration_date DESC")
     end
 
