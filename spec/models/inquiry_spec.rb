@@ -79,28 +79,28 @@ RSpec.describe Inquiry, type: :model do
     end
   end
 
-  describe '検索機能の表示切り替え' do
-    context '表示を選択する場合' do
+  describe '問い合わせ一覧の表示・非表示' do
+    context '検索機能で「表示」を選択した場合' do
       let(:params) { { filter: { hidden: "1" } } }
       let!(:inquiry_visible) { FactoryBot.create(:inquiry, hidden: false) }
       let(:result) { Inquiry.get_inquiries(params) }
-      it '表示のみ表示される' do
+      it '「表示」と設定された問い合わせのみ表示される' do
         expect(result.first).to include(inquiry_visible)
       end
     end
-    context '非表示を選択する場合' do
+    context '検索機能で「非表示」を選択した場合' do
       let(:params) { { filter: { hidden: "2" } } }
       let!(:inquiry_hidden) { FactoryBot.create(:inquiry, hidden: true) }
       let(:result) { Inquiry.get_inquiries(params) }
-      it '非表示のみ表される' do
+      it '「非表示」と設定された問い合わせのみ表示される' do
         expect(result.second).to include(inquiry_hidden)
       end
     end
-    context '全表示を選択する場合' do
+    context '検索機能で「全表示」を選択した場合' do
       let(:params) { { filter: { hidden: "3" } } }
       let!(:inquiry_both) { FactoryBot.create(:inquiry, hidden: [true, false]) }
       let(:result) { Inquiry.get_inquiries(params) }
-      it '表示・非表示共に表示される' do
+      it '「表示」「非表示」共に表示される' do
         expect(result.third).to include(inquiry_both)
       end
       
