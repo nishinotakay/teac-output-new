@@ -79,5 +79,35 @@ end
   Tenant.create!(name: "テナント#{n+1}")
 end
 
+puts "Tenants Created"
+
+Profile.create!(birthday: '1990-03-30',
+  gender: 'male',
+  registration_date: '2018-01-01',
+  hobby: '野球',
+  user_id: '1')
+Profile.create!(birthday: '1992-04-10',
+  gender: 'female',
+  registration_date: '2019-02-02',
+  hobby: '読書',
+  user_id: '2')
+Profile.create!(birthday: '1997-08-18',
+  gender: 'female',
+  registration_date: '2019-06-06',
+  hobby: 'サーフィン',
+  user_id: '3')
+Profile.create!(birthday: '1960-09-30',
+  gender: 'male',
+  registration_date: '2019-09-06',
+  hobby: '将棋',
+  user_id: '4')
+Profile.create!(birthday: '2000-12-25',
+  gender: 'male',
+  registration_date: '2022-05-05',
+  hobby: '食べ歩き',
+  user_id: '5')
+
+  puts "Profile Created"
+
 
 
