@@ -77,20 +77,17 @@
       </div>
       <div class="modal-body text-right">
         <div class="sort-modal" style="display: none;">
-          <% selects = [['五十音順', '逆順'], ['昇順', '降順'], ['昇順', '降順']] %>
-          <% order = {'五十音順': 'ASC', '逆順': 'DESC', '昇順': 'ASC', '降順': 'DESC'}.with_indifferent_access %>
-          <% {'name': selects[0], 'registration_date': selects[1], 'hobby': selects[2]}.each do |k, v| %>
-            <div class="form-group row my-5">
-              <label for="sort-<%= k %>" class="col-sm-4 col-form-label"><%= Profile.human_attribute_name(k) %></label>
-              <div class="col-md-8">
-                <select id="sort-<%= k %>" class="form-select" aria-label="Default select none">
-                  <option value="" selected>-</option>
-                  <option value="<%= order[v[0]] %>"><%= v[0] %></option>
-                  <option value="<%= order[v[1]] %>"><%= v[1] %></option>
-                </select>
-              </div>
+          <div class="form-group row my-5">
+            <label for="sort-select" class="col-sm-3 col-form-label"><%= Profile.human_attribute_name(:registration_date) %></label>
+            <div class="col-md-9">
+              <% order = {'DESC': '新しい順', 'ASC': '古い順'} %>
+              <% params[:order] ||= 'DESC' %>
+              <select id="sort-select" class="form-select" aria-label="Default select desc">
+                <option value="<%= params[:order] %>" selected><%= order.delete(:"#{params[:order]}") %></option>
+                <option value="<%= order.keys[0] %>"><%= order[order.keys[0]] %></option>
+              </select>
             </div>
-          <% end %>
+          </div>
         </div>
         <div class="filter-modal" style="display: none;">
           <div class="form-group row my-6">
