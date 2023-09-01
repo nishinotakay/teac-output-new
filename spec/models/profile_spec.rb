@@ -66,20 +66,63 @@ RSpec.describe Profile, type: :model do
     end
 
     describe '絞り込み機能' do
-      it '入力した文字が含まれる名前のプロフィールを返す' do
-        matching_name = described_class.sort_filter({}, { name: '太郎' }).pluck(:id)
-        expect(matching_name).to eq([profile1.id])
+      context '名前を指定する場合' do
+        context '名前の一部を入力した場合' do
+          it '一致したプロフィールが返ること' do
+            matching_name = described_class.sort_filter({}, { name: '太郎' }).pluck(:id)
+            expect(matching_name).to eq([profile1.id])
+          end
+        end
+        context "一致しない名前を指定した場合" do
+          it '何も返らないこと' do
+            matching_name = described_class.sort_filter({}, { name: '拓也' }).pluck(:id)
+            expect(matching_name).to be_empty
+          end
+        end
       end
 
-      it '入力した登録日のプロフィールを返す' do
-        matching_registration_date = described_class.sort_filter({}, { registration_date: '2023-08-09' }).pluck(:id)
-        expect(matching_registration_date).to eq([profile1.id])
+      context '登録日を指定する場合' do
+        context "存在する登録日を指定した場合" do
+          it '一致したプロフィールが返ること' do
+            matching_registration_date = described_class.sort_filter({}, { registration_date: '2023-08-09' }).pluck(:id)
+            expect(matching_registration_date).to eq([profile1.id])
+          end
+        end
+        context "一致しない登録日を指定した場合" do
+          it '何も返らないこと' do
+            matching_registration_date = described_class.sort_filter({}, { registration_date: '2022-12-31' }).pluck(:id)
+            expect(matching_registration_date).to be_empty
+          end
+        end
+        context "空の登録日を指定した場合" do
+          it "sort_filterメソッドが呼び出されても何もせず終了すること" do
+            # sort_filterメソッドが呼び出されることを期待します
+            expect(described_class).to receive(:sort_filter).and_call_original
+        
+            # 空の登録日を指定してsort_filterメソッドを呼び出します
+            matching_registration_date = described_class.sort_filter({}, { registration_date: '' }).pluck(:id)
+        
+            # sort_filterメソッドの戻り値が空であることを確認します
+            expect(matching_registration_date).to eq([])
+
+          end
+        end
       end
 
-      it '入力した文字が含まれる趣味のプロフィールを返す' do
-        matching_hobby = described_class.sort_filter({}, { hobby: 'ヨガ' }).pluck(:id)
-        expect(matching_hobby).to eq([profile2.id])
-      end
+      context '趣味を指定する場合' do
+        context '趣味の一部を入力した場合' do
+          it '一致したプロフィールが返ること' do
+            matching_hobby = described_class.sort_filter({}, { hobby: 'ヨ' }).pluck(:id)
+            expect(matching_hobby).to eq([profile2.id])
+          end
+        end
+        context "一致しない名前を指定した場合" do
+          it '何も返らないこと' do
+            matching_hobby = described_class.sort_filter({}, { hobby: '読書' }).pluck(:id)
+            expect(matching_hobby).to be_empty
+          end
+        end
+      end     
     end
   end
 end
