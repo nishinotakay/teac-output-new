@@ -10,7 +10,6 @@ module Users
       default_order = { registration_date: 'DESC' }
       sort_order = sort_and_filter_params[:order].presence || default_order
       @profiles = Profile.sort_filter(sort_order, sort_and_filter_params[:filter]).page(params[:page]).per(30)
-
     end
 
     def show
@@ -50,10 +49,8 @@ module Users
     end
 
     def destroy
-      # データの削除
       if @profile.destroy
         flash[:success] = "#{@profile.name}のデータを削除しました。"
-        # 一覧ページへリダイレクト
         redirect_to users_profiles_path
       else
         render :index
