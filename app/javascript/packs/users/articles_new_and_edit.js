@@ -69,6 +69,9 @@ $(function(){
     formData.append('image', image); // FormDataに画像を追加
     formData.append('user_id', e.target.dataset.userId); // FormDataに画像を追加
 
+    // CSRFトークンを取得
+    var token = $('meta[name="csrf-token"]').attr('content');
+
     // ajaxで画像をアップロード
     $.ajax({
       url: "/users/articles/image",
@@ -76,7 +79,10 @@ $(function(){
       data: formData,
       dataType: "json",
       contentType: false,
-      processData: false
+      processData: false,
+      headers: { 
+        'X-CSRF-Token': token  // こちらでトークンをヘッダーに追加
+      }
     })
     .done(function(data, textStatus, jqXHR){
       setImage(data['name'], data['url'])
