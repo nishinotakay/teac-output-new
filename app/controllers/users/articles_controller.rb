@@ -79,7 +79,7 @@ module Users
       else
         #flash[:danger] = "不正な操作です。"
         #redirect_to users_articles_path(page: params[:page])
-        render json: { error: "画像の挿入に失敗しました。" }, status: :unauthorized
+        render json: { error: '画像の挿入に失敗しました。' }, status: :unauthorized
       end
     end
 
@@ -98,7 +98,7 @@ module Users
     def check_article_owner
       @article = Article.find_by(id: params[:id])
       unless current_user.id == @article.user_id
-        flash[:danger] = "不正な操作です。"
+        flash[:danger] = '不正な操作です。'
         redirect_to users_articles_path(page: params[:page])
       end
     end
