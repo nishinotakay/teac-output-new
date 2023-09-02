@@ -108,23 +108,39 @@ RSpec.describe Inquiry, type: :model do
 
   
     describe "検索機能" do
-      before do
-        @inquiry1 = FactoryBot.create(:inquiry, subject: "テスト問い合わせ1", content: "問い合わせ1の内容", created_at: "2022-08-01")
-        @inquiry2 = FactoryBot.create(:inquiry, subject: "テスト問い合わせ2", content: "問い合わせ2の特定の内容", created_at: "2022-08-01")
-        @inquiry3 = FactoryBot.create(:inquiry, subject: "異なる問い合わせ", content: "問い合わせ3", created_at: "2022-08-03")
-      end
-      context "検索する場合" do
-        it "件名のみ問い合わせ情報を抽出する" do
-          result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { subject: "テスト" } })
-          expect(result).to contain_exactly(@inquiry1, @inquiry2)
+      let!(:inquiry1) { FactoryBot.create(:inquiry, subject: "テスト問い合わせ1", content: "問い合わせ1の内容", created_at: "2022-08-01") }
+      let!(:inquiry2) { FactoryBot.create(:inquiry, subject: "テスト問い合わせ2", content: "問い合わせ2の特定の内容", created_at: "2022-08-01") }
+      let!(:inquiry3) { FactoryBot.create(:inquiry, subject: "異なる問い合わせ", content: "問い合わせ3", created_at: "2022-08-03") }
+      context "件名を検索する場合" do
+        context "完全一致する場合" do
+          it "一致した問い合わせが返ること" do
+            result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { subject: "テスト問い合わせ1" } })
+            expect(result).to contain_exactly(inquiry1)
+          end
         end
+        context "部分一致する場合" do
+          it "件名のみ問い合わせ情報を抽出する" do
+            result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { subject: "テスト" } })
+            expect(result).to contain_exactly(inquiry1, inquiry2)
+          end
+        end
+      end
+      context "件名を検索する場合" do
         it "内容のみ問い合わせ情報を抽出する" do
           result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { content: "内容" } })
-          expect(result).to contain_exactly(@inquiry1, @inquiry2)
+          expect(result).to contain_exactly(inquiry1, inquiry2)
+        end
+        it "内容で完全一致の問い合わせ情報を抽出する" do
+          result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { content: "問い合わせ3" } })
+          expect(result).to contain_exactly(inquiry3)
         end
         it "作成日時のみ問い合わせを情報を抽出する" do
           result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { created_at: "2022-08-01" } })
-          expect(result).to contain_exactly(@inquiry1, @inquiry2)
+          expect(result).to contain_exactly(inquiry1, inquiry2)
+        end
+        it "作成日時で完全一致の問い合わせ情報を抽出する" do
+          result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { created_at: "2022-08-03" } })
+          expect(result).to contain_exactly(inquiry3)
         end
       end
     end    
