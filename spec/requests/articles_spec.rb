@@ -5,7 +5,7 @@ RSpec.describe 'Articles', type: :request do
   let(:user_2) { build(:user, :b, confirmed_at: Date.today) }
   let(:article) { create(:article, user: user_1) }
 
-  describe 'GET /index' do
+  describe 'GET /index' do # 一覧画面の取得
     article_count = 2
     let(:articles_1) { create_list(:article, article_count, user: user_1) }
     let(:articles_2) { create_list(:article, article_count, user: user_2) }
@@ -56,7 +56,7 @@ RSpec.describe 'Articles', type: :request do
     end
   end
 
-  describe 'GET /show' do
+  describe 'GET /show' do # 詳細画面の取得
     context 'ログインユーザーが投稿者である場合' do
       it '記事詳細画面へ遷移する' do
         sign_in user_1
@@ -93,7 +93,7 @@ RSpec.describe 'Articles', type: :request do
     end
   end
 
-  describe 'GET /new' do
+  describe 'GET /new' do # 新規作成画面の取得
     context 'ログインしている場合' do
       it '記事投稿画面へ遷移する' do
         sign_in user_1
@@ -112,7 +112,7 @@ RSpec.describe 'Articles', type: :request do
     end
   end
 
-  describe 'GET /edit' do
+  describe 'GET /edit' do # 編集画面の取得
     context 'ログインユーザーが投稿者である場合' do
       it '記事編集画面へ遷移する' do
         sign_in user_1
@@ -146,7 +146,7 @@ RSpec.describe 'Articles', type: :request do
     end
   end
 
-  describe 'POST /create' do
+  describe 'POST /create' do # 新規作成の実行
     let(:params) { { article: attributes_for(:article, user_id: user_1.id) } }
 
     before(:each) { sign_in user_1 }
@@ -180,7 +180,7 @@ RSpec.describe 'Articles', type: :request do
     end
   end
 
-  describe 'PATCH /update' do
+  describe 'PATCH /update' do # 記事の更新
     let(:article) { create(:article, user: user_1) }
 
     before(:each) do
@@ -234,7 +234,7 @@ RSpec.describe 'Articles', type: :request do
     end
   end
 
-  describe 'DELETE /destroy' do
+  describe 'DELETE /destroy' do # 記事の削除
     let(:article) { create(:article, user: user_1) }
 
     before(:each) do
@@ -279,8 +279,8 @@ RSpec.describe 'Articles', type: :request do
     end
   end
 
-  describe 'POST /image' do
-    context 'ログインユーザーが投稿者である場合' do # 記事の生成前、データベース保存前の画像ドロップアンドドロップ作業
+  describe 'POST /image' do # 画像のアップロード
+    context 'ログインユーザーが投稿者である場合' do
       it '記事に画像を添付できる' do
         user_1.save
         image = fixture_file_upload('spec/fixtures/files/ruby.png', 'image/png')
