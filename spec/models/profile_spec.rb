@@ -73,7 +73,8 @@ RSpec.describe Profile, type: :model do
             expect(matching_name).to eq([profile1.id])
           end
         end
-        context "一致しない名前を指定した場合" do
+
+        context '一致しない名前を指定した場合' do
           it '何も返らないこと' do
             matching_name = described_class.sort_filter({}, { name: '拓也' }).pluck(:id)
             expect(matching_name).to be_empty
@@ -82,29 +83,17 @@ RSpec.describe Profile, type: :model do
       end
 
       context '登録日を指定する場合' do
-        context "存在する登録日を指定した場合" do
+        context '存在する登録日を指定した場合' do
           it '一致したプロフィールが返ること' do
             matching_registration_date = described_class.sort_filter({}, { registration_date: '2023-08-09' }).pluck(:id)
             expect(matching_registration_date).to eq([profile1.id])
           end
         end
-        context "一致しない登録日を指定した場合" do
+
+        context '一致しない登録日を指定した場合' do
           it '何も返らないこと' do
             matching_registration_date = described_class.sort_filter({}, { registration_date: '2022-12-31' }).pluck(:id)
             expect(matching_registration_date).to be_empty
-          end
-        end
-        context "空の登録日を指定した場合" do
-          it "sort_filterメソッドが呼び出されても何もせず終了すること" do
-            # sort_filterメソッドが呼び出されることを期待します
-            expect(described_class).to receive(:sort_filter).and_call_original
-        
-            # 空の登録日を指定してsort_filterメソッドを呼び出します
-            matching_registration_date = described_class.sort_filter({}, { registration_date: '' }).pluck(:id)
-        
-            # sort_filterメソッドの戻り値が空であることを確認します
-            expect(matching_registration_date).to eq([])
-
           end
         end
       end
@@ -116,13 +105,22 @@ RSpec.describe Profile, type: :model do
             expect(matching_hobby).to eq([profile2.id])
           end
         end
-        context "一致しない名前を指定した場合" do
+
+        context '一致しない趣味を指定した場合' do
           it '何も返らないこと' do
             matching_hobby = described_class.sort_filter({}, { hobby: '読書' }).pluck(:id)
             expect(matching_hobby).to be_empty
           end
         end
-      end     
+      end
+
+      context 'すべてのフォームが未入力の場合' do
+        it 'すべてのプロフィールが抽出されること' do
+          filter = { name: '', registration_date: '', hobby: '' }
+          profiles = described_class.sort_filter({}, filter)
+          expect(profiles).to match_array(described_class.all) # 全てのプロフィール抽出を確認するためallで実装
+        end
+      end
     end
   end
 end
