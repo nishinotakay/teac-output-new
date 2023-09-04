@@ -104,9 +104,9 @@ RSpec.describe Profile, type: :model do
           context '正規表現が指定された場合' do
             it '正規表現が実行されないこと' do
               filter = { name: /伊東/ } # nameに正規表現を指定  
-              allow(Profile).to receive(:where).and_return([]) # データベースクエリをモックするためにRSpecのallowメソッドを使用
+              allow(Profile).to receive(:where).and_return([])
               result = Profile.sort_filter({}, filter)      
-              expect(Profile).not_to have_received(:where) # データベースクエリが実行されなかったことを確認
+              expect(Profile).not_to have_received(:where)
             end
           end
         end
@@ -131,18 +131,18 @@ RSpec.describe Profile, type: :model do
           context 'SQLが指定された場合' do
             it 'クエリが実行されないこと' do
               filter = { registration_date: 'SELECT * FROM profiles WHERE some_condition' } 
-              allow(Profile).to receive(:where).and_return([]) # データベースクエリをモックするためにRSpecのallowメソッドを使用
+              allow(Profile).to receive(:where).and_return([])
               result = Profile.sort_filter({}, filter)      
-              expect(Profile).not_to have_received(:where) # データベースクエリが実行されなかったことを確認
+              expect(Profile).not_to have_received(:where)
             end
           end
 
           context '正規表現が指定された場合' do
             it '正規表現が実行されないこと' do
               filter = { registration_date: /2023-08-09/ }             
-              allow(Profile).to receive(:where).and_return([]) # データベースクエリをモックするためにRSpecのallowメソッドを使用
+              allow(Profile).to receive(:where).and_return([])
               result = Profile.sort_filter({}, filter)      
-              expect(Profile).not_to have_received(:where) # データベースクエリが実行されなかったことを確認
+              expect(Profile).not_to have_received(:where)
             end
           end
         end
@@ -177,29 +177,18 @@ RSpec.describe Profile, type: :model do
           context 'SQLが指定された場合' do
             it 'クエリが実行されないこと' do
               filter = { hobby: 'SELECT * FROM profiles WHERE some_condition' } 
-              allow(Profile).to receive(:where).and_return([]) # データベースクエリをモックするためにRSpecのallowメソッドを使用
+              allow(Profile).to receive(:where).and_return([]) 
               result = Profile.sort_filter({}, filter)      
-              expect(Profile).not_to have_received(:where) # データベースクエリが実行されなかったことを確認
+              expect(Profile).not_to have_received(:where)
             end
           end
 
           context '正規表現が指定された場合' do
             it '正規表現が実行されないこと' do
-              # 正規表現を含むフィルターを設定
-              filter = { hobby: /ゲーム/ }
-
-              # 正規表現が渡されたことを確認
-              expect(filter[:hobby]).to be_a(Regexp)
-
-              # データベースクエリをモックするためにRSpecのallowメソッドを使用
+              filter = { hobby: /ゲーム/ }              
               allow(Profile).to receive(:where).and_return([])
-
-              # テスト対象のコードを実行
-              result = Profile.sort_filter({}, filter)
-
-              # データベースクエリが実行されなかったことを確認
-              expect(Profile).not_to have_received(:where)
-            
+              result = Profile.sort_filter({}, filter)   
+              expect(Profile).not_to have_received(:where)            
             end
           end
         end
@@ -209,7 +198,7 @@ RSpec.describe Profile, type: :model do
         it 'すべてのプロフィールが抽出されること' do
           filter = { name: '', registration_date: '', hobby: '' }
           profiles = described_class.sort_filter({}, filter)
-          expect(profiles).to match_array(described_class.all) # 全てのプロフィール抽出を確認するためallで実装
+          expect(profiles).to match_array(described_class.all)
         end
       end
     end
