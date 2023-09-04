@@ -3,9 +3,7 @@ require 'rails_helper'
 RSpec.describe Profile, type: :model do
   describe 'バリデーション' do
     context '登録日と趣味が入力されている場合' do
-      profile = FactoryBot.build(:profile)
-      profile.registration_date = '2023-08-09'
-      profile.hobby = 'プログラミング'
+      let(:profile) { FactoryBot.build(:profile, registration_date: '2023-08-09', hobby: 'プログラミング') }
 
       it '有効である' do
         expect(profile).to be_valid
@@ -13,8 +11,7 @@ RSpec.describe Profile, type: :model do
     end
 
     context '登録日が入力されていない場合' do
-      profile = FactoryBot.build(:profile)
-      profile.registration_date = ''
+      let(:profile) { FactoryBot.build(:profile, registration_date: '', hobby: 'プログラミング') }
 
       it '無効である' do
         expect(profile).to be_invalid
@@ -23,8 +20,7 @@ RSpec.describe Profile, type: :model do
     end
 
     context '趣味が入力されていない場合' do
-      profile = FactoryBot.build(:profile)
-      profile.hobby = ''
+      let(:profile) { FactoryBot.build(:profile, registration_date: '2023-08-09', hobby: '') }
 
       it '無効である' do
         expect(profile).to be_invalid
@@ -34,16 +30,20 @@ RSpec.describe Profile, type: :model do
   end
 
   describe 'アソシエーション' do
-    it 'Userモデルとの関係が1:1となっていること' do
-      association = described_class.reflect_on_association(:user)
-      expect(association.macro).to eq :belongs_to
+    context 'ユーザーと関連付けられている場合' do
+      it '1:1になっていること' do
+        association = described_class.reflect_on_association(:user)
+        expect(association.macro).to eq :belongs_to
+      end
     end
 
-    it 'Userが削除されると関連するProfileも削除されること' do
-      user = FactoryBot.create(:user)
-      FactoryBot.create(:profile, user: user)
+    context 'ユーザーが削除された場合' do
+      it 'プロフィールも削除されること' do
+        user = FactoryBot.create(:user)
+        FactoryBot.create(:profile, user: user)
 
-      expect { user.destroy }.to change(described_class, :count).by(-1)
+        expect { user.destroy }.to change(described_class, :count).by(-1)
+      end
     end
   end
 
@@ -51,7 +51,7 @@ RSpec.describe Profile, type: :model do
     let!(:user1) { create(:user, name: '山田太郎', email: Faker::Internet.email, password: 'password') }
     let!(:user2) { create(:user, name: '伊東美咲', email: Faker::Internet.email, password: 'password') }
     let!(:profile1) { create(:profile, registration_date: '2023-08-09', hobby: 'ゲーム', user: user1) }
-    let!(:profile2) { create(:profile, registration_date: '1999-10-25', hobby: 'ヨガ', user: user2) }
+    let!(:profile2) { create(:profile, registration_date: '1999-10-25', hobby: 'ランニング', user: user2) }
 
     describe '並べ替え機能' do
       it '古い順に並べ替えることができる' do
@@ -68,9 +68,19 @@ RSpec.describe Profile, type: :model do
     describe '絞り込み機能' do
       context '名前を指定する場合' do
         context '名前の一部を入力した場合' do
-          it '一致したプロフィールが返ること' do
-            matching_name = described_class.sort_filter({}, { name: '太郎' }).pluck(:id)
+          it '前方一致したプロフィールが返ること' do
+            matching_name = described_class.sort_filter({}, { name: '山' }).pluck(:id)
             expect(matching_name).to eq([profile1.id])
+          end
+
+          it '中央一致したプロフィールが返ること' do
+            matching_name = described_class.sort_filter({}, { name: '田' }).pluck(:id)
+            expect(matching_name).to eq([profile1.id])
+          end
+
+          it '後方一致したプロフィールが返ること' do
+            matching_name = described_class.sort_filter({}, { name: '咲' }).pluck(:id)
+            expect(matching_name).to eq([profile2.id])
           end
         end
 
@@ -78,6 +88,26 @@ RSpec.describe Profile, type: :model do
           it '何も返らないこと' do
             matching_name = described_class.sort_filter({}, { name: '拓也' }).pluck(:id)
             expect(matching_name).to be_empty
+          end
+        end
+
+        context "想定外の値を指定した場合" do
+          context 'SQLが指定された場合' do
+            it 'クエリが実行されないこと' do
+              filter = { name: 'SELECT * FROM profiles WHERE some_condition' } 
+              allow(Profile).to receive(:where).and_return([]) # データベースクエリをモックするためにRSpecのallowメソッドを使用
+              result = Profile.sort_filter({}, filter)      
+              expect(Profile).not_to have_received(:where) # データベースクエリが実行されなかったことを確認
+            end
+          end
+
+          context '正規表現が指定された場合' do
+            it '正規表現が実行されないこと' do
+              filter = { name: /伊東/ } # nameに正規表現を指定  
+              allow(Profile).to receive(:where).and_return([]) # データベースクエリをモックするためにRSpecのallowメソッドを使用
+              result = Profile.sort_filter({}, filter)      
+              expect(Profile).not_to have_received(:where) # データベースクエリが実行されなかったことを確認
+            end
           end
         end
       end
@@ -96,13 +126,43 @@ RSpec.describe Profile, type: :model do
             expect(matching_registration_date).to be_empty
           end
         end
+
+        context "想定外の値を指定した場合" do
+          context 'SQLが指定された場合' do
+            it 'クエリが実行されないこと' do
+              filter = { registration_date: 'SELECT * FROM profiles WHERE some_condition' } 
+              allow(Profile).to receive(:where).and_return([]) # データベースクエリをモックするためにRSpecのallowメソッドを使用
+              result = Profile.sort_filter({}, filter)      
+              expect(Profile).not_to have_received(:where) # データベースクエリが実行されなかったことを確認
+            end
+          end
+
+          context '正規表現が指定された場合' do
+            it '正規表現が実行されないこと' do
+              filter = { registration_date: /2023-08-09/ }             
+              allow(Profile).to receive(:where).and_return([]) # データベースクエリをモックするためにRSpecのallowメソッドを使用
+              result = Profile.sort_filter({}, filter)      
+              expect(Profile).not_to have_received(:where) # データベースクエリが実行されなかったことを確認
+            end
+          end
+        end
       end
 
       context '趣味を指定する場合' do
         context '趣味の一部を入力した場合' do
-          it '一致したプロフィールが返ること' do
-            matching_hobby = described_class.sort_filter({}, { hobby: 'ヨ' }).pluck(:id)
+          it '前方一致したプロフィールが返ること' do
+            matching_hobby = described_class.sort_filter({}, { hobby: 'ラ' }).pluck(:id)
             expect(matching_hobby).to eq([profile2.id])
+          end
+
+          it '中央一致したプロフィールが返ること' do
+            matching_hobby = described_class.sort_filter({}, { hobby: 'ニン' }).pluck(:id)
+            expect(matching_hobby).to eq([profile2.id])
+          end
+
+          it '後方一致したプロフィールが返ること' do
+            matching_hobby = described_class.sort_filter({}, { hobby: 'ム' }).pluck(:id)
+            expect(matching_hobby).to eq([profile1.id])
           end
         end
 
@@ -110,6 +170,37 @@ RSpec.describe Profile, type: :model do
           it '何も返らないこと' do
             matching_hobby = described_class.sort_filter({}, { hobby: '読書' }).pluck(:id)
             expect(matching_hobby).to be_empty
+          end
+        end
+
+        context "想定外の値を指定した場合" do
+          context 'SQLが指定された場合' do
+            it 'クエリが実行されないこと' do
+              filter = { hobby: 'SELECT * FROM profiles WHERE some_condition' } 
+              allow(Profile).to receive(:where).and_return([]) # データベースクエリをモックするためにRSpecのallowメソッドを使用
+              result = Profile.sort_filter({}, filter)      
+              expect(Profile).not_to have_received(:where) # データベースクエリが実行されなかったことを確認
+            end
+          end
+
+          context '正規表現が指定された場合' do
+            it '正規表現が実行されないこと' do
+              # 正規表現を含むフィルターを設定
+              filter = { hobby: /ゲーム/ }
+
+              # 正規表現が渡されたことを確認
+              expect(filter[:hobby]).to be_a(Regexp)
+
+              # データベースクエリをモックするためにRSpecのallowメソッドを使用
+              allow(Profile).to receive(:where).and_return([])
+
+              # テスト対象のコードを実行
+              result = Profile.sort_filter({}, filter)
+
+              # データベースクエリが実行されなかったことを確認
+              expect(Profile).not_to have_received(:where)
+            
+            end
           end
         end
       end
