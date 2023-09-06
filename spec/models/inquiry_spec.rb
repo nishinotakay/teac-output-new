@@ -14,13 +14,17 @@ RSpec.describe Inquiry, type: :model do
       end
     end
     context "問い合わせ新規登録で指定文字数以上を入力した場合" do
-      it "件名を30文字以上入力するとバリデーションが通らない。" do
-        inquiry.subject = Faker::Lorem.characters(number: 31)
-        expect(inquiry).to_not be_valid
+      context "件名を30文字以上入力した場合" do
+        it "バリデーションが通らない。" do
+          inquiry.subject = Faker::Lorem.characters(number: 31)
+          expect(inquiry).to_not be_valid
+        end
       end
-      it "内容を800文字以上入力するとバリデーションが通らない。" do
-        inquiry.content = Faker::Lorem.characters(number: 801)
-        expect(inquiry).to_not be_valid
+      context "内容を800文字以上入力した場合" do
+        it "バリデーションが通らない。" do
+          inquiry.content = Faker::Lorem.characters(number: 801)
+          expect(inquiry).to_not be_valid
+        end
       end
     end
   end
@@ -102,48 +106,71 @@ RSpec.describe Inquiry, type: :model do
       let(:result) { Inquiry.get_inquiries(params) }
       it '「表示」「非表示」共に表示される' do
         expect(result.third).to include(inquiry_both)
-      end
-      
+      end      
     end
 
-  
     describe "検索機能" do
-      let!(:inquiry1) { FactoryBot.create(:inquiry, subject: "テスト問い合わせ1", content: "問い合わせ1の内容", created_at: "2022-08-01") }
-      let!(:inquiry2) { FactoryBot.create(:inquiry, subject: "テスト問い合わせ2", content: "問い合わせ2の特定の内容", created_at: "2022-08-01") }
-      let!(:inquiry3) { FactoryBot.create(:inquiry, subject: "異なる問い合わせ", content: "問い合わせ3", created_at: "2022-08-03") }
+      let!(:inquiry1) { FactoryBot.create(:inquiry, subject: "テスト問い合わせ1", content: "問い合わせ1の内容", created_at: "2023-08-01") }
+      let!(:inquiry2) { FactoryBot.create(:inquiry, subject: "テスト問い合わせ2", content: "問い合わせ2の特定の内容", created_at: "2023-08-01") }
+      let!(:inquiry3) { FactoryBot.create(:inquiry, subject: "異なる問い合わせ", content: "問い合わせ3", created_at: "2023-08-03") }
       context "件名を検索する場合" do
-        context "完全一致する場合" do
-          it "一致した問い合わせが返ること" do
-            result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { subject: "テスト問い合わせ1" } })
+        context "完全一致する時" do
+          it "一致した値が返ること" do
+            result = Inquiry.apply_sort_and_filter(Inquiry.all, { filter: { subject: "テスト問い合わせ1" } })
             expect(result).to contain_exactly(inquiry1)
           end
         end
-        context "部分一致する場合" do
-          it "件名のみ問い合わせ情報を抽出する" do
-            result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { subject: "テスト" } })
+        context "部分一致する時" do
+          it "一致した値が返ること" do
+            result = Inquiry.apply_sort_and_filter(Inquiry.all, { filter: { subject: "テスト" } })
             expect(result).to contain_exactly(inquiry1, inquiry2)
           end
         end
-      end
-      context "件名を検索する場合" do
-        it "内容のみ問い合わせ情報を抽出する" do
-          result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { content: "内容" } })
-          expect(result).to contain_exactly(inquiry1, inquiry2)
-        end
-        it "内容で完全一致の問い合わせ情報を抽出する" do
-          result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { content: "問い合わせ3" } })
-          expect(result).to contain_exactly(inquiry3)
-        end
-        it "作成日時のみ問い合わせを情報を抽出する" do
-          result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { created_at: "2022-08-01" } })
-          expect(result).to contain_exactly(inquiry1, inquiry2)
-        end
-        it "作成日時で完全一致の問い合わせ情報を抽出する" do
-          result = Inquiry.apply_sort_and_filter(Inquiry.all, { order: "created_at ASC", filter: { created_at: "2022-08-03" } })
-          expect(result).to contain_exactly(inquiry3)
+        context "一致する値が存在しない時" do
+          it "空の配列が返ること" do
+            result = Inquiry.apply_sort_and_filter(Inquiry.all, { filter: { subject: "存在しない問い合わせ" } })
+            expect(result).to be_empty
+          end
         end
       end
-    end    
+      context "内容を検索する場合" do
+        context "完全一致する時" do
+          it "一致した値が返ること" do
+            result = Inquiry.apply_sort_and_filter(Inquiry.all, { filter: { content: "内容" } })
+            expect(result).to contain_exactly(inquiry1, inquiry2)
+          end
+        end
+        context "部分一致する時" do
+          it "一致した値が返ること" do
+            result = Inquiry.apply_sort_and_filter(Inquiry.all, { filter: { content: "問い合わせ3" } })
+            expect(result).to contain_exactly(inquiry3)
+          end
+        end
+        context "一致する値が存在しない時" do
+          it "空の配列が返ること" do
+            result = Inquiry.apply_sort_and_filter(Inquiry.all, { filter: { content: "存在しない問い合わせ" } })
+            expect(result).to be_empty
+          end
+        end
+      end
+      context "作成日時を検索する場合" do 
+        context "完全一致する時" do
+          it "一致した値が返ること" do
+            result = Inquiry.apply_sort_and_filter(Inquiry.all, { filter: { created_at: "2023-08-01" } })
+            expect(result).to contain_exactly(inquiry1, inquiry2)
+          end
+        end
+        context "一致する値が存在しない時" do
+          it "空の配列が返ること" do
+            result = Inquiry.apply_sort_and_filter(Inquiry.all, { filter: { created_at: "2023-01-01" } })
+            expect(result).to be_empty
+          end
+        end
+      end
+    end 
+
+  
+     
   end
     
 end
