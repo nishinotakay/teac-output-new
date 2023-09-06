@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "つぶやき機能", type: :system do
+RSpec.describe "つぶやき機能", type: :system, js: true do
   let(:user) do
     user = create(:user, name: '山田太郎', email: Faker::Internet.email, password: 'password')
     user.confirm
@@ -20,12 +20,14 @@ RSpec.describe "つぶやき機能", type: :system do
     expect(current_path).to eq users_tweets_path
     expect(page).to have_content 'つぶやき一覧'
 
-    # find('.nav-link[data-remote="true"][data-method="get"][href="/users/tweets/new"]')
-
-    # sleep 1
-
-    # expect(page).to have_content '投稿を作成'
-
+    find('.nav-link[data-remote="true"][data-method="get"][href="/users/tweets/new"]').click
+    expect(page).to have_selector('.modal', visible: true)
+    # Capybara.default_max_wait_time = 5
+    # expect(page).to have_selector('.modal', visible: true)
+    
+    # within('.modal') do
+    #   expect(page).to have_content('投稿を作成')
+    # end
 
   end
 end
