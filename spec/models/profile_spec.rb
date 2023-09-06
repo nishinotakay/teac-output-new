@@ -94,7 +94,7 @@ RSpec.describe Profile, type: :model do
         context "想定外の値を指定した場合" do
           context 'SQLが指定された場合' do
             it 'クエリが実行されないこと' do
-              filter = { name: 'SELECT * FROM profiles WHERE some_condition' } 
+              filter = { name: "SELECT * FROM profiles WHERE name = '山田太郎';" } 
               allow(Profile).to receive(:where).and_return([]) # データベースクエリをモックするためにRSpecのallowメソッドを使用
               result = Profile.sort_filter({}, filter)      
               expect(Profile).not_to have_received(:where) # データベースクエリが実行されなかったことを確認
@@ -130,7 +130,7 @@ RSpec.describe Profile, type: :model do
         context "想定外の値を指定した場合" do
           context 'SQLが指定された場合' do
             it 'クエリが実行されないこと' do
-              filter = { registration_date: 'SELECT * FROM profiles WHERE some_condition' } 
+              filter = { registration_date: "SELECT * FROM profiles WHERE registration_date = '2023-08-09';" } 
               allow(Profile).to receive(:where).and_return([])
               result = Profile.sort_filter({}, filter)      
               expect(Profile).not_to have_received(:where)
@@ -176,7 +176,7 @@ RSpec.describe Profile, type: :model do
         context "想定外の値を指定した場合" do
           context 'SQLが指定された場合' do
             it 'クエリが実行されないこと' do
-              filter = { hobby: 'SELECT * FROM profiles WHERE some_condition' } 
+              filter = { hobby: "SELECT * FROM profiles WHERE hobby = '読書';" } 
               allow(Profile).to receive(:where).and_return([]) 
               result = Profile.sort_filter({}, filter)      
               expect(Profile).not_to have_received(:where)
