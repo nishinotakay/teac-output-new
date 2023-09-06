@@ -176,7 +176,7 @@ RSpec.describe Profile, type: :model do
         context "想定外の値を指定した場合" do
           context 'SQLが指定された場合' do
             it 'クエリが実行されないこと' do
-              filter = { hobby: "SELECT * FROM profiles WHERE hobby = '読書';" } 
+              filter = { hobby: "SELECT * FROM profiles WHERE hobby = 'ランニング';" } 
               allow(Profile).to receive(:where).and_return([]) 
               result = Profile.sort_filter({}, filter)      
               expect(Profile).not_to have_received(:where)
