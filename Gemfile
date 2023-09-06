@@ -63,6 +63,8 @@ group :development, :test do
   gem 'rspec-rails'
   # ファクトリーボットの為、導入
   gem 'faker'
+  # N+1問題検出ツール
+  gem 'bullet'
 end
 
 group :development do
@@ -92,8 +94,6 @@ group :test do
   # 脆弱性チェックツール
   gem 'brakeman'
 
-  # N+1問題検出ツール
-  gem 'bullet'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
