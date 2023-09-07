@@ -169,6 +169,24 @@ RSpec.describe 'Articles', type: :request do
       end
     end
 
+    context 'SQL文を入力した場合' do
+      it '記事投稿が成功し、クエリが実行されないこと' do
+        post users_articles_url, params: { article: { title: 'a', sub_title: 'b', content: 'c', user_id: user_1.id } } # 一件目の記事を生成
+        params[:article][:content] = 'DELETE FROM articles;' # ２件目の記事生成用、本文に全ての記事を削除するクエリを指定
+        expect { post users_articles_url params: params }.to change(Article, :count).by(1) # クエリを入力しても記事投稿が成功する
+        expect(Article.first.title).to eq 'a' # クエリが発行されず、１件目の記事が存在する
+      end
+    end
+
+    context '正規表現を入力した場合' do
+      it '記事投稿が成功し、正規表現が実行されないこと' do
+        params[:article][:content] = '/[0-9]/' # 数字を含む正規表現を指定
+        expect { post users_articles_url params: params }.to change(Article, :count).by(1) # 正規表現を指定しても記事投稿は成功する
+        expect(response.status).to eq 302
+        expect(Article.last.content).to eq('/[0-9]/') # 正規表現が実行されず、本文に文字列 /[0-9]/ がある。正規表現が実行されていれば、文字列は存在しない googleBardより
+      end
+    end
+
     context 'ログインしていない場合' do
       it '記事は作成されず、トップページへリダイレクトする' do
         sign_out user_1
