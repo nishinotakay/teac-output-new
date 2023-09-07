@@ -34,7 +34,7 @@ module Users
     end
 
     def new
-      @article = current_user.articles.new # Article.new
+      @article = current_user.articles.new
     end
 
     def create
