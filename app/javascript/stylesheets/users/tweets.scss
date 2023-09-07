@@ -115,3 +115,8 @@
 .list-group-item:hover {
   background-color: #f0f0f0; // グレーに変わる
 }
+
+.tweet-paginate {
+  overflow-x: auto;
+  display: block;
+}
