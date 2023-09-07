@@ -1,26 +1,26 @@
 require 'rails_helper'
 
 RSpec.describe 'Articles', type: :request do
-  let(:user_1) { build(:user, :a, confirmed_at: Date.today) }
-  let(:user_2) { build(:user, :b, confirmed_at: Date.today) }
-  let(:article) { create(:article, user: user_1) }
+  let(:user_a) { build(:user, :a, confirmed_at: Date.today) }
+  let(:user_b) { build(:user, :b, confirmed_at: Date.today) }
+  let(:article) { create(:article, user: user_a) }
 
   describe 'GET /index' do # 一覧画面の取得
     article_count = 2
-    let(:articles_1) { create_list(:article, article_count, user: user_1) }
-    let(:articles_2) { create_list(:article, article_count, user: user_2) }
+    let(:articles_a) { create_list(:article, article_count, user: user_a) }
+    let(:articles_b) { create_list(:article, article_count, user: user_b) }
 
-    before(:each) { articles_1 }
+    before(:each) { articles_a }
 
     context 'ログインユーザーが投稿者である場合' do
       it '記事一覧画面へ遷移する' do
-        articles_2
-        sign_in user_1
+        articles_b
+        sign_in user_a
         get users_articles_url # 記事一覧画面へ遷移
         expect(response.status).to eq 200
-        expect(response.body).to include user_1.name
-        expect(response.body).to include user_2.name
-        articles_1.concat(articles_2).each do |a|
+        expect(response.body).to include user_a.name
+        expect(response.body).to include user_b.name
+        articles_a.concat(articles_2).each do |a|
           expect(response.body).to include a.title
           expect(response.body).to include a.sub_title
           expect(response.body).to include '編集'
@@ -31,12 +31,12 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインユーザーが投稿者でない場合' do
       it '記事一覧画面へ遷移する' do
-        sign_in user_2 # ユーザー２でログイン
+        sign_in user_b # ユーザー２でログイン
         get users_articles_url
         expect(response.status).to eq 200
-        expect(response.body).to include user_1.name
-        expect(response.body).to include user_2.name
-        articles_1.each do |a|
+        expect(response.body).to include user_a.name
+        expect(response.body).to include user_b.name
+        articles_a.each do |a|
           expect(response.body).to include a.title
           expect(response.body).to include a.sub_title
           expect(response.body).not_to include '編集'
@@ -47,7 +47,7 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインしていない場合' do
       it '記事一覧画面へ遷移せず、ログインページにリダイレクトする' do
-        sign_out user_2
+        sign_out user_b
         get users_articles_url
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
@@ -59,7 +59,7 @@ RSpec.describe 'Articles', type: :request do
   describe 'GET /show' do # 詳細画面の取得
     context 'ログインユーザーが投稿者である場合' do
       it '記事詳細画面へ遷移する' do
-        sign_in user_1
+        sign_in user_a
         get users_article_url(article) # ユーザー１投稿の記事詳細画面へ
         expect(response.status).to eq 200
         expect(response.body).to include '編集'
@@ -72,7 +72,7 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインユーザーが投稿者ではない場合' do
       it '記事詳細画面へ遷移し、編集・削除ボタンが表示されない' do
-        sign_in user_2
+        sign_in user_b
         get users_article_url(article) # ユーザー１が投稿した記事詳細画面へ
         expect(response.status).to eq 200
         expect(response.body).not_to include '編集'
@@ -96,7 +96,7 @@ RSpec.describe 'Articles', type: :request do
   describe 'GET /new' do # 新規作成画面の取得
     context 'ログインしている場合' do
       it '記事投稿画面へ遷移する' do
-        sign_in user_1
+        sign_in user_a
         get new_users_article_url
         expect(response.status).to eq 200
       end
@@ -115,7 +115,7 @@ RSpec.describe 'Articles', type: :request do
   describe 'GET /edit' do # 編集画面の取得
     context 'ログインユーザーが投稿者である場合' do
       it '記事編集画面へ遷移する' do
-        sign_in user_1
+        sign_in user_a
         get edit_users_article_url(article)
         expect(response.status).to eq 200
         expect(response.body).to include '<input', 'title-form', article.title, '/>'
@@ -128,7 +128,7 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインユーザーが投稿者でない場合' do
       it '記事編集画面へ遷移せず、記事一覧画面へリダイレクトする' do
-        sign_in user_2
+        sign_in user_b
         get edit_users_article_url(article)
         expect(response.status).to eq 302
         expect(response).to redirect_to users_articles_url
@@ -147,9 +147,9 @@ RSpec.describe 'Articles', type: :request do
   end
 
   describe 'POST /create' do # 新規作成の実行
-    let(:params) { { article: attributes_for(:article, user_id: user_1.id) } }
+    let(:params) { { article: attributes_for(:article, user_id: user_a.id) } }
 
-    before(:each) { sign_in user_1 }
+    before(:each) { sign_in user_a }
 
     context '記事投稿が成功した場合' do
       it '記事が保存され、記事詳細画面へ遷移する' do
@@ -171,7 +171,7 @@ RSpec.describe 'Articles', type: :request do
 
     context 'SQL文を入力した場合' do
       it '記事投稿が成功し、クエリが実行されないこと' do
-        post users_articles_url, params: { article: { title: 'a', sub_title: 'b', content: 'c', user_id: user_1.id } } # 一件目の記事を生成
+        post users_articles_url, params: { article: { title: 'a', sub_title: 'b', content: 'c', user_id: user_a.id } } # 一件目の記事を生成
         params[:article][:content] = 'DELETE FROM articles;' # ２件目の記事生成用、本文に全ての記事を削除するクエリを指定
         expect { post users_articles_url params: params }.to change(Article, :count).by(1) # クエリを入力しても記事投稿が成功する
         expect(Article.first.title).to eq 'a' # クエリが発行されず、１件目の記事が存在する
@@ -189,7 +189,7 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインしていない場合' do
       it '記事は作成されず、トップページへリダイレクトする' do
-        sign_out user_1
+        sign_out user_a
         post users_articles_url params: params
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
@@ -199,10 +199,10 @@ RSpec.describe 'Articles', type: :request do
   end
 
   describe 'PATCH /update' do # 記事の更新
-    let(:article) { create(:article, user: user_1) }
+    let(:article) { create(:article, user: user_a) }
 
     before(:each) do
-      sign_in user_1
+      sign_in user_a
       article
     end
 
@@ -230,9 +230,9 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインユーザーが投稿者ではない場合' do
       it '記事は更新されず、記事一覧画面へリダイレクトする' do
-        sign_in user_2
+        sign_in user_b
         params = { article: { title: 'a', sub_title: 'b', content: 'c' } }
-        patch users_article_url(article, params: params) # user_1の投稿記事を編集する
+        patch users_article_url(article, params: params) # user_a の投稿記事を編集する
         article.reload
         expect(response.status).to eq 302
         expect(response).to redirect_to users_articles_url
@@ -242,7 +242,7 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインしていない場合' do
       it '記事は更新されず、トップページへリダイレクトする' do
-        sign_out user_1
+        sign_out user_a
         params = { article: { title: 'a', sub_title: 'b', content: 'c' } }
         patch users_article_url(article, params: params)
         expect(response.status).to eq 302
@@ -253,10 +253,10 @@ RSpec.describe 'Articles', type: :request do
   end
 
   describe 'DELETE /destroy' do # 記事の削除
-    let(:article) { create(:article, user: user_1) }
+    let(:article) { create(:article, user: user_a) }
 
     before(:each) do
-      sign_in user_1
+      sign_in user_a
       article
     end
 
@@ -265,7 +265,7 @@ RSpec.describe 'Articles', type: :request do
         expect { delete users_article_url(article, dashboard: true) }.to change(Article, :count).by(-1)
         expect(response.status).to eq 302
         expect(flash[:notice]).to eq '記事を削除しました。'
-        expect(response).to redirect_to users_dash_boards_url(user_1)
+        expect(response).to redirect_to users_dash_boards_url(user_a)
       end
 
       it '記事の削除ができ、記事一覧画面へ遷移する' do # dashboard: false
@@ -278,7 +278,7 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインユーザーが投稿者ではない場合' do
       it '削除されず、記事一覧画面へリダイレクトする' do
-        sign_in user_2
+        sign_in user_b
         expect { delete users_article_url(article) }.not_to change(Article, :count) # 記事の数は変化しない
         expect(response.status).to eq 302
         expect(response).to redirect_to users_articles_url
@@ -288,7 +288,7 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインしていない場合' do
       it '記事は削除されず、トップページへリダイレクトする' do
-        sign_out user_1
+        sign_out user_a
         expect { delete users_article_url(article) }.not_to change(Article, :count)
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
@@ -300,15 +300,15 @@ RSpec.describe 'Articles', type: :request do
   describe 'POST /image' do # 画像のアップロード
     context 'ログインユーザーが投稿者である場合' do
       it '記事に画像を添付できる' do
-        user_1.save
+        user_a.save
         image = fixture_file_upload('spec/fixtures/files/ruby.png', 'image/png')
-        sign_in user_1
-        post users_articles_image_url, params: { image: image, user_id: user_1.id }
+        sign_in user_a
+        post users_articles_image_url, params: { image: image, user_id: user_a.id }
         expect(JSON.parse(response.body)['name']).to eq 'ruby.png'
         expect(JSON.parse(response.body)['url']).to include 'ruby.png'
         expect(JSON.parse(response.body)['url']).to include '/uploads/tmp/'
         uploaded_image_url = JSON.parse(response.body)['url']
-        article_params = { title: 'a', sub_title: 'a', content: "<img src=\"#{uploaded_image_url}\">", user: user_1.id } # ここから画像投稿までのテストをする
+        article_params = { title: 'a', sub_title: 'a', content: "<img src=\"#{uploaded_image_url}\">", user: user_a.id } # ここから画像投稿までのテストをする
         post users_articles_url, params: { article: article_params }
         expect(response.status).to eq 302
         expect(flash[:notice]).to eq '記事を作成しました。'
@@ -318,10 +318,10 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインユーザーが投稿者ではない場合' do # 悪意あるユーザーが、他ユーザーの投稿で画像添付できないテスト
       it '記事に画像を添付できない' do
-        user_1.save
+        user_a.save
         image = fixture_file_upload('spec/fixtures/files/ruby.png', 'image/png')
-        sign_in user_2
-        post users_articles_image_url, params: { image: image, user_id: user_1.id }
+        sign_in user_b
+        post users_articles_image_url, params: { image: image, user_id: user_a.id }
         expect(response.status).to eq 401 # 401はUnauthorizedのステータスコードです
         json_response = JSON.parse(response.body)
         expect(json_response['error']).to eq '画像の挿入に失敗しました。'
@@ -330,9 +330,9 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインしていない場合' do
       it '記事の画像は保存されず、トップページへリダイレクトする' do
-        sign_out user_1
+        sign_out user_a
         image = fixture_file_upload('spec/fixtures/files/ruby.png', 'image/png')
-        post users_articles_image_url, params: { image: image, user_id: user_1.id }
+        post users_articles_image_url, params: { image: image, user_id: user_a.id }
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
