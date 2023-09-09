@@ -109,5 +109,8 @@ Profile.create!(birthday: '2000-12-25',
 
   puts "Profile Created"
 
-
-
+User.all.each do |u|
+  5.times do |i|
+    tweet = u.tweets.create!(post: "つぶやきコンテント#{i + 1}")
+  end
+end
