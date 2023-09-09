@@ -31,7 +31,7 @@ RSpec.describe Profile, type: :model do
 
   describe 'アソシエーション' do
     context 'ユーザーと関連付けられている場合' do
-      it '1:1になっていること' do
+      it '1対1になっていること' do
         association = described_class.reflect_on_association(:user)
         expect(association.macro).to eq :belongs_to
       end
@@ -69,25 +69,33 @@ RSpec.describe Profile, type: :model do
       context '名前を指定する場合' do
         context '名前の一部を入力した場合' do
           it '前方一致したプロフィールが返ること' do
-            matching_name = described_class.sort_filter({}, { name: '山' }).pluck(:id)
-            expect(matching_name).to eq([profile1.id])
+            matching_profiles = described_class.sort_filter({}, { name: '山' }).pluck(:id)
+            expect(matching_profiles).to eq([profile1.id])
           end
 
           it '中央一致したプロフィールが返ること' do
-            matching_name = described_class.sort_filter({}, { name: '田' }).pluck(:id)
-            expect(matching_name).to eq([profile1.id])
+            matching_profiles = described_class.sort_filter({}, { name: '田' }).pluck(:id)
+            expect(matching_profiles).to eq([profile1.id])
           end
 
           it '後方一致したプロフィールが返ること' do
-            matching_name = described_class.sort_filter({}, { name: '咲' }).pluck(:id)
-            expect(matching_name).to eq([profile2.id])
+            matching_profiles = described_class.sort_filter({}, { name: '咲' }).pluck(:id)
+            expect(matching_profiles).to eq([profile2.id])
+          end
+        end
+
+        context 'フルネームを入力した場合' do
+          it '完全一致したプロフィールが返ること' do
+            matching_profiles = described_class.sort_filter({}, { name: '伊東美咲' }).pluck(:id)
+            expect(matching_profiles).to include(profile2.id)
+            expect(matching_profiles.size).to eq(1)
           end
         end
 
         context '一致しない名前を指定した場合' do
           it '何も返らないこと' do
-            matching_name = described_class.sort_filter({}, { name: '拓也' }).pluck(:id)
-            expect(matching_name).to be_empty
+            matching_profiles = described_class.sort_filter({}, { name: '拓也' }).pluck(:id)
+            expect(matching_profiles).to be_empty
           end
         end
 
@@ -115,15 +123,15 @@ RSpec.describe Profile, type: :model do
       context '登録日を指定する場合' do
         context '存在する登録日を指定した場合' do
           it '一致したプロフィールが返ること' do
-            matching_registration_date = described_class.sort_filter({}, { registration_date: '2023-08-09' }).pluck(:id)
-            expect(matching_registration_date).to eq([profile1.id])
+            matching_profiles = described_class.sort_filter({}, { registration_date: '2023-08-09' }).pluck(:id)
+            expect(matching_profiles).to eq([profile1.id])
           end
         end
 
         context '一致しない登録日を指定した場合' do
           it '何も返らないこと' do
-            matching_registration_date = described_class.sort_filter({}, { registration_date: '2022-12-31' }).pluck(:id)
-            expect(matching_registration_date).to be_empty
+            matching_profiles = described_class.sort_filter({}, { registration_date: '2022-12-31' }).pluck(:id)
+            expect(matching_profiles).to be_empty
           end
         end
 
@@ -151,25 +159,33 @@ RSpec.describe Profile, type: :model do
       context '趣味を指定する場合' do
         context '趣味の一部を入力した場合' do
           it '前方一致したプロフィールが返ること' do
-            matching_hobby = described_class.sort_filter({}, { hobby: 'ラ' }).pluck(:id)
-            expect(matching_hobby).to eq([profile2.id])
+            matching_profiles = described_class.sort_filter({}, { hobby: 'ラ' }).pluck(:id)
+            expect(matching_profiles).to eq([profile2.id])
           end
 
           it '中央一致したプロフィールが返ること' do
-            matching_hobby = described_class.sort_filter({}, { hobby: 'ニン' }).pluck(:id)
-            expect(matching_hobby).to eq([profile2.id])
+            matching_profiles = described_class.sort_filter({}, { hobby: 'ニン' }).pluck(:id)
+            expect(matching_profiles).to eq([profile2.id])
           end
 
           it '後方一致したプロフィールが返ること' do
-            matching_hobby = described_class.sort_filter({}, { hobby: 'ム' }).pluck(:id)
-            expect(matching_hobby).to eq([profile1.id])
+            matching_profiles = described_class.sort_filter({}, { hobby: 'ム' }).pluck(:id)
+            expect(matching_profiles).to eq([profile1.id])
+          end
+        end
+
+        context '完全な表現で趣味を入力した場合' do
+          it '完全一致したプロフィールが返ること' do
+            matching_profiles = described_class.sort_filter({}, { hobby: 'ランニング' }).pluck(:id)
+            expect(matching_profiles).to include(profile2.id)
+            expect(matching_profiles.size).to eq(1)
           end
         end
 
         context '一致しない趣味を指定した場合' do
           it '何も返らないこと' do
-            matching_hobby = described_class.sort_filter({}, { hobby: '読書' }).pluck(:id)
-            expect(matching_hobby).to be_empty
+            matching_profiles = described_class.sort_filter({}, { hobby: '読書' }).pluck(:id)
+            expect(matching_profiles).to be_empty
           end
         end
 
