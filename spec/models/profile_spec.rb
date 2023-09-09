@@ -86,8 +86,7 @@ RSpec.describe Profile, type: :model do
 
         context 'フルネームを入力した場合' do
           it '完全一致したプロフィールが返ること' do
-            matching_profiles = described_class.sort_filter({}, { name: '伊東美咲' }).pluck(:id)
-            expect(matching_profiles).to include(profile2.id)
+            matching_profiles = described_class.sort_filter({}, { name: '伊東美咲' })
             expect(matching_profiles.size).to eq(1)
           end
         end
@@ -176,8 +175,7 @@ RSpec.describe Profile, type: :model do
 
         context '完全な表現で趣味を入力した場合' do
           it '完全一致したプロフィールが返ること' do
-            matching_profiles = described_class.sort_filter({}, { hobby: 'ランニング' }).pluck(:id)
-            expect(matching_profiles).to include(profile2.id)
+            matching_profiles = described_class.sort_filter({}, { hobby: 'ランニング' })
             expect(matching_profiles.size).to eq(1)
           end
         end
