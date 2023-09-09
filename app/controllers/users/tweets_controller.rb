@@ -10,7 +10,8 @@ module Users
 
     def index
       @users = User.all
-      @tweets = Tweet.all.order(created_at: :desc)
+      @tweets = Tweet.all.order(created_at: :desc).page(params[:page]).per(30)
+      # @articles = Article.order(created_at: params[:order]).page(params[:page]).per(30)
     end
 
     def show
@@ -57,7 +58,7 @@ module Users
     end
 
     def index_user
-      @tweets = Tweet.where(user_id: params[:id])
+      @tweets = Tweet.where(user_id: params[:id]).page(params[:page]).per(30)
       @user = User.find(params[:id])
     end
 
