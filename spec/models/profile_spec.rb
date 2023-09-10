@@ -50,18 +50,20 @@ RSpec.describe Profile, type: :model do
   describe '一覧表示の操作' do
     let!(:user1) { create(:user, name: '山田太郎', email: Faker::Internet.email, password: 'password') }
     let!(:user2) { create(:user, name: '伊東美咲', email: Faker::Internet.email, password: 'password') }
+    let!(:user3) { create(:user, name: '伊藤英明', email: Faker::Internet.email, password: 'password') }
     let!(:profile1) { create(:profile, registration_date: '2023-08-09', hobby: 'ゲーム', user: user1) }
     let!(:profile2) { create(:profile, registration_date: '1999-10-25', hobby: 'ランニング', user: user2) }
+    let!(:profile3) { create(:profile, registration_date: '2005-01-01', hobby: 'ランニング', user: user3) }
 
     describe '並べ替え機能' do
       it '古い順に並べ替えることができる' do
         oldest_first = described_class.sort_filter({ registration_date: 'ASC' }, {}).pluck(:id)
-        expect(oldest_first).to eq([profile2.id, profile1.id])
+        expect(oldest_first).to eq([profile2.id, profile3.id, profile1.id])
       end
 
       it '新しい順に並べ替えることができる' do
         newest_first = described_class.sort_filter({ registration_date: 'DESC' }, {}).pluck(:id)
-        expect(newest_first).to eq([profile1.id, profile2.id])
+        expect(newest_first).to eq([profile1.id, profile3.id, profile2.id])
       end
     end
 
@@ -69,8 +71,8 @@ RSpec.describe Profile, type: :model do
       context '名前を指定する場合' do
         context '名前の一部を入力した場合' do
           it '前方一致したプロフィールが返ること' do
-            matching_profiles = described_class.sort_filter({}, { name: '山' }).pluck(:id)
-            expect(matching_profiles).to eq([profile1.id])
+            matching_profiles = described_class.sort_filter({}, { name: '伊' }).pluck(:id)
+            expect(matching_profiles).to eq([profile2.id, profile3.id])
           end
 
           it '中央一致したプロフィールが返ること' do
@@ -159,12 +161,12 @@ RSpec.describe Profile, type: :model do
         context '趣味の一部を入力した場合' do
           it '前方一致したプロフィールが返ること' do
             matching_profiles = described_class.sort_filter({}, { hobby: 'ラ' }).pluck(:id)
-            expect(matching_profiles).to eq([profile2.id])
+            expect(matching_profiles).to eq([profile2.id, profile3.id])
           end
 
           it '中央一致したプロフィールが返ること' do
             matching_profiles = described_class.sort_filter({}, { hobby: 'ニン' }).pluck(:id)
-            expect(matching_profiles).to eq([profile2.id])
+            expect(matching_profiles).to eq([profile2.id, profile3.id])
           end
 
           it '後方一致したプロフィールが返ること' do
@@ -176,7 +178,7 @@ RSpec.describe Profile, type: :model do
         context '完全な表現で趣味を入力した場合' do
           it '完全一致したプロフィールが返ること' do
             matching_profiles = described_class.sort_filter({}, { hobby: 'ランニング' })
-            expect(matching_profiles.size).to eq(1)
+            expect(matching_profiles.size).to eq(2)
           end
         end
 
