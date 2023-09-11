@@ -53,7 +53,7 @@ $(function(){
   $('.submit-btn').on('click', function(){
     var sort = $('#sort-select option:selected').val()
     var search = "order=" + sort
-    var values = ['author', 'title', 'subtitle', 'content', 'start', 'finish' ,'body']
+    var values = ['author', 'title', 'subtitle', 'content', 'start', 'finish' ,'body', 'post']
     $.each(values, function(index, value){
       var input = $('#input-' + value).val()
       if(input){

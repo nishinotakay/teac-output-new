@@ -7,5 +7,5 @@ ja:
         post: '投稿内容'
         created_at: '投稿日時'
         updated_at: '編集日時'
-        tweet_contributor: '投稿者'
+        author: '投稿者'
 
