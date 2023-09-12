@@ -19,12 +19,12 @@ module Users
 
       if filter.compact.blank?
         @paginate = true
-        @posts = Post.order(created_at: params[:order]).page(params[:page]).per(30)
-        @articles = Article.order(created_at: params[:order]).page(params[:page]).per(30)
+        @posts = Post.includes(:admin, :user).order(created_at: params[:order]).page(params[:page]).per(30)
+        @articles = Article.includes(:user).order(created_at: params[:order]).page(params[:page]).per(30)
       else
         filter[:order] = params[:order]
-        post_query = Post.all
-        article_query = Article.all
+        post_query = Post.includes(:admin).all
+        article_query = Article.includes(:admin).all
 
         if filter[:author].present?
           post_query = post_query.joins(:user).where('name LIKE ?', "%#{filter[:author]}%")
@@ -48,11 +48,12 @@ module Users
           article_query = article_query.where('created_at >= ?', start_date).where('created_at <= ?', finish_date)
         end
 
-        @posts = post_query.page(params[:page]).per(30)
-        @articles = article_query.page(params[:page]).per(30)
+        @posts = post_query.includes(:admin, :user).page(params[:page]).per(30)
+        @articles = article_query.includes(:user).page(params[:page]).per(30)
       end
     end
 
+    # 動画詳細ページ
     def show; end
 
     # 新規投稿ページ
@@ -78,15 +79,13 @@ module Users
 
     # 投稿動画編集のアップデート
     def update
-      # 追記した部分ここから
       url = params[:post][:youtube_url].last(11)
       @post.youtube_url = url
-      # ここまで
       if @post.update(post_params)
         redirect_to users_posts_path(@post), flash: { success: '動画編集完了致しました' }
       else
         flash.now[:danger] = '動画投稿出来ませんでした。' # 4/25訂正
-        render :new
+        render :edit
       end
     end
 

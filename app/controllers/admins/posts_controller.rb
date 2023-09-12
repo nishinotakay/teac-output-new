@@ -19,20 +19,20 @@ module Admins
 
       if filter.compact.blank?
         @paginate = true
-        @posts = Post.order(created_at: params[:order]).page(params[:page]).per(30)
-        @articles = Article.order(created_at: params[:order]).page(params[:page]).per(30)
+        @posts = Post.includes(:user, :admin).order(created_at: params[:order]).page(params[:page]).per(30)
+        @articles = Article.includes(:user, :admin).order(created_at: params[:order]).page(params[:page]).per(30)
       else
         filter[:order] = params[:order]
-        post_query = Post.all
-        article_query = Article.all
+        post_query = Post.includes(:user, :admin).all
+        article_query = Article.includes(:user, :admin).all
 
         if filter[:author].present?
-          post_query = post_query.left_joins(:user, :admin)
+          post_query = post_query.left_joins(:user, :admin).includes(:user, :admin)
             .where('users.name LIKE ? OR admins.name LIKE ?', "%#{filter[:author]}%", "%#{filter[:author]}%")
-          article_query = article_query.left_joins(:user, :admin)
+          article_query = article_query.left_joins(:user, :admin).includes(:user, :admin)
             .where('users.name LIKE ? OR admins.name LIKE ?', "%#{filter[:author]}%", "%#{filter[:author]}%")
         end
-
+        
         if filter[:title].present?
           post_query = post_query.where('title LIKE ?', "%#{filter[:title]}%")
           article_query = article_query.where('title LIKE ?', "%#{filter[:title]}%")
@@ -55,6 +55,7 @@ module Admins
       end
     end
 
+    # 動画詳細ページ
     def show
       @post = Post.find(params[:id])
     end
@@ -70,7 +71,6 @@ module Admins
     # 投稿動画作成
     def create
       @post = current_admin.posts.new(post_params)
-      @post.user_id = current_admin.id
       url = params[:post][:youtube_url].last(11)
       @post.youtube_url = url
       if @post.save
@@ -83,15 +83,13 @@ module Admins
 
     # 投稿動画編集のアップデート
     def update
-      # 追記した部分ここから
       url = params[:post][:youtube_url].last(11)
       @post.youtube_url = url
-      # ここまで
       if @post.update(post_params)
         redirect_to admins_posts_path(@post), flash: { success: '動画編集完了致しました' }
       else
         flash.now[:danger] = '動画投稿出来ませんでした。' # 4/25訂正
-        render :new
+        render :edit
       end
     end
 
@@ -101,7 +99,6 @@ module Admins
         redirect_to admins_posts_path, flash: { warning: '動画を削除しました。' }
       else
         redirect_to :index
-        # redirect_to admins_post_path(@post)
       end
     end
 
