@@ -16,122 +16,276 @@ RSpec.describe '/posts', type: :request do
   # Post. As you add validations to Post, be sure to
   # adjust the attributes here as well.
 
-  let(:valid_attributes) do
-    skip('Add a hash of attributes valid for your model')
+  let(:user) { FactoryBot.create(:user) }
+  let(:admin) { FactoryBot.create(:admin) }
+  
+  let(:valid_user_post) do
+    FactoryBot.create(:post, :valid_post, user: user)
+  end
+  
+  let(:valid_admin_post) do
+    FactoryBot.create(:post, :valid_post, admin: admin)
+  end
+  
+  let(:invalid_user_post) do
+    FactoryBot.attributes_for(:post, user: user)
   end
 
-  let(:invalid_attributes) do
-    skip('Add a hash of attributes invalid for your model')
+  let(:invalid_admin_post) do
+    FactoryBot.attributes_for(:post, admin: admin)
   end
 
-  describe 'GET /index' do
-    it 'renders a successful response' do
-      Post.create! valid_attributes
-      get posts_url
-      expect(response).to be_successful
-    end
-  end
-
-  describe 'GET /show' do
-    it 'renders a successful response' do
-      post = Post.create! valid_attributes
-      get post_url(post)
-      expect(response).to be_successful
-    end
-  end
-
-  describe 'GET /new' do
+  # ユーザーがサインインして、既存の投稿がある場合、投稿一覧を取得できるか？
+  describe 'GET /index (ユーザー)' do
     before(:each) do
-      @user = FactoryBot.create(:user)
-      # deviseでメール認証機能をつけている場合はサインインの前に user.confirm を行い認証を済ませておく必要がある
-      @user.confirm
-      sign_in @user
+      valid_user_post
+      user.confirm
+      sign_in user
+    end
+  
+    it '成功したレスポンスを返すこと' do
+      get users_posts_path
+      expect(response).to be_successful
+    end
+  end
+
+  # 管理者がサインインして、既存の投稿がある場合、投稿一覧を取得できるか？
+  describe 'GET /index (管理者)' do
+    before(:each) do
+      valid_admin_post
+      admin.confirm
+      sign_in admin
+    end
+  
+    it '成功したレスポンスを返すこと' do
+      get admins_posts_path
+      expect(response).to be_successful
+    end
+  end
+  
+  # ユーザーがサインインして新たな投稿を作成した場合、その投稿の詳細を取得できるか？
+  describe 'GET /show (ユーザー)' do
+    before(:each) do
+      valid_user_post
+      user.confirm
+      sign_in user
+    end
+    
+    it '成功したレスポンスを返すこと' do
+      get users_post_path(valid_user_post)
+      expect(response).to be_successful
+    end
+  end
+
+  # 管理者がサインインして新たな投稿を作成した場合、その投稿の詳細を取得できるか？
+  describe 'GET /show (管理者)' do
+    before(:each) do
+      valid_admin_post
+      admin.confirm
+      sign_in admin
+    end
+    
+    it '成功したレスポンスを返すこと' do
+      get admins_post_path(valid_user_post)
+      expect(response).to be_successful
+    end
+  end
+
+  # ユーザがサインインして新規投稿ボタンを押した場合、新規投稿ページへ遷移できるか？
+  describe 'GET /new (ユーザー)' do
+    before(:each) do
+      user.confirm
+      sign_in user
     end
 
-    it 'renders a successful response' do
+    it '成功したレスポンスを返すこと' do
       get new_users_post_path
       expect(response).to be_successful
     end
   end
 
-  describe 'GET /edit' do
-    it 'render a successful response' do
-      post = Post.create! valid_attributes
-      get edit_post_url(post)
+  # 管理者がサインインして新規投稿ボタンを押した場合、新規投稿ページへ遷移できるか？
+  describe 'GET /new (管理者)' do
+    before(:each) do
+      admin.confirm
+      sign_in admin
+    end
+
+    it '成功したレスポンスを返すこと' do
+      get new_admins_post_path
+      expect(response).to be_successful
+    end
+  end
+  
+  # ユーザーがサインインして編集ボタンを押した場合、動画編集ページへ遷移できるか？
+  describe 'GET /edit (ユーザー)' do
+    before(:each) do
+      valid_user_post
+      user.confirm
+      sign_in user
+    end
+    
+    it '成功したレスポンスを返すこと' do
+      get edit_users_post_path(valid_user_post)
       expect(response).to be_successful
     end
   end
 
-  describe 'POST /create' do
-    context 'with valid parameters' do
-      it 'creates a new Post' do
+  # 管理者がサインインして編集ボタンを押した場合、動画編集ページへ遷移できるか？
+  describe 'GET /edit (管理者)' do
+    before(:each) do
+      valid_admin_post
+      admin.confirm
+      sign_in admin
+    end
+    
+    it '成功したレスポンスを返すこと' do
+      get edit_admins_post_path(valid_admin_post)
+      expect(response).to be_successful
+    end
+  end
+
+  # ユーザーがサインインして動画投稿をしてpostレコードが1増えたか？、その際投稿した動画詳細ページへ遷移したか？
+  # 無効なデータを投稿した際postレコードは増えず、動画投稿ページへレンダリングしたか？
+  describe 'POST /create (ユーザー)' do
+    context '有効なパラメータの場合(ユーザー)' do
+      before(:each) do
+        user.confirm
+        sign_in user
+      end
+      
+      it '新しいPostを作成すること' do
+        post_attributes = FactoryBot.attributes_for(:post, :valid_post)
         expect {
-          post '/posts', params: { post: valid_attributes }
+          post users_posts_path, params: { post: post_attributes }
         }.to change(Post, :count).by(1)
       end
-
-      it 'redirects to the created post' do
-        post '/posts', params: { post: valid_attributes }
-        expect(response).to redirect_to(post_path(Post.last))
+      
+      it '作成したpostの詳細ページにリダイレクトすること' do
+        post_attributes = FactoryBot.attributes_for(:post, :valid_post)
+        post users_posts_path, params: { post: post_attributes }
+        expect(response).to redirect_to(users_post_path(Post.last))
       end
     end
-
-    context 'with invalid parameters' do
-      it 'does not create a new Post' do
+    
+    context '無効なパラメータの場合(ユーザー)' do
+      before(:each) do
+        user.confirm
+        sign_in user
+      end
+      
+      it '新しいPostを作成しないこと' do
+        invalid_attributes = FactoryBot.attributes_for(:post)
         expect {
-          post '/posts', params: { post: invalid_attributes }
+          post users_posts_path, params: { post: invalid_attributes }
         }.to change(Post, :count).by(0)
       end
 
-      it "renders a successful response (i.e. to display the 'new' template)" do
-        post '/posts', params: { post: invalid_attributes }
-        expect(response).to be_successful
+      it "成功したレスポンスを返すこと（つまり、'動画投稿'を表示すること）" do
+        post users_posts_path, params: { post: invalid_user_post }
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end  
+    
+  # 管理者がサインインして動画投稿をしてpostレコードが1増えたか？、その際投稿した動画詳細ページへ遷移したか？
+  # 無効なデータを投稿した際postレコードは増えず、動画投稿ページへレンダリングしたか？
+  describe 'POST /create (管理者)' do
+    context '有効なパラメータの場合(管理者)' do
+      before(:each) do
+        admin.confirm
+        sign_in admin
+      end
+      
+      it '新しいPostを作成すること' do
+        post_attributes = FactoryBot.attributes_for(:post, :valid_post)
+        expect {
+          post admins_posts_path, params: { post: post_attributes }
+        }.to change(Post, :count).by(1)
+      end
+      
+      it '作成したpostにリダイレクトすること' do
+        post_attributes = FactoryBot.attributes_for(:post, :valid_post)
+        post admins_posts_path, params: { post: post_attributes }
+        expect(response).to redirect_to(admins_post_path(Post.last))
+      end
+    end
+
+    context '無効なパラメータの場合(管理者)' do
+      before(:each) do
+        admin.confirm
+        sign_in admin
+      end
+      
+      it '新しいPostを作成しないこと' do
+        expect {
+          post admins_posts_path, params: { post: invalid_admin_post }
+        }.to change(Post, :count).by(0)
+      end
+
+      it "成功したレスポンスを返すこと（つまり、'動画投稿画面'を表示すること）" do
+        post admins_posts_path, params: { post: invalid_admin_post }
+        expect(response).to have_http_status(:ok)
       end
     end
   end
 
-  describe 'PATCH /update' do
-    context 'with valid parameters' do
-      let(:new_attributes) do
-        skip('Add a hash of attributes valid for your model')
+  # ユーザーがサインインして有効な値で動画投稿を更新できるか？その際投稿した動画詳細ページへ遷移したか？
+  # 無効なデータを投稿した際postレコードは増えず、動画編集ページへレンダリングしたか？
+  describe 'PATCH /update について' do    
+    before(:each) do
+      valid_user_post
+      user.confirm
+      sign_in user
+    end
+    
+    context '有効なパラメータの場合' do
+      let(:new_valid_post) do
+        { title: 'Ruby on Rails解説動画', body: 'Rspecについて詳しく解説した動画です。', youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo' }
       end
 
-      it 'updates the requested post' do
-        post = Post.create! valid_attributes
-        patch post_url(post), params: { post: new_attributes }
+      it '要求されたpostを更新すること' do
+        post = valid_user_post
+        patch users_post_path(post), params: { post: new_valid_post }
         post.reload
-        skip('Add assertions for updated state')
+        expect(post.title).to eq('Ruby on Rails解説動画')
+        expect(post.body).to eq('Rspecについて詳しく解説した動画です。')
+        expect(post.youtube_url).to eq('https://www.youtube.com/watch?v=AgeJhUvEezo')
       end
 
-      it 'redirects to the post' do
-        post = Post.create! valid_attributes
-        patch post_url(post), params: { post: new_attributes }
-        post.reload
-        expect(response).to redirect_to(post_url(post))
+      it 'postにリダイレクトすること' do
+        post = valid_user_post
+        patch users_post_path(post), params: { post: new_valid_post }
+        expect(response).to redirect_to(users_posts_path(post))
       end
     end
-
-    context 'with invalid parameters' do
-      it "renders a successful response (i.e. to display the 'edit' template)" do
-        post = Post.create! valid_attributes
-        patch post_url(post), params: { post: invalid_attributes }
-        expect(response).to be_successful
+  
+    context '無効なパラメータの場合' do
+      it "成功したレスポンスを返すこと（つまり、'動画編集画面'を表示すること）" do
+        post = valid_user_post
+        patch users_post_path(post), params: { post: invalid_user_post }
+        expect(response).to have_http_status(:ok)
       end
     end
   end
 
-  describe 'DELETE /destroy' do
-    it 'destroys the requested post' do
-      post = Post.create! valid_attributes
+  # ユーザーがサインインして要求されたpostを削除できるか？その後、動画一覧ページへ遷移したか？
+  describe 'DELETE /destroy について' do
+    before(:each) do
+      user.confirm
+      sign_in user
+    end
+    it '要求されたpostを削除すること' do
+      post = valid_user_post
       expect {
-        delete post_url(post)
+        delete users_post_path(post)
       }.to change(Post, :count).by(-1)
     end
 
-    it 'redirects to the posts list' do
-      post = Post.create! valid_attributes
-      delete post_url(post)
-      expect(response).to redirect_to(posts_url)
+    it 'postの一覧にリダイレクトすること' do
+      post = valid_user_post
+      delete users_post_path(post)
+      expect(response).to redirect_to(users_posts_path)
     end
   end
 end
