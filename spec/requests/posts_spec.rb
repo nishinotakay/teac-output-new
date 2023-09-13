@@ -94,6 +94,7 @@ RSpec.describe '/posts', type: :request do
   # ユーザがサインインして新規投稿ボタンを押した場合、新規投稿ページへ遷移できるか？
   describe 'GET /new (ユーザー)' do
     before(:each) do
+      valid_user_post
       user.confirm
       sign_in user
     end
@@ -150,6 +151,7 @@ RSpec.describe '/posts', type: :request do
   describe 'POST /create (ユーザー)' do
     context '有効なパラメータの場合(ユーザー)' do
       before(:each) do
+        valid_user_post
         user.confirm
         sign_in user
       end
@@ -170,6 +172,7 @@ RSpec.describe '/posts', type: :request do
     
     context '無効なパラメータの場合(ユーザー)' do
       before(:each) do
+        valid_user_post
         user.confirm
         sign_in user
       end
@@ -232,7 +235,7 @@ RSpec.describe '/posts', type: :request do
 
   # ユーザーがサインインして有効な値で動画投稿を更新できるか？その際投稿した動画詳細ページへ遷移したか？
   # 無効なデータを投稿した際postレコードは増えず、動画編集ページへレンダリングしたか？
-  describe 'PATCH /update について' do    
+  describe 'PATCH /update (ユーザー)' do    
     before(:each) do
       valid_user_post
       user.confirm
@@ -269,9 +272,49 @@ RSpec.describe '/posts', type: :request do
     end
   end
 
-  # ユーザーがサインインして要求されたpostを削除できるか？その後、動画一覧ページへ遷移したか？
-  describe 'DELETE /destroy について' do
+  # 管理者がサインインして有効な値で動画投稿を更新できるか？その際投稿した動画詳細ページへ遷移したか？
+  # 無効なデータを投稿した際postレコードは増えず、動画編集ページへレンダリングしたか？
+  describe 'PATCH /update (管理者)' do    
     before(:each) do
+      valid_admin_post
+      admin.confirm
+      sign_in admin
+    end
+    
+    context '有効なパラメータの場合' do
+      let(:new_valid_post) do
+        { title: 'Ruby on Rails解説動画', body: 'Rspecについて詳しく解説した動画です。', youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo' }
+      end
+
+      it '要求されたpostを更新すること' do
+        post = valid_admin_post
+        patch admins_post_path(post), params: { post: new_valid_post }
+        post.reload
+        expect(post.title).to eq('Ruby on Rails解説動画')
+        expect(post.body).to eq('Rspecについて詳しく解説した動画です。')
+        expect(post.youtube_url).to eq('https://www.youtube.com/watch?v=AgeJhUvEezo')
+      end
+
+      it 'postにリダイレクトすること' do
+        post = valid_admin_post
+        patch admins_post_path(post), params: { post: new_valid_post }
+        expect(response).to redirect_to(admins_posts_path(post))
+      end
+    end
+  
+    context '無効なパラメータの場合' do
+      it "成功したレスポンスを返すこと（つまり、'動画編集画面'を表示すること）" do
+        post = valid_admin_post
+        patch admins_post_path(post), params: { post: invalid_admin_post }
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
+  
+  # ユーザーがサインインして要求されたpostを削除できるか？その後、動画一覧ページへ遷移したか？
+  describe 'DELETE /destroy (ユーザー)' do
+    before(:each) do
+      valid_user_post
       user.confirm
       sign_in user
     end
@@ -286,6 +329,27 @@ RSpec.describe '/posts', type: :request do
       post = valid_user_post
       delete users_post_path(post)
       expect(response).to redirect_to(users_posts_path)
+    end
+  end
+
+  # 管理者がサインインして要求されたpostを削除できるか？その後、動画一覧ページへ遷移したか？
+  describe 'DELETE /destroy (管理者)' do
+    before(:each) do
+      valid_admin_post
+      admin.confirm
+      sign_in admin
+    end
+    it '要求されたpostを削除すること' do
+      post = valid_admin_post
+      expect {
+        delete admins_post_path(post)
+      }.to change(Post, :count).by(-1)
+    end
+
+    it 'postの一覧にリダイレクトすること' do
+      post = valid_admin_post
+      delete admins_post_path(post)
+      expect(response).to redirect_to(admins_posts_path)
     end
   end
 end
