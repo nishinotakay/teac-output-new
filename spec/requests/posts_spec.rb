@@ -18,15 +18,15 @@ RSpec.describe '/posts', type: :request do
 
   let(:user) { FactoryBot.create(:user) }
   let(:admin) { FactoryBot.create(:admin) }
-  
+
   let(:valid_user_post) do
     FactoryBot.create(:post, :valid_post, user: user)
   end
-  
+
   let(:valid_admin_post) do
     FactoryBot.create(:post, :valid_post, admin: admin)
   end
-  
+
   let(:invalid_user_post) do
     FactoryBot.attributes_for(:post, user: user)
   end
@@ -42,7 +42,7 @@ RSpec.describe '/posts', type: :request do
       user.confirm
       sign_in user
     end
-  
+
     it '成功したレスポンスを返すこと' do
       get users_posts_path
       expect(response).to be_successful
@@ -56,13 +56,13 @@ RSpec.describe '/posts', type: :request do
       admin.confirm
       sign_in admin
     end
-  
+
     it '成功したレスポンスを返すこと' do
       get admins_posts_path
       expect(response).to be_successful
     end
   end
-  
+
   # ユーザーがサインインして新たな投稿を作成した場合、その投稿の詳細を取得できるか？
   describe 'GET /show (ユーザー)' do
     before(:each) do
@@ -70,7 +70,7 @@ RSpec.describe '/posts', type: :request do
       user.confirm
       sign_in user
     end
-    
+
     it '成功したレスポンスを返すこと' do
       get users_post_path(valid_user_post)
       expect(response).to be_successful
@@ -84,7 +84,7 @@ RSpec.describe '/posts', type: :request do
       admin.confirm
       sign_in admin
     end
-    
+
     it '成功したレスポンスを返すこと' do
       get admins_post_path(valid_user_post)
       expect(response).to be_successful
@@ -117,7 +117,7 @@ RSpec.describe '/posts', type: :request do
       expect(response).to be_successful
     end
   end
-  
+
   # ユーザーがサインインして編集ボタンを押した場合、動画編集ページへ遷移できるか？
   describe 'GET /edit (ユーザー)' do
     before(:each) do
@@ -125,7 +125,7 @@ RSpec.describe '/posts', type: :request do
       user.confirm
       sign_in user
     end
-    
+
     it '成功したレスポンスを返すこと' do
       get edit_users_post_path(valid_user_post)
       expect(response).to be_successful
@@ -139,7 +139,7 @@ RSpec.describe '/posts', type: :request do
       admin.confirm
       sign_in admin
     end
-    
+
     it '成功したレスポンスを返すこと' do
       get edit_admins_post_path(valid_admin_post)
       expect(response).to be_successful
@@ -155,33 +155,33 @@ RSpec.describe '/posts', type: :request do
         user.confirm
         sign_in user
       end
-      
+
       it '新しいPostを作成すること' do
         post_attributes = FactoryBot.attributes_for(:post, :valid_post)
         expect {
           post users_posts_path, params: { post: post_attributes }
         }.to change(Post, :count).by(1)
       end
-      
+
       it '作成したpostの詳細ページにリダイレクトすること' do
         post_attributes = FactoryBot.attributes_for(:post, :valid_post)
         post users_posts_path, params: { post: post_attributes }
         expect(response).to redirect_to(users_post_path(Post.last))
       end
     end
-    
+
     context '無効なパラメータの場合(ユーザー)' do
       before(:each) do
         valid_user_post
         user.confirm
         sign_in user
       end
-      
+
       it '新しいPostを作成しないこと' do
         invalid_attributes = FactoryBot.attributes_for(:post)
         expect {
           post users_posts_path, params: { post: invalid_attributes }
-        }.to change(Post, :count).by(0)
+        }.not_to change(Post, :count)
       end
 
       it "成功したレスポンスを返すこと（つまり、'動画投稿'を表示すること）" do
@@ -189,8 +189,8 @@ RSpec.describe '/posts', type: :request do
         expect(response).to have_http_status(:ok)
       end
     end
-  end  
-    
+  end
+
   # 管理者がサインインして動画投稿をしてpostレコードが1増えたか？、その際投稿した動画詳細ページへ遷移したか？
   # 無効なデータを投稿した際postレコードは増えず、動画投稿ページへレンダリングしたか？
   describe 'POST /create (管理者)' do
@@ -199,14 +199,14 @@ RSpec.describe '/posts', type: :request do
         admin.confirm
         sign_in admin
       end
-      
+
       it '新しいPostを作成すること' do
         post_attributes = FactoryBot.attributes_for(:post, :valid_post)
         expect {
           post admins_posts_path, params: { post: post_attributes }
         }.to change(Post, :count).by(1)
       end
-      
+
       it '作成したpostにリダイレクトすること' do
         post_attributes = FactoryBot.attributes_for(:post, :valid_post)
         post admins_posts_path, params: { post: post_attributes }
@@ -219,11 +219,11 @@ RSpec.describe '/posts', type: :request do
         admin.confirm
         sign_in admin
       end
-      
+
       it '新しいPostを作成しないこと' do
         expect {
           post admins_posts_path, params: { post: invalid_admin_post }
-        }.to change(Post, :count).by(0)
+        }.not_to change(Post, :count)
       end
 
       it "成功したレスポンスを返すこと（つまり、'動画投稿画面'を表示すること）" do
@@ -235,13 +235,13 @@ RSpec.describe '/posts', type: :request do
 
   # ユーザーがサインインして有効な値で動画投稿を更新できるか？その際投稿した動画詳細ページへ遷移したか？
   # 無効なデータを投稿した際postレコードは増えず、動画編集ページへレンダリングしたか？
-  describe 'PATCH /update (ユーザー)' do    
+  describe 'PATCH /update (ユーザー)' do
     before(:each) do
       valid_user_post
       user.confirm
       sign_in user
     end
-    
+
     context '有効なパラメータの場合' do
       let(:new_valid_post) do
         { title: 'Ruby on Rails解説動画', body: 'Rspecについて詳しく解説した動画です。', youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo' }
@@ -262,7 +262,7 @@ RSpec.describe '/posts', type: :request do
         expect(response).to redirect_to(users_posts_path(post))
       end
     end
-  
+
     context '無効なパラメータの場合' do
       it "成功したレスポンスを返すこと（つまり、'動画編集画面'を表示すること）" do
         post = valid_user_post
@@ -274,13 +274,13 @@ RSpec.describe '/posts', type: :request do
 
   # 管理者がサインインして有効な値で動画投稿を更新できるか？その際投稿した動画詳細ページへ遷移したか？
   # 無効なデータを投稿した際postレコードは増えず、動画編集ページへレンダリングしたか？
-  describe 'PATCH /update (管理者)' do    
+  describe 'PATCH /update (管理者)' do
     before(:each) do
       valid_admin_post
       admin.confirm
       sign_in admin
     end
-    
+
     context '有効なパラメータの場合' do
       let(:new_valid_post) do
         { title: 'Ruby on Rails解説動画', body: 'Rspecについて詳しく解説した動画です。', youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo' }
@@ -301,7 +301,7 @@ RSpec.describe '/posts', type: :request do
         expect(response).to redirect_to(admins_posts_path(post))
       end
     end
-  
+
     context '無効なパラメータの場合' do
       it "成功したレスポンスを返すこと（つまり、'動画編集画面'を表示すること）" do
         post = valid_admin_post
@@ -310,7 +310,7 @@ RSpec.describe '/posts', type: :request do
       end
     end
   end
-  
+
   # ユーザーがサインインして要求されたpostを削除できるか？その後、動画一覧ページへ遷移したか？
   describe 'DELETE /destroy (ユーザー)' do
     before(:each) do
@@ -318,6 +318,7 @@ RSpec.describe '/posts', type: :request do
       user.confirm
       sign_in user
     end
+
     it '要求されたpostを削除すること' do
       post = valid_user_post
       expect {
@@ -339,6 +340,7 @@ RSpec.describe '/posts', type: :request do
       admin.confirm
       sign_in admin
     end
+
     it '要求されたpostを削除すること' do
       post = valid_admin_post
       expect {
