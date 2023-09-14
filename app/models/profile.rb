@@ -26,13 +26,16 @@ class Profile < ApplicationRecord
 
   def self.sort_filter(order, filter)
     profiles = self.joins(:user)
-    filter.each do |ord, fit|
-      if ord == :name && fit.present?
-        profiles = profiles.where("lower(users.name) LIKE ?", "%#{fit.downcase}%")
-      elsif ord == :hobby && fit.present?
-        profiles = profiles.where("lower(profiles.hobby) LIKE ?", "%#{fit.downcase}%")
-      elsif fit.present?
-        profiles = profiles.where(ord => fit)
+
+    filter.each do |key, value|
+      next unless value.present? # 条件値が存在しない場合はクエリを生成しない
+  
+      if key == :name
+        profiles = profiles.where("users.name LIKE ?", "%#{value}%")
+      elsif key == :hobby
+        profiles = profiles.where("profiles.hobby LIKE ?", "%#{value}%")
+      else
+        profiles = profiles.where(key => value)
       end
     end
 
