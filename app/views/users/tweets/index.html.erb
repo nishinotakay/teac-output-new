@@ -1,4 +1,4 @@
-<%= javascript_pack_tag "users/tweets" %>
+<%= javascript_pack_tag "users/tweets","users/index_articles_and_dashboards" %>
 <% provide(:title, "つぶやき一覧") %>
 <% number_of_comment_notifications = @comment_notifications.count %>
 <% if number_of_comment_notifications > 0 %>
