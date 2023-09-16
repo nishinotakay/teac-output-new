@@ -1,0 +1,3 @@
+﻿name,email,affiliation,employee_number,uid,basic_time,designated_work_start_time,designated_work_end_time,superior,admin,password
+上長A,superior-1@email.com,総務部,1,1,8:00,9:00,18:00,TRUE,FALSE,password
+上長B,superior-2@email.com,営業部,2,2,8:00,9:00,18:00,TRUE,FALSE,password

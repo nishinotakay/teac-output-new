@@ -2,13 +2,14 @@ module Users
   class ProfilesController < Users::Base
     require 'date'
     before_action :authenticate_user!, only: %i[new create edit update destroy]
-    before_action :find_profile, only: %i[show double_registration edit update destroy]
-    # before_action :double_registration, only: %i[create]
+    before_action :find_profile, only: %i[show edit update destroy]
 
     def index
       sort_and_filter_params = Profile.get_sort_and_filter_params(params)
       @users = sort_and_filter_params[:order].count == 1 ? User.sort_filter(sort_and_filter_params[:order].first, sort_and_filter_params[:filter]).page(params[:page]).per(30) : User.all.page(params[:page]).per(30)
-      @profiles = Profile.sort_filter(sort_and_filter_params[:order], sort_and_filter_params[:filter]).page(params[:page]).per(30)
+      default_order = { registration_date: 'DESC' }
+      sort_order = sort_and_filter_params[:order].presence || default_order
+      @profiles = Profile.sort_filter(sort_order, sort_and_filter_params[:filter]).page(params[:page]).per(30)
     end
 
     def show
@@ -33,25 +34,23 @@ module Users
       @profile = current_user.build_profile(profile_params)
       if @profile.save
         @profile.user.update(profile_params[:user_attributes])
-        redirect_to users_profiles_path, notice: 'プロフィール情報の入力が完了しました'
+        redirect_to users_profile_path(current_user.profile), notice: 'プロフィールを作成しました'
       else
         render :new
       end
     end
-
+    
     def update
       if @profile.update(profile_params)
-        redirect_to users_profile_path, notice: 'プロフィール情報の更新が完了しました'
+        redirect_to users_profile_path, notice: 'プロフィール情報を更新しました'
       else
         render :edit
       end
     end
 
     def destroy
-      # データの削除
       if @profile.destroy
         flash[:success] = "#{@profile.name}のデータを削除しました。"
-        # 一覧ページへリダイレクト
         redirect_to users_profiles_path
       else
         render :index
@@ -62,21 +61,7 @@ module Users
 
     def find_profile
       @profile = Profile.find(params[:id])
-      # if @profile
-      #   # binding.pry
-      #   redirect_to users_profiles_path, notice: 'プロフィール情報は入力済です'
-      # else
-      # end
     end
-
-    # def double_registration
-    #   # @profile = Profile.find(params[:id])
-    #   if @profile.present?
-    #     redirect_to users_profiles_path, notice: 'プロフィール情報は入力済です'
-    #   else
-    #     # render :show
-    #   end
-    # end
 
     def profile_params
       params.require(:profile).permit(

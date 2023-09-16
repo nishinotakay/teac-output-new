@@ -9,8 +9,20 @@ module Users
     before_action :correct_tweet_user, only: %i[edit update destroy]
 
     def index
-      @users = User.all
-      @tweets = Tweet.all.order(created_at: :desc)
+      params[:order] ||= 'DESC'
+      filter = {
+        author: params[:author],
+        post: params[:post],
+        start: params[:start],
+        finish: params[:finish]
+      }
+
+      if filter.compact.blank?
+        @tweets = Tweet.order(created_at: params[:order]).page(params[:page]).per(30)
+      else
+        filter[:order] = params[:order]
+        @tweets = Tweet.sort_filter(filter).page(params[:page]).per(30)
+      end
     end
 
     def show
@@ -57,7 +69,7 @@ module Users
     end
 
     def index_user
-      @tweets = Tweet.where(user_id: params[:id])
+      @tweets = Tweet.where(user_id: params[:id]).page(params[:page]).per(30)
       @user = User.find(params[:id])
     end
 
