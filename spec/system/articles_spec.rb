@@ -189,13 +189,13 @@ RSpec.describe 'Articles', type: :system do
     end
   end
   
-  describe 'markdown with marked.js', js: true do
+  describe 'markdown with marked.js', js: true do # Marked.js によるマークダウン
     before do
       article.content = "# This is h1.  \r\n```ruby:qiita.rb\r\nputs 'The best way to log and share programmers knowledge.'\r\n```"
       article.save
     end
     
-    describe 'new article page' do
+    describe 'new article page' do # 記事投稿画面で
       before do
         visit new_users_article_path
         sleep 1
@@ -203,9 +203,9 @@ RSpec.describe 'Articles', type: :system do
         @preview = find('.preview')
       end
       
-      it 'markdown to preview' do
+      it 'markdown to preview' do # プレビュー画面でマークダウンが機能している
         @markd.set(article.content)
-        expect(@preview).to have_css('h1', text: 'This is h1.', wait: 1)
+        expect(@preview).to have_css('h1', text: 'This is h1.', wait: 1) # 「#」の文字列が、h1のcssになっていることを期待
       end
       
       it 'drag and drop image' do
