@@ -9,7 +9,7 @@ module Admins
     end
 
     def show
-      @inquiries = Inquiry.find(params[:id])
+      @inquiry = Inquiry.find(params[:id])
     end
 
     def update
