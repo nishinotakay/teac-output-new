@@ -9,24 +9,25 @@ module Users
     before_action :correct_tweet_user, only: %i[edit update destroy]
 
     def index
-      params[:order] ||= 'DESC'
       filter = {
         author: params[:author],
         post: params[:post],
         start: params[:start],
-        finish: params[:finish]
+        finish: params[:finish],
+        order: params[:order] || 'DESC'
       }
 
-      if filter.compact.blank?
-        @tweets = Tweet.order(created_at: params[:order]).page(params[:page]).per(30)
-      else
-        filter[:order] = params[:order]
-        @tweets = Tweet.sort_filter(filter).page(params[:page]).per(30)
+      @tweets = filter.compact.blank? ? base_tweets_queries.order(created_at: params[:order]) : base_tweets_queries.sort_filter(filter)
+
+      @tweets_with_images = @tweets.map do |tweet|
+        {
+          tweet: tweet,
+          image: tweet.user.profile&.image || "user_default.png"
+        }
       end
     end
 
     def show
-      @tweet = Tweet.find(params[:id])
       @tweet_comments = @tweet.tweet_comments.all.order(created_at: :desc)
       @tweet_comment = current_user.tweet_comments.new
     end
@@ -53,7 +54,6 @@ module Users
 
     def update
       if @tweet.update(tweet_params)
-        @tweet.save
         flash[:success] = '編集成功しました。'
         redirect_to users_tweets_url
       else
@@ -79,6 +79,14 @@ module Users
       params.require(:tweet).permit(:post, images: [])
     end
 
+    # 検索前のクエリを取得
+    def base_tweets_queries
+      Tweet.with_attached_images
+        .includes(:user, :profile, :tweet_comments)
+        .page(params[:page])
+        .per(30)
+    end
+
     # beforeフィルター
     def set_tweet
       @tweet = Tweet.find(params[:id])
@@ -87,12 +95,8 @@ module Users
     def correct_tweet_user
       @tweet = Tweet.find(params[:id])
       if @tweet.user != current_user
-        if authenticate_user!
-          flash[:alart] = 'アクセスできません'
-          redirect_to users_dash_boards_path
-        else
-          redirect_to root_path
-        end
+        flash[:alert] = 'アクセスできません'
+        redirect_to users_dash_boards_path
       end
     end
   end
