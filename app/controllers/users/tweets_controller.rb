@@ -82,7 +82,7 @@ module Users
     # 検索前のクエリを取得
     def base_tweets_queries
       Tweet.with_attached_images
-        .includes(:user, :profile, :tweet_comments)
+        .includes(:user, { user: [:profile, { profile: :image_attachment } ] }, :tweet_comments)
         .page(params[:page])
         .per(30)
     end
@@ -93,7 +93,6 @@ module Users
     end
 
     def correct_tweet_user
-      @tweet = Tweet.find(params[:id])
       if @tweet.user != current_user
         flash[:alert] = 'アクセスできません'
         redirect_to users_dash_boards_path
