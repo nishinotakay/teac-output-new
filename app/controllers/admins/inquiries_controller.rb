@@ -6,10 +6,12 @@ module Admins
       [@inquiries, @hidden, @both].compact.each do |inquiry_scope|
         @inquiry_scope = Inquiry.apply_sort_and_filter(inquiry_scope, sort_and_filter_params)
       end
+      @users = User.page(params[:page]).per(30)
     end
 
     def show
       @inquiry = Inquiry.find(params[:id])
+      @user = @inquiry
     end
 
     def update
