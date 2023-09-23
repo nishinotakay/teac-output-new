@@ -84,7 +84,7 @@ module Users
       if @post.update(post_params)
         redirect_to users_posts_path(@post), flash: { success: '動画編集完了致しました' }
       else
-        flash.now[:danger] = '動画投稿出来ませんでした。' # 4/25訂正
+        flash.now[:danger] = '動画編集出来ませんでした。' # 4/25訂正
         render :edit
       end
     end
