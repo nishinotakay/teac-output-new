@@ -101,7 +101,7 @@ RSpec.describe 'Articles', type: :request do
         sign_in user_a
         get new_users_article_url
         expect(response.status).to eq 200
-        expect(response.body).to include 'input', 'title-form', 'subtitle-form', 'textarea', 'markdown-editor','preview-side'
+        expect(response.body).to include 'input', 'title-form', 'subtitle-form', 'textarea', 'markdown-editor', 'preview-side'
       end
     end
 
@@ -123,7 +123,7 @@ RSpec.describe 'Articles', type: :request do
         expect(response.status).to eq 200
         binding.pry
         expect(response.body).to include article.title, article.sub_title, article.content
-        expect(response.body).to include 'input', 'title-form', 'subtitle-form', 'textarea', 'markdown-editor','preview-side'
+        expect(response.body).to include 'input', 'title-form', 'subtitle-form', 'textarea', 'markdown-editor', 'preview-side'
       end
     end
 
