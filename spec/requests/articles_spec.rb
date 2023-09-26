@@ -24,10 +24,6 @@ RSpec.describe 'Articles', type: :request do
         expect(response.body).to include user_a.articles.last.title
         expect(response.body).to include user_b.articles.first.title
         expect(response.body).to include user_b.articles.last.title
-        #Article.all.each do |a| # articles_a.concat(articles_b).each do |a|
-          #expect(response.body).to include a.title
-          #expect(response.body).to include a.sub_title
-        #end
       end
     end
 
@@ -43,10 +39,6 @@ RSpec.describe 'Articles', type: :request do
         expect(response.body).to include user_a.articles.last.title
         expect(response.body).to include user_b.articles.first.title
         expect(response.body).to include user_b.articles.last.title
-        #Article.all.each do |a|
-          #expect(response.body).to include a.title
-          #expect(response.body).to include a.sub_title
-        #end
       end
     end
 
@@ -353,7 +345,6 @@ RSpec.describe 'Articles', type: :request do
         follow_redirect!
         expect(response.body).to include ('ログイン')
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
-        binding.pry
         expect(Article.last).to be_blank
       end
     end
