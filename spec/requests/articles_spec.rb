@@ -30,7 +30,6 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインユーザーが投稿者でない場合' do
       it '記事一覧画面へ遷移する' do
-        #articles_b
         sign_in user_b # ユーザー２でログイン
         get users_articles_url
         expect(response.status).to eq 200
@@ -45,7 +44,6 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインしていない場合' do
       it '記事一覧画面へ遷移せず、ログイン画面へリダイレクトする' do
-        #sign_out user_b
         get users_articles_url
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
@@ -116,7 +114,6 @@ RSpec.describe 'Articles', type: :request do
   end
 
   describe 'GET /edit' do # 編集画面の取得
-    let(:articles_b) { create(:article, user: user_b) }
     context 'ログインユーザーが投稿者である場合' do
       it '記事編集画面へ遷移する' do
         sign_in user_a
@@ -161,7 +158,9 @@ RSpec.describe 'Articles', type: :request do
         expect { post users_articles_url params: params }.to change(Article, :count).by(1)
         expect(response.status).to eq 302
         expect(flash[:notice]).to eq '記事を作成しました。'
-        expect(response).to redirect_to users_article_url(Article.last, dashboard: false)
+        expect(response).to redirect_to users_article_url(user_a.articles.last, dashboard: false)
+        follow_redirect!
+        expect(response.body).to include user_a.articles.last.title
       end
     end
 
@@ -169,8 +168,9 @@ RSpec.describe 'Articles', type: :request do
       it '記事は作成されず、記事投稿画面へ遷移する' do
         params[:article][:title] = nil
         expect { post users_articles_url params: params }.to change(Article, :count).by(0)
-        expect(response.status).to eq 200
+        expect(response.status).to eq 200        
         expect(flash[:alert]).to eq '記事の作成に失敗しました。'
+        expect(response.body).to include '記事投稿'
       end
     end
 
