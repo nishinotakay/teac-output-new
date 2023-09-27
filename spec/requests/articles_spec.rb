@@ -164,6 +164,7 @@ RSpec.describe 'Articles', type: :request do
         params[:article][:content] = 'DELETE FROM articles;'
         expect { post users_articles_url params: params }.to change(Article, :count).by(1)
         expect(Article.first.title).to eq 'a'
+        expect(response.status).to eq 302
       end
     end
 
@@ -212,6 +213,7 @@ RSpec.describe 'Articles', type: :request do
           params = { article: { title: nil, sub_title: 'b', content: 'c' } }
           patch users_article_url(article, params: params)
           article.reload
+          expect(response.status).to eq 200
           expect(flash[:alert]).to eq '記事の編集に失敗しました。'
         end
       end
