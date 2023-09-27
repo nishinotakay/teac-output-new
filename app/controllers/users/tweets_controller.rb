@@ -69,9 +69,26 @@ module Users
     end
 
     def index_user
-      @tweets = Tweet.where(user_id: params[:id]).page(params[:page]).per(30)
       @user = User.find(params[:id])
+      filter = {
+        author: params[:author],
+        post: params[:post],
+        start: params[:start],
+        finish: params[:finish],
+        order: params[:order] || 'DESC'
+      }
+
+      @tweets = filter.compact.blank? ? base_tweets_queries.where(user_id: params[:id]).order(created_at: params[:order]) : base_tweets_queries.where(user_id: params[:id]).sort_filter(filter)
+
+      @tweets_with_images = @tweets.map do |tweet|
+        {
+          tweet: tweet,
+          image: tweet.user.profile&.image || "user_default.png"
+        }
+      end
     end
+
+
 
     private
 
