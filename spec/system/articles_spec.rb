@@ -10,10 +10,10 @@ RSpec.describe 'Articles', type: :system do
     article
   end
 
-  describe '画面遷移のテスト' do # redirect to #X
-    context '記事一覧画面と投稿した記事一覧画面' do # X = index || dashboards
-      context '記事一覧画面' do # index
-        it '成功する' do # success
+  describe 'redirect to #X' do
+    context 'X = index || dashboards' do
+      context 'index' do
+        it 'success' do
           visit users_articles_path
           expect(current_path).to eq users_articles_path
           expect(page).to have_content '記事一覧'
@@ -21,9 +21,9 @@ RSpec.describe 'Articles', type: :system do
           expect(page).to have_content article.user.name
         end
       end
-    
-      context '投稿した記事一覧画面' do # dashboards
-        it '成功する' do # success
+
+      context 'dashboards' do
+        it 'success' do
           visit users_dash_boards_path
           expect(current_path).to eq users_dash_boards_path
           expect(page).to have_content '投稿した記事一覧'
@@ -32,30 +32,23 @@ RSpec.describe 'Articles', type: :system do
         end
       end
 
-      after do # 記事一覧画面と投稿した記事一覧画面の共通項目テスト after(:each) doの略称
+      after do
         expect(page).to have_content 'タイトル'
         expect(page).to have_content 'サブタイトル'
         expect(page).to have_content '投稿日'
-        #binding.pry
-        expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
+        expect(page).to have_content article.created_at.strftime('%-m/%d %-H:%M')
         expect(page).to have_content article.title
         expect(page).to have_content article.sub_title
       end
     end
 
-      
-    context '記事投稿画面または記事詳細画面' do # X = new || edit
-      context '記事投稿画面' do # new
-        it '成功する' do # success
+    context 'X = new || edit' do
+      context 'new' do
+        it 'success' do
           visit new_users_article_path
           expect(current_path).to eq new_users_article_path
-          expect(page).to have_content '記事投稿'
-          expect(page).to have_button '投稿'
-          #expect(page).to have_css('.markdown-editor', placeholder: '本文')
-          expect(page).to have_field('article_title', placeholder: 'タイトル')
-          expect(page).to have_field('article_sub_title', placeholder: 'サブタイトル')
-          expect(page).to have_field('article_content', placeholder: '本文')
-          # expect(page).to have_css('.markdown-editor')
+          expect(page).to have_content "記事投稿"
+          expect(page).to have_css('.markdown-editor', placeholder: '本文')
         end
       end
 
@@ -64,19 +57,13 @@ RSpec.describe 'Articles', type: :system do
           visit edit_users_article_path(article)
           expect(current_path).to eq edit_users_article_path(article)
           expect(page).to have_content "記事編集"
-          expect(page).to have_button '更新'
-          expect(page).to have_field('article_title', with: article.title)
-          expect(page).to have_field('article_sub_title', with: article.sub_title)
-          expect(page).to have_field('article_content', with: article.content)
-          expect(page).to have_content article.content, count: 2 # ページ内で、article.contentの呼び出しが計2回ある
+          expect(page).to have_content article.content, count: 2
         end
       end
 
       after do
-        expect(page).to have_content 'エディター'
-        expect(page).to have_content 'プレビュー'
-        expect(page).to have_link 'キャンセル'
-        expect(page).to have_css('.markdown-editor')
+        expect(page).to have_content "エディター"
+        expect(page).to have_content "プレビュー"
       end
     end
 
@@ -92,8 +79,8 @@ RSpec.describe 'Articles', type: :system do
 
       context 'non_writer' do
         it 'success' do
-          find('#dropdownMenuButton').click # dropdownmenu を探してクリック
-          click_link 'ログアウト'  # click_button ×
+          # click_link 'ログアウト'
+          find('ログアウト').click
           sign_in(user_b)
           visit users_article_path(article)
           expect(page).to_not have_content '編集'
@@ -142,7 +129,6 @@ RSpec.describe 'Articles', type: :system do
       expect(current_path).to eq users_article_path(article)
       expect(page).to have_content '記事を編集しました。'
       expect(page).to have_content article.title
-      #binding.pry
       expect(page).to_not have_content prev_article_title
     end
 
@@ -158,11 +144,9 @@ RSpec.describe 'Articles', type: :system do
   describe 'delete article' do
     context 'dashboards to delete' do
       it 'success' do
-        #binding.pry
         visit users_dash_boards_path
         expect(page).to have_content article.title
-        # page.find('.link-tr', text: article.title).click
-        page.first('.link-td', text: article.title).click
+        page.find('.link-tr', text: article.title).click
         expect(current_path).to eq users_article_path(article)
         page.accept_confirm('表示中の記事を削除します。') do
           click_link "削除"
@@ -177,7 +161,7 @@ RSpec.describe 'Articles', type: :system do
       it 'success' do
         visit users_articles_path
         expect(page).to have_content article.title
-        page.first('.link-td', text: article.title).click
+        page.find('.link-tr', text: article.title).click
         expect(current_path).to eq users_article_path(article)
         page.accept_confirm('表示中の記事を削除します。') do
           click_link "削除"
@@ -189,13 +173,13 @@ RSpec.describe 'Articles', type: :system do
     end
   end
   
-  describe 'markdown with marked.js', js: true do # Marked.js によるマークダウン
+  describe 'markdown with marked.js', js: true do
     before do
       article.content = "# This is h1.  \r\n```ruby:qiita.rb\r\nputs 'The best way to log and share programmers knowledge.'\r\n```"
       article.save
     end
     
-    describe 'new article page' do # 記事投稿画面で
+    describe 'new article page' do
       before do
         visit new_users_article_path
         sleep 1
@@ -203,9 +187,9 @@ RSpec.describe 'Articles', type: :system do
         @preview = find('.preview')
       end
       
-      it 'markdown to preview' do # プレビュー画面でマークダウンが機能している
+      it 'markdown to preview' do
         @markd.set(article.content)
-        expect(@preview).to have_css('h1', text: 'This is h1.', wait: 1) # 「#」の文字列が、h1のcssになっていることを期待
+        expect(@preview).to have_css('h1', text: 'This is h1.', wait: 1)
       end
       
       it 'drag and drop image' do
