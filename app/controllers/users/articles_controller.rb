@@ -77,8 +77,6 @@ module Users
         @article = current_user.articles.new(params.permit(:image))
         render json: { name: @article.image.identifier, url: @article.image.url }
       else
-        #flash[:danger] = "不正な操作です。"
-        #redirect_to users_articles_path(page: params[:page])
         render json: { error: '画像の挿入に失敗しました。' }, status: :unauthorized
       end
     end
