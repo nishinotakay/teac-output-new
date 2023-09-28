@@ -9,22 +9,7 @@ module Users
     before_action :correct_tweet_user, only: %i[edit update destroy]
 
     def index
-      filter = {
-        author: params[:author],
-        post: params[:post],
-        start: params[:start],
-        finish: params[:finish],
-        order: params[:order] || 'DESC'
-      }
-
-      @tweets = filter.compact.blank? ? base_tweets_queries.order(created_at: params[:order]) : base_tweets_queries.sort_filter(filter)
-
-      @tweets_with_images = @tweets.map do |tweet|
-        {
-          tweet: tweet,
-          image: tweet.user.profile&.image || "user_default.png"
-        }
-      end
+      fetch_tweets_and_images
     end
 
     def show
@@ -94,6 +79,27 @@ module Users
 
     def tweet_params
       params.require(:tweet).permit(:post, images: [])
+    end
+
+    def fetch_tweets_and_images
+      filter = build_filter_from_params
+      @tweets = filter.compact.blank? ? base_tweets_queries.order(created_at: params[:order]) : base_tweets_queries.sort_filter(filter)
+      @tweets_with_images = @tweets.map do |tweet|
+        {
+          tweet: tweet,
+          image: tweet.user.profile&.image || "user_default.png"
+        }
+      end
+    end
+
+    def build_filter_from_params
+      {
+        author: params[:author],
+        post: params[:post],
+        start: params[:start],
+        finish: params[:finish],
+        order: params[:order] || 'DESC'
+      }
     end
 
     # 検索前のクエリを取得
