@@ -5,16 +5,11 @@ module Users
     before_action :find_profile, only: %i[show edit update destroy]
 
     def index
-      #@user = User.includes(:profile).find(current_user) # 追加
       sort_and_filter_params = Profile.get_sort_and_filter_params(params)
-    
-      # ユーザーを取得する際に、関連するprofileも同時に取得
-      @users = if sort_and_filter_params[:order].count == 1
-        User.sort_filter(sort_and_filter_params[:order].first, sort_and_filter_params[:filter]).page(params[:page]).per(30)
-      else
-        User.includes(:profile).all.page(params[:page]).per(30)
-      end
-      @profiles = Profile.sort_filter(sort_and_filter_params[:order], sort_and_filter_params[:filter]).page(params[:page]).per(30)
+      @users = sort_and_filter_params[:order].count == 1 ? User.sort_filter(sort_and_filter_params[:order].first, sort_and_filter_params[:filter]).page(params[:page]).per(30) : User.all.page(params[:page]).per(30)
+      default_order = { registration_date: 'DESC' }
+      sort_order = sort_and_filter_params[:order].presence || default_order
+      @profiles = Profile.sort_filter(sort_order, sort_and_filter_params[:filter]).page(params[:page]).per(30)
     end
 
     def show
