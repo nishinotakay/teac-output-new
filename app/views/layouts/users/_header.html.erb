@@ -54,11 +54,7 @@
     </ul>
   <div class="dropdown navbar-nav" style="padding-bottom:6px">
       <div class="nav-link" id="dropdownMenuButton button_group" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <% if current_user.profile.present? && current_user.profile.image.present? %>
-          <%= image_tag current_user.profile.image, class: "rounded-circle", size: "30x30" %>
-        <% else %>
-          <%= image_tag "user_default.png", class: "rounded-circle", size: "30x30" %>
-        <% end %>
+        <%= image_tag user_image, class: "rounded-circle", size: "30x30" %>
         <b class="caret"></b> 
       </div>
     <ul class="dropdown-menu dropdown-menu-right dropdown-menu-header">
