@@ -55,7 +55,6 @@ module Admins
       end
     end
 
-    # 動画詳細ページ
     def show
       @post = Post.find(params[:id])
     end
@@ -76,7 +75,7 @@ module Admins
       if @post.save
         redirect_to admins_post_path(@post), flash: { success: '動画投稿完了致しました' }
       else
-        flash.now[:danger] = '動画投稿出来ませんでした。' # 4/25訂正
+        flash.now[:danger] = '動画投稿出来ませんでした。'
         render :new
       end
     end
@@ -88,7 +87,7 @@ module Admins
       if @post.update(post_params)
         redirect_to admins_posts_path(@post), flash: { success: '動画編集完了致しました' }
       else
-        flash.now[:danger] = '動画編集出来ませんでした。' # 4/25訂正
+        flash.now[:danger] = '動画編集出来ませんでした。'
         render :edit
       end
     end
