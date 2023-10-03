@@ -2,17 +2,25 @@ class Inquiry < ApplicationRecord
   belongs_to :user
 
   def self.get_sort_and_filter_params(params)
+
     order = {
       subject: params[:ord_subject], 
       content: params[:ord_content], 
       created_at: params[:ord_created_at]
     }.compact
     filter = {
-      subject: params[:flt_subject], 
+      subject: params[:flt_subject],
       content: params[:flt_content],
-      created_at: params[:flt_created_at],
-      hidden: params[:flt_hidden]
+      hidden: params[:flt_hidden],
+      start: params[:flt_start],
+      finish: params[:flt_finish]
     }.compact
+
+    binding.pry
+
+    filter[:start] = Time.zone.parse(filter[:start].presence || '2022-01-01').beginning_of_day
+    filter[:finish] = Time.zone.parse(filter[:finish].presence || Date.current.to_s).end_of_day
+
     sort_and_filter_params = {order: order, filter: filter}
     return sort_and_filter_params
   end
@@ -38,11 +46,9 @@ class Inquiry < ApplicationRecord
     if sort_and_filter_params[:filter][:content].present?
       inquiry_scope = inquiry_scope.where("content LIKE ?", "%#{sort_and_filter_params[:filter][:content]}%")
     end
-    if sort_and_filter_params[:filter][:created_at].present?
-      created_at_date = Date.parse(sort_and_filter_params[:filter][:created_at]).strftime('%Y-%m-%d')
-      inquiry_scope = inquiry_scope.where("DATE(created_at) = ?", created_at_date)
-    end
-    
+    if sort_and_filter_params[:filter][:start].present? || sort_and_filter_params[:filter][:finish].present?
+      inquiry_scope = inquiry_scope.where('created_at BETWEEN ? AND ?', sort_and_filter_params[:filter][:start], sort_and_filter_params[:filter][:finish])
+    end  
     inquiry_scope
   end
 end
