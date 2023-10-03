@@ -1,12 +1,9 @@
 module Admins
   class PostsController < Admins::Base
-    # Userがログインしていないと、投稿を作成・編集・削除できない
     before_action :authenticate_admin!, only: %i[show index new create edit update destroy]
     before_action :set_post, only: %i[show edit update destroy]
-    # 投稿したユーザーと現在のユーザーのidが違えばトップページに飛ばす
     before_action :prevent_url, only: %i[edit update destroy]
 
-    # 投稿動画一覧ページ
     def index
       params[:order] ||= 'DESC'
       filter = {
@@ -59,15 +56,12 @@ module Admins
       @post = Post.find(params[:id])
     end
 
-    # 新規投稿ページ
     def new
       @post = current_admin.posts.new
     end
 
-    # 投稿動画編集ページ
     def edit; end
 
-    # 投稿動画作成
     def create
       @post = current_admin.posts.new(post_params)
       url = params[:post][:youtube_url].last(11)
@@ -80,7 +74,6 @@ module Admins
       end
     end
 
-    # 投稿動画編集のアップデート
     def update
       url = params[:post][:youtube_url].last(11)
       @post.youtube_url = url
@@ -92,7 +85,6 @@ module Admins
       end
     end
 
-    # 投稿動画削除
     def destroy
       if @post.destroy
         redirect_to admins_posts_path, flash: { warning: '動画を削除しました。' }
@@ -103,23 +95,19 @@ module Admins
 
     private
 
-    # Use callbacks to share common setup or constraints between actions.
-
-    def set_post
-      @post = Post.find(params[:id])
-    end
-
-    # 投稿動画に関するカラム
-    def post_params
-      params.require(:post).permit(:title, :body, :youtube_url)
-    end
-
-    # 投稿したユーザーと現在のユーザーのidが違えばトップページに飛ばす
-    def prevent_url
-      @post = current_admin.posts.find(params[:id])
-      if @post.admin_id != current_admin.id
-        redirect_to root_path
+      def set_post
+        @post = Post.find(params[:id])
       end
-    end
+
+      def post_params
+        params.require(:post).permit(:title, :body, :youtube_url)
+      end
+
+      def prevent_url
+        @post = current_admin.posts.find(params[:id])
+        if @post.admin_id != current_admin.id
+          redirect_to root_path
+        end
+      end
   end
 end
