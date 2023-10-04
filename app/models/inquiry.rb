@@ -16,9 +16,6 @@ class Inquiry < ApplicationRecord
       finish: params[:flt_finish]
     }.compact
   
-    start = Time.zone.parse(filter[:start].presence || '2022-01-01').beginning_of_day
-    finish = Time.zone.parse(filter[:finish].presence || Date.current.to_s).end_of_day
-
     sort_and_filter_params = {order: order, filter: filter}
     return sort_and_filter_params
   end
