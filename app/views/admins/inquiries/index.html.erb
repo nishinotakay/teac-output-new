@@ -78,11 +78,11 @@
           <div class="form-group row my-5">
               <label for="input-subject" class="col-sm-4 col-form-label"><%= Inquiry.human_attribute_name(:created_at) %></label>
               <div class="col-sm-4">
-                  <input type="date" id="date_input_from" class="form-control" value="<%= params[:flt_start] %>">
+                  <input type="date" aria-label="created" id="input-start" class="form-control" value="<%= params[:flt_start] %>">
               </div>
               <div class="col-sm-4 d-flex align-items-center">
                   <span class="ml-n4">〜</span>
-                  <input type="date" id="date_input_to" class="form-control" value="<%= params[:flt_finish] %>">
+                  <input type="date" aria-label="created" id="input-finish" class="form-control" value="<%= params[:fit_finish] %>">
               </div>
           </div>
           <div class="form-group row my-4">
