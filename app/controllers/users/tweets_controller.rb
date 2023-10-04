@@ -58,8 +58,6 @@ module Users
       fetch_tweets_and_images(@user.id)
     end
 
-
-
     private
 
     def tweet_params
@@ -73,7 +71,7 @@ module Users
       @tweets_with_images = @tweets.map do |tweet|
         {
           tweet: tweet,
-          image: tweet.user.profile&.image || "user_default.png"
+          image: tweet.user.profile&.image || 'user_default.png'
         }
       end
     end
@@ -81,17 +79,17 @@ module Users
     def build_filter_from_params
       {
         author: params[:author],
-        post: params[:post],
-        start: params[:start],
+        post:   params[:post],
+        start:  params[:start],
         finish: params[:finish],
-        order: params[:order] || 'DESC'
+        order:  params[:order] || 'DESC'
       }
     end
 
     # 検索前のクエリを取得
     def base_tweets_queries
       Tweet.with_attached_images
-        .includes(:user, { user: [:profile, { profile: :image_attachment } ] }, :tweet_comments)
+        .includes(:user, { user: [:profile, { profile: :image_attachment }] }, :tweet_comments)
         .page(params[:page])
         .per(30)
     end
