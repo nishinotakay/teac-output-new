@@ -55,22 +55,7 @@ module Users
 
     def index_user
       @user = User.find(params[:id])
-      filter = {
-        author: params[:author],
-        post: params[:post],
-        start: params[:start],
-        finish: params[:finish],
-        order: params[:order] || 'DESC'
-      }
-
-      @tweets = filter.compact.blank? ? base_tweets_queries.where(user_id: params[:id]).order(created_at: params[:order]) : base_tweets_queries.where(user_id: params[:id]).sort_filter(filter)
-
-      @tweets_with_images = @tweets.map do |tweet|
-        {
-          tweet: tweet,
-          image: tweet.user.profile&.image || "user_default.png"
-        }
-      end
+      fetch_tweets_and_images(@user.id)
     end
 
 
@@ -81,9 +66,10 @@ module Users
       params.require(:tweet).permit(:post, images: [])
     end
 
-    def fetch_tweets_and_images
+    def fetch_tweets_and_images(user_id = nil)
       filter = build_filter_from_params
-      @tweets = filter.compact.blank? ? base_tweets_queries.order(created_at: params[:order]) : base_tweets_queries.sort_filter(filter)
+      base_query = user_id ? base_tweets_queries.where(user_id: user_id) : base_tweets_queries
+      @tweets = filter.compact.blank? ? base_query.order(created_at: params[:order]) : base_query.sort_filter(filter)
       @tweets_with_images = @tweets.map do |tweet|
         {
           tweet: tweet,
