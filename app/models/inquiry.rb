@@ -9,13 +9,14 @@ class Inquiry < ApplicationRecord
       created_at: params[:ord_created_at]
     }.compact
     filter = {
+      user_name: params[:flt_user_name],
       subject: params[:flt_subject],
       content: params[:flt_content],
       hidden: params[:flt_hidden],
       start: params[:flt_start],
       finish: params[:flt_finish]
     }.compact
-  
+    
     sort_and_filter_params = {order: order, filter: filter}
     return sort_and_filter_params
   end
@@ -35,6 +36,9 @@ class Inquiry < ApplicationRecord
   
   def self.apply_sort_and_filter(inquiry_scope, sort_and_filter_params)
     inquiry_scope = inquiry_scope.order(sort_and_filter_params[:order])
+    if sort_and_filter_params[:filter][:user_name].present?
+      inquiry_scope = inquiry_scope.joins(:user).where("users.name LIKE ?", "%#{sort_and_filter_params[:filter][:user_name]}%")
+    end
     if sort_and_filter_params[:filter][:subject].present?
       inquiry_scope = inquiry_scope.where("subject LIKE ?", "%#{sort_and_filter_params[:filter][:subject]}%")
     end
