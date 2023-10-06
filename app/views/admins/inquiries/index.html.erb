@@ -55,7 +55,7 @@
         <div class="sort-modal" style="display: none;">
           <% selects = [['五十音順', '逆順'], ['昇順', '降順']] %>
           <% order = {'五十音順': 'ASC', '逆順': 'DESC', '昇順 ': 'ASC', '降順': 'DESC'}.with_indifferent_access %>
-          <% {'user': selects[0], 'created_at': selects[1]}.each do |k, v| %>
+          <% {'user_name': selects[0], 'created_at': selects[1]}.each do |k, v| %>
             <div class="form-group row my-5">
               <label for="sort-<%= k %>" class="col-sm-4 col-form-label" ><%= Inquiry.human_attribute_name(k) %></label>
               <div class="col-md-8">

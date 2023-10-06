@@ -4,7 +4,7 @@ class Inquiry < ApplicationRecord
   def self.get_sort_and_filter_params(params)
 
     order = {
-      subject: params[:ord_subject], 
+      user_name: params[:ord_user_name], 
       content: params[:ord_content], 
       created_at: params[:ord_created_at]
     }.compact
