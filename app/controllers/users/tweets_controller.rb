@@ -66,8 +66,7 @@ module Users
 
     def fetch_tweets_and_images(user_id = nil)
       filter = build_filter_from_params
-      base_query = user_id ? base_tweets_queries.where(user_id: user_id) : base_tweets_queries
-      @tweets = filter.compact.blank? ? base_query.order(created_at: params[:order]) : base_query.sort_filter(filter)
+      @tweets = Tweet.filtered_or_base_queries(filter, user_id, params[:page])
       @tweets_with_images = @tweets.map do |tweet|
         {
           tweet: tweet,
@@ -84,14 +83,6 @@ module Users
         finish: params[:finish],
         order:  params[:order] || 'DESC'
       }
-    end
-
-    # 検索前のクエリを取得
-    def base_tweets_queries
-      Tweet.with_attached_images
-        .includes(:user, { user: [:profile, { profile: :image_attachment }] }, :tweet_comments)
-        .page(params[:page])
-        .per(30)
     end
 
     # beforeフィルター
