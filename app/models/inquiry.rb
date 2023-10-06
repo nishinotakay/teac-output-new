@@ -1,6 +1,9 @@
 class Inquiry < ApplicationRecord
   belongs_to :user
 
+  validates :subject, presence: true, length: { maximum: 30 }
+  validates :content, presence: true, length: { maximum: 800 }
+
   def self.get_sort_and_filter_params(params)
 
     order = {
