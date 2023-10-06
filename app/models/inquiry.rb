@@ -1,6 +1,9 @@
 class Inquiry < ApplicationRecord
   belongs_to :user
 
+  validates :subject, presence: true, length: { maximum: 30 }
+  validates :content, presence: true, length: { maximum: 800 }
+
   def self.get_sort_and_filter_params(params)
 
     order = {
@@ -41,6 +44,7 @@ class Inquiry < ApplicationRecord
     if sort_and_filter_params[:filter][:content].present?
       inquiry_scope = inquiry_scope.where("content LIKE ?", "%#{sort_and_filter_params[:filter][:content]}%")
     end
+
     if sort_and_filter_params[:filter][:start].present? || sort_and_filter_params[:filter][:finish].present?
       inquiry_scope = inquiry_scope.where('created_at BETWEEN ? AND ?', sort_and_filter_params[:filter][:start], sort_and_filter_params[:filter][:finish])
     end  
