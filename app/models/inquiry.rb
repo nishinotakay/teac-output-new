@@ -1,6 +1,9 @@
 class Inquiry < ApplicationRecord
   belongs_to :user
 
+  validates :subject, presence: true, length: { maximum: 30 }
+  validates :content, presence: true, length: { maximum: 800 }
+
   def self.get_sort_and_filter_params(params)
 
     order = {
@@ -41,6 +44,7 @@ class Inquiry < ApplicationRecord
     if sort_and_filter_params[:filter][:content].present?
       inquiry_scope = inquiry_scope.where("content LIKE ?", "%#{sort_and_filter_params[:filter][:content]}%")
     end
+
     if sort_and_filter_params[:filter][:start].present? || sort_and_filter_params[:filter][:finish].present?
       start = Time.zone.parse(sort_and_filter_params[:filter][:start].presence || '2022-01-01').beginning_of_day
       finish = Time.zone.parse(sort_and_filter_params[:filter][:finish].presence || Date.current.to_s).end_of_day
