@@ -42,8 +42,11 @@ class Inquiry < ApplicationRecord
       inquiry_scope = inquiry_scope.where("content LIKE ?", "%#{sort_and_filter_params[:filter][:content]}%")
     end
     if sort_and_filter_params[:filter][:start].present? || sort_and_filter_params[:filter][:finish].present?
-      inquiry_scope = inquiry_scope.where('created_at BETWEEN ? AND ?', sort_and_filter_params[:filter][:start], sort_and_filter_params[:filter][:finish])
-    end  
+      start = Time.zone.parse(sort_and_filter_params[:filter][:start].presence || '2022-01-01').beginning_of_day
+      finish = Time.zone.parse(sort_and_filter_params[:filter][:finish].presence || Date.current.to_s).end_of_day
+      inquiry_scope = inquiry_scope.where('created_at BETWEEN ? AND ?', start, finish)
+    end
+
     inquiry_scope
   end
 end
