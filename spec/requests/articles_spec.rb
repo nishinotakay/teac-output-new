@@ -13,10 +13,13 @@ RSpec.describe 'Articles', type: :request do
     before(:each) { articles_a }
 
     context 'ログインユーザーが投稿者である場合' do
-      it '記事一覧画面へ遷移する' do
+      before(:each) do
         sign_in user_a
         articles_b
         get users_articles_url
+      end
+
+      it '記事一覧画面へ遷移する' do
         expect(response.status).to eq 200
         expect(response.body).to include user_a.name
         expect(response.body).to include user_b.name
@@ -28,9 +31,12 @@ RSpec.describe 'Articles', type: :request do
     end
 
     context 'ログインユーザーが投稿者でない場合' do
-      it '記事一覧画面へ遷移する' do
+      before(:each) do
         sign_in user_b
         get users_articles_url
+      end
+
+      it '記事一覧画面へ遷移する' do
         expect(response.status).to eq 200
         expect(response.body).to include user_a.name
         expect(response.body).to include user_a.articles.first.title
@@ -39,8 +45,11 @@ RSpec.describe 'Articles', type: :request do
     end
 
     context 'ログインしていない場合' do
-      it '記事一覧画面へ遷移せず、ログイン画面へリダイレクトする' do
+      before(:each) do
         get users_articles_url
+      end
+
+      it '記事一覧画面へ遷移せず、ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
@@ -50,8 +59,11 @@ RSpec.describe 'Articles', type: :request do
 
   describe 'GET /show' do
     context 'ログインユーザーが投稿者である場合' do
-      it '記事詳細画面へ遷移する' do
+      before(:each) do
         sign_in user_a
+      end
+
+      it '記事詳細画面へ遷移する' do
         get users_article_url(article)
         expect(response.status).to eq 200
         expect(response.body).to include user_a.name
@@ -62,9 +74,12 @@ RSpec.describe 'Articles', type: :request do
     end
 
     context 'ログインユーザーが投稿者ではない場合' do
-      it '記事詳細画面へ遷移する' do
+      before(:each) do
         sign_in user_b
         get users_article_url(article)
+      end
+
+      it '記事詳細画面へ遷移する' do
         expect(response.status).to eq 200
         expect(response.body).to include user_a.name
         expect(response.body).to include article.title
@@ -74,8 +89,11 @@ RSpec.describe 'Articles', type: :request do
     end
 
     context 'ログインしていない場合' do
-      it '記事詳細画面へ遷移せず、ログイン画面へリダイレクトする' do
+      before(:each) do
         get users_article_url(article)
+      end
+
+      it '記事詳細画面へ遷移せず、ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
@@ -85,17 +103,23 @@ RSpec.describe 'Articles', type: :request do
 
   describe 'GET /new' do
     context 'ログインしている場合' do
-      it '記事投稿画面へ遷移する' do
+      before(:each) do
         sign_in user_a
         get new_users_article_url
+      end
+
+      it '記事投稿画面へ遷移する' do
         expect(response.status).to eq 200
         expect(response.body).to include 'input', 'title-form', 'subtitle-form', 'textarea', 'markdown-editor', 'preview-side'
       end
     end
 
     context 'ログインしていない場合' do
-      it '記事投稿画面へ遷移せず、ログイン画面へリダイレクトする' do
+      before(:each) do
         get new_users_article_url
+      end
+
+      it '記事投稿画面へ遷移せず、ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
@@ -105,9 +129,12 @@ RSpec.describe 'Articles', type: :request do
 
   describe 'GET /edit' do
     context 'ログインユーザーが投稿者である場合' do
-      it '記事編集画面へ遷移する' do
+      before(:each) do
         sign_in user_a
         get edit_users_article_url(article)
+      end
+
+      it '記事編集画面へ遷移する' do
         expect(response.status).to eq 200
         expect(response.body).to include article.title, article.sub_title, article.content
         expect(response.body).to include 'input', 'title-form', 'subtitle-form', 'textarea', 'markdown-editor', 'preview-side'
@@ -115,9 +142,12 @@ RSpec.describe 'Articles', type: :request do
     end
 
     context 'ログインユーザーが投稿者でない場合' do
-      it '記事編集画面へ遷移せず、記事一覧画面へリダイレクトする' do
+      before(:each) do
         sign_in user_b
         get edit_users_article_url(article)
+      end
+
+      it '記事編集画面へ遷移せず、記事一覧画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to users_articles_url
         expect(flash[:danger]).to eq '不正な操作です。'
@@ -125,8 +155,11 @@ RSpec.describe 'Articles', type: :request do
     end
 
     context 'ログインしていない場合' do
-      it '記事編集画面へ遷移せず、ログイン画面へリダイレクトする' do
+      before(:each) do
         get edit_users_article_url(article)
+      end
+
+      it '記事編集画面へ遷移せず、ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
@@ -178,9 +211,12 @@ RSpec.describe 'Articles', type: :request do
     end
 
     context 'ログインしていない場合' do
-      it '記事は作成されず、ログイン画面へリダイレクトする' do
+      before(:each) do
         sign_out user_a
         post users_articles_url params: params
+      end
+
+      it '記事は作成されず、ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
@@ -198,10 +234,13 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインユーザーが投稿者であり' do
       context '編集内容が適切な場合' do
-        it '記事を編集できる' do
+        before(:each) do
           params = { article: { title: 'a', sub_title: 'b', content: 'c' } }
           patch users_article_url(article, params: params)
           article.reload
+        end
+
+        it '記事を編集できる' do
           expect(response.status).to eq 302
           expect(flash[:notice]).to eq '記事を編集しました。'
           expect(response).to redirect_to users_article_url(Article.last, dashboard: false)
@@ -209,10 +248,13 @@ RSpec.describe 'Articles', type: :request do
       end
 
       context '編集内容が不適切な場合' do
-        it '記事を編集できない' do
+        before(:each) do
           params = { article: { title: nil, sub_title: 'b', content: 'c' } }
           patch users_article_url(article, params: params)
           article.reload
+        end
+
+        it '記事を編集できない' do
           expect(response.status).to eq 200
           expect(flash[:alert]).to eq '記事の編集に失敗しました。'
         end
@@ -220,11 +262,14 @@ RSpec.describe 'Articles', type: :request do
     end
 
     context 'ログインユーザーが投稿者ではない場合' do
-      it '記事は更新されず、記事一覧画面へリダイレクトする' do
+      before(:each) do
         sign_in user_b
         params = { article: { title: 'a', sub_title: 'b', content: 'c' } }
         patch users_article_url(article, params: params)
         article.reload
+      end
+
+      it '記事は更新されず、記事一覧画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to users_articles_url
         expect(flash[:danger]).to eq '不正な操作です。'
@@ -232,10 +277,13 @@ RSpec.describe 'Articles', type: :request do
     end
 
     context 'ログインしていない場合' do
-      it '記事は更新されず、ログイン画面へリダイレクトする' do
+      before(:each) do
         sign_out user_a
         params = { article: { title: 'a', sub_title: 'b', content: 'c' } }
         patch users_article_url(article, params: params)
+      end
+
+      it '記事は更新されず、ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
@@ -268,8 +316,11 @@ RSpec.describe 'Articles', type: :request do
     end
 
     context 'ログインユーザーが投稿者ではない場合' do
-      it '削除されず、記事一覧画面へリダイレクトする' do
+      before(:each) do
         sign_in user_b
+      end
+
+      it '削除されず、記事一覧画面へリダイレクトする' do
         expect { delete users_article_url(article) }.not_to change(Article, :count)
         expect(response.status).to eq 302
         expect(response).to redirect_to users_articles_url
@@ -278,8 +329,11 @@ RSpec.describe 'Articles', type: :request do
     end
 
     context 'ログインしていない場合' do
-      it '記事は削除されず、ログイン画面へリダイレクトする' do
+      before(:each) do
         sign_out user_a
+      end
+
+      it '記事は削除されず、ログイン画面へリダイレクトする' do
         expect { delete users_article_url(article) }.not_to change(Article, :count)
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
@@ -290,11 +344,14 @@ RSpec.describe 'Articles', type: :request do
 
   describe 'POST /image' do
     context 'ログインユーザーが投稿者である場合' do
-      it '記事に画像を添付できる' do
+      before(:each) do
         user_a.save
         image = fixture_file_upload('spec/fixtures/files/ruby.png', 'image/png')
         sign_in user_a
         post users_articles_image_url, params: { image: image, user_id: user_a.id }
+      end
+
+      it '記事に画像を添付できる' do
         expect(JSON.parse(response.body)['name']).to eq 'ruby.png'
         expect(JSON.parse(response.body)['url']).to include 'ruby.png'
         expect(JSON.parse(response.body)['url']).to include '/uploads/tmp/'
@@ -308,11 +365,14 @@ RSpec.describe 'Articles', type: :request do
     end
 
     context 'ログインユーザーが投稿者ではない場合' do
-      it '記事に画像を添付できない' do
+      before(:each) do
         user_a.save
         image = fixture_file_upload('spec/fixtures/files/ruby.png', 'image/png')
         sign_in user_b
         post users_articles_image_url, params: { image: image, user_id: user_a.id }
+      end
+
+      it '記事に画像を添付できない' do
         expect(response.status).to eq 401
         json_response = JSON.parse(response.body)
         expect(json_response['error']).to eq '画像の挿入に失敗しました。'
@@ -320,10 +380,13 @@ RSpec.describe 'Articles', type: :request do
     end
 
     context 'ログインしていない場合' do
-      it '記事の画像は保存されず、ログイン画面へリダイレクトする' do
+      before(:each) do
         sign_out user_a
         image = fixture_file_upload('spec/fixtures/files/ruby.png', 'image/png')
         post users_articles_image_url, params: { image: image, user_id: user_a.id }
+      end
+
+      it '記事の画像は保存されず、ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
