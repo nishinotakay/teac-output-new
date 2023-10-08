@@ -15,6 +15,6 @@ module ApplicationHelper
   end
 
   def user_image
-    @profile&.image.present? ? @profile.image : "user_default.png"
+    @current_user_profile&.image ? @current_user_profile.image : "user_default.png"
   end
 end
