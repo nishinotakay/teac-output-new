@@ -4,7 +4,7 @@ module Admins
       sort_and_filter_params = Inquiry.get_sort_and_filter_params(params)
       @inquiries, @hidden, @both = Inquiry.get_inquiries(sort_and_filter_params)
       [@inquiries, @hidden, @both].compact.each do |inquiry_scope|
-        @inquiry_scope = Inquiry.apply_sort_and_filter(inquiry_scope, sort_and_filter_params)
+        @inquiry_scope = Inquiry.apply_sort_and_filter(inquiry_scope, sort_and_filter_params).order(created_at: :desc)
       end
       @users = User.page(params[:page]).per(30)
     end
