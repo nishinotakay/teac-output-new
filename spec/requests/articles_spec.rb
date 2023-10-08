@@ -1,46 +1,46 @@
 require 'rails_helper'
 
 RSpec.describe 'Articles', type: :request do
-  let(:user_a) { build(:user, :a, confirmed_at: Date.today) }
-  let(:user_b) { build(:user, :b, confirmed_at: Date.today) }
-  let(:article) { create(:article, user: user_a) }
+  let(:user_1) { build(:user, :a, confirmed_at: Date.today) }
+  let(:user_2) { build(:user, :b, confirmed_at: Date.today) }
+  let(:article) { create(:article, user: user_1) }
 
   article_count = 2
-  let(:articles_a) { create_list(:article, article_count, user: user_a) }
-  let(:articles_b) { create_list(:article, article_count, user: user_b) }
+  let(:articles_1) { create_list(:article, article_count, user: user_1) }
+  let(:articles_2) { create_list(:article, article_count, user: user_2) }
 
   describe 'GET /index' do
-    before(:each) { articles_a }
+    before(:each) { articles_1 }
 
     context 'ログインユーザーが投稿者である場合' do
       before(:each) do
-        sign_in user_a
-        articles_b
+        sign_in user_1
+        articles_2
         get users_articles_url
       end
 
       it '記事一覧画面へ遷移する' do
         expect(response.status).to eq 200
-        expect(response.body).to include user_a.name
-        expect(response.body).to include user_b.name
-        expect(response.body).to include user_a.articles.first.title
-        expect(response.body).to include user_a.articles.last.title
-        expect(response.body).to include user_b.articles.first.title
-        expect(response.body).to include user_b.articles.last.title
+        expect(response.body).to include user_1.name
+        expect(response.body).to include user_2.name
+        expect(response.body).to include user_1.articles.first.title
+        expect(response.body).to include user_1.articles.last.title
+        expect(response.body).to include user_2.articles.first.title
+        expect(response.body).to include user_2.articles.last.title
       end
     end
 
     context 'ログインユーザーが投稿者でない場合' do
       before(:each) do
-        sign_in user_b
+        sign_in user_2
         get users_articles_url
       end
 
       it '記事一覧画面へ遷移する' do
         expect(response.status).to eq 200
-        expect(response.body).to include user_a.name
-        expect(response.body).to include user_a.articles.first.title
-        expect(response.body).to include user_a.articles.last.title
+        expect(response.body).to include user_1.name
+        expect(response.body).to include user_1.articles.first.title
+        expect(response.body).to include user_1.articles.last.title
       end
     end
 
@@ -60,13 +60,13 @@ RSpec.describe 'Articles', type: :request do
   describe 'GET /show' do
     context 'ログインユーザーが投稿者である場合' do
       before(:each) do
-        sign_in user_a
+        sign_in user_1
       end
 
       it '記事詳細画面へ遷移する' do
         get users_article_url(article)
         expect(response.status).to eq 200
-        expect(response.body).to include user_a.name
+        expect(response.body).to include user_1.name
         expect(response.body).to include article.title
         expect(response.body).to include article.sub_title
         expect(response.body).to include article.content
@@ -75,13 +75,13 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインユーザーが投稿者ではない場合' do
       before(:each) do
-        sign_in user_b
+        sign_in user_2
         get users_article_url(article)
       end
 
       it '記事詳細画面へ遷移する' do
         expect(response.status).to eq 200
-        expect(response.body).to include user_a.name
+        expect(response.body).to include user_1.name
         expect(response.body).to include article.title
         expect(response.body).to include article.sub_title
         expect(response.body).to include article.content
@@ -104,7 +104,7 @@ RSpec.describe 'Articles', type: :request do
   describe 'GET /new' do
     context 'ログインしている場合' do
       before(:each) do
-        sign_in user_a
+        sign_in user_1
         get new_users_article_url
       end
 
@@ -130,7 +130,7 @@ RSpec.describe 'Articles', type: :request do
   describe 'GET /edit' do
     context 'ログインユーザーが投稿者である場合' do
       before(:each) do
-        sign_in user_a
+        sign_in user_1
         get edit_users_article_url(article)
       end
 
@@ -143,7 +143,7 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインユーザーが投稿者でない場合' do
       before(:each) do
-        sign_in user_b
+        sign_in user_2
         get edit_users_article_url(article)
       end
 
@@ -168,16 +168,16 @@ RSpec.describe 'Articles', type: :request do
   end
 
   describe 'POST /create' do
-    let(:params) { { article: attributes_for(:article, user_id: user_a.id) } }
+    let(:params) { { article: attributes_for(:article, user_id: user_1.id) } }
 
-    before(:each) { sign_in user_a }
+    before(:each) { sign_in user_1 }
 
     context '記事投稿が成功した場合' do
       it '記事が保存され、記事詳細画面へ遷移する' do
         expect { post users_articles_url params: params }.to change(Article, :count).by(1)
         expect(response.status).to eq 302
         expect(flash[:notice]).to eq '記事を作成しました。'
-        expect(response).to redirect_to users_article_url(user_a.articles.last, dashboard: false)
+        expect(response).to redirect_to users_article_url(user_1.articles.last, dashboard: false)
       end
     end
 
@@ -193,7 +193,7 @@ RSpec.describe 'Articles', type: :request do
 
     context 'SQL文を入力した場合' do
       it '記事投稿が成功し、クエリが実行されないこと' do
-        post users_articles_url, params: { article: { title: 'a', sub_title: 'b', content: 'c', user_id: user_a.id } }
+        post users_articles_url, params: { article: { title: 'a', sub_title: 'b', content: 'c', user_id: user_1.id } }
         params[:article][:content] = 'DELETE FROM articles;'
         expect { post users_articles_url params: params }.to change(Article, :count).by(1)
         expect(Article.first.title).to eq 'a'
@@ -212,7 +212,7 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインしていない場合' do
       before(:each) do
-        sign_out user_a
+        sign_out user_1
         post users_articles_url params: params
       end
 
@@ -225,10 +225,10 @@ RSpec.describe 'Articles', type: :request do
   end
 
   describe 'PATCH /update' do
-    let(:article) { create(:article, user: user_a) }
+    let(:article) { create(:article, user: user_1) }
 
     before(:each) do
-      sign_in user_a
+      sign_in user_1
       article
     end
 
@@ -263,7 +263,7 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインユーザーが投稿者ではない場合' do
       before(:each) do
-        sign_in user_b
+        sign_in user_2
         params = { article: { title: 'a', sub_title: 'b', content: 'c' } }
         patch users_article_url(article, params: params)
         article.reload
@@ -278,7 +278,7 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインしていない場合' do
       before(:each) do
-        sign_out user_a
+        sign_out user_1
         params = { article: { title: 'a', sub_title: 'b', content: 'c' } }
         patch users_article_url(article, params: params)
       end
@@ -292,10 +292,10 @@ RSpec.describe 'Articles', type: :request do
   end
 
   describe 'DELETE /destroy' do
-    let(:article) { create(:article, user: user_a) }
+    let(:article) { create(:article, user: user_1) }
 
     before(:each) do
-      sign_in user_a
+      sign_in user_1
       article
     end
 
@@ -304,7 +304,7 @@ RSpec.describe 'Articles', type: :request do
         expect { delete users_article_url(article, dashboard: true) }.to change(Article, :count).by(-1)
         expect(response.status).to eq 302
         expect(flash[:notice]).to eq '記事を削除しました。'
-        expect(response).to redirect_to users_dash_boards_url(user_a)
+        expect(response).to redirect_to users_dash_boards_url(user_1)
       end
 
       it '記事の削除ができ、記事一覧画面へ遷移する' do
@@ -317,7 +317,7 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインユーザーが投稿者ではない場合' do
       before(:each) do
-        sign_in user_b
+        sign_in user_2
       end
 
       it '削除されず、記事一覧画面へリダイレクトする' do
@@ -330,7 +330,7 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインしていない場合' do
       before(:each) do
-        sign_out user_a
+        sign_out user_1
       end
 
       it 'ログイン画面へリダイレクトする' do
@@ -345,10 +345,10 @@ RSpec.describe 'Articles', type: :request do
   describe 'POST /image' do
     context 'ログインユーザーが投稿者である場合' do
       before(:each) do
-        user_a.save
+        user_1.save
         image = fixture_file_upload('spec/fixtures/files/ruby.png', 'image/png')
-        sign_in user_a
-        post users_articles_image_url, params: { image: image, user_id: user_a.id }
+        sign_in user_1
+        post users_articles_image_url, params: { image: image, user_id: user_1.id }
       end
 
       it '記事に画像を添付できる' do
@@ -356,7 +356,7 @@ RSpec.describe 'Articles', type: :request do
         expect(JSON.parse(response.body)['url']).to include 'ruby.png'
         expect(JSON.parse(response.body)['url']).to include '/uploads/tmp/'
         uploaded_image_url = JSON.parse(response.body)['url']
-        article_params = { title: 'a', sub_title: 'a', content: "<img src=\"#{uploaded_image_url}\">", user: user_a.id }
+        article_params = { title: 'a', sub_title: 'a', content: "<img src=\"#{uploaded_image_url}\">", user: user_1.id }
         post users_articles_url, params: { article: article_params }
         expect(response.status).to eq 302
         expect(flash[:notice]).to eq '記事を作成しました。'
@@ -366,10 +366,10 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインユーザーが投稿者ではない場合' do
       before(:each) do
-        user_a.save
+        user_1.save
         image = fixture_file_upload('spec/fixtures/files/ruby.png', 'image/png')
-        sign_in user_b
-        post users_articles_image_url, params: { image: image, user_id: user_a.id }
+        sign_in user_2
+        post users_articles_image_url, params: { image: image, user_id: user_1.id }
       end
 
       it '記事に画像を添付できない' do
@@ -381,9 +381,9 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインしていない場合' do
       before(:each) do
-        sign_out user_a
+        sign_out user_1
         image = fixture_file_upload('spec/fixtures/files/ruby.png', 'image/png')
-        post users_articles_image_url, params: { image: image, user_id: user_a.id }
+        post users_articles_image_url, params: { image: image, user_id: user_1.id }
       end
 
       it 'ログイン画面へリダイレクトする' do
