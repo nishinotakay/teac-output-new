@@ -49,7 +49,7 @@ RSpec.describe 'Articles', type: :request do
         get users_articles_url
       end
 
-      it '記事一覧画面へ遷移せず、ログイン画面へリダイレクトする' do
+      it 'ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
@@ -93,7 +93,7 @@ RSpec.describe 'Articles', type: :request do
         get users_article_url(article)
       end
 
-      it '記事詳細画面へ遷移せず、ログイン画面へリダイレクトする' do
+      it 'ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
@@ -119,7 +119,7 @@ RSpec.describe 'Articles', type: :request do
         get new_users_article_url
       end
 
-      it '記事投稿画面へ遷移せず、ログイン画面へリダイレクトする' do
+      it 'ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
@@ -159,7 +159,7 @@ RSpec.describe 'Articles', type: :request do
         get edit_users_article_url(article)
       end
 
-      it '記事編集画面へ遷移せず、ログイン画面へリダイレクトする' do
+      it 'ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
@@ -216,7 +216,7 @@ RSpec.describe 'Articles', type: :request do
         post users_articles_url params: params
       end
 
-      it '記事は作成されず、ログイン画面へリダイレクトする' do
+      it 'ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
@@ -283,7 +283,7 @@ RSpec.describe 'Articles', type: :request do
         patch users_article_url(article, params: params)
       end
 
-      it '記事は更新されず、ログイン画面へリダイレクトする' do
+      it 'ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
@@ -333,7 +333,7 @@ RSpec.describe 'Articles', type: :request do
         sign_out user_a
       end
 
-      it '記事は削除されず、ログイン画面へリダイレクトする' do
+      it 'ログイン画面へリダイレクトする' do
         expect { delete users_article_url(article) }.not_to change(Article, :count)
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
@@ -386,7 +386,7 @@ RSpec.describe 'Articles', type: :request do
         post users_articles_image_url, params: { image: image, user_id: user_a.id }
       end
 
-      it '記事の画像は保存されず、ログイン画面へリダイレクトする' do
+      it 'ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
