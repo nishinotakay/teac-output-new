@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Tweet, type: :model do
-  let(:user) { create(:user, name: '山田太郎', email: Faker::Internet.email, password: 'password') }
+  let(:user) { create(:user, name: '山田太郎', email: Faker::Internet.email, password: 'password', created_at: 2023-10-5) }
   let!(:tweet) { create(:tweet, post: "it's a sunny day!", user: user) }
   let!(:tweet_comment) { FactoryBot.create_list(:tweet_comment, 3, content: "tweet_comment_test", user: user, tweet: tweet, recipient_id: tweet.user_id)}
   describe '#valid?' do
@@ -140,6 +140,62 @@ RSpec.describe Tweet, type: :model do
     context 'つぶやきを削除する場合' do
       it '3つの関連付けられたtweet_commentsが削除される' do
         expect { tweet.destroy }.to change { TweetComment.count }.by(-3)
+      end
+    end
+  end
+
+  describe '#sort_filter' do
+    let(:user_1) { create(:user, name: '山下達郎', email: Faker::Internet.email, password: 'password') }
+    let(:tweet_1) { create(:tweet, post: 'シティポップ', user: user_1) }
+
+    before do
+      user_1
+      tweet_1
+    end
+
+    context '絞り込み検索' do
+      context '投稿者の名前を完全一致で検索する場合' do
+        let(:filter) {
+          { author: '山田太郎',
+            post: '',
+            filter_start: '',
+            filter_finish: ''
+          }
+        }
+
+        filter = {
+          author: '山田太郎',
+          order: 'DESC'
+        }
+
+        it '完全一致で検索した投稿一覧を返す' do
+          serch_tweets = described_class.sort_filter(filter)
+          expect(serch_tweets.count).to eq(1)
+        end
+      end
+
+      context '投稿者の名前を前方一致で検索する場合' do
+        let(:filter) {
+          { author: '山',
+            post: '',
+            filter_start:'',
+            filter_finish:''
+          }
+        }
+
+        filter = {
+          author: '山',
+          order: 'DESC'
+        }
+        it '前方一致で検索した投稿一覧を返す' do
+          
+          filter = {
+            author: '山',
+            order: 'DESC'
+          }
+          serch_tweets = described_class.sort_filter(filter)
+          expect(serch_tweets.count).to eq(2)
+        end
       end
     end
   end
