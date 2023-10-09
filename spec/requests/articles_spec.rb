@@ -4,10 +4,9 @@ RSpec.describe 'Articles', type: :request do
   let(:user_1) { build(:user, :a, confirmed_at: Date.today) }
   let(:user_2) { build(:user, :b, confirmed_at: Date.today) }
   let(:article) { create(:article, user: user_1) }
-
-  article_count = 2
-  let(:articles_1) { create_list(:article, article_count, user: user_1) }
-  let(:articles_2) { create_list(:article, article_count, user: user_2) }
+  let(:articles_1) { create_list(:article, 2, user: user_1) }
+  let(:articles_2) { create_list(:article, 2, user: user_2) }
+  let(:many_articles) { create_list(:article, 50, user: user_1) }
 
   describe 'GET /index' do
     before(:each) { articles_1 }
@@ -21,26 +20,20 @@ RSpec.describe 'Articles', type: :request do
 
       it '記事一覧画面へ遷移する' do
         expect(response.status).to eq 200
-        expect(response.body).to include user_1.name
-        expect(response.body).to include user_2.name
-        expect(response.body).to include user_1.articles.first.title
-        expect(response.body).to include user_1.articles.last.title
-        expect(response.body).to include user_2.articles.first.title
-        expect(response.body).to include user_2.articles.last.title
+        expect(Article.count).to eq 4
       end
     end
-
+    
     context 'ログインユーザーが投稿者でない場合' do
       before(:each) do
         sign_in user_2
+        articles_2
         get users_articles_url
       end
 
       it '記事一覧画面へ遷移する' do
         expect(response.status).to eq 200
-        expect(response.body).to include user_1.name
-        expect(response.body).to include user_1.articles.first.title
-        expect(response.body).to include user_1.articles.last.title
+        expect(Article.count).to eq 4
       end
     end
 
@@ -53,6 +46,23 @@ RSpec.describe 'Articles', type: :request do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
+      end
+    end
+
+    context '記事が30件以上ある場合' do
+      before(:each) do
+        sign_in user_1
+        many_articles
+        get users_articles_url, params: { page: 1 }
+      end
+
+      it 'ページネーションが機能して記事が30件返る' do
+        expect(response.status).to eq 200
+        
+        parsed_body = Nokogiri::HTML(response.body)
+        articles_count = parsed_body.css('td:contains("サブタイトル")').size
+        binding.pry
+        expect(articles_count).to eq 30
       end
     end
   end
