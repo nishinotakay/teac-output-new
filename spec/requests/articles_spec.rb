@@ -58,10 +58,7 @@ RSpec.describe 'Articles', type: :request do
 
       it 'ページネーションが機能して記事が30件返る' do
         expect(response.status).to eq 200
-        
-        parsed_body = Nokogiri::HTML(response.body)
-        articles_count = parsed_body.css('td:contains("サブタイトル")').size
-        binding.pry
+        articles_count = Nokogiri::HTML(response.body).css('td:contains("サブタイトル")').size
         expect(articles_count).to eq 30
       end
     end
