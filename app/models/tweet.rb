@@ -18,6 +18,19 @@ class Tweet < ApplicationRecord
       .presence || Tweet.none
   end
 
+  def self.base_queries(page)
+    with_attached_images
+      .includes(:user, { user: [:profile, { profile: :image_attachment }] }, :tweet_comments)
+      .page(page) # ここでページ番号を指定
+      .per(30)
+  end
+
+  def self.filtered_or_base_queries(filter, user_id = nil, page = 1) # user_idとpageのデフォルト値を定める
+    base_query = user_id ? base_queries(page).where(user_id: user_id) : base_queries(page)
+    filter.compact.blank? ? base_query.order(created_at: filter[:order]) : base_query.sort_filter(filter)
+  end
+
+
   private
 
   def image_count_validation

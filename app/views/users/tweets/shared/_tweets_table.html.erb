@@ -12,36 +12,37 @@
   <div class="container">
     <div class="row">
       <% if @tweets.exists? %>
-        <% @tweets.each do |tweet| %>
+        <% @tweets_with_images.each do |data| %>
           <div class="col-12 col-sm-8 offset-sm-2">
             <div class="card tweets-index-item">
-            <% image = tweet.user.profile.present? && tweet.user.profile.image.present? ? tweet.user.profile&.image : "user_default.png" %>
               <div class="d-flex align-items-center">
-                <%= image_tag image , class: "rounded-circle", size: "60x60" %>
+                  <% if data[:image].present? %>
+                    <%= image_tag data[:image] , class: "rounded-circle", size: "60x60" %>
+                  <% end %>
                 <div class="d-flex align-items-start flex-column justify-content-start"> <%# flex-colmunは縦並び %>
                   <div class="px-0">
-                    <%= link_to index_user_users_tweet_path(tweet.user_id), style: "text-decoration: underline;" do %>
-                      <strong><%= tweet.user.name %>&nbsp;</strong>
+                    <%= link_to index_user_users_tweet_path(data[:tweet].user_id), style: "text-decoration: underline;" do %>
+                      <strong><%= data[:tweet].user.name %>&nbsp;</strong>
                     <% end %>
                   </div>
-                  <time class="timestamp" data-time="<%= tweet.created_at.to_i %>"></time>
+                  <time class="timestamp" data-time="<%= data[:tweet].created_at.to_i %>"></time>
                 </div>
                 <div class="d-flex align-items-center ms-auto">
                   <div class="dropdown">
                     <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
                     <ul class="dropdown-menu test-color">
-                      <li><%= link_to '詳細', index_user_users_tweet_path(tweet.user_id), class:"dropdown-item" %></li>
-                      <% if tweet.user.name == current_user.name %>
-                        <li><%= link_to '編集', edit_users_tweet_path(tweet), remote: true, class:"dropdown-item" %></li>
-                        <li><%= link_to '削除', users_tweet_path(tweet), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
+                      <li><%= link_to '詳細', index_user_users_tweet_path(data[:tweet].user_id), class:"dropdown-item" %></li>
+                      <% if data[:tweet].user.name == current_user.name %>
+                        <li><%= link_to '編集', edit_users_tweet_path(data[:tweet]), remote: true, class:"dropdown-item" %></li>
+                        <li><%= link_to '削除', users_tweet_path(data[:tweet]), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
                       <% end %>
                     </ul>
                   </div>
                 </div>
               </div>
-              <div class="tweet-post" data-tweet-url="<%= users_tweet_path(tweet.id) %>">
-                <%= raw Rinku.auto_link(sanitize(simple_format(tweet.post.gsub(/ /, '&nbsp;'))), :all, 'target="_blank"') %>
-                <% tweet.images.each do |image| %>
+              <div class="tweet-post" data-tweet-url="<%= users_tweet_path(data[:tweet].id) %>">
+                <%= format_and_linkify_text(data[:tweet].post) %>
+                <% data[:tweet].images.each do |image| %>
                   <% if image.persisted? %>
                     <%= image_tag image, class: "tweet-image" %>
                   <% end %>
@@ -49,10 +50,10 @@
               </div>
               <div class="d-flex align-items-center">
                 <div class="commentIcon px-2">
-                  <%= link_to users_tweet_path(tweet.id), style: "color: black; text-decoration: none;" do %>
+                  <%= link_to users_tweet_path(data[:tweet].id), style: "color: black; text-decoration: none;" do %>
                     <i class="fa-regular fa-comment fa-lg"></i>
-                    <% if tweet.tweet_comments.count > 0 %>
-                      &nbsp;<%= tweet.tweet_comments.count %>
+                    <% if data[:tweet].tweet_comments.size > 0 %>
+                      &nbsp;<%= data[:tweet].tweet_comments.size %>
                     <% end %>
                   <% end %>
                 </div>
