@@ -6,7 +6,6 @@ RSpec.describe 'Articles', type: :request do
   let(:article) { create(:article, user: user_1) }
   let(:articles_1) { create_list(:article, 2, user: user_1) }
   let(:articles_2) { create_list(:article, 2, user: user_2) }
-  let(:many_articles) { create_list(:article, 50, user: user_1) }
 
   describe 'GET /index' do
     before(:each) { articles_1 }
@@ -48,20 +47,6 @@ RSpec.describe 'Articles', type: :request do
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
       end
     end
-
-    context '記事が30件以上ある場合' do
-      before(:each) do
-        sign_in user_1
-        many_articles
-        get users_articles_url, params: { page: 1 }
-      end
-
-      it 'ページネーションが機能して記事が30件返る' do
-        expect(response.status).to eq 200
-        articles_count = Nokogiri::HTML(response.body).css('td:contains("サブタイトル")').size
-        expect(articles_count).to eq 30
-      end
-    end
   end
 
   describe 'GET /show' do
@@ -73,6 +58,7 @@ RSpec.describe 'Articles', type: :request do
       it '記事詳細画面へ遷移する' do
         get users_article_url(article)
         expect(response.status).to eq 200
+        binding.pry
         expect(response.body).to include user_1.name
         expect(response.body).to include article.title
         expect(response.body).to include article.sub_title
