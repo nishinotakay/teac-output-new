@@ -7,6 +7,7 @@ RSpec.describe Article, type: :model do
   let(:user_article) { create(:article, title: "タイトル", sub_title: "サブタイトル", content: "本文", user: user) }
   let(:admin) { create(:admin) }
   let(:admin_article) { create(:article, title: "タイトル", sub_title: "サブタイトル", content: "本文", admin: admin) }
+  let(:many_articles) { create_list(:article, 50, title: "タイトル", sub_title: "サブタイトル", content: "本文", user: user) }
 
   describe '条件検索' do
     before(:each) do # 各itの前に１件の記事データを生成する
@@ -217,7 +218,7 @@ RSpec.describe Article, type: :model do
       end
     end
   end
-
+    
   RSpec.shared_examples '記事投稿' do # 各テストの内容は spec/support/concerns/common_module.rb へ
     it_behaves_like '正常な記事投稿'
     it_behaves_like 'タイトル'
@@ -236,6 +237,28 @@ RSpec.describe Article, type: :model do
     subject(:article) { admin_article }
 
     it_behaves_like '記事投稿'
+  end
+
+  describe 'ページネーション' do
+    before(:each) do
+      many_articles
+    end
+
+    context '1ページ目の場合' do
+      it '最初の30件の記事が取得される' do
+        params = { order: 'DESC', page: 1 }
+        articles = described_class.all
+        expect(articles.paginated_and_filtered(params).count).to eq 30
+      end
+    end
+
+    context '２ページ目の場合' do
+      it '残りの20件の記事が取得される' do
+        params = { order: 'DESC', page: 2 }
+        articles = described_class.all
+        expect(articles.paginated_and_filtered(params).count).to eq 20
+      end
+    end
   end
 
   describe 'sanitized_contentメソッド' do # 以下はDBとのやり取り不要のため build で実装
