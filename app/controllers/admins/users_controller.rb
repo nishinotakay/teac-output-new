@@ -1,5 +1,5 @@
 module Admins
-  class ProfilesController < Admins::Base
+  class UsersController < Admins::Base
     require 'date'
     before_action :authenticate_admin!, only: %i[new create edit update destroy users_show user_edit user_destroy admins_show]
     before_action :find_profile, only: %i[edit update destroy]
@@ -78,7 +78,7 @@ posts: params[:ord_posts] }.compact
       if @profile.destroy
         flash[:success] = "#{@profile.name}のデータを削除しました。"
         # 一覧ページへリダイレクト
-        redirect_to users_profiles_path
+        redirect_to admins_users_path
       else
         render :index
       end
