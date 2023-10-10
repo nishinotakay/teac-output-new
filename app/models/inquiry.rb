@@ -5,17 +5,20 @@ class Inquiry < ApplicationRecord
   validates :content, presence: true, length: { maximum: 800 }
 
   def self.get_sort_and_filter_params(params)
+
     order = {
       subject: params[:ord_subject], 
       content: params[:ord_content], 
       created_at: params[:ord_created_at]
     }.compact
     filter = {
-      subject: params[:flt_subject], 
+      subject: params[:flt_subject],
       content: params[:flt_content],
-      created_at: params[:flt_created_at],
-      hidden: params[:flt_hidden]
+      hidden: params[:flt_hidden],
+      start: params[:flt_start],
+      finish: params[:flt_finish]
     }.compact
+  
     sort_and_filter_params = {order: order, filter: filter}
     return sort_and_filter_params
   end
@@ -41,11 +44,13 @@ class Inquiry < ApplicationRecord
     if sort_and_filter_params[:filter][:content].present?
       inquiry_scope = inquiry_scope.where("content LIKE ?", "%#{sort_and_filter_params[:filter][:content]}%")
     end
-    if sort_and_filter_params[:filter][:created_at].present?
-      created_at_date = Date.parse(sort_and_filter_params[:filter][:created_at])
-      inquiry_scope = inquiry_scope.where("created_at >= ? AND created_at <= ?", created_at_date.beginning_of_day, created_at_date.end_of_day)
+
+    if sort_and_filter_params[:filter][:start].present? || sort_and_filter_params[:filter][:finish].present?
+      start = Time.zone.parse(sort_and_filter_params[:filter][:start].presence || '2022-01-01').beginning_of_day
+      finish = Time.zone.parse(sort_and_filter_params[:filter][:finish].presence || Date.current.to_s).end_of_day
+      inquiry_scope = inquiry_scope.where('created_at BETWEEN ? AND ?', start, finish)
     end
-    
+
     inquiry_scope
   end
 end
