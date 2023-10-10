@@ -140,7 +140,7 @@ RSpec.describe 'Articles', type: :request do
         get edit_users_article_url(article)
       end
 
-      it '記事編集画面へ遷移せず、記事一覧画面へリダイレクトする' do
+      it '記事一覧画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to users_articles_url
         expect(flash[:danger]).to eq '不正な操作です。'
@@ -262,7 +262,7 @@ RSpec.describe 'Articles', type: :request do
         article.reload
       end
 
-      it '記事は更新されず、記事一覧画面へリダイレクトする' do
+      it '記事一覧画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to users_articles_url
         expect(flash[:danger]).to eq '不正な操作です。'
