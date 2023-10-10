@@ -8,14 +8,6 @@ class Post < ApplicationRecord
   validates :body, presence: true, length: { maximum: 240 }
   validates :youtube_url, presence: true
 
-  def self.search(search)
-    if search
-      where(['body LIKE ? OR title LIKE ?', "%#{search}%", "%#{search}%"])
-    else
-      all
-    end
-  end
-
   def self.sort_filter(filter)
     result = all
     result = result.joins(:user).where('name LIKE ?', "%#{filter[:author]}%") if filter[:author].present?
