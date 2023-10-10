@@ -9,11 +9,15 @@ class Post < ApplicationRecord
   validates :youtube_url, presence: true
 
   def self.sort_filter(filter)
-    result = all
-    result = result.joins(:user).where('name LIKE ?', "%#{filter[:author]}%") if filter[:author].present?
-    result = result.where('title LIKE ?', "%#{filter[:title]}%") if filter[:title].present?
-    result = result.where('body LIKE ?', "%#{filter[:body]}%") if filter[:body].present?
-    result = result.where(created_at: filter[:start]..filter[:finish]) if filter[:start].present? && filter[:finish].present?
-    result.order(created_at: filter[:order])
+    start = Time.zone.parse(filter[:start].presence || '2022-01-01').beginning_of_day
+    finish = Time.zone.parse(filter[:finish].presence || Date.current.to_s).end_of_day
+
+    left_joins(:user, :admin)
+      .where(['title LIKE ? AND body LIKE ?',
+              "%#{filter[:title]}%", "%#{filter[:body]}%"])
+      .where('posts.created_at BETWEEN ? AND ?', start, finish)
+      .where('users.name LIKE :author OR admins.name LIKE :author', author: "%#{filter[:author]}%")
+      .order("posts.created_at #{filter[:order]}")
+      .presence || Post.none
   end
 end
