@@ -4,7 +4,8 @@ ja:
       inquiry: "問い合わせ"
     attributes:
       inquiry:
+        user: "名前"
         subject: "件名"
         content: "内容"
-        created_at: "作成日時"
+        created_at: "送信日時"
         hidden: "表示切り替え"
