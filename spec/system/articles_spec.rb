@@ -4,16 +4,109 @@ RSpec.describe 'Articles', type: :system do
   let(:user_a) { create(:user, :a, confirmed_at: Date.today) }
   let(:user_b) { create(:user, :b, confirmed_at: Date.today) }
   let(:article) { create(:article, user: user_a) }
+  let(:article_b) { create(:article, user: user_b) }
 
   before do
     sign_in(user_a)
     article
   end
 
-  describe 'redirect to #X' do
-    context 'X = index || dashboards' do
-      context 'index' do
-        it 'success' do
+  describe '記事一覧画面' do
+    context 'ログインユーザーの場合' do
+      context '遷移テスト' do
+        it '記事一覧画面に遷移できる' do
+          visit users_articles_path
+          expect(current_path).to eq users_articles_path
+        end
+      end
+
+      before do
+        article_b
+        visit users_articles_path
+      end
+  
+      context '表示テスト' do
+        it '投稿された全ての記事が一覧表示されている' do
+          expect(page).to have_content '記事一覧'
+          expect(page).to have_content '投稿者'
+          expect(page).to have_content article_b.title
+          expect(page).to have_content article_b.sub_title
+          expect(page).to have_content article_b.user.name
+          expect(page).to have_content article_b.created_at.strftime('%Y/%m/%d %H:%M')
+          expect(page).to have_content article.title
+          expect(page).to have_content article.sub_title
+          expect(page).to have_content article.user.name
+          expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
+          expect(page).to have_button('︙')
+        end
+
+        it 'ログインユーザーの記事のみ、３点リーダー押下後、閲覧・編集・削除ボタンが表示される' do
+          page.all(:button, '︙')[1].click # 一覧の2つ目がログインユーザー（user_a）の記事
+          expect(page).to have_content('閲覧')
+          expect(page).to have_content('編集')
+          expect(page).to have_content('削除')
+        end
+      
+        it 'ログインユーザー以外の投稿記事の３点リーダー押下後は閲覧ボタンのみ表示される' do
+          page.all(:button, '︙')[0].click # click_button '︙', match: :first でもOK
+          expect(page).to have_content('閲覧')
+          expect(page).not_to have_content('編集')
+          expect(page).not_to have_content('削除')
+        end
+      end
+  
+      context '機能テスト' do
+        it '投稿者・非投稿者に関係なく、全ての記事はクリックすると、それぞれの記事詳細画面へ遷移できる' do
+          # ログインユーザーでログインする
+          sign_in(user_a)
+          # 投稿者・非投稿者の記事をそれぞれクリックする
+          Article.all.each do |article|
+            click_link article.title
+            # それぞれの記事詳細画面に遷移できることを確認する
+            expect(current_path).to eq users_article_path(article.id)
+          end
+        end
+  
+        it 'ログインユーザーの記事のみ、３点リーダー押下後に閲覧、編集、削除ボタンが表示される' do
+          # ログインユーザーでログインする
+          sign_in(user_a)
+          # ログインユーザーの記事の３点リーダーを押下する
+          click_button '︙', match: :first
+          # 閲覧、編集、削除ボタンが表示されていることを確認する
+          expect(page).to have_content('閲覧')
+          expect(page).to have_content('編集')
+          expect(page).to have_content('削除')
+        end
+  
+        it 'ログインユーザー以外の投稿記事の３点リーダー押下後は閲覧ボタンのみ表示され、閲覧ボタン押下後は記事詳細画面へ遷移できる' do
+          # ログインユーザーでログインする
+          sign_in(user)
+          # ログインユーザー以外の投稿記事の３点リーダーを押下する
+          click_link '︙', match: :first, visible: false
+          # 閲覧ボタンのみ表示されていることを確認する
+          expect(page).to have_content('閲覧')
+          # 閲覧ボタンを押下すると、記事詳細画面に遷移できることを確認する
+          click_link '閲覧'
+          expect(current_path).to eq users_article_path(Article.first.id)
+        end
+  
+        it 'ログインユーザーは３点リーダーから記事の削除ができる' do
+          # ログインユーザーでログインする
+          sign_in(user)
+          # ログインユーザーの記事の３点リーダーから削除ボタンを押下する
+          click_link '︙', match: :first
+          click_link '削除'
+          # 記事が削除されていることを確認する
+          expect(Article.where(id: Article.first.id).count).to eq 0
+        end
+      end
+    end
+  end
+
+  describe '画面遷移のテスト' do # redirect to #X
+    context '記事一覧画面と投稿した記事一覧画面' do # X = index || dashboards
+      context '記事一覧画面' do # index
+        it '成功する' do # success
           visit users_articles_path
           expect(current_path).to eq users_articles_path
           expect(page).to have_content '記事一覧'
@@ -21,9 +114,9 @@ RSpec.describe 'Articles', type: :system do
           expect(page).to have_content article.user.name
         end
       end
-
-      context 'dashboards' do
-        it 'success' do
+    
+      context '投稿した記事一覧画面' do # dashboards
+        it '成功する' do # success
           visit users_dash_boards_path
           expect(current_path).to eq users_dash_boards_path
           expect(page).to have_content '投稿した記事一覧'
@@ -32,23 +125,36 @@ RSpec.describe 'Articles', type: :system do
         end
       end
 
-      after do
+      after do # 記事一覧画面と投稿した記事一覧画面の共通項目テスト after(:each) doの略称
         expect(page).to have_content 'タイトル'
         expect(page).to have_content 'サブタイトル'
         expect(page).to have_content '投稿日'
-        expect(page).to have_content article.created_at.strftime('%-m/%d %-H:%M')
+        #binding.pry
+        expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
         expect(page).to have_content article.title
         expect(page).to have_content article.sub_title
+        # binding.pry
+        #expect(page).to have_button('︙')
+        click_button('︙')
+        expect(page).to have_link('閲覧')
+        expect(page).to have_link('編集')
+        expect(page).to have_link('削除')
       end
     end
 
-    context 'X = new || edit' do
-      context 'new' do
-        it 'success' do
+      
+    context '記事投稿画面または記事詳細画面' do # X = new || edit
+      context '記事投稿画面' do # new
+        it '成功する' do # success
           visit new_users_article_path
           expect(current_path).to eq new_users_article_path
-          expect(page).to have_content "記事投稿"
-          expect(page).to have_css('.markdown-editor', placeholder: '本文')
+          expect(page).to have_content '記事投稿'
+          expect(page).to have_button '投稿'
+          #expect(page).to have_css('.markdown-editor', placeholder: '本文')
+          expect(page).to have_field('article_title', placeholder: 'タイトル')
+          expect(page).to have_field('article_sub_title', placeholder: 'サブタイトル')
+          expect(page).to have_field('article_content', placeholder: '本文')
+          # expect(page).to have_css('.markdown-editor')
         end
       end
 
@@ -57,13 +163,19 @@ RSpec.describe 'Articles', type: :system do
           visit edit_users_article_path(article)
           expect(current_path).to eq edit_users_article_path(article)
           expect(page).to have_content "記事編集"
-          expect(page).to have_content article.content, count: 2
+          expect(page).to have_button '更新'
+          expect(page).to have_field('article_title', with: article.title)
+          expect(page).to have_field('article_sub_title', with: article.sub_title)
+          expect(page).to have_field('article_content', with: article.content)
+          expect(page).to have_content article.content, count: 2 # ページ内で、article.contentの呼び出しが計2回ある
         end
       end
 
       after do
-        expect(page).to have_content "エディター"
-        expect(page).to have_content "プレビュー"
+        expect(page).to have_content 'エディター'
+        expect(page).to have_content 'プレビュー'
+        expect(page).to have_link 'キャンセル'
+        expect(page).to have_css('.markdown-editor')
       end
     end
 
@@ -79,8 +191,8 @@ RSpec.describe 'Articles', type: :system do
 
       context 'non_writer' do
         it 'success' do
-          # click_link 'ログアウト'
-          find('ログアウト').click
+          find('#dropdownMenuButton').click # dropdownmenu を探してクリック
+          click_link 'ログアウト'  # click_button ×
           sign_in(user_b)
           visit users_article_path(article)
           expect(page).to_not have_content '編集'
@@ -129,6 +241,7 @@ RSpec.describe 'Articles', type: :system do
       expect(current_path).to eq users_article_path(article)
       expect(page).to have_content '記事を編集しました。'
       expect(page).to have_content article.title
+      #binding.pry
       expect(page).to_not have_content prev_article_title
     end
 
@@ -144,9 +257,11 @@ RSpec.describe 'Articles', type: :system do
   describe 'delete article' do
     context 'dashboards to delete' do
       it 'success' do
+        #binding.pry
         visit users_dash_boards_path
         expect(page).to have_content article.title
-        page.find('.link-tr', text: article.title).click
+        # page.find('.link-tr', text: article.title).click
+        page.first('.link-td', text: article.title).click
         expect(current_path).to eq users_article_path(article)
         page.accept_confirm('表示中の記事を削除します。') do
           click_link "削除"
@@ -161,7 +276,7 @@ RSpec.describe 'Articles', type: :system do
       it 'success' do
         visit users_articles_path
         expect(page).to have_content article.title
-        page.find('.link-tr', text: article.title).click
+        page.first('.link-td', text: article.title).click
         expect(current_path).to eq users_article_path(article)
         page.accept_confirm('表示中の記事を削除します。') do
           click_link "削除"
@@ -173,13 +288,13 @@ RSpec.describe 'Articles', type: :system do
     end
   end
   
-  describe 'markdown with marked.js', js: true do
+  describe 'markdown with marked.js', js: true do # Marked.js によるマークダウン
     before do
       article.content = "# This is h1.  \r\n```ruby:qiita.rb\r\nputs 'The best way to log and share programmers knowledge.'\r\n```"
       article.save
     end
     
-    describe 'new article page' do
+    describe 'new article page' do # 記事投稿画面で
       before do
         visit new_users_article_path
         sleep 1
@@ -187,9 +302,9 @@ RSpec.describe 'Articles', type: :system do
         @preview = find('.preview')
       end
       
-      it 'markdown to preview' do
+      it 'markdown to preview' do # プレビュー画面でマークダウンが機能している
         @markd.set(article.content)
-        expect(@preview).to have_css('h1', text: 'This is h1.', wait: 1)
+        expect(@preview).to have_css('h1', text: 'This is h1.', wait: 1) # 「#」の文字列が、h1のcssになっていることを期待
       end
       
       it 'drag and drop image' do
