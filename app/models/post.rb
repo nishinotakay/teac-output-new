@@ -8,6 +8,17 @@ class Post < ApplicationRecord
   validates :body, presence: true, length: { maximum: 240 }
   validates :youtube_url, presence: true
 
+  def self.filtered_posts(filter_params, page = 1, per_page = 30)
+    order = filter_params[:order] || 'DESC'
+    posts = self.includes(:user, :admin)
+
+    if filter_params.except(:order).present?
+      posts = posts.sort_filter(filter_params.except(:order))
+    end
+
+    posts.order(created_at: order).page(page).per(per_page)
+  end
+
   def self.sort_filter(filter)
     start = Time.zone.parse(filter[:start].presence || '2022-01-01').beginning_of_day
     finish = Time.zone.parse(filter[:finish].presence || Date.current.to_s).end_of_day
@@ -17,7 +28,7 @@ class Post < ApplicationRecord
               "%#{filter[:title]}%", "%#{filter[:body]}%"])
       .where('posts.created_at BETWEEN ? AND ?', start, finish)
       .where('users.name LIKE :author OR admins.name LIKE :author', author: "%#{filter[:author]}%")
-      .order("posts.created_at #{filter[:order]}")
+      .order(Arel.sql("posts.created_at #{filter[:order]}"))
       .presence || Post.none
-  end
+  end 
 end

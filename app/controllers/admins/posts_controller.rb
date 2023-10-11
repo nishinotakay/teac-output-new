@@ -5,21 +5,7 @@ module Admins
     before_action :prevent_url, only: %i[edit update destroy]
 
     def index
-      params[:order] ||= 'DESC'
-      filter = {
-        author: params[:author],
-        body:   params[:body],
-        title:  params[:title],
-        start:  params[:start],
-        finish: params[:finish]
-      }
-
-      if filter.compact.blank?
-        @posts = Post.includes(:user, :admin).order(created_at: params[:order]).page(params[:page]).per(30)
-      else
-        filter[:order] = params[:order]
-        @posts = Post.includes(:user, :admin).sort_filter(filter).page(params[:page]).per(30)
-      end
+      @posts = Post.filtered_posts(filter_params, params[:page], 30)
     end
 
     def show
@@ -71,6 +57,17 @@ module Admins
 
       def post_params
         params.require(:post).permit(:title, :body, :youtube_url)
+      end
+
+      def filter_params
+        {
+          author: params[:author],
+          body:   params[:body],
+          title:  params[:title],
+          start:  params[:start],
+          finish: params[:finish],
+          order:  params[:order] || 'DESC'
+        }
       end
 
       def prevent_url
