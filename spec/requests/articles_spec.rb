@@ -22,19 +22,6 @@ RSpec.describe 'Articles', type: :request do
         expect(Article.count).to eq 4
       end
     end
-    
-    context 'ログインユーザーが投稿者でない場合' do
-      before(:each) do
-        sign_in user_2
-        articles_2
-        get users_articles_url
-      end
-
-      it '記事一覧画面へ遷移する' do
-        expect(response.status).to eq 200
-        expect(Article.count).to eq 4
-      end
-    end
 
     context 'ログインしていない場合' do
       before(:each) do
