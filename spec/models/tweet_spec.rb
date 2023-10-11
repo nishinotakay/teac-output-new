@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Tweet, type: :model do
-  let(:user) { create(:user, name: '山田太郎', email: Faker::Internet.email, password: 'password', created_at: 2023-10-5) }
-  let!(:tweet) { create(:tweet, post: "it's a sunny day!", user: user) }
+  let(:user) { create(:user, name: '山田太郎', email: Faker::Internet.email, password: 'password', created_at: '2021-12-31') }
+  let!(:tweet) { create(:tweet, post: "it's a sunny day!", created_at: '2022-01-01 00:00:00', user: user) }
   let!(:tweet_comment) { FactoryBot.create_list(:tweet_comment, 3, content: "tweet_comment_test", user: user, tweet: tweet, recipient_id: tweet.user_id)}
   describe '#valid?' do
 
@@ -22,7 +22,7 @@ RSpec.describe Tweet, type: :model do
       end
       it 'バリデーションをパスしない' do
         expect(tweet.valid?).to eq(false)
-        expect(tweet.errors.full_messages).to eq(["Postを入力してください"])
+        expect(tweet.errors.full_messages).to eq(["投稿内容を入力してください"])
       end
     end
 
@@ -42,7 +42,7 @@ RSpec.describe Tweet, type: :model do
       end
       it 'バリデーションをパスしない' do
         expect(tweet.valid?).to eq(false)
-        expect(tweet.errors.full_messages).to eq(["Postは255文字以内で入力してください"])
+        expect(tweet.errors.full_messages).to eq(["投稿内容は255文字以内で入力してください"])
       end
     end
 
@@ -146,57 +146,120 @@ RSpec.describe Tweet, type: :model do
 
   describe '#sort_filter' do
     let(:user_1) { create(:user, name: '山下達郎', email: Faker::Internet.email, password: 'password') }
-    let(:tweet_1) { create(:tweet, post: 'シティポップ', user: user_1) }
+    let(:tweet_1) { create(:tweet, post: 'ミュージックday!', created_at: '2021-12-31 23:59:59', user: user_1) }
+    let(:tweet_2) { create(:tweet, post: 'ビデオday!', created_at: Time.zone.parse(Date.current.to_s), user: user_1) }
+    let(:tweet_3) { create(:tweet, post: '未来の日付の投稿です。', created_at: Time.zone.parse((Date.current + 1.day).to_s).beginning_of_day, user: user_1) }
+
 
     before do
       user_1
       tweet_1
+      tweet_2
+      tweet_3
     end
 
     context '絞り込み検索' do
       context '投稿者の名前を完全一致で検索する場合' do
-        let(:filter) {
-          { author: '山田太郎',
-            post: '',
-            filter_start: '',
-            filter_finish: ''
-          }
-        }
-
-        filter = {
-          author: '山田太郎',
-          order: 'DESC'
-        }
-
+        let(:filter) { { author: '山田太郎', order: 'DESC' } }
         it '完全一致で検索した投稿一覧を返す' do
-          serch_tweets = described_class.sort_filter(filter)
-          expect(serch_tweets.count).to eq(1)
+          search_tweets = described_class.sort_filter(filter)
+          expect(search_tweets.count).to eq(1)
         end
       end
 
       context '投稿者の名前を前方一致で検索する場合' do
-        let(:filter) {
-          { author: '山',
-            post: '',
-            filter_start:'',
-            filter_finish:''
-          }
-        }
-
-        filter = {
-          author: '山',
-          order: 'DESC'
-        }
+        let(:filter) { { author: '山', order: 'DESC' } }
         it '前方一致で検索した投稿一覧を返す' do
-          
-          filter = {
-            author: '山',
-            order: 'DESC'
-          }
-          serch_tweets = described_class.sort_filter(filter)
-          expect(serch_tweets.count).to eq(2)
+          search_tweets = described_class.sort_filter(filter)
+          expect(search_tweets.count).to eq(2)
         end
       end
+
+      context '投稿者の名前を中央一致で検索する場合' do
+        let(:filter) { { author: '田', order: 'DESC' } }
+        it '中央一致で検索した投稿一覧を返す' do
+          search_tweets = described_class.sort_filter(filter)
+          expect(search_tweets.count).to eq(1)
+        end
+      end
+
+      context '投稿者の名前を後方一致で検索する場合' do
+        let(:filter) { { author: '郎', order: 'DESC' } }
+        it '後方一致で検索した投稿一覧を返す' do
+          search_tweets = described_class.sort_filter(filter)
+          expect(search_tweets.count).to eq(2)
+        end
+      end
+
+      context '存在しない投稿者の名前を検索する場合' do
+        let(:filter) { { author: '存在しない', order: 'DESC' } }
+        it 'つぶやき一覧の件数が0になる' do
+          search_tweets = described_class.sort_filter(filter)
+          expect(search_tweets.count).to eq(0)
+        end
+      end
+
+      context '投稿内容を完全一致で検索する場合' do
+        let(:filter) { { post: "it's a sunny day!", order: 'DESC' } }
+        it '完全一致で検索した投稿一覧を返す' do
+          search_tweets = described_class.sort_filter(filter)
+          expect(search_tweets.count).to eq(1)
+        end
+      end
+
+      context '投稿内容を前方一致で検索する場合' do
+        let(:filter) { { post: "it's", order: 'DESC' } }
+        it '前方一致で検索した投稿一覧を返す' do
+          search_tweets = described_class.sort_filter(filter)
+          expect(search_tweets.count).to eq(1)
+        end
+      end
+
+      context '投稿内容を中央一致で検索する場合' do
+        let(:filter) { { post: 'sunny', order: 'DESC' } }
+        it '中央一致で検索した投稿一覧を返す' do
+          search_tweets = described_class.sort_filter(filter)
+          expect(search_tweets.count).to eq(1)
+        end
+      end
+
+      context '投稿内容を後方一致で検索する場合' do
+        let(:filter) { { post: 'day!', order: 'DESC' } }
+        it '後方一致で検索した投稿一覧を返す' do
+          search_tweets = described_class.sort_filter(filter)
+          expect(search_tweets.count).to eq(2)
+        end
+      end
+
+      context '存在しない投稿内容を検索する場合' do
+        let(:filter) { { post: '存在しない', order: 'DESC' } }
+        it 'つぶやき投稿一覧の件数が0になる' do
+          search_tweets = described_class.sort_filter(filter)
+          expect(search_tweets.count).to eq(0)
+        end
+      end
+      
+      context '日付範囲を指定しない場合' do
+        let(:filter) { { order: 'DESC' } }
+        it '2022年1月1日から現在までをフィルタリングすること' do
+          search_tweets = described_class.sort_filter(filter)
+          search_tweets.each do |tweet|
+            expect(tweet.created_at).to be >= Time.zone.parse('2022-01-01 00:00:00')
+            expect(tweet.created_at).to be <= Time.zone.parse(Date.current.to_s).end_of_day
+          end
+          expect(search_tweets.count).to eq(2)
+        end
+      end
+
+      context '日付範囲を指定する場合' do
+        let(:filter) { { start: '2010-01-01', finish: '2023-10-01', order: 'DESC' } }
+        it '指定した日付範囲つぶやき一覧が表示されること' do
+          
+        end
+        it '日付範囲外のつぶやきが表示されないこと' do
+        end
+      end
+
     end
   end
 end
