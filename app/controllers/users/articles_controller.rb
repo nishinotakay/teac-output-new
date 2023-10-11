@@ -3,6 +3,7 @@
 module Users
   class ArticlesController < Users::Base
     protect_from_forgery
+    before_action :check_article_owner, only: %i[edit update destroy]
     before_action :set_article, except: %i[index show new create image]
     before_action :set_dashboard, only: %i[show new create edit update destroy]
 
@@ -18,11 +19,11 @@ module Users
       }
 
       if (@paginate = filter.compact.blank?)
-        @articles = Article.order(created_at: params[:order]).page(params[:page]).per(30)
+        @articles = Article.includes(:admin, :user, :article_comments).order(created_at: params[:order]).page(params[:page]).per(30)
       else
         (@paginate = filter.compact.present?)
         filter[:order] = params[:order]
-        @articles = Article.sort_filter(filter).page(params[:page]).per(30)
+        @articles = Article.includes(:admin, :user, :article_comments).sort_filter(filter).page(params[:page]).per(30)
       end
     end
 
@@ -72,9 +73,12 @@ module Users
     end
 
     def image
-      user = User.find(params[:user_id])
-      @article = user.articles.new(params.permit(:image))
-      render json: { name: @article.image.identifier, url: @article.image.url }
+      if current_user.id == params[:user_id].to_i
+        @article = current_user.articles.new(params.permit(:image))
+        render json: { name: @article.image.identifier, url: @article.image.url }
+      else
+        render json: { error: '画像の挿入に失敗しました。' }, status: :unauthorized
+      end
     end
 
     private
@@ -86,9 +90,17 @@ module Users
     # before_action
 
     def set_article
-      @article = current_user.articles.find(params[:id])
+      @article = current_user.articles.find_by(id: params[:id])
     end
 
+    def check_article_owner
+      @article = Article.find_by(id: params[:id])
+      unless current_user.id == @article.user_id
+        flash[:danger] = '不正な操作です。'
+        redirect_to users_articles_path(page: params[:page])
+      end
+    end
+    
     def set_dashboard
       params[:dashboard] ||= 'false'
       @dashboard = !(params[:dashboard] == 'false')
