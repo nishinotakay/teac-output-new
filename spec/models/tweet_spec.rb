@@ -241,6 +241,7 @@ RSpec.describe Tweet, type: :model do
       
       context '日付範囲を指定しない場合' do
         let(:filter) { { order: 'DESC' } }
+        
         it '2022年1月1日から現在までをフィルタリングすること' do
           search_tweets = described_class.sort_filter(filter)
           search_tweets.each do |tweet|
@@ -253,9 +254,14 @@ RSpec.describe Tweet, type: :model do
 
       context '日付範囲を指定する場合' do
         let(:filter) { { start: '2010-01-01', finish: '2023-10-01', order: 'DESC' } }
-        it '指定した日付範囲つぶやき一覧が表示されること' do
-          
+        it '指定した日付範囲がフィルタリングされること' do
+          search_tweets = described_class.sort_filter(filter)
+          search_tweets.each do |tweet|
+            expect(tweet.created_at).to be >= Time.zone.parse(filter[:start])
+            expect(tweet.created_at).to be <= Time.zone.parse(filter[:finish])
+          end
         end
+
         it '日付範囲外のつぶやきが表示されないこと' do
         end
       end
