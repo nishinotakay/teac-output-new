@@ -58,8 +58,7 @@ RSpec.describe 'Articles', type: :request do
       it '記事詳細画面へ遷移する' do
         get users_article_url(article)
         expect(response.status).to eq 200
-        binding.pry
-        expect(response.body).to include user_1.name
+¥       expect(response.body).to include user_1.name
         expect(response.body).to include article.title
         expect(response.body).to include article.sub_title
         expect(response.body).to include article.content
