@@ -1,0 +1,113 @@
+<%= javascript_pack_tag "admins/dashboards_index" %>
+<button type="button" class="btn btn-success sort-modal-btn ml-5" data-bs-toggle="modal" data-bs-target="#sortFilterModal" style="display: none;">
+  並べ替え
+</button>
+<button type="button" class="btn btn-success filter-modal-btn ml-3" data-bs-toggle="modal" data-bs-target="#sortFilterModal" style="display: none;">
+  絞り込み検索
+</button>
+<% if params[:reset] %>
+  <button type="button" class="btn btn-outline-success reset-btn ml-3">リセット</button>
+<% end %>
+
+
+<span style="background: linear-gradient(transparent 98%, #0073ff 0%);">
+<% provide(:title,  "問い合わせ一覧") %></span>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <table class="table" class="table table-hover">
+        <thead>
+          <tr>
+            <th>件名</th>
+            <th>内容</th>
+            <th>作成日</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+        <% @inquiry_scope.each do |inquiry| %>
+          <tr>
+            <td><%= inquiry.subject %></td>
+            <td><%= inquiry.content %></td>
+            <td><%= inquiry.created_at.strftime('%Y/%m/%d') %></td>
+            <td>
+              <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px">︙</button>
+              <ul class="dropdown-menu">
+                <li><%= link_to '詳細', admins_inquiry_path(inquiry), class:"nav-link" %></li>
+                <li><%= link_to '非表示', admins_inquiry_path(inquiry), method: :patch, class:"nav-link", data: { confirm: '本当に非表示にしますか？' } %></li>
+              </ul>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="sortFilterModal" tabindex="-1" aria-labelledby="sortFilterModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="form-inline">
+        <h5 class="modal-title text-center flex-grow-1 mt-4" id="sortFilterModalLabel"></h5>
+        <button type="button" class="modal-close btn-close mr-3" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-right">
+        <div class="sort-modal" style="display: none;">
+          <% selects = [['五十音順', '逆順'], ['五十音順', '逆順'], ['昇順', '降順']] %>
+          <% order = {'五十音順': 'ASC', '逆順': 'DESC', '昇順 ': 'ASC', '降順': 'DESC'}.with_indifferent_access %>
+          <% {'subject': selects[0], 'content': selects[1], 'created_at': selects[2]}.each do |k, v| %>
+            <div class="form-group row my-5">
+              <label for="sort-<%= k %>" class="col-sm-4 col-form-label" ><%= Inquiry.human_attribute_name(k) %></label>
+              <div class="col-md-8">
+                <select id="sort-<%= k %>" class="form-select" aria-label="Default select none">
+                  <option value="" selected>-</option>
+                  <option value="<%= order[v[0]] %>"><%= v[0] %></option>
+                  <option value="<%= order[v[1]] %>"><%= v[1] %></option>
+                </select>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <div class="filter-modal" style="display: none;">
+          <div class="form-group row my-4">
+            <label for="input-subject" class="col-sm-4 col-form-label"><%= Inquiry.human_attribute_name(:subject) %></label>
+            <div class="col-md-8">
+              <input type="text" aria-label="subject" id="input-subject" class="form-control" value="<%= params[:flt_subject] %>">
+            </div>
+          </div>
+          <div class="form-group row my-4">
+            <label for="input-content" class="col-sm-4 col-form-label"><%= Inquiry.human_attribute_name(:content) %></label>
+            <div class="col-md-8">
+              <input type="text" aria-label="content" id="input-content" class="form-control" value="<%= params[:flt_content] %>">
+            </div>
+          </div>
+        <div class="form-group row my-4">
+          <label for="input-created_at" class="col-sm-4 col-form-label"><%= User.human_attribute_name(:created_at) %></label>
+          <div class="col-sm-8">
+            <input type="text" aria-label="created_at" id="input-created_at" class="form-control" value="<%= params[:flt_created_at] %>">
+          </div>
+        </div>
+          <div class="form-group row my-4">
+            <label for="input-hidden" class="col-sm-4 col-form-label"><%= Inquiry.human_attribute_name(:hidden) %></label>
+            <div class="col-md-8">
+            <select id="input-hidden" name="flt_hidden" class="form-control">
+              <option value=""></option>
+              <option value="1" <%= params[:flt_hidden] == '1' ? 'selected' : '' %>>表示</option>
+              <option value="2" <%= params[:flt_hidden] == '2' ? 'selected' : '' %>>非表示</option>
+              <option value="3" <%= params[:flt_hidden] == '3' ? 'selected' : '' %>>全表示</option>
+            </select>
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <button type="button" class="btn btn-primary submit-btn"></button>
+          <button type="button" class="modal-close btn btn-secondary" data-bs-dismiss="modal">戻る</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--カレンダー追加用 -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="//code.jquery.com/ui/1.12.1/i18n/jquery-ui-i18n.min.js"></script>
