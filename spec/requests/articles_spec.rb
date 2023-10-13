@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Articles', type: :request do
   let(:user_1) { build(:user, :a, confirmed_at: Date.today) }
   let(:user_2) { build(:user, :b, confirmed_at: Date.today) }
-  let(:article) { create(:article, user: user_1) }
+  let(:article_1) { create(:article, user: user_1) }
   let(:articles_1) { create_list(:article, 2, user: user_1) }
   let(:articles_2) { create_list(:article, 2, user: user_2) }
 
@@ -19,7 +19,7 @@ RSpec.describe 'Articles', type: :request do
 
       it '記事一覧画面へ遷移する' do
         expect(response.status).to eq 200
-        expect(Article.count).to eq 4
+        expect(assigns(:articles).count).to eq Article.count
       end
     end
 
@@ -43,33 +43,27 @@ RSpec.describe 'Articles', type: :request do
       end
 
       it '記事詳細画面へ遷移する' do
-        get users_article_url(article)
+        get users_article_url(article_1)
         expect(response.status).to eq 200
-        expect(response.body).to include user_1.name
-        expect(response.body).to include article.title
-        expect(response.body).to include article.sub_title
-        expect(response.body).to include article.content
+        expect(assigns(:article)).to eq article_1
       end
     end
 
     context 'ログインユーザーが投稿者ではない場合' do
       before(:each) do
         sign_in user_2
-        get users_article_url(article)
+        get users_article_url(article_1)
       end
 
       it '記事詳細画面へ遷移する' do
         expect(response.status).to eq 200
-        expect(response.body).to include user_1.name
-        expect(response.body).to include article.title
-        expect(response.body).to include article.sub_title
-        expect(response.body).to include article.content
+        expect(assigns(:article)).to eq article_1
       end
     end
 
     context 'ログインしていない場合' do
       before(:each) do
-        get users_article_url(article)
+        get users_article_url(article_1)
       end
 
       it 'ログイン画面へリダイレクトする' do
@@ -110,12 +104,13 @@ RSpec.describe 'Articles', type: :request do
     context 'ログインユーザーが投稿者である場合' do
       before(:each) do
         sign_in user_1
-        get edit_users_article_url(article)
+        get edit_users_article_url(article_1)
       end
 
       it '記事編集画面へ遷移する' do
         expect(response.status).to eq 200
-        expect(response.body).to include article.title, article.sub_title, article.content
+        expect(assigns(:article)).to eq article_1
+        expect(response.body).to include article_1.title, article_1.sub_title, article_1.content
         expect(response.body).to include 'input', 'title-form', 'subtitle-form', 'textarea', 'markdown-editor', 'preview-side'
       end
     end
@@ -123,7 +118,7 @@ RSpec.describe 'Articles', type: :request do
     context 'ログインユーザーが投稿者でない場合' do
       before(:each) do
         sign_in user_2
-        get edit_users_article_url(article)
+        get edit_users_article_url(article_1)
       end
 
       it '記事一覧画面へリダイレクトする' do
@@ -135,7 +130,7 @@ RSpec.describe 'Articles', type: :request do
 
     context 'ログインしていない場合' do
       before(:each) do
-        get edit_users_article_url(article)
+        get edit_users_article_url(article_1)
       end
 
       it 'ログイン画面へリダイレクトする' do
@@ -156,6 +151,7 @@ RSpec.describe 'Articles', type: :request do
         expect { post users_articles_url params: params }.to change(Article, :count).by(1)
         expect(response.status).to eq 302
         expect(flash[:notice]).to eq '記事を作成しました。'
+        expect(assigns(:article)).to eq Article.last
         expect(response).to redirect_to users_article_url(user_1.articles.last, dashboard: false)
       end
     end
@@ -172,10 +168,10 @@ RSpec.describe 'Articles', type: :request do
 
     context 'SQL文を入力した場合' do
       it '記事投稿が成功し、クエリが実行されないこと' do
-        post users_articles_url, params: { article: { title: 'a', sub_title: 'b', content: 'c', user_id: user_1.id } }
-        params[:article][:content] = 'DELETE FROM articles;'
-        expect { post users_articles_url params: params }.to change(Article, :count).by(1)
-        expect(Article.first.title).to eq 'a'
+        post users_articles_url, params: { article: { title: 'a', sub_title: 'b', content: 'c', user_id: user_1.id } } # 1件目を生成
+        params[:article][:content] = 'DELETE FROM articles;' # 2件目の記事生成で、本文に全ての記事を削除するsqlを記述
+        post users_articles_url params: params
+        expect(Article.first.title).to eq 'a' # 1件目の記事が削除されていない
         expect(response.status).to eq 302
       end
     end
@@ -215,13 +211,16 @@ RSpec.describe 'Articles', type: :request do
       context '編集内容が適切な場合' do
         before(:each) do
           params = { article: { title: 'a', sub_title: 'b', content: 'c' } }
-          patch users_article_url(article, params: params)
-          article.reload
+          patch users_article_url(article_1, params: params)
+          article_1.reload
         end
 
         it '記事を編集できる' do
           expect(response.status).to eq 302
           expect(flash[:notice]).to eq '記事を編集しました。'
+          expect(article_1.title).to eq 'a'
+          expect(article_1.sub_title).to eq 'b'
+          expect(article_1.content).to eq 'c'
           expect(response).to redirect_to users_article_url(Article.last, dashboard: false)
         end
       end
@@ -229,12 +228,13 @@ RSpec.describe 'Articles', type: :request do
       context '編集内容が不適切な場合' do
         before(:each) do
           params = { article: { title: nil, sub_title: 'b', content: 'c' } }
-          patch users_article_url(article, params: params)
+          patch users_article_url(article_1, params: params)
           article.reload
         end
 
         it '記事を編集できない' do
           expect(response.status).to eq 200
+          expect(article_1.title).to_not eq nil
           expect(flash[:alert]).to eq '記事の編集に失敗しました。'
         end
       end
@@ -245,11 +245,14 @@ RSpec.describe 'Articles', type: :request do
         sign_in user_2
         params = { article: { title: 'a', sub_title: 'b', content: 'c' } }
         patch users_article_url(article, params: params)
-        article.reload
+        article_1.reload
       end
 
       it '記事一覧画面へリダイレクトする' do
         expect(response.status).to eq 302
+        expect(article_1.title).to_not eq 'a'
+        expect(article_1.sub_title).to_not eq 'b'
+        expect(article_1.content).to_not eq 'c'
         expect(response).to redirect_to users_articles_url
         expect(flash[:danger]).to eq '不正な操作です。'
       end
@@ -271,23 +274,23 @@ RSpec.describe 'Articles', type: :request do
   end
 
   describe 'DELETE /destroy' do
-    let(:article) { create(:article, user: user_1) }
+    let(:article_1) { create(:article, user: user_1) }
 
     before(:each) do
       sign_in user_1
-      article
+      article_1
     end
 
     context 'ログインユーザーが投稿者である場合' do
       it '記事の削除ができ、投稿した記事一覧画面へ遷移する' do
-        expect { delete users_article_url(article, dashboard: true) }.to change(Article, :count).by(-1)
+        expect { delete users_article_url(article_1, dashboard: true) }.to change(Article, :count).by(-1)
         expect(response.status).to eq 302
         expect(flash[:notice]).to eq '記事を削除しました。'
         expect(response).to redirect_to users_dash_boards_url(user_1)
       end
 
       it '記事の削除ができ、記事一覧画面へ遷移する' do
-        expect { delete users_article_url(article, dashboard: false) }.to change(Article, :count).by(-1)
+        expect { delete users_article_url(article_1, dashboard: false) }.to change(Article, :count).by(-1)
         expect(response.status).to eq 302
         expect(flash[:notice]).to eq '記事を削除しました。'
         expect(response).to redirect_to users_articles_url
@@ -300,7 +303,7 @@ RSpec.describe 'Articles', type: :request do
       end
 
       it '削除されず、記事一覧画面へリダイレクトする' do
-        expect { delete users_article_url(article) }.not_to change(Article, :count)
+        expect { delete users_article_url(article_1) }.not_to change(Article, :count)
         expect(response.status).to eq 302
         expect(response).to redirect_to users_articles_url
         expect(flash[:danger]).to eq '不正な操作です。'
@@ -313,7 +316,7 @@ RSpec.describe 'Articles', type: :request do
       end
 
       it 'ログイン画面へリダイレクトする' do
-        expect { delete users_article_url(article) }.not_to change(Article, :count)
+        expect { delete users_article_url(article_1) }.not_to change(Article, :count)
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
         expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
