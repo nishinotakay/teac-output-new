@@ -12,8 +12,4 @@ module ApplicationHelper
     linked_str = Rinku.auto_link(sanitized_str, :all, 'target="_blank"')
     linked_str.html_safe
   end
-
-  def user_image
-    @current_user_profile&.image ? @current_user_profile.image : "user_default.png"
-  end
 end

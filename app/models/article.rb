@@ -13,27 +13,6 @@ class Article < ApplicationRecord
   validates :sub_title, allow_nil: true, length: { maximum: 50 }
   validates :content, presence: true
 
-  def self.paginated_and_filtered(params)
-    params[:order] ||= 'DESC'
-      filter = {
-        author:   params[:author],
-        title:    params[:title],
-        subtitle: params[:subtitle],
-        content:  params[:content],
-        start:    params[:start],
-        finish:   params[:finish]
-      }
-    query = self.includes(:admin, :user, :article_comments)
-
-    if filter.compact.present?
-      filter[:order] = params[:order]
-      query = query.sort_filter(filter)
-    else
-      query = query.order(created_at: params[:order])
-    end
-    query.page(params[:page]).per(30)
-  end
-
   def self.sort_filter(filter)
     start = Time.zone.parse(filter[:start].presence || '2022-01-01').beginning_of_day
     finish = Time.zone.parse(filter[:finish].presence || Date.current.to_s).end_of_day
