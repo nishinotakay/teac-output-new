@@ -23,15 +23,15 @@ class Article < ApplicationRecord
         start:    params[:start],
         finish:   params[:finish]
       }
-    query = self.includes(:admin, :user, :article_comments)
+    articles = self.includes(:admin, :user, :article_comments)
 
     if filter.compact.present?
       filter[:order] = params[:order]
-      query = query.sort_filter(filter)
+      articles = articles.sort_filter(filter)
     else
-      query = query.order(created_at: params[:order])
+      articles = articles.order(created_at: params[:order])
     end
-    query.page(params[:page]).per(30)
+    articles.page(params[:page]).per(30)
   end
 
   def self.sort_filter(filter)
