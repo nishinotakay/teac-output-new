@@ -8,18 +8,26 @@ class Post < ApplicationRecord
   validates :body, presence: true, length: { maximum: 240 }
   validates :youtube_url, presence: true
 
-  def self.filtered_posts(filter_params, page = 1, per_page = 30)
-    order = filter_params[:order] || 'DESC'
+  def self.filtered_and_ordered_posts(params, page, per_page)
+    params[:order] ||= 'DESC'
+    filter = {
+      author: params[:author],
+      body:   params[:body],
+      title:  params[:title],
+      start:  params[:start],
+      finish: params[:finish],
+      order:  params[:order]
+    }
     posts = self.includes(:user, :admin)
 
-    if filter_params.except(:order).present?
-      posts = posts.sort_filter(filter_params.except(:order))
+    if params.present?
+      posts = posts.apply_filters(params)
     end
 
-    posts.order(created_at: order).page(page).per(per_page)
+    posts.order(created_at: 'DESC').page(page).per(per_page)
   end
 
-  def self.sort_filter(filter)
+  def self.apply_filters(filter)
     start = Time.zone.parse(filter[:start].presence || '2022-01-01').beginning_of_day
     finish = Time.zone.parse(filter[:finish].presence || Date.current.to_s).end_of_day
 

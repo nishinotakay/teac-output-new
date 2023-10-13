@@ -5,8 +5,7 @@ module Users
     before_action :prevent_url, only: %i[edit update destroy]
 
     def index
-      params[:order] || 'DESC'
-      @posts = Post.filtered_posts(filter_params)
+      @posts = Post.filtered_and_ordered_posts(params, params[:page], 30)
     end
 
     def show; end
@@ -58,16 +57,16 @@ module Users
         params.require(:post).permit(:title, :body, :youtube_url)
       end
 
-      def filter_params
-        {
-          author: params[:author],
-          body:   params[:body],
-          title:  params[:title],
-          start:  params[:start],
-          finish: params[:finish],
-          order:  params[:order]
-        }
-      end
+      # def filter_params
+      #   {
+      #     author: params[:author],
+      #     body:   params[:body],
+      #     title:  params[:title],
+      #     start:  params[:start],
+      #     finish: params[:finish],
+      #     order:  params[:order]
+      #   }
+      # end
 
       def prevent_url
         @post = current_user.posts.find(params[:id])

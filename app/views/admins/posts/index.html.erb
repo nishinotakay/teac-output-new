@@ -1,6 +1,9 @@
 <%= javascript_pack_tag "users/post", "users/index_articles_and_dashboards" %>
 <% provide(:title,  "動画投稿一覧") %>
 <%= form_tag(admins_posts_path, :method => "get") do %>
+  <button type="button" class="btn btn-success sort-modal-btn ml-5" data-bs-toggle="modal" data-bs-target="#sortFilterModal" style="display: none;">
+    並べ替え
+  </button>
   <button type="button" class="btn btn-success filter-modal-btn ml-3" data-bs-toggle="modal" data-bs-target="#sortFilterModal" style="display: none;">
     絞り込み検索
   </button>
