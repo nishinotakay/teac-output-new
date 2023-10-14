@@ -1,9 +1,6 @@
 class Inquiry < ApplicationRecord
   belongs_to :user
 
-  validates :subject, presence: true, length: { maximum: 30 }
-  validates :content, presence: true, length: { maximum: 800 }
-
   def self.get_sort_and_filter_params(params)
 
     order = {
@@ -13,8 +10,6 @@ class Inquiry < ApplicationRecord
     }.compact
     filter = {
       user_name: params[:flt_user_name],
-      subject: params[:flt_subject],
-      content: params[:flt_content],
       hidden: params[:flt_hidden],
       start: params[:flt_start],
       finish: params[:flt_finish]
@@ -36,25 +31,20 @@ class Inquiry < ApplicationRecord
     end
     [inquiries, hidden, both]
   end
+
+  def self.apply_sort(inquiry_scope, sort_and_filter_params)
+    inquiry_scope = inquiry_scope.order(sort_and_filter_params[:order])
+    return inquiry_scope
+  end
   
-  def self.apply_sort_and_filter(inquiry_scope, sort_and_filter_params)
+  def self.apply_filter(inquiry_scope, sort_and_filter_params)
     inquiry_scope = inquiry_scope.order(sort_and_filter_params[:order])
     if sort_and_filter_params[:filter][:user_name].present?
       inquiry_scope = inquiry_scope.joins(:user).where("users.name LIKE ?", "%#{sort_and_filter_params[:filter][:user_name]}%")
     end
-    if sort_and_filter_params[:filter][:subject].present?
-      inquiry_scope = inquiry_scope.where("subject LIKE ?", "%#{sort_and_filter_params[:filter][:subject]}%")
-    end
-    if sort_and_filter_params[:filter][:content].present?
-      inquiry_scope = inquiry_scope.where("content LIKE ?", "%#{sort_and_filter_params[:filter][:content]}%")
-    end
-
     if sort_and_filter_params[:filter][:start].present? || sort_and_filter_params[:filter][:finish].present?
-      start = Time.zone.parse(sort_and_filter_params[:filter][:start].presence || '2022-01-01').beginning_of_day
-      finish = Time.zone.parse(sort_and_filter_params[:filter][:finish].presence || Date.current.to_s).end_of_day
-      inquiry_scope = inquiry_scope.where('created_at BETWEEN ? AND ?', start, finish)
-    end
-
-    inquiry_scope
+      inquiry_scope = inquiry_scope.where('created_at BETWEEN ? AND ?', sort_and_filter_params[:filter][:start], sort_and_filter_params[:filter][:finish])
+    end  
+    return inquiry_scope
   end
 end
