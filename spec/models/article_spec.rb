@@ -245,7 +245,7 @@ RSpec.describe Article, type: :model do
     end
 
     context '1ページ目の場合' do
-      it '最初の30件の記事が取得される' do
+      it '30件の記事が取得される' do
         params = { order: 'DESC', page: 1 }
         articles = described_class.all
         expect(articles.paginated_and_filtered(params).count).to eq 30
@@ -253,7 +253,7 @@ RSpec.describe Article, type: :model do
     end
 
     context '２ページ目の場合' do
-      it '残りの20件の記事が取得される' do
+      it '20件の記事が取得される' do
         params = { order: 'DESC', page: 2 }
         articles = described_class.all
         expect(articles.paginated_and_filtered(params).count).to eq 20
