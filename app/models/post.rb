@@ -36,7 +36,7 @@ class Post < ApplicationRecord
               "%#{filter[:title]}%", "%#{filter[:body]}%"])
       .where('posts.created_at BETWEEN ? AND ?', start, finish)
       .where('users.name LIKE :author OR admins.name LIKE :author', author: "%#{filter[:author]}%")
-      .order(Arel.sql("posts.created_at #{filter[:order]}"))
+      .order("posts.created_at #{filter[:order]}")
       .presence || Post.none
   end 
 end
