@@ -23,7 +23,6 @@ module Users
       if @post.save
         redirect_to users_post_path(@post), flash: { success: '動画投稿完了致しました' }
       else
-        flash.now[:danger] = '動画投稿出来ませんでした。'
         render :new
       end
     end
@@ -34,7 +33,6 @@ module Users
       if @post.update(post_params)
         redirect_to users_posts_path(@post), flash: { success: '動画編集完了致しました' }
       else
-        flash.now[:danger] = '動画編集出来ませんでした。'
         render :edit
       end
     end
@@ -56,17 +54,6 @@ module Users
       def post_params
         params.require(:post).permit(:title, :body, :youtube_url)
       end
-
-      # def filter_params
-      #   {
-      #     author: params[:author],
-      #     body:   params[:body],
-      #     title:  params[:title],
-      #     start:  params[:start],
-      #     finish: params[:finish],
-      #     order:  params[:order]
-      #   }
-      # end
 
       def prevent_url
         @post = current_user.posts.find(params[:id])
