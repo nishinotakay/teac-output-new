@@ -23,15 +23,10 @@ class Article < ApplicationRecord
         start:    params[:start],
         finish:   params[:finish]
       }
-    articles = self.includes(:admin, :user, :article_comments)
-
-    if filter.compact.present?
-      filter[:order] = params[:order]
-      articles = articles.sort_filter(filter)
-    else
-      articles = articles.order(created_at: params[:order])
-    end
-    articles.page(params[:page]).per(30)
+      articles = self.includes(:admin, :user, :article_comments)
+                              .sort_filter(filter)
+                              .order(created_at: params[:order])
+                              .page(params[:page]).per(30)
   end
 
   def self.sort_filter(filter)
@@ -43,7 +38,6 @@ class Article < ApplicationRecord
               "%#{filter[:title]}%", "%#{filter[:subtitle]}%", "%#{filter[:content]}%"])
       .where('articles.created_at BETWEEN ? AND ?', start, finish)
       .where('users.name LIKE :author OR admins.name LIKE :author', author: "%#{filter[:author]}%")
-      .order("articles.created_at #{filter[:order]}")
       .presence || Article.none
   end
 
