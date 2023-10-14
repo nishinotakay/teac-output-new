@@ -23,9 +23,8 @@ module Admins
       url = params[:post][:youtube_url].last(11)
       @post.youtube_url = url
       if @post.save
-        redirect_to admins_post_path(@post), flash: { success: '動画投稿完了致しました' }
+        redirect_to admins_post_path(@post), flash: { success: '動画を投稿しました' }
       else
-        flash.now[:danger] = '動画投稿出来ませんでした。'
         render :new
       end
     end
@@ -34,9 +33,8 @@ module Admins
       url = params[:post][:youtube_url].last(11)
       @post.youtube_url = url
       if @post.update(post_params)
-        redirect_to admins_posts_path(@post), flash: { success: '動画編集完了致しました' }
+        redirect_to admins_posts_path(@post), flash: { success: '動画情報を更新しました' }
       else
-        flash.now[:danger] = '動画編集出来ませんでした。'
         render :edit
       end
     end
