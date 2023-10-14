@@ -239,7 +239,7 @@ RSpec.describe Article, type: :model do
     it_behaves_like '記事投稿'
   end
 
-  describe 'ページネーション' do
+  describe 'paginated_and_filtered メソッド' do
     before(:each) do
       many_articles
     end
