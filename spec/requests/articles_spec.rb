@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Articles', type: :request do
-  let(:user_1) { build(:user, :a, confirmed_at: Date.today) }
-  let(:user_2) { build(:user, :b, confirmed_at: Date.today) }
+  let(:user_1) { build(:user, :a, confirmed_at: '2020-01-01') }
+  let(:user_2) { build(:user, :b, confirmed_at: '2020-01-01') }
   let(:article_1) { create(:article, user: user_1) }
   let(:articles_1) { create_list(:article, 2, user: user_1) }
   let(:articles_2) { create_list(:article, 2, user: user_2) }
