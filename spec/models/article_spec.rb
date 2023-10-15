@@ -4,11 +4,20 @@ require 'rails_helper'
 
 RSpec.describe Article, type: :model do
   let(:user) { create(:user) }
-  let(:user_article) { create(:article, title: "タイトル", sub_title: "サブタイトル", content: "本文", user: user) }
+  let(:user_article) { create(:article, title: 'タイトル', sub_title: 'サブタイトル', content: '本文', user: user) }
   let(:admin) { create(:admin) }
-  let(:admin_article) { create(:article, title: "タイトル", sub_title: "サブタイトル", content: "本文", admin: admin) }
-  let(:many_articles) { create_list(:article, 50, title: "タイトル", sub_title: "サブタイトル", content: "本文", user: user) }
-    
+  let(:admin_article) { create(:article, title: 'タイトル', sub_title: 'サブタイトル', content: '本文', admin: admin) }
+  let(:many_articles) do
+    35.times do |i|
+      create(:article,
+        title:      'タイトル',
+        sub_title:  'サブタイトル',
+        content:    '本文',
+        created_at: "2022-01-#{i + 1}",
+        user:       user)
+    end
+  end
+
   RSpec.shared_examples '記事投稿' do # 各テストの内容は spec/support/concerns/common_module.rb へ
     it_behaves_like '正常な記事投稿'
     it_behaves_like 'タイトル'
@@ -30,12 +39,11 @@ RSpec.describe Article, type: :model do
   end
 
   describe 'paginated_and_filtered メソッド' do
-
     describe '条件検索' do
       before(:each) do # 各itの前に１件の記事データを生成する
         user_article
       end
-  
+
       context '条件を満たすデータが存在する場合' do
         it 'タイトルで部分一致する記事を返す' do
           filter = {
@@ -45,17 +53,16 @@ RSpec.describe Article, type: :model do
           articles = described_class.sort_filter(filter)
           expect(articles.count).to eq(1)
         end
-  
+
         it 'サブタイトルで部分一致する記事を返す' do
           filter = {
             subtitle: 'サブタイトル',
             order:    'desc'
           }
           articles = described_class.sort_filter(filter)
-          binding.pry
           expect(articles.count).to eq(1)
         end
-  
+
         it '本文で部分一致する記事を返す' do
           filter = {
             content: '本文',
@@ -64,7 +71,7 @@ RSpec.describe Article, type: :model do
           articles = described_class.sort_filter(filter)
           expect(articles.count).to eq(1)
         end
-  
+
         it '投稿者で部分一致する記事を返す' do
           filter = {
             author: '山田太郎',
@@ -73,7 +80,7 @@ RSpec.describe Article, type: :model do
           articles = described_class.sort_filter(filter)
           expect(articles.count).to eq(1)
         end
-  
+
         it '指定日付範囲内の記事を返す' do
           filter = {
             start:  Date.current.to_s,
@@ -83,7 +90,7 @@ RSpec.describe Article, type: :model do
           articles = described_class.sort_filter(filter)
           expect(articles.count).to eq(1)
         end
-  
+
         it '指定開始日以降の記事を返す' do # 終了日は指定なし
           filter = {
             start: Date.current.to_s,
@@ -92,7 +99,7 @@ RSpec.describe Article, type: :model do
           articles = described_class.sort_filter(filter)
           expect(articles.count).to eq(1)
         end
-  
+
         it '指定終了日までの記事を返す' do # 開始日は指定なし
           filter = {
             finish: Date.current.to_s,
@@ -101,7 +108,7 @@ RSpec.describe Article, type: :model do
           articles = described_class.sort_filter(filter)
           expect(articles.count).to eq(1)
         end
-  
+
         it '部分一致で全ての条件を満たす記事を抽出できる' do
           filter = {
             start:    "#{Date.today.year}-01-01",
@@ -116,7 +123,7 @@ RSpec.describe Article, type: :model do
           expect(articles.count).to eq(1)
         end
       end
-  
+
       context '条件を満たすデータが存在しない場合' do
         it 'タイトルが一致せず空のリストを返す' do
           filter = {
@@ -126,7 +133,7 @@ RSpec.describe Article, type: :model do
           articles = described_class.sort_filter(filter)
           expect(articles).to be_empty # be_falsy では×
         end
-  
+
         it 'サブタイトルが一致せず空のリストを返す' do
           filter = {
             subtitle: '存在しない',
@@ -135,7 +142,7 @@ RSpec.describe Article, type: :model do
           articles = described_class.sort_filter(filter)
           expect(articles).to be_empty
         end
-  
+
         it '本文が一致せず空のリストを返す' do
           filter = {
             content: '存在しない',
@@ -144,7 +151,7 @@ RSpec.describe Article, type: :model do
           articles = described_class.sort_filter(filter)
           expect(articles).to be_empty
         end
-  
+
         it '投稿者が一致せず空のリストを返す' do
           filter = {
             author: '存在しない',
@@ -153,7 +160,7 @@ RSpec.describe Article, type: :model do
           articles = described_class.sort_filter(filter)
           expect(articles).to be_empty
         end
-  
+
         it '全ての条件を満たす記事が存在せず空のリストが返る' do
           filter = {
             start:    "#{Date.today.year}-01-01",
@@ -168,7 +175,7 @@ RSpec.describe Article, type: :model do
           expect(articles).to be_empty
         end
       end
-  
+
       it '指定開始日からの記事が存在せず空のリストが返る' do
         user_article.update(created_at: Date.yesterday) # 記事を前日投稿に修正
         filter = {
@@ -178,7 +185,7 @@ RSpec.describe Article, type: :model do
         articles = described_class.sort_filter(filter)
         expect(articles).to be_empty
       end
-  
+
       it '指定終了日までの記事が存在せず空のリストが返る' do
         filter = {
           finish: Date.yesterday.to_s, # 終了日を前日に指定
@@ -187,7 +194,7 @@ RSpec.describe Article, type: :model do
         articles = described_class.sort_filter(filter)
         expect(articles).to be_empty
       end
-  
+
       context '全てのフォームが未入力の場合' do
         it '全ての記事が抽出される' do
           filter = { title: '', sub_title: '', content: '', order: 'desc' }
@@ -196,13 +203,13 @@ RSpec.describe Article, type: :model do
         end
       end
     end
-  
+
     describe '複数記事の条件検索' do
       before(:each) do
         user_article
         admin_article # ユーザーと管理者の投稿記事を生成　計２件
       end
-  
+
       context '条件を満たすデータが存在する場合' do
         it '条件で部分一致する全ての記事を返す' do
           filter = {
@@ -217,28 +224,22 @@ RSpec.describe Article, type: :model do
 
     describe '並び替え機能' do
       before(:each) do
-        30.times do |i|
-          Article.create(title: "タイトル",
-                         sub_title: "サブタイトル",
-                         content: "本文",
-                         created_at: "2022-01-#{i + 1}",
-                         user: user)
-        end
+        many_articles
       end
-  
+
       context '古い順を押下した場合' do
         it '昇順で記事を返す' do
           params = { order: 'ASC', page: 1 }
-          articles = Article.paginated_and_filtered(params)
-          expect(articles.map(&:created_at)).to eq articles.map(&:created_at).sort # map → pluckメソッドも使用可
+          articles = described_class.paginated_and_filtered(params)
+          expect(articles).to eq articles.sort
         end
       end
-  
+
       context '新しい順を押下した場合' do
-        it '昇順で記事を返す' do
+        it '降順で記事を返す' do
           params = { order: 'DESC', page: 1 }
-          articles = Article.paginated_and_filtered(params)
-          expect(articles.map(&:created_at)).to eq articles.map(&:created_at).sort.reverse # created_at が昇順を期待
+          articles = described_class.paginated_and_filtered(params)
+          expect(articles).to eq articles.sort.reverse # created_at が降順を期待
         end
       end
     end
@@ -247,25 +248,49 @@ RSpec.describe Article, type: :model do
       before(:each) do
         many_articles
       end
-  
-      context '1ページ目の場合' do
-        it '30件の記事が取得される' do
-          params = { order: 'DESC', page: 1 }
-          articles = described_class.all
-          expect(articles.paginated_and_filtered(params).count).to eq 30
+
+      context '並び替え指定なし（デフォルト）' do
+        context '1ページ目' do
+          it '30件の記事が降順で取得される' do
+            params = { order: nil, page: 1 }
+            articles = described_class.paginated_and_filtered(params)
+            expect(articles.count).to eq 30
+            expect(articles).to eq articles.sort.reverse
+          end
+        end
+
+        context '２ページ目' do
+          it '5件の記事が降順で取得される' do
+            params = { order: nil, page: 2 }
+            articles = described_class.paginated_and_filtered(params)
+            expect(articles.count).to eq 5
+            expect(articles).to eq articles.sort.reverse
+          end
         end
       end
-  
-      context '２ページ目の場合' do
-        it '20件の記事が取得される' do
-          params = { order: 'DESC', page: 2 }
-          articles = described_class.all
-          expect(articles.paginated_and_filtered(params).count).to eq 20
+
+      context '並び替えが古い順を選択' do
+        context '1ページ目' do
+          it '30件の記事が昇順で取得される' do
+            params = { order: 'ASC', page: 1 }
+            articles = described_class.paginated_and_filtered(params)
+            expect(articles.count).to eq 30
+            expect(articles).to eq articles.sort
+          end
+        end
+
+        context '２ページ目' do
+          it '5件の記事が昇順で取得される' do
+            params = { order: 'ASC', page: 2 }
+            articles = described_class.paginated_and_filtered(params)
+            expect(articles.count).to eq 5
+            expect(articles).to eq articles.sort
+          end
         end
       end
     end
   end
-    
+
   describe 'sanitized_contentメソッド' do # 以下はDBとのやり取り不要のため build で実装
     let(:article) { build(:article, content: '<script>タグを</script><iframe>取り除く</iframe>') }
 
