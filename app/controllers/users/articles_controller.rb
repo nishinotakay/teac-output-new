@@ -21,7 +21,7 @@ module Users
       }
   
       # filterを元に記事一覧を取得する
-      @articles = Article.paginated_and_sort_filter(filter)#.order(created_at: params[:order]).page(params[:page]).per(30)
+      @articles = Article.paginated_and_sort_filter(filter).page(params[:page])
     end
 
     def show
