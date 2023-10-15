@@ -38,7 +38,7 @@ RSpec.describe Article, type: :model do
     it_behaves_like '記事投稿'
   end
 
-  describe 'paginated_and_filtered メソッド' do
+  describe 'paginated_and_sort_filter メソッド' do
     describe '条件検索' do
       before(:each) do # 各itの前に１件の記事データを生成する
         user_article
@@ -50,7 +50,7 @@ RSpec.describe Article, type: :model do
             title: 'タイトル',
             order: 'desc'
           }
-          articles = described_class.sort_filter(filter)
+          articles = described_class.paginated_and_sort_filter(filter)
           expect(articles.count).to eq(1)
         end
 
@@ -59,7 +59,7 @@ RSpec.describe Article, type: :model do
             subtitle: 'サブタイトル',
             order:    'desc'
           }
-          articles = described_class.sort_filter(filter)
+          articles = described_class.paginated_and_sort_filter(filter)
           expect(articles.count).to eq(1)
         end
 
@@ -68,7 +68,7 @@ RSpec.describe Article, type: :model do
             content: '本文',
             order:   'desc'
           }
-          articles = described_class.sort_filter(filter)
+          articles = described_class.paginated_and_sort_filter(filter)
           expect(articles.count).to eq(1)
         end
 
@@ -77,7 +77,7 @@ RSpec.describe Article, type: :model do
             author: '山田太郎',
             order:  'desc'
           }
-          articles = described_class.sort_filter(filter)
+          articles = described_class.paginated_and_sort_filter(filter)
           expect(articles.count).to eq(1)
         end
 
@@ -87,7 +87,7 @@ RSpec.describe Article, type: :model do
             finish: Date.current.to_s,
             order:  'desc'
           }
-          articles = described_class.sort_filter(filter)
+          articles = described_class.paginated_and_sort_filter(filter)
           expect(articles.count).to eq(1)
         end
 
@@ -96,7 +96,7 @@ RSpec.describe Article, type: :model do
             start: Date.current.to_s,
             order: 'desc'
           }
-          articles = described_class.sort_filter(filter)
+          articles = described_class.paginated_and_sort_filter(filter)
           expect(articles.count).to eq(1)
         end
 
@@ -105,7 +105,7 @@ RSpec.describe Article, type: :model do
             finish: Date.current.to_s,
             order:  'desc'
           }
-          articles = described_class.sort_filter(filter)
+          articles = described_class.paginated_and_sort_filter(filter)
           expect(articles.count).to eq(1)
         end
 
@@ -119,7 +119,7 @@ RSpec.describe Article, type: :model do
             author:   '山田太郎',
             order:    'desc'
           }
-          articles = described_class.sort_filter(filter)
+          articles = described_class.paginated_and_sort_filter(filter)
           expect(articles.count).to eq(1)
         end
       end
@@ -130,7 +130,7 @@ RSpec.describe Article, type: :model do
             title: '存在しない',
             order: 'desc'
           }
-          articles = described_class.sort_filter(filter)
+          articles = described_class.paginated_and_sort_filter(filter)
           expect(articles).to be_empty # be_falsy では×
         end
 
@@ -139,7 +139,7 @@ RSpec.describe Article, type: :model do
             subtitle: '存在しない',
             order:    'desc'
           }
-          articles = described_class.sort_filter(filter)
+          articles = described_class.paginated_and_sort_filter(filter)
           expect(articles).to be_empty
         end
 
@@ -148,7 +148,7 @@ RSpec.describe Article, type: :model do
             content: '存在しない',
             order:   'desc'
           }
-          articles = described_class.sort_filter(filter)
+          articles = described_class.paginated_and_sort_filter(filter)
           expect(articles).to be_empty
         end
 
@@ -157,7 +157,7 @@ RSpec.describe Article, type: :model do
             author: '存在しない',
             order:  'desc'
           }
-          articles = described_class.sort_filter(filter)
+          articles = described_class.paginated_and_sort_filter(filter)
           expect(articles).to be_empty
         end
 
@@ -171,7 +171,7 @@ RSpec.describe Article, type: :model do
             author:   '存在しない',
             order:    'desc'
           }
-          articles = described_class.sort_filter(filter)
+          articles = described_class.paginated_and_sort_filter(filter)
           expect(articles).to be_empty
         end
       end
@@ -182,7 +182,7 @@ RSpec.describe Article, type: :model do
           start: Date.current.to_s,
           order: 'desc'
         }
-        articles = described_class.sort_filter(filter)
+        articles = described_class.paginated_and_sort_filter(filter)
         expect(articles).to be_empty
       end
 
@@ -191,14 +191,14 @@ RSpec.describe Article, type: :model do
           finish: Date.yesterday.to_s, # 終了日を前日に指定
           order:  'desc'
         }
-        articles = described_class.sort_filter(filter)
+        articles = described_class.paginated_and_sort_filter(filter)
         expect(articles).to be_empty
       end
 
       context '全てのフォームが未入力の場合' do
         it '全ての記事が抽出される' do
           filter = { title: '', sub_title: '', content: '', order: 'desc' }
-          articles = described_class.sort_filter(filter)
+          articles = described_class.paginated_and_sort_filter(filter)
           expect(articles).to match_array(described_class.all) # 全ての記事抽出を確認するためallで実装
         end
       end
@@ -216,7 +216,7 @@ RSpec.describe Article, type: :model do
             title: 'タイトル',
             order: 'desc'
           }
-          articles = described_class.sort_filter(filter)
+          articles = described_class.paginated_and_sort_filter(filter)
           expect(articles.count).to eq(2)
         end
       end
@@ -229,16 +229,16 @@ RSpec.describe Article, type: :model do
 
       context '古い順を押下した場合' do
         it '昇順で記事を返す' do
-          params = { order: 'ASC', page: 1 }
-          articles = described_class.paginated_and_filtered(params)
+          filter = { order: 'ASC', page: 1 }
+          articles = described_class.paginated_and_sort_filter(filter)
           expect(articles).to eq articles.sort
         end
       end
 
       context '新しい順を押下した場合' do
         it '降順で記事を返す' do
-          params = { order: 'DESC', page: 1 }
-          articles = described_class.paginated_and_filtered(params)
+          filter = { order: 'DESC', page: 1 }
+          articles = described_class.paginated_and_sort_filter(filter)
           expect(articles).to eq articles.sort.reverse # created_at が降順を期待
         end
       end
@@ -249,31 +249,29 @@ RSpec.describe Article, type: :model do
         many_articles
       end
 
-      context '並び替え指定なし（デフォルト）' do
-        context '1ページ目' do
-          it '30件の記事が降順で取得される' do
-            params = { order: nil, page: 1 }
-            articles = described_class.paginated_and_filtered(params)
-            expect(articles.count).to eq 30
-            expect(articles).to eq articles.sort.reverse
-          end
+      context '1ページ目' do
+        it '30件の記事が降順で取得される' do
+          filter = { order: 'DESC', page: 1 }
+          articles = described_class.paginated_and_sort_filter(filter)
+          expect(articles.count).to eq 30
+          expect(articles).to eq articles.sort.reverse
         end
+      end
 
-        context '２ページ目' do
-          it '5件の記事が降順で取得される' do
-            params = { order: nil, page: 2 }
-            articles = described_class.paginated_and_filtered(params)
-            expect(articles.count).to eq 5
-            expect(articles).to eq articles.sort.reverse
-          end
+      context '２ページ目' do
+        it '5件の記事が降順で取得される' do
+          filter = { order: 'DESC', page: 2 }
+          articles = described_class.paginated_and_sort_filter(filter)
+          expect(articles.count).to eq 5
+          expect(articles).to eq articles.sort.reverse
         end
       end
 
       context '並び替えを古い順で選択' do
         context '1ページ目' do
           it '30件の記事が昇順で取得される' do
-            params = { order: 'ASC', page: 1 }
-            articles = described_class.paginated_and_filtered(params)
+            filter = { order: 'ASC', page: 1 }
+            articles = described_class.paginated_and_sort_filter(filter)
             expect(articles.count).to eq 30
             expect(articles).to eq articles.sort
           end
@@ -281,8 +279,8 @@ RSpec.describe Article, type: :model do
 
         context '２ページ目' do
           it '5件の記事が昇順で取得される' do
-            params = { order: 'ASC', page: 2 }
-            articles = described_class.paginated_and_filtered(params)
+            filter = { order: 'ASC', page: 2 }
+            articles = described_class.paginated_and_sort_filter(filter)
             expect(articles.count).to eq 5
             expect(articles).to eq articles.sort
           end
