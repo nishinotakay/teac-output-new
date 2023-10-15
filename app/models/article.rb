@@ -30,7 +30,7 @@ class Article < ApplicationRecord
   end
 
   def self.sort_filter(filter)
-    start = Time.zone.parse(filter[:start].presence || '2022-01-01').beginning_of_day
+    start = Time.zone.parse(filter[:start].presence || '2020-01-01').beginning_of_day
     finish = Time.zone.parse(filter[:finish].presence || Date.current.to_s).end_of_day
 
     left_joins(:user, :admin)
