@@ -8,7 +8,20 @@ module Users
     before_action :set_dashboard, only: %i[show new create edit update destroy]
 
     def index
-      @articles = Article.paginated_and_filtered(params)
+      params[:order] ||= 'DESC'
+      # paramsを元にfilterを作成する
+      filter = {
+        author:   params[:author],
+        title:    params[:title],
+        subtitle: params[:subtitle],
+        content:  params[:content],
+        start:    params[:start],
+        finish:   params[:finish],
+        order:    params[:order]
+      }
+  
+      # filterを元に記事一覧を取得する
+      @articles = Article.paginated_and_sort_filter(filter)#.order(created_at: params[:order]).page(params[:page]).per(30)
     end
 
     def show
