@@ -269,7 +269,7 @@ RSpec.describe Article, type: :model do
         end
       end
 
-      context '並び替えが古い順を選択' do
+      context '並び替えを古い順で選択' do
         context '1ページ目' do
           it '30件の記事が昇順で取得される' do
             params = { order: 'ASC', page: 1 }
