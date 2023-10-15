@@ -13,31 +13,19 @@ class Article < ApplicationRecord
   validates :sub_title, allow_nil: true, length: { maximum: 50 }
   validates :content, presence: true
 
-  def self.paginated_and_filtered(params)
-    params[:order] ||= 'DESC'
-      filter = {
-        author:   params[:author],
-        title:    params[:title],
-        subtitle: params[:subtitle],
-        content:  params[:content],
-        start:    params[:start],
-        finish:   params[:finish]
-      }
-      articles = self.includes(:admin, :user, :article_comments)
-                              .sort_filter(filter)
-                              .order(created_at: params[:order])
-                              .page(params[:page]).per(30)
-  end
-
-  def self.sort_filter(filter)
+  def self.paginated_and_sort_filter(filter)
+    
     start = Time.zone.parse(filter[:start].presence || '2020-01-01').beginning_of_day
     finish = Time.zone.parse(filter[:finish].presence || Date.current.to_s).end_of_day
-
+    
     left_joins(:user, :admin)
+      .includes(:admin, :user, :article_comments)
       .where(['title LIKE ? AND sub_title LIKE ? AND content LIKE ?',
               "%#{filter[:title]}%", "%#{filter[:subtitle]}%", "%#{filter[:content]}%"])
       .where('articles.created_at BETWEEN ? AND ?', start, finish)
       .where('users.name LIKE :author OR admins.name LIKE :author', author: "%#{filter[:author]}%")
+      .order(created_at: "#{filter[:order]}")
+      .page(filter[:page]).per(30)
       .presence || Article.none
   end
 
