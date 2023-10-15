@@ -248,9 +248,9 @@ RSpec.describe Article, type: :model do
       before(:each) do
         many_articles
       end
-
+    
       context '1ページ目' do
-        it '30件の記事が降順で取得される' do
+        it '30件の記事が新しい順で取得される' do
           filter = { order: 'DESC', page: 1 }
           articles = described_class.paginated_and_sort_filter(filter)
           expect(articles.count).to eq 30
@@ -259,7 +259,7 @@ RSpec.describe Article, type: :model do
       end
 
       context '２ページ目' do
-        it '5件の記事が降順で取得される' do
+        it '5件の記事が新しい順で取得される' do
           filter = { order: 'DESC', page: 2 }
           articles = described_class.paginated_and_sort_filter(filter)
           expect(articles.count).to eq 5
@@ -267,9 +267,17 @@ RSpec.describe Article, type: :model do
         end
       end
 
+      context '作成日がフィルタリングされた場合' do
+        it '作成日が新しい順で記事が取得される' do
+          filter = { order: 'DESC', page: 1, start: '2020-02-02'}
+          articles = described_class.paginated_and_sort_filter(filter)
+          expect(articles).to eq articles.sort.reverse
+        end
+      end
+
       context '並び替えを古い順で選択' do
         context '1ページ目' do
-          it '30件の記事が昇順で取得される' do
+          it '30件の記事が古い順で取得される' do
             filter = { order: 'ASC', page: 1 }
             articles = described_class.paginated_and_sort_filter(filter)
             expect(articles.count).to eq 30
@@ -278,11 +286,19 @@ RSpec.describe Article, type: :model do
         end
 
         context '２ページ目' do
-          it '5件の記事が昇順で取得される' do
+          it '5件の記事が古い順で取得される' do
             filter = { order: 'ASC', page: 2 }
             articles = described_class.paginated_and_sort_filter(filter)
             expect(articles.count).to eq 5
             expect(articles).to eq articles.sort
+          end
+        end
+
+        context '作成日がフィルタリングされた場合' do
+          it '作成日が古い順で記事が取得される' do
+            filter = { order: 'DESC', page: 1, start: '2020-02-02'}
+            articles = described_class.paginated_and_sort_filter(filter)
+            expect(articles).to eq articles.sort.reverse
           end
         end
       end
