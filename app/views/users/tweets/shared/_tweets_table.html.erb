@@ -11,7 +11,7 @@
 <div class="content">
   <div class="container">
     <div class="row">
-      <% if @tweets.exists? %>
+      <% if @tweets.present? %>
         <% @tweets_with_images.each do |data| %>
           <div class="col-12 col-sm-8 offset-sm-2">
             <div class="card tweets-index-item">
