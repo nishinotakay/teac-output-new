@@ -17,7 +17,7 @@ RSpec.describe 'Articles', type: :request do
         get users_articles_url
       end
 
-      it '記事一覧画面へ遷移する' do
+      it '全ての記事を取得できる' do
         expect(response.status).to eq 200
         expect(assigns(:articles).count).to eq Article.count
       end
@@ -42,7 +42,7 @@ RSpec.describe 'Articles', type: :request do
         sign_in user_1
       end
 
-      it '記事詳細画面へ遷移する' do
+      it '記事詳細画面で記事を取得できる' do
         get users_article_url(article_1)
         expect(response.status).to eq 200
         expect(assigns(:article)).to eq article_1
@@ -55,7 +55,7 @@ RSpec.describe 'Articles', type: :request do
         get users_article_url(article_1)
       end
 
-      it '記事詳細画面へ遷移する' do
+      it '記事詳細画面で記事を取得できる' do
         expect(response.status).to eq 200
         expect(assigns(:article)).to eq article_1
       end
@@ -107,7 +107,7 @@ RSpec.describe 'Articles', type: :request do
         get edit_users_article_url(article_1)
       end
 
-      it '記事編集画面へ遷移する' do
+      it '記事編集画面へ遷移し、記事を取得できる' do
         expect(response.status).to eq 200
         expect(assigns(:article)).to eq article_1
         expect(response.body).to include article_1.title, article_1.sub_title, article_1.content
@@ -147,7 +147,7 @@ RSpec.describe 'Articles', type: :request do
     before(:each) { sign_in user_1 }
 
     context '記事投稿が成功した場合' do
-      it '記事が保存され、記事詳細画面へ遷移する' do
+      it '記事が保存され、記事詳細画面へリダイレクトする' do
         expect { post users_articles_url params: params }.to change(Article, :count).by(1)
         expect(response.status).to eq 302
         expect(flash[:notice]).to eq '記事を作成しました。'
@@ -157,7 +157,7 @@ RSpec.describe 'Articles', type: :request do
     end
 
     context '記事投稿が失敗した場合' do
-      it '記事は作成されず、記事投稿画面へ遷移する' do
+      it '記事は作成されず、記事投稿画面が再表示される' do
         params[:article][:title] = nil
         expect { post users_articles_url params: params }.to change(Article, :count).by(0)
         expect(response.status).to eq 200
@@ -215,7 +215,7 @@ RSpec.describe 'Articles', type: :request do
           article_1.reload
         end
 
-        it '記事を編集できる' do
+        it '記事の編集が成功し、記事詳細画面へリダイレクトする' do
           expect(response.status).to eq 302
           expect(flash[:notice]).to eq '記事を編集しました。'
           expect(article_1.title).to eq 'a'
@@ -232,10 +232,11 @@ RSpec.describe 'Articles', type: :request do
           article.reload
         end
 
-        it '記事を編集できない' do
+        it '記事の編集に失敗し、記事編集画面が再表示される' do
           expect(response.status).to eq 200
           expect(article_1.title).to_not eq nil
           expect(flash[:alert]).to eq '記事の編集に失敗しました。'
+          expect(response.body).to include 'input', 'title-form', 'subtitle-form', 'textarea', 'markdown-editor', 'preview-side'
         end
       end
     end
