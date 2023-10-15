@@ -45,16 +45,17 @@ RSpec.describe Article, type: :model do
       end
 
       context '条件を満たすデータが存在する場合' do
-        it 'タイトルで部分一致する記事を返す' do
+        it 'タイトルで一致する記事を返す' do
           filter = {
             title: 'タイトル',
             order: 'desc'
           }
           articles = described_class.paginated_and_sort_filter(filter)
           expect(articles.count).to eq(1)
+          expect(articles.first.title).to eq 'タイトル'
         end
 
-        it 'サブタイトルで部分一致する記事を返す' do
+        it 'サブタイトルで一致する記事を返す' do
           filter = {
             subtitle: 'サブタイトル',
             order:    'desc'
@@ -63,22 +64,24 @@ RSpec.describe Article, type: :model do
           expect(articles.count).to eq(1)
         end
 
-        it '本文で部分一致する記事を返す' do
+        it '本文で一致する記事を返す' do
           filter = {
             content: '本文',
             order:   'desc'
           }
           articles = described_class.paginated_and_sort_filter(filter)
           expect(articles.count).to eq(1)
+          expect(articles.first.sub_title).to eq '本文'
         end
 
-        it '投稿者で部分一致する記事を返す' do
+        it '投稿者で一致する記事を返す' do
           filter = {
             author: '山田太郎',
             order:  'desc'
           }
           articles = described_class.paginated_and_sort_filter(filter)
           expect(articles.count).to eq(1)
+          expect(articles.first.user.name).to eq '山田太郎'
         end
 
         it '指定日付範囲内の記事を返す' do
