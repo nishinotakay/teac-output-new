@@ -31,7 +31,7 @@ Rails.application.routes.draw do
     namespace :articles do
       post 'image'
     end
-    resources :profiles do
+    resources :users do
       collection do
         get 'admins_show'
         get 'users_show'
