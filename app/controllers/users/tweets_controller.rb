@@ -13,7 +13,7 @@ module Users
     end
 
     def show
-      @tweet_comments = @tweet.tweet_comments.all.order(created_at: :desc)
+      @tweet_comments = @tweet.tweet_comments.order(created_at: :desc)
       @tweet_comment = current_user.tweet_comments.new
     end
 
