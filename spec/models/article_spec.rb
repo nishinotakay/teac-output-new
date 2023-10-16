@@ -71,7 +71,7 @@ RSpec.describe Article, type: :model do
           }
           articles = described_class.paginated_and_sort_filter(filter)
           expect(articles.count).to eq(1)
-          expect(articles.first.sub_title).to eq '本文'
+          expect(articles.first.content).to eq '本文'
         end
 
         it '投稿者で一致する記事を返す' do
