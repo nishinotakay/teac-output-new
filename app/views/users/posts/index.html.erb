@@ -7,8 +7,13 @@
   <button type="button" class="btn btn-success filter-modal-btn ml-3" data-bs-toggle="modal" data-bs-target="#sortFilterModal" style="display: none;">
     絞り込み検索
   </button>
+  <% if params[:reset] %>
+    <button type="button" class="btn btn-outline-success reset-btn ml-3">リセット</button>
+  <% end %>
+
   <%= render partial: 'modal', locals: { posts: @posts, order: params[:order] } %>
 <% end %>
+
 <table class="table table-hover table-scroll">
   <thead>
     <tr>
