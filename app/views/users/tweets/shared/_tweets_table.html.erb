@@ -11,7 +11,7 @@
 <div class="content">
   <div class="container">
     <div class="row">
-      <% if @tweets.exists? %>
+      <% if @tweets.present? %>
         <% @tweets_with_images.each do |data| %>
           <div class="col-12 col-sm-8 offset-sm-2">
             <div class="card tweets-index-item">
@@ -31,7 +31,7 @@
                   <div class="dropdown">
                     <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
                     <ul class="dropdown-menu test-color">
-                      <li><%= link_to '詳細', index_user_users_tweet_path(data[:tweet].user_id), class:"dropdown-item" %></li>
+                      <li><%= link_to '詳細', users_tweet_path(data[:tweet].id), class:"dropdown-item" %></li>
                       <% if data[:tweet].user.name == current_user.name %>
                         <li><%= link_to '編集', edit_users_tweet_path(data[:tweet]), remote: true, class:"dropdown-item" %></li>
                         <li><%= link_to '削除', users_tweet_path(data[:tweet]), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
