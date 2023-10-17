@@ -6,7 +6,7 @@ $(function(){
   title.wrap('<div class="form-inline title-and-buttons">')
   var t_and_btns = $('.title-and-buttons')
   t_and_btns.parent().removeClass('col-sm-6')
-  t_and_btns.parent().addClass('col-sm-10')
+  t_and_btns.parent().addClass('col-sm-8')
   var filter = $('.filter-modal-btn')
   title.after(filter)
   $('.title-and-buttons').children().css({'display': 'inline'})

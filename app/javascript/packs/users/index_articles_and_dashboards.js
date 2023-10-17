@@ -5,7 +5,7 @@ $(function(){
   title.wrap('<div class="form-inline title-and-buttons">')
   var t_and_btns = $('.title-and-buttons')
   t_and_btns.parent().removeClass('col-sm-6')
-  t_and_btns.parent().addClass('col-sm-8')
+  t_and_btns.parent().addClass('col-sm-10')
   var reset = $('.reset-btn')
   var filter = $('.filter-modal-btn')
   var sort = $('.sort-modal-btn')
