@@ -1,5 +1,5 @@
 <% provide(:title, "ユーザー編集") %>
-<%= form_with model: @user, url: admins_profiles_path, local: true do |f| %>
+<%= form_with model: @user, url: admins_user_path(@user), local: true do |f| %>
 
   <div class="form-group">
     <%= f.label :name, "名前" %><br/>
