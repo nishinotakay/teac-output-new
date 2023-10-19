@@ -146,10 +146,12 @@ RSpec.describe Tweet, type: :model do
   describe '#sort_filter' do
     let(:user_1) { create(:user, name: '山下達郎', email: Faker::Internet.email, password: 'password') }
     let(:tweet_1) { create(:tweet, post: 'ミュージックday!', created_at: '2023-04-01', user: user_1) }
+    let(:tweet_2) { create(:tweet, post: '2021年のポスト', created_at: '2021-12-31 23:59:59', user: user_1) }
 
     before do
       user_1
       tweet_1
+      tweet_2
     end
 
     context '絞り込み検索' do
@@ -235,8 +237,6 @@ RSpec.describe Tweet, type: :model do
 
       context 'start,finishともに日付範囲を指定しない場合' do
         let(:filter) { { order: 'DESC' } }
-        let(:tweet_2) { create(:tweet, post: '2021年のポスト', created_at: '2021-12-31 23:59:59') }
-
         it '2022年1月1日から本日までをフィルタリングすること' do
           search_tweets = described_class.sort_filter(filter)
           search_tweets.each do |tweet|
@@ -248,7 +248,7 @@ RSpec.describe Tweet, type: :model do
         end
       end
 
-      context '日付範囲を指定する場合' do
+      context 'start,finishともに日付範囲を指定する場合' do
         let(:filter) { { start: '2021-12-31', finish: '2023-10-01', order: 'DESC' } }
         it '指定した日付範囲がフィルタリングされること' do
           search_tweets = described_class.sort_filter(filter)
@@ -256,7 +256,7 @@ RSpec.describe Tweet, type: :model do
             expect(tweet.created_at).to be >= Time.zone.parse(filter[:start])
             expect(tweet.created_at).to be <= Time.zone.parse(filter[:finish])
           end
-          expect(search_tweets.count).to eq(2)
+          expect(search_tweets.count).to eq(3)
         end
       end
 
