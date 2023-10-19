@@ -46,7 +46,6 @@ RSpec.describe Tweet, type: :model do
       end
     end
 
-    
     context '4つ以内の画像データをアップロードする場合' do
       before do
         4.times do |i|
@@ -59,11 +58,11 @@ RSpec.describe Tweet, type: :model do
         expect(tweet.errors).to be_empty
       end
     end
-    
+
     context '4つよりも多いの画像データをアップロードする場合' do
       before do
         5.times do |i|
-          tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', "test#{i + 1}.png"), 
+          tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', "test#{i + 1}.png"),
           filename: "test#{i + 1}.png", content_type: 'image/png'))
         end
       end
@@ -72,7 +71,7 @@ RSpec.describe Tweet, type: :model do
         expect(tweet.errors.full_messages).to eq(["Imagesは4つまでしかアップロードできません。"])
       end
     end
-    
+
     context '5MB以下の画像データをアップロードする場合' do
       before do
         tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'test_5mb.jpg'),
@@ -146,16 +145,11 @@ RSpec.describe Tweet, type: :model do
 
   describe '#sort_filter' do
     let(:user_1) { create(:user, name: '山下達郎', email: Faker::Internet.email, password: 'password') }
-    let(:tweet_1) { create(:tweet, post: 'ミュージックday!', created_at: '2021-12-31 23:59:59', user: user_1) }
-    let(:tweet_2) { create(:tweet, post: 'ビデオday!', created_at: Time.zone.parse(Date.current.to_s), user: user_1) }
-    let(:tweet_3) { create(:tweet, post: '未来の日付の投稿です。', created_at: Time.zone.parse((Date.current + 1.day).to_s).beginning_of_day, user: user_1) }
-
+    let(:tweet_1) { create(:tweet, post: 'ミュージックday!', created_at: '2023-04-01', user: user_1) }
 
     before do
       user_1
       tweet_1
-      tweet_2
-      tweet_3
     end
 
     context '絞り込み検索' do
@@ -238,33 +232,31 @@ RSpec.describe Tweet, type: :model do
           expect(search_tweets.count).to eq(0)
         end
       end
-      
-      context '日付範囲を指定しない場合' do
-        let(:filter) { { order: 'DESC' } }
 
-        it '2022年1月1日から現在までをフィルタリングすること' do
+      context 'start,finishともに日付範囲を指定しない場合' do
+        let(:filter) { { order: 'DESC' } }
+        let(:tweet_2) { create(:tweet, post: '2021年のポスト', created_at: '2021-12-31 23:59:59') }
+
+        it '2022年1月1日から本日までをフィルタリングすること' do
           search_tweets = described_class.sort_filter(filter)
           search_tweets.each do |tweet|
             expect(tweet.created_at).to be >= Time.zone.parse('2022-01-01 00:00:00')
             expect(tweet.created_at).to be <= Time.zone.parse(Date.current.to_s).end_of_day
           end
           expect(search_tweets.count).to eq(2)
+          expect(search_tweets).to_not include(tweet_2)
         end
       end
 
       context '日付範囲を指定する場合' do
-        let(:filter) { { start: '2010-01-01', finish: '2023-10-01', order: 'DESC' } }
+        let(:filter) { { start: '2021-12-31', finish: '2023-10-01', order: 'DESC' } }
         it '指定した日付範囲がフィルタリングされること' do
           search_tweets = described_class.sort_filter(filter)
           search_tweets.each do |tweet|
             expect(tweet.created_at).to be >= Time.zone.parse(filter[:start])
             expect(tweet.created_at).to be <= Time.zone.parse(filter[:finish])
           end
-        end
-
-        it '日付範囲外のつぶやきが表示されないこと' do
-          search_tweets = described_class.sort_filter(filter)
-          expect(search_tweets).to_not include(tweet_2)
+          expect(search_tweets.count).to eq(2)
         end
       end
 
