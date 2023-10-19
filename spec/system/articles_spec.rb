@@ -5,6 +5,7 @@ RSpec.describe 'Articles', type: :system do
   let(:user_b) { create(:user, :b, confirmed_at: Date.today) }
   let(:article_a) { create(:article, user: user_a) }
   let(:article_b) { create(:article, user: user_b) }
+  let(:many_articles_a) { create_list(:article, 50, user: user_a) }
 
   before do
     sign_in(user_a)
@@ -14,7 +15,7 @@ RSpec.describe 'Articles', type: :system do
   describe '記事一覧画面' do # index
     before do
       article_b
-      visit users_articles_path
+      visit users_articles_path(order: 'DESC')
     end
 
     it '現在のパスが記事一覧画面のパスである' do
@@ -58,6 +59,24 @@ RSpec.describe 'Articles', type: :system do
             expect(page).not_to have_content('編集')
             expect(page).not_to have_content('削除')
           end
+        end
+      end
+
+      context 'ページネーション' do
+        before do
+          many_articles_a
+          visit current_path
+        end
+
+        it 'ページ割で表示される' do
+          page.execute_script('window.scroll(0, 1000)') # ページ割部分まで下へスクロール
+          expect(page).to have_selector '.pagination' # 不要なテストかも
+          expect(page).to have_selector('.article-paginate') # 不要なテストかも
+          expect(page).to have_link('1', class: 'page-link')
+          expect(page).to have_link('2', class: 'page-link')
+          expect(page).to have_link('›', class: 'page-link')
+          expect(page).to have_link('»', class: 'page-link')
+          # expect(page).to have_link('...', class: 'page-link') 5ページ以上から...が表示される
         end
       end
     end
@@ -146,10 +165,12 @@ RSpec.describe 'Articles', type: :system do
         before do
           click_button '︙', match: :first #, visible: false
           click_link '閲覧'
+          #find_link('閲覧', wait: 10).click
           # sleep 1 これよりも , have_content オプションで wait: 10 が良いらしい
         end
 
         it '記事詳細画面へ遷移する' do
+          sleep 1
           expect(current_path).to eq users_article_path(article_b)
           expect(page).to have_content article_b.title # ページ遅延エラー対策
           expect(page).to have_content article_b.sub_title
