@@ -23,8 +23,8 @@ module Admins
       @user = User.find(params[:format])
       if @user.destroy
         flash[:success] = "#{@user.name}のデータを削除しました。"
-        # 一覧ページへリダイレクト
-        redirect_to users_profiles_path
+        # ユーザー 一覧ページへリダイレクト
+        redirect_to admins_users_path
       else
         render :index
       end
