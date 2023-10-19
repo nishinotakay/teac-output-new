@@ -281,9 +281,17 @@ RSpec.describe Tweet, type: :model do
           end
           expect(search_tweets).to_not include(tweet_2)
         end
-
       end
 
     end
+
+    context '並び替え' do
+      context '新しい順に並び替える場合' do
+      end
+
+      context '古い順に並び替える場合' do
+      end
+    end
+
   end
 end
