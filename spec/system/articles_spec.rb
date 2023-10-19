@@ -17,11 +17,15 @@ RSpec.describe 'Articles', type: :system do
       visit users_articles_path
     end
 
-    it '記事一覧画面に遷移できる' do
+    it '現在のパスが記事一覧画面のパスである' do
       expect(current_path).to eq users_articles_path
     end
 
     describe '表示テスト' do
+
+      it '画面の見出しに記事一覧が表示される' do
+        expect(page).to have_selector('h1', text:'記事一覧')
+      end
       
       it '全ての記事が一覧表示される' do
         # 確認すべき内容を配列でまとめて、eachで回す
@@ -227,7 +231,6 @@ RSpec.describe 'Articles', type: :system do
         expect(page).to have_link('削除')
       end
     end
-
       
     context '記事投稿画面または記事詳細画面' do # X = new || edit
       context '記事投稿画面' do # new
