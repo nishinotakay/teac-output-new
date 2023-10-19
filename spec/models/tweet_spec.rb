@@ -157,7 +157,7 @@ RSpec.describe Tweet, type: :model do
     context '絞り込み検索' do
       context '投稿者の名前を完全一致で検索する場合' do
         let(:filter) { { author: '山田太郎', order: 'DESC' } }
-        it '完全一致で検索した投稿一覧を返す' do
+        it '一致した件数を返すこと' do
           search_tweets = described_class.sort_filter(filter)
           expect(search_tweets.count).to eq(1)
         end
@@ -165,7 +165,7 @@ RSpec.describe Tweet, type: :model do
 
       context '投稿者の名前を前方一致で検索する場合' do
         let(:filter) { { author: '山', order: 'DESC' } }
-        it '前方一致で検索した投稿一覧を返す' do
+        it '一致した件数を返すこと' do
           search_tweets = described_class.sort_filter(filter)
           expect(search_tweets.count).to eq(2)
         end
@@ -173,7 +173,7 @@ RSpec.describe Tweet, type: :model do
 
       context '投稿者の名前を中央一致で検索する場合' do
         let(:filter) { { author: '田', order: 'DESC' } }
-        it '中央一致で検索した投稿一覧を返す' do
+        it '一致した件数を返すこと' do
           search_tweets = described_class.sort_filter(filter)
           expect(search_tweets.count).to eq(1)
         end
@@ -181,7 +181,7 @@ RSpec.describe Tweet, type: :model do
 
       context '投稿者の名前を後方一致で検索する場合' do
         let(:filter) { { author: '郎', order: 'DESC' } }
-        it '後方一致で検索した投稿一覧を返す' do
+        it '一致した件数を返すこと' do
           search_tweets = described_class.sort_filter(filter)
           expect(search_tweets.count).to eq(2)
         end
@@ -189,7 +189,7 @@ RSpec.describe Tweet, type: :model do
 
       context '存在しない投稿者の名前を検索する場合' do
         let(:filter) { { author: '存在しない', order: 'DESC' } }
-        it 'つぶやき一覧の件数が0になる' do
+        it 'つぶやき一覧の件数が0になること' do
           search_tweets = described_class.sort_filter(filter)
           expect(search_tweets.count).to eq(0)
         end
@@ -197,7 +197,7 @@ RSpec.describe Tweet, type: :model do
 
       context '投稿内容を完全一致で検索する場合' do
         let(:filter) { { post: "it's a sunny day!", order: 'DESC' } }
-        it '完全一致で検索した投稿一覧を返す' do
+        it '一致した件数を返すこと' do
           search_tweets = described_class.sort_filter(filter)
           expect(search_tweets.count).to eq(1)
         end
@@ -205,7 +205,7 @@ RSpec.describe Tweet, type: :model do
 
       context '投稿内容を前方一致で検索する場合' do
         let(:filter) { { post: "it's", order: 'DESC' } }
-        it '前方一致で検索した投稿一覧を返す' do
+        it '一致した件数を返すこと' do
           search_tweets = described_class.sort_filter(filter)
           expect(search_tweets.count).to eq(1)
         end
@@ -213,7 +213,7 @@ RSpec.describe Tweet, type: :model do
 
       context '投稿内容を中央一致で検索する場合' do
         let(:filter) { { post: 'sunny', order: 'DESC' } }
-        it '中央一致で検索した投稿一覧を返す' do
+        it '一致した件数を返すこと' do
           search_tweets = described_class.sort_filter(filter)
           expect(search_tweets.count).to eq(1)
         end
@@ -221,7 +221,7 @@ RSpec.describe Tweet, type: :model do
 
       context '投稿内容を後方一致で検索する場合' do
         let(:filter) { { post: 'day!', order: 'DESC' } }
-        it '後方一致で検索した投稿一覧を返す' do
+        it '一致した件数を返すこと' do
           search_tweets = described_class.sort_filter(filter)
           expect(search_tweets.count).to eq(2)
         end
