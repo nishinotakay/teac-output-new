@@ -193,6 +193,71 @@ RSpec.describe 'Articles', type: :system do
     end
   end
 
+  describe '投稿した記事一覧画面' do # dashboard
+    before do
+      visit 
+    end
+
+    it '現在のパスが記事一覧画面のパスである' do
+      expect(current_path).to eq 
+    end
+
+    describe '表示テスト' do
+      it 'ログインユーザーが投稿した全ての記事が一覧表示される' do
+        expect(page).to have_content article_a.title
+        expect(page).to have_content article_a.sub_title
+        expect(page).to have_content article_a.created_at.strftime('%Y/%m/%d %H:%M')
+      end
+    
+      describe '３点リーダー' do
+        it '閲覧・編集・削除ボタンが表示される' do
+        end
+      end
+    end
+
+    describe '遷移テスト' do
+      context '記事を押下' do
+
+        it '記事詳細画面へ遷移する' do
+        end
+
+        it '編集・削除ボタンが表示される' do
+          expect(page).to have_content('編集')
+          expect(page).to have_content('削除')
+        end
+      end
+
+      context '３点リーダー' do
+        before do
+          page.all('.btn', text: '︙')[1].click
+        end
+
+        context '閲覧ボタン押下' do
+          it '記事詳細画面へ遷移する' do
+          end
+
+          it '編集・削除ボタンが表示される' do
+          end
+        end
+        
+        context '編集ボタン押下' do
+          before do
+            click_link '編集'
+          end
+
+          it '編集ボタン押下で記事詳細画面へ遷移する' do
+          end
+        end
+      end
+    end
+
+    context '機能テスト' do
+
+      it '３点リーダーから記事の削除ができる' do
+      end
+    end
+  end
+
   describe '画面遷移のテスト' do # redirect to #X
     context '記事一覧画面と投稿した記事一覧画面' do # X = index || dashboards
       context '記事一覧画面' do # index
