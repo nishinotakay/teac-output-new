@@ -260,6 +260,30 @@ RSpec.describe Tweet, type: :model do
         end
       end
 
+      context 'startのみ日付範囲を指定する場合' do
+        let(:filter) { { start: '2022-04-01', order: 'DESC' } }
+        it '指定した日付から本日までの日付範囲がフィルタリングされること' do
+          search_tweets = described_class.sort_filter(filter)
+          search_tweets.each do |tweet|
+            expect(tweet.created_at).to be >= Time.zone.parse('2022-04-01')
+            expect(tweet.created_at).to be <= Time.zone.parse(Date.current.to_s).end_of_day
+          end
+        end
+      end
+
+      context 'finishのみ日付範囲を指定する場合' do
+        let(:filter) { { finish: '2022-04-01', order: 'DESC' } }
+        it '2022/1/1から指定された日までの日付範囲がフィルタリングされること' do
+          search_tweets = described_class.sort_filter(filter)
+          search_tweets.each do |tweet|
+          expect(tweet.created_at).to be >= Time.zone.parse('2022-01-01')
+          expect(tweet.created_at).to be <= Time.zone.parse('2022-04-01')
+          end
+          expect(search_tweets).to_not include(tweet_2)
+        end
+
+      end
+
     end
   end
 end
