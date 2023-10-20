@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Tweet, type: :model do
-  let(:user) { create(:user, name: '山田太郎', email: Faker::Internet.email, password: 'password', created_at: '2021-12-31') }
-  let!(:tweet) { create(:tweet, post: "it's a sunny day!", created_at: '2022-01-01 00:00:00', user: user) }
-  let!(:tweet_comment) { FactoryBot.create_list(:tweet_comment, 3, content: "tweet_comment_test", user: user, tweet: tweet, recipient_id: tweet.user_id)}
+
   describe '#valid?' do
+    let(:user) { create(:user, name: '山田太郎', email: Faker::Internet.email, password: 'password', created_at: '2021-12-31') }
+    let!(:tweet) { create(:tweet, post: "it's a sunny day!", created_at: '2022-01-01 00:00:00', user: user) }
 
     context '投稿フォームに1文字入力されている場合' do
       before do
@@ -128,6 +128,8 @@ RSpec.describe Tweet, type: :model do
   end
 
   describe 'association' do
+    let(:user) { create(:user, name: '山田太郎', email: Faker::Internet.email, password: 'password', created_at: '2021-12-31') }
+    let!(:tweet) { create(:tweet, post: "it's a sunny day!", created_at: '2022-01-01 00:00:00', user: user) }
     context 'つぶやきが存在する場合' do
       it 'ユーザーと関連付けられる' do
         expect(tweet.user_id).to eq(user.id)
@@ -136,6 +138,9 @@ RSpec.describe Tweet, type: :model do
   end
 
   describe '#destroy' do
+    let(:user) { create(:user, name: '山田太郎', email: Faker::Internet.email, password: 'password', created_at: '2021-12-31') }
+    let!(:tweet) { create(:tweet, post: "it's a sunny day!", created_at: '2022-01-01 00:00:00', user: user) }
+    let!(:tweet_comment) { FactoryBot.create_list(:tweet_comment, 3, content: "tweet_comment_test", user: user, tweet: tweet, recipient_id: tweet.user_id)}
     context 'つぶやきを削除する場合' do
       it '3つの関連付けられたtweet_commentsが削除される' do
         expect { tweet.destroy }.to change { TweetComment.count }.by(-3)
@@ -144,15 +149,11 @@ RSpec.describe Tweet, type: :model do
   end
 
   describe '#sort_filter' do
+    let(:user) { create(:user, name: '山田太郎', email: Faker::Internet.email, password: 'password', created_at: '2021-12-31') }
+    let!(:tweet) { create(:tweet, post: "it's a sunny day!", created_at: '2022-01-01 00:00:00', user: user) }
     let(:user_1) { create(:user, name: '山下達郎', email: Faker::Internet.email, password: 'password') }
-    let(:tweet_1) { create(:tweet, post: 'ミュージックday!', created_at: '2023-04-01', user: user_1) }
-    let(:tweet_2) { create(:tweet, post: '2021年のポスト', created_at: '2021-12-31 23:59:59', user: user_1) }
-
-    before do
-      user_1
-      tweet_1
-      tweet_2
-    end
+    let!(:tweet_1) { create(:tweet, post: 'ミュージックday!', created_at: '2023-04-01', user: user_1) }
+    let!(:tweet_2) { create(:tweet, post: '2021年のポスト', created_at: '2021-12-31 23:59:59', user: user_1) }
 
     context '絞り込み検索' do
       context '投稿者の名前を完全一致で検索する場合' do
