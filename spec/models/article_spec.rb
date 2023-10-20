@@ -298,7 +298,7 @@ RSpec.describe Article, type: :model do
         end
 
         context '作成日がフィルタリングされた場合' do
-          it '作成日が古い順で記事が取得される' do
+          it '作成日が新しい順で記事が取得される' do
             filter = { order: 'DESC', page: 1, start: '2020-02-02'}
             articles = described_class.paginated_and_sort_filter(filter)
             expect(articles).to eq articles.sort.reverse
