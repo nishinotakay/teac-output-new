@@ -48,6 +48,7 @@ gem 'rails-i18n', '~> 6.0'
 
 gem 'dotenv-rails'
 gem 'rinku'
+gem 'draper'
 
 group :development, :test do
   # ERD生成
