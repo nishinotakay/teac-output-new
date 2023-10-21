@@ -216,11 +216,12 @@ RSpec.describe 'Articles', type: :system do
 
   describe '投稿した記事一覧画面' do # dashboard
     before do
-      visit 
+      visit users_dash_boards_path
     end
 
     it '現在のパスが記事一覧画面のパスである' do
-      expect(current_path).to eq 
+      binding.pry
+      expect(current_path).to eq users_dash_boards_path
     end
 
     describe '表示テスト' do
