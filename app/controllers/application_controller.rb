@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   add_flash_types :success, :info, :warning, :danger
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_comment_notifiations
-  before_action :set_profile, if: :user_signed_in?
+  before_action :set_profile_image, if: :user_signed_in?
 
   def after_sign_in_path_for(resource)
     case resource
@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def set_profile
+  def set_profile_image
     @user_profile_image = current_user.profile ? current_user.profile.decorate.image : "user_default.png"
   end
 end
