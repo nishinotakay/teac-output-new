@@ -5,7 +5,18 @@ module Admins
     before_action :set_dashboard, only: %i[show new create edit update destroy]
 
     def index
-      @articles = Article.paginated_and_filtered(params)
+      params[:order] ||= 'DESC'
+      filter = {
+        author:   params[:author],
+        title:    params[:title],
+        subtitle: params[:subtitle],
+        content:  params[:content],
+        start:    params[:start],
+        finish:   params[:finish],
+        order:    params[:order]
+      }
+  
+      @articles = Article.paginated_and_sort_filter(filter).page(params[:page])
     end
 
     def show; end
