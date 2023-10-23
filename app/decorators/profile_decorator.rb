@@ -11,6 +11,6 @@ class ProfileDecorator < ApplicationDecorator
   #   end
 
   def image
-    object.image : "user_default.png"
+    object.image.present? ? object.image : "user_default.png"
   end
 end
