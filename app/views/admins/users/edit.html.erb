@@ -1,28 +1,23 @@
-<% provide(:title, "プロフィール編集") %>
-  <%= form_with model: @profile, url: admins_profile_path, local: true do |f| %>
-    <%#<%= render "devise/shared/error_messages", resource: resource %>
+<% provide(:title, "ユーザー編集") %>
+<%= form_with model: @user, url: admins_user_path(@user), local: true do |f| %>
 
-    <div class="form-group">
-      <%= f.label :name, "名前" %><br/>
-      <%= f.text_field :name, class: 'form-control' %>
-    </div>
+  <div class="form-group">
+    <%= f.label :name, "名前" %><br/>
+    <%= f.text_field :name, class: 'form-control' %>
+  </div>
 
-    <div class="form-group">
-      <%= f.label :learning_start, "学習開始日" %><br>
-      <%= f.date_field :learning_start, class: 'form-control' %>
-    </div>
+  <div class="form-group">
+    <%= f.label :email, "email" %><br>
+    <%= f.email_field :email, class: 'form-control' %>
+  </div>
 
-    <div class="form-group">
-      <%= f.label :purpose, "プログラミング学習の目的" %><br />
-      <%= f.text_area :purpose, class: 'form-control' %>
-    </div>
-
-    <div class="form-group">
-      <%= f.label :image, "プロフィール画像" %><br>
-      <%= f.file_field :image %>
-    </div>
-    
-      <%= f.submit "更新", class: "button is-success" %>
-  <% end %>
+  <div class="form-group">
+    <%= f.label :password, "password" %><br />
+    <%= f.password_field :password, class: 'form-control' %>
+  </div>
+  
+  <%= f.submit "更新", class: "button is-success" %>
+<% end %>
 
 <%= link_to t('devise.shared.links.back'), :back %>
+
