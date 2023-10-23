@@ -6,7 +6,7 @@ class Tweet < ApplicationRecord
   validates :post, presence: true, length: { maximum: 255 }
   validate :image_count_validation, :image_size_varidation, :image_type_validation
 
-  def self.build_filter(params)
+  def self.build_filter(params) # 渡されたパラメータからフィルタを構築
     {
       author: params[:author],
       post:   params[:post],

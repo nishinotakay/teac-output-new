@@ -290,7 +290,7 @@ RSpec.describe Tweet, type: :model do
 
       context '新しい順を押下する場合' do
         let(:filter) { { order: 'DESC' } }
-        it '投稿日時が降順で配列を返すこと' do
+        it '降順の投稿日時の配列を返すこと' do
           search_tweets = described_class.sort_filter(filter)
           expect(search_tweets.map { |tweet| tweet.created_at }).to eq [Time.zone.parse('2023-04-01'), Time.zone.parse('2022-01-01')]
         end
@@ -298,12 +298,62 @@ RSpec.describe Tweet, type: :model do
 
       context '古い順を押下する場合' do
         let(:filter) { { order: 'ASC' } }
-        it '投稿日時が降順で配列を返すこと' do
+        it '昇順の投稿日時の配列を返すこと' do
           search_tweets = described_class.sort_filter(filter)
           expect(search_tweets.map { |tweet| tweet.created_at }).to eq [Time.zone.parse('2022-01-01'), Time.zone.parse('2023-04-01')]
         end
       end
     end
 
+  end
+
+  describe '#build_filter' do
+    context '投稿日時の並び順を指定しない場合' do
+      let(:params) {
+        {
+          author: '山',
+          post:   'day',
+          start:  '2021-12-31',
+          finish: '2023-04-01',
+          order:  nil
+        }
+      }
+      it 'params[:order]に"DESC"を返すこと' do
+        filter = described_class.build_filter(params)
+        expect(filter[:order]).to eq('DESC')
+      end
+    end
+    context '投稿日時の並び順を指定する場合' do
+      context '新しい順に指定する場合' do
+        let(:params) {
+          {
+            author: '山',
+            post:   'day',
+            start:  '2021-12-31',
+            finish: '2023-04-01',
+            order:  'DESC'
+          }
+        }
+        it 'params[:order]に"DESC"を返すこと' do
+          filter = described_class.build_filter(params)
+          expect(filter[:order]).to eq('DESC')
+        end
+      end
+      context '古い順に指定する場合' do
+        let(:params) {
+          {
+            author: '山',
+            post:   'day',
+            start:  '2021-12-31',
+            finish: '2023-04-01',
+            order:  'ASC'
+          }
+        }
+        it 'params[:order]に"ASC"を返すこと' do
+          filter = described_class.build_filter(params)
+          expect(filter[:order]).to eq('ASC')
+        end
+      end
+    end
   end
 end
