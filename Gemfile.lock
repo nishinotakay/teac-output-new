@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+<<<<<<< HEAD
     actioncable (6.1.7.6)
       actionpack (= 6.1.7.6)
       activesupport (= 6.1.7.6)
@@ -23,10 +24,35 @@ GEM
     actionpack (6.1.7.6)
       actionview (= 6.1.7.6)
       activesupport (= 6.1.7.6)
+=======
+    actioncable (6.1.7.4)
+      actionpack (= 6.1.7.4)
+      activesupport (= 6.1.7.4)
+      nio4r (~> 2.0)
+      websocket-driver (>= 0.6.1)
+    actionmailbox (6.1.7.4)
+      actionpack (= 6.1.7.4)
+      activejob (= 6.1.7.4)
+      activerecord (= 6.1.7.4)
+      activestorage (= 6.1.7.4)
+      activesupport (= 6.1.7.4)
+      mail (>= 2.7.1)
+    actionmailer (6.1.7.4)
+      actionpack (= 6.1.7.4)
+      actionview (= 6.1.7.4)
+      activejob (= 6.1.7.4)
+      activesupport (= 6.1.7.4)
+      mail (~> 2.5, >= 2.5.4)
+      rails-dom-testing (~> 2.0)
+    actionpack (6.1.7.4)
+      actionview (= 6.1.7.4)
+      activesupport (= 6.1.7.4)
+>>>>>>> d267c505822959c1dbe8455a2cb67e776fdaac2b
       rack (~> 2.0, >= 2.0.9)
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.2.0)
+<<<<<<< HEAD
     actiontext (6.1.7.6)
       actionpack (= 6.1.7.6)
       activerecord (= 6.1.7.6)
@@ -35,10 +61,21 @@ GEM
       nokogiri (>= 1.8.5)
     actionview (6.1.7.6)
       activesupport (= 6.1.7.6)
+=======
+    actiontext (6.1.7.4)
+      actionpack (= 6.1.7.4)
+      activerecord (= 6.1.7.4)
+      activestorage (= 6.1.7.4)
+      activesupport (= 6.1.7.4)
+      nokogiri (>= 1.8.5)
+    actionview (6.1.7.4)
+      activesupport (= 6.1.7.4)
+>>>>>>> d267c505822959c1dbe8455a2cb67e776fdaac2b
       builder (~> 3.1)
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
+<<<<<<< HEAD
     activejob (6.1.7.6)
       activesupport (= 6.1.7.6)
       globalid (>= 0.3.6)
@@ -55,6 +92,28 @@ GEM
       marcel (~> 1.0)
       mini_mime (>= 1.1.0)
     activesupport (6.1.7.6)
+=======
+    activejob (6.1.7.4)
+      activesupport (= 6.1.7.4)
+      globalid (>= 0.3.6)
+    activemodel (6.1.7.4)
+      activesupport (= 6.1.7.4)
+    activemodel-serializers-xml (1.0.2)
+      activemodel (> 5.x)
+      activesupport (> 5.x)
+      builder (~> 3.1)
+    activerecord (6.1.7.4)
+      activemodel (= 6.1.7.4)
+      activesupport (= 6.1.7.4)
+    activestorage (6.1.7.4)
+      actionpack (= 6.1.7.4)
+      activejob (= 6.1.7.4)
+      activerecord (= 6.1.7.4)
+      activesupport (= 6.1.7.4)
+      marcel (~> 1.0)
+      mini_mime (>= 1.1.0)
+    activesupport (6.1.7.4)
+>>>>>>> d267c505822959c1dbe8455a2cb67e776fdaac2b
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
@@ -63,7 +122,10 @@ GEM
     addressable (2.8.5)
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
+<<<<<<< HEAD
     base64 (0.1.1)
+=======
+>>>>>>> d267c505822959c1dbe8455a2cb67e776fdaac2b
     bcrypt (3.1.19)
     bindex (0.8.1)
     bootsnap (1.16.0)
@@ -85,7 +147,11 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
+<<<<<<< HEAD
     carrierwave (3.0.3)
+=======
+    carrierwave (3.0.2)
+>>>>>>> d267c505822959c1dbe8455a2cb67e776fdaac2b
       activemodel (>= 6.0.0)
       activesupport (>= 6.0.0)
       addressable (~> 2.6)
@@ -123,6 +189,16 @@ GEM
     dotenv-rails (2.8.1)
       dotenv (= 2.8.1)
       railties (>= 3.2)
+<<<<<<< HEAD
+=======
+    draper (4.0.2)
+      actionpack (>= 5.0)
+      activemodel (>= 5.0)
+      activemodel-serializers-xml (>= 1.0)
+      activesupport (>= 5.0)
+      request_store (>= 1.0)
+      ruby2_keywords
+>>>>>>> d267c505822959c1dbe8455a2cb67e776fdaac2b
     enum_help (0.0.19)
       activesupport (>= 3.0.0)
     erubi (1.12.0)
@@ -131,7 +207,11 @@ GEM
     factory_bot_rails (6.2.0)
       factory_bot (~> 6.2.0)
       railties (>= 5.0.0)
+<<<<<<< HEAD
     faker (3.2.1)
+=======
+    faker (3.2.0)
+>>>>>>> d267c505822959c1dbe8455a2cb67e776fdaac2b
       i18n (>= 1.8.11, < 2)
     ffi (1.15.5)
     globalid (1.1.0)
@@ -199,7 +279,11 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.9)
+<<<<<<< HEAD
     nokogiri (1.15.4-aarch64-linux)
+=======
+    nokogiri (1.15.3-aarch64-linux)
+>>>>>>> d267c505822959c1dbe8455a2cb67e776fdaac2b
       racc (~> 1.4)
     orm_adapter (0.5.0)
     parallel (1.23.0)
@@ -212,12 +296,17 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (5.0.3)
+<<<<<<< HEAD
     puma (5.6.7)
+=======
+    puma (5.6.6)
+>>>>>>> d267c505822959c1dbe8455a2cb67e776fdaac2b
       nio4r (~> 2.0)
     racc (1.7.1)
     rack (2.2.8)
     rack-mini-profiler (2.3.4)
       rack (>= 1.2.0)
+<<<<<<< HEAD
     rack-proxy (0.7.7)
       rack
     rack-test (2.1.0)
@@ -236,6 +325,26 @@ GEM
       activesupport (= 6.1.7.6)
       bundler (>= 1.15.0)
       railties (= 6.1.7.6)
+=======
+    rack-proxy (0.7.6)
+      rack
+    rack-test (2.1.0)
+      rack (>= 1.3)
+    rails (6.1.7.4)
+      actioncable (= 6.1.7.4)
+      actionmailbox (= 6.1.7.4)
+      actionmailer (= 6.1.7.4)
+      actionpack (= 6.1.7.4)
+      actiontext (= 6.1.7.4)
+      actionview (= 6.1.7.4)
+      activejob (= 6.1.7.4)
+      activemodel (= 6.1.7.4)
+      activerecord (= 6.1.7.4)
+      activestorage (= 6.1.7.4)
+      activesupport (= 6.1.7.4)
+      bundler (>= 1.15.0)
+      railties (= 6.1.7.4)
+>>>>>>> d267c505822959c1dbe8455a2cb67e776fdaac2b
       sprockets-rails (>= 2.0.0)
     rails-dom-testing (2.2.0)
       activesupport (>= 5.0.0)
@@ -252,9 +361,15 @@ GEM
     rails-i18n (6.0.0)
       i18n (>= 0.7, < 2)
       railties (>= 6.0.0, < 7)
+<<<<<<< HEAD
     railties (6.1.7.6)
       actionpack (= 6.1.7.6)
       activesupport (= 6.1.7.6)
+=======
+    railties (6.1.7.4)
+      actionpack (= 6.1.7.4)
+      activesupport (= 6.1.7.4)
+>>>>>>> d267c505822959c1dbe8455a2cb67e776fdaac2b
       method_source
       rake (>= 12.2)
       thor (~> 1.0)
@@ -264,6 +379,11 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     regexp_parser (2.8.1)
+<<<<<<< HEAD
+=======
+    request_store (1.5.1)
+      rack (>= 1.4)
+>>>>>>> d267c505822959c1dbe8455a2cb67e776fdaac2b
     responders (3.1.0)
       actionpack (>= 5.2)
       railties (>= 5.2)
@@ -290,8 +410,12 @@ GEM
       rspec-mocks (~> 3.12)
       rspec-support (~> 3.12)
     rspec-support (3.12.1)
+<<<<<<< HEAD
     rubocop (1.56.2)
       base64 (~> 0.1.1)
+=======
+    rubocop (1.55.1)
+>>>>>>> d267c505822959c1dbe8455a2cb67e776fdaac2b
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
@@ -308,7 +432,11 @@ GEM
       rubocop (~> 1.41)
     rubocop-factory_bot (2.23.1)
       rubocop (~> 1.33)
+<<<<<<< HEAD
     rubocop-rspec (2.23.2)
+=======
+    rubocop-rspec (2.23.1)
+>>>>>>> d267c505822959c1dbe8455a2cb67e776fdaac2b
       rubocop (~> 1.33)
       rubocop-capybara (~> 2.17)
       rubocop-factory_bot (~> 2.22)
@@ -317,6 +445,10 @@ GEM
     ruby-progressbar (1.13.0)
     ruby-vips (2.1.4)
       ffi (~> 1.12)
+<<<<<<< HEAD
+=======
+    ruby2_keywords (0.0.5)
+>>>>>>> d267c505822959c1dbe8455a2cb67e776fdaac2b
     rubyzip (2.3.2)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
@@ -328,7 +460,11 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+<<<<<<< HEAD
     selenium-webdriver (4.10.0)
+=======
+    selenium-webdriver (4.11.0)
+>>>>>>> d267c505822959c1dbe8455a2cb67e776fdaac2b
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
@@ -368,10 +504,17 @@ GEM
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
       railties (>= 6.0.0)
+<<<<<<< HEAD
     webdrivers (5.3.1)
       nokogiri (~> 1.6)
       rubyzip (>= 1.3.0)
       selenium-webdriver (~> 4.0, < 4.11)
+=======
+    webdrivers (5.2.0)
+      nokogiri (~> 1.6)
+      rubyzip (>= 1.3.0)
+      selenium-webdriver (~> 4.0)
+>>>>>>> d267c505822959c1dbe8455a2cb67e776fdaac2b
     webpacker (5.4.4)
       activesupport (>= 5.2)
       rack-proxy (>= 0.6.1)
@@ -401,6 +544,10 @@ DEPENDENCIES
   devise-bootstrap-views (~> 1.0)
   devise-i18n
   dotenv-rails
+<<<<<<< HEAD
+=======
+  draper
+>>>>>>> d267c505822959c1dbe8455a2cb67e776fdaac2b
   enum_help
   factory_bot_rails
   faker
