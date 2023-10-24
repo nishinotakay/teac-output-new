@@ -34,9 +34,6 @@ Rails.application.routes.draw do
     resources :users do
       collection do
         get 'admins_show'
-        get 'users_show'
-        get 'users_edit'
-        delete 'user_destroy'
       end
     end
     resources :inquiries
