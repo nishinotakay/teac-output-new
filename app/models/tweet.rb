@@ -16,30 +16,33 @@ class Tweet < ApplicationRecord
     }
   end
 
-  def self.sort_filter(filter)
+  def self.apply_and_sort_query(filter, user_id = nil, page = 1)
     start = Time.zone.parse(filter[:start].presence || '2022-01-01').beginning_of_day
     finish = Time.zone.parse(filter[:finish].presence || Date.current.to_s).end_of_day
 
-    left_joins(:user)
-      .where('tweets.post LIKE :post', post: "%#{filter[:post]}%")
-      .where('tweets.created_at BETWEEN ? AND ?', start, finish)
-      .where('users.name LIKE :author', author: "%#{filter[:author]}%")
-      .order("tweets.created_at #{filter[:order]}")
-      .presence || Tweet.none
+    query = with_attached_images
+            .includes(:user, { user: [:profile, { profile: :image_attachment }] }, :tweet_comments)
+            .page(page) # ここでページ番号を指定
+            .per(30)
+
+    query = user_id ? query.where(user_id: user_id) : query
+
+    query = filter.compact.blank? ? query : query.left_joins(:user)
+                                                   .where('tweets.post LIKE :post', post: "%#{filter[:post]}%")
+                                                   .where('tweets.created_at BETWEEN ? AND ?', start, finish)
+                                                   .where('users.name LIKE :author', author: "%#{filter[:author]}%")
+
+    query.order("tweets.created_at #{filter[:order]}" || 'DESC' ).presence || Tweet.none
   end
 
-  def self.base_queries(page)
-    with_attached_images
-      .includes(:user, { user: [:profile, { profile: :image_attachment }] }, :tweet_comments)
-      .page(page) # ここでページ番号を指定
-      .per(30)
+  def self.tweet_and_image(tweets)
+    tweets.map do |tweet|
+      {
+        tweet: tweet,
+        image: tweet.user.profile&.image || 'user_default.png'
+      }
+    end
   end
-
-  def self.filtered_or_base_queries(filter, user_id = nil, page = 1) # user_idとpageのデフォルト値を定める
-    base_query = user_id ? base_queries(page).where(user_id: user_id) : base_queries(page)
-    filter.compact.blank? ? base_query.order(created_at: filter[:order]) : base_query.sort_filter(filter)
-  end
-
 
   private
 

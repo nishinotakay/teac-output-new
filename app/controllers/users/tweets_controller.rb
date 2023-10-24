@@ -66,13 +66,8 @@ module Users
 
     def fetch_tweets_and_images(user_id = nil)
       filter = Tweet.build_filter(params)
-      @tweets = Tweet.filtered_or_base_queries(filter, user_id, params[:page])
-      @tweets_with_images = @tweets.map do |tweet|
-        {
-          tweet: tweet,
-          image: tweet.user.profile&.image || 'user_default.png'
-        }
-      end
+      @tweets = Tweet.apply_and_sort_query(filter, user_id, params[:page])
+      @tweets_with_images = Tweet.tweet_and_image(@tweets)
     end
 
 

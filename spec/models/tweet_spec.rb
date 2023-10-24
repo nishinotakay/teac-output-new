@@ -148,7 +148,7 @@ RSpec.describe Tweet, type: :model do
     end
   end
 
-  describe '#sort_filter' do
+  describe '#apply_and_sort_query' do
     let(:user) { create(:user, name: '山田太郎', email: Faker::Internet.email, password: 'password', created_at: '2021-12-31') }
     let!(:tweet) { create(:tweet, post: "it's a sunny day!", created_at: '2022-01-01 00:00:00', user: user) }
     let(:user_1) { create(:user, name: '山下達郎', email: Faker::Internet.email, password: 'password') }
@@ -159,7 +159,7 @@ RSpec.describe Tweet, type: :model do
       context '投稿者の名前を完全一致で検索する場合' do
         let(:filter) { { author: '山田太郎', order: 'DESC' } }
         it '一致した件数を返すこと' do
-          search_tweets = described_class.sort_filter(filter)
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(1)
         end
       end
@@ -167,7 +167,7 @@ RSpec.describe Tweet, type: :model do
       context '投稿者の名前を前方一致で検索する場合' do
         let(:filter) { { author: '山', order: 'DESC' } }
         it '一致した件数を返すこと' do
-          search_tweets = described_class.sort_filter(filter)
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(2)
         end
       end
@@ -175,7 +175,7 @@ RSpec.describe Tweet, type: :model do
       context '投稿者の名前を中央一致で検索する場合' do
         let(:filter) { { author: '田', order: 'DESC' } }
         it '一致した件数を返すこと' do
-          search_tweets = described_class.sort_filter(filter)
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(1)
         end
       end
@@ -183,7 +183,7 @@ RSpec.describe Tweet, type: :model do
       context '投稿者の名前を後方一致で検索する場合' do
         let(:filter) { { author: '郎', order: 'DESC' } }
         it '一致した件数を返すこと' do
-          search_tweets = described_class.sort_filter(filter)
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(2)
         end
       end
@@ -191,7 +191,7 @@ RSpec.describe Tweet, type: :model do
       context '存在しない投稿者の名前を検索する場合' do
         let(:filter) { { author: '存在しない', order: 'DESC' } }
         it 'つぶやき一覧の件数が0になること' do
-          search_tweets = described_class.sort_filter(filter)
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(0)
         end
       end
@@ -199,7 +199,7 @@ RSpec.describe Tweet, type: :model do
       context '投稿内容を完全一致で検索する場合' do
         let(:filter) { { post: "it's a sunny day!", order: 'DESC' } }
         it '一致した件数を返すこと' do
-          search_tweets = described_class.sort_filter(filter)
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(1)
         end
       end
@@ -207,7 +207,7 @@ RSpec.describe Tweet, type: :model do
       context '投稿内容を前方一致で検索する場合' do
         let(:filter) { { post: "it's", order: 'DESC' } }
         it '一致した件数を返すこと' do
-          search_tweets = described_class.sort_filter(filter)
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(1)
         end
       end
@@ -215,7 +215,7 @@ RSpec.describe Tweet, type: :model do
       context '投稿内容を中央一致で検索する場合' do
         let(:filter) { { post: 'sunny', order: 'DESC' } }
         it '一致した件数を返すこと' do
-          search_tweets = described_class.sort_filter(filter)
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(1)
         end
       end
@@ -223,7 +223,7 @@ RSpec.describe Tweet, type: :model do
       context '投稿内容を後方一致で検索する場合' do
         let(:filter) { { post: 'day!', order: 'DESC' } }
         it '一致した件数を返すこと' do
-          search_tweets = described_class.sort_filter(filter)
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(2)
         end
       end
@@ -231,7 +231,7 @@ RSpec.describe Tweet, type: :model do
       context '存在しない投稿内容を検索する場合' do
         let(:filter) { { post: '存在しない', order: 'DESC' } }
         it 'つぶやき投稿一覧の件数が0になる' do
-          search_tweets = described_class.sort_filter(filter)
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(0)
         end
       end
@@ -239,7 +239,7 @@ RSpec.describe Tweet, type: :model do
       context 'start,finishともに日付範囲を指定しない場合' do
         let(:filter) { { order: 'DESC' } }
         it '2022年1月1日から本日までをフィルタリングすること' do
-          search_tweets = described_class.sort_filter(filter)
+          search_tweets = described_class.apply_and_sort_query(filter)
           search_tweets.each do |tweet|
             expect(tweet.created_at).to be >= Time.zone.parse('2022-01-01 00:00:00')
             expect(tweet.created_at).to be <= Time.zone.parse(Date.current.to_s).end_of_day
@@ -252,7 +252,7 @@ RSpec.describe Tweet, type: :model do
       context 'start,finishともに日付範囲を指定する場合' do
         let(:filter) { { start: '2021-12-31', finish: '2023-10-01', order: 'DESC' } }
         it '指定した日付範囲がフィルタリングされること' do
-          search_tweets = described_class.sort_filter(filter)
+          search_tweets = described_class.apply_and_sort_query(filter)
           search_tweets.each do |tweet|
             expect(tweet.created_at).to be >= Time.zone.parse(filter[:start])
             expect(tweet.created_at).to be <= Time.zone.parse(filter[:finish])
@@ -264,7 +264,7 @@ RSpec.describe Tweet, type: :model do
       context 'startのみ日付範囲を指定する場合' do
         let(:filter) { { start: '2022-04-01', order: 'DESC' } }
         it '指定した日付から本日までの日付範囲がフィルタリングされること' do
-          search_tweets = described_class.sort_filter(filter)
+          search_tweets = described_class.apply_and_sort_query(filter)
           search_tweets.each do |tweet|
             expect(tweet.created_at).to be >= Time.zone.parse('2022-04-01')
             expect(tweet.created_at).to be <= Time.zone.parse(Date.current.to_s).end_of_day
@@ -275,7 +275,7 @@ RSpec.describe Tweet, type: :model do
       context 'finishのみ日付範囲を指定する場合' do
         let(:filter) { { finish: '2022-04-01', order: 'DESC' } }
         it '2022/1/1から指定された日までの日付範囲がフィルタリングされること' do
-          search_tweets = described_class.sort_filter(filter)
+          search_tweets = described_class.apply_and_sort_query(filter)
           search_tweets.each do |tweet|
           expect(tweet.created_at).to be >= Time.zone.parse('2022-01-01')
           expect(tweet.created_at).to be <= Time.zone.parse('2022-04-01')
@@ -291,7 +291,7 @@ RSpec.describe Tweet, type: :model do
       context '新しい順を押下する場合' do
         let(:filter) { { order: 'DESC' } }
         it '降順の投稿日時の配列を返すこと' do
-          search_tweets = described_class.sort_filter(filter)
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.map { |tweet| tweet.created_at }).to eq [Time.zone.parse('2023-04-01'), Time.zone.parse('2022-01-01')]
         end
       end
@@ -299,7 +299,7 @@ RSpec.describe Tweet, type: :model do
       context '古い順を押下する場合' do
         let(:filter) { { order: 'ASC' } }
         it '昇順の投稿日時の配列を返すこと' do
-          search_tweets = described_class.sort_filter(filter)
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.map { |tweet| tweet.created_at }).to eq [Time.zone.parse('2022-01-01'), Time.zone.parse('2023-04-01')]
         end
       end
@@ -356,4 +356,5 @@ RSpec.describe Tweet, type: :model do
       end
     end
   end
+
 end
