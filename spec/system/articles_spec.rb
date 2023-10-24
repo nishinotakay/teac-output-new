@@ -36,25 +36,36 @@ RSpec.describe 'Articles', type: :system do
           expect(page).to have_content article.user.name
           expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
         end
-        expect(page).to have_button('︙')
       end
 
       describe '３点リーダー' do
-        context 'ログインユーザーの記事' do
-          it '閲覧・編集・削除ボタンが表示される' do
-            page.all(:button, '︙')[1].click # 一覧の2つ目がログインユーザー（user_a）の記事
-            expect(page).to have_content('閲覧')
-            expect(page).to have_content('編集')
-            expect(page).to have_content('削除')
+        it '全ての記事に３点リーダーが表示されている' do
+          expect(page.all('button', text: '︙').count).to eq 2 # テスト記事は2件
+        end
+
+        context 'ログインユーザーの投稿記事' do
+          context '３点リーダー押下' do
+            before do
+              page.all(:button, '︙')[1].click # 一覧の2つ目[1]がログインユーザー（user_a）の記事
+            end
+
+            it '閲覧・編集・削除ボタンが表示される' do
+              expect(page).to have_content('閲覧')
+              expect(page).to have_content('編集')
+              expect(page).to have_content('削除')
+            end
           end
         end
         
         context 'ログインユーザー以外の記事' do
-          it '閲覧ボタンのみ表示される' do
+          before '３点リーダー押下' do
+            find_button( '︙', match: :first).click
             # click_button '︙', match: :first もOK
             # find('button', text: '︙', match: :first).click もOK
             # page.all(:button, '︙')[0].click もOK
-            find_button( '︙', match: :first).click
+          end
+
+          it '閲覧ボタンのみ表示される' do
             expect(page).to have_content('閲覧')
             expect(page).not_to have_content('編集')
             expect(page).not_to have_content('削除')
@@ -77,6 +88,11 @@ RSpec.describe 'Articles', type: :system do
           expect(page).to have_link('›', class: 'page-link')
           expect(page).to have_link('»', class: 'page-link')
           # expect(page).to have_link('...', class: 'page-link') 5ページ以上から...が表示される
+        end
+      end
+
+      context '並び替えボタン' do
+        it '表示されている' do
         end
       end
     end
@@ -220,7 +236,6 @@ RSpec.describe 'Articles', type: :system do
     end
 
     it '現在のパスが記事一覧画面のパスである' do
-      binding.pry
       expect(current_path).to eq users_dash_boards_path
     end
 
@@ -233,6 +248,10 @@ RSpec.describe 'Articles', type: :system do
     
       describe '３点リーダー' do
         it '閲覧・編集・削除ボタンが表示される' do
+          page.all(:button, '︙')[1].click # 一覧の2つ目がログインユーザー（user_a）の記事
+          expect(page).to have_content('閲覧')
+          expect(page).to have_content('編集')
+          expect(page).to have_content('削除')
         end
       end
     end
