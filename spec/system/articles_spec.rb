@@ -91,14 +91,21 @@ RSpec.describe 'Articles', type: :system do
         end
       end
 
-      context '並び替えボタン' do
+      context '並べ替えボタン' do
         it '表示されている' do
+          expect(page).to have_button('並べ替え')
+        end
+      end
+
+      context '絞り込み検索ボタン' do
+        it '表示されている' do
+          expect(page).to have_button('絞り込み検索')
         end
       end
     end
 
     describe '遷移テスト' do
-      context 'ログインユーザーの記事押下' do
+      context 'ログインユーザーの投稿記事を押下' do
         before do
           find('.link-td', text: article_a.sub_title).click
         end
@@ -135,7 +142,7 @@ RSpec.describe 'Articles', type: :system do
         end
       end
       
-      context 'ログインユーザーの記事の３点リーダー' do # この箇所で、高速テストの影響で、不安定なエラー発生する！解決案は, wait: 10 か、sleep 1
+      context 'ログインユーザーの記事３点リーダー' do # この箇所で、高速テストの影響で、不安定なエラー発生する！解決案は, wait: 10 か、sleep 1
         before do
           page.all('.btn', text: '︙')[1].click # 2番目を押下
           #click_button '︙', match: :first 1番目を押下、この記述だと２番目以降を押下指定する実装不可
@@ -197,6 +204,11 @@ RSpec.describe 'Articles', type: :system do
         it '編集・削除ボタンが表示されない' do
           expect(page).to_not have_content('編集')
           expect(page).to_not have_content('削除')
+        end
+      end
+
+      context 'ページネーション' do
+        it do
         end
       end
     end
