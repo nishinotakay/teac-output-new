@@ -38,7 +38,7 @@ RSpec.describe 'Articles', type: :system do
         end
       end
 
-      describe '３点リーダー' do
+      context '３点リーダー' do
         it '全ての記事に３点リーダーが表示されている' do
           expect(page.all('button', text: '︙').count).to eq 2 # テスト記事は2件
         end
@@ -364,18 +364,53 @@ RSpec.describe 'Articles', type: :system do
     end
 
     describe '表示テスト' do
-      it 'ログインユーザーが投稿した全ての記事が一覧表示される' do
+
+      it '画面の見出しに記事一覧が表示される' do
+        expect(page).to have_selector('h1', text:'投稿した記事一覧')
+      end
+
+      it 'ログインユーザーが投稿した記事が一覧表示される' do
         expect(page).to have_content article_a.title
         expect(page).to have_content article_a.sub_title
         expect(page).to have_content article_a.created_at.strftime('%Y/%m/%d %H:%M')
       end
     
-      describe '３点リーダー' do
+      context '３点リーダー' do
         it '閲覧・編集・削除ボタンが表示される' do
-          page.all(:button, '︙')[1].click # 一覧の2つ目がログインユーザー（user_a）の記事
+          page.all(:button, '︙')[0].click
           expect(page).to have_content('閲覧')
           expect(page).to have_content('編集')
           expect(page).to have_content('削除')
+        end
+      end
+
+      context 'ページネーション' do
+        before do
+          article_a_30
+          visit current_path
+        end
+
+        it 'ページ割で表示される' do
+          page.execute_script('window.scroll(0, 1000)') # ページ割部分まで下へスクロール
+          expect(page).to have_selector '.pagination' # 不要なテストかも
+          expect(page).to have_selector('.article-paginate') # 不要なテストかも
+          expect(page).to have_link('1', class: 'page-link')
+          expect(page).to have_link('2', class: 'page-link')
+          expect(page).to have_link('›', class: 'page-link')
+          expect(page).to have_link('»', class: 'page-link')
+          # expect(page).to have_link('...', class: 'page-link') 5ページ以上から...が表示される
+        end
+      end
+
+      context '並べ替えボタン' do
+        it '表示されている' do
+          expect(page).to have_button('並べ替え')
+        end
+      end
+
+      context '絞り込み検索ボタン' do
+        it '表示されている' do
+          expect(page).to have_button('絞り込み検索')
         end
       end
     end
