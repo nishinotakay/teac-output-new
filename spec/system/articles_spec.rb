@@ -5,7 +5,7 @@ RSpec.describe 'Articles', type: :system do
   let(:user_b) { create(:user, :b, confirmed_at: Date.today) }
   let(:article_a) { create(:article, user: user_a) }
   let(:article_b) { create(:article, user: user_b) }
-  let(:many_articles_a) { create_list(:article, 50, user: user_a) }
+  let(:article_a_30) { create_list(:article, 30, user: user_a) }
 
   before do
     sign_in(user_a)
@@ -75,7 +75,7 @@ RSpec.describe 'Articles', type: :system do
 
       context 'ページネーション' do
         before do
-          many_articles_a
+          article_a_30
           visit current_path
         end
 
@@ -207,16 +207,128 @@ RSpec.describe 'Articles', type: :system do
         end
       end
 
-      context 'ページネーション' do
-        it do
+      describe 'ページネーション' do
+        before(:all) do
+          @user = User.new(
+            id:       100,
+            email:    'email@100.com',
+            name:     "テストユーザー",
+            password: 'password'
+          )
+          @user.skip_confirmation!
+          @user.save!
+          #@user = User.first
+          #FactoryBot.create_list(:article, 148, user: @user)
+          
+          148.times do |i|
+            article = @user.articles.new(
+              title:     "paginate_#{i}",
+              sub_title: "paginate_sub_#{i}",
+              content:   "paginate_content_#{i}"
+            )
+            article.save!
+          end
         end
+
+        before do
+          page.execute_script('window.scroll(0, 1000)')
+        end
+        
+        it '1を押下で、1ページ目へ遷移する' do
+          find('.page-link', text: '2').click
+          # sleep 1
+          page.execute_script('window.scroll(0, 1000)')
+          #wait_for_ajax_without_jquery
+          find('.page-link', text: '1').click
+          # sleep 1
+          page.execute_script('window.scroll(0, 1000)')
+          background_color = find_link('1').native.css_value('background-color')
+          expect(background_color).to eq 'rgba(13, 110, 253, 1)'
+          expect(page).to have_content 'paginate_120'
+        end
+
+        it '3を押下で、3ページ目へ遷移する' do
+          find('.page-link', text: '3').click
+          sleep 1
+          page.execute_script('window.scroll(0, 1000)')
+          background_color = find('.page-link', text: '3').native.css_value('background-color')
+          expect(background_color).to eq 'rgba(13, 110, 253, 1)'
+          expect(page).to have_content 'paginate_60'
+          # expect(page).to have_selector('a', text: '3', class: 'page-link')
+        end
+
+        it '5を押下で、5ページ目へ遷移する' do
+          find('.page-link', text: '5').click
+          sleep 1
+          page.execute_script('window.scroll(0, 1000)')
+          background_color = find_link('5').native.css_value('background-color')
+          #binding.pry
+          expect(background_color).to eq 'rgba(13, 110, 253, 1)'
+          expect(page).to have_content 'paginate_0'
+          #sleep 2
+          #expect(page).to have_selector('a', text: '5', class: 'page-link')
+        end
+
+        it '›を押下で、次のページへ遷移する' do
+          find('.page-link', text: '›').click
+          sleep 1
+          page.execute_script('window.scroll(0, 1000)')
+          background_color = find_link('2').native.css_value('background-color')
+          #binding.pry
+          expect(background_color).to eq 'rgba(13, 110, 253, 1)'
+          expect(page).to have_content 'paginate_90'
+          # expect(page).to have_selector('a', text: '2', class: 'page-link')
+        end
+
+        it '»を押下で、最終ページへ遷移する' do
+          find('.page-link', text: '»').click
+          sleep 1
+          page.execute_script('window.scroll(0, 1000)')
+          background_color = find_link('5').native.css_value('background-color')
+          #binding.pry
+          expect(background_color).to eq 'rgba(13, 110, 253, 1)'
+          # expect(page).to have_selector('a', text: '5', class: 'page-link')
+          expect(page).to have_content 'paginate_0'
+          expect(page).to_not have_selector('a', text: '»', class: 'page-link')
+        end
+
+        it '‹を押下で、前のページへ遷移する' do
+          find('.page-link', text: '»').click
+          # sleep 1
+          page.execute_script('window.scroll(0, 1000)')
+          #wait_for_ajax_without_jquery
+          find('.page-link', text: '‹').click
+          sleep 1
+          page.execute_script('window.scroll(0, 1000)')
+          background_color = find_link('4').native.css_value('background-color')
+          expect(background_color).to eq 'rgba(13, 110, 253, 1)'
+          expect(page).to have_content 'paginate_30'
+          # expect(page).to have_selector('a', text: '4', class: 'page-link')
+        end
+
+        it '«を押下で、最初のページへ遷移する' do
+          find('.page-link', text: '»').click
+          # sleep 1
+          page.execute_script('window.scroll(0, 1000)')
+          find('.page-link', text: '«').click
+          page.execute_script('window.scroll(0, 1000)')
+          #sleep 2
+          background_color = find_link('1').native.css_value('background-color')
+          expect(background_color).to eq 'rgba(13, 110, 253, 1)'
+          expect(page).to have_content 'paginate_120'
+          expect(page).to_not have_selector('.page-link', text: '«', class: 'page-link')
+        end
+      end
+
+      after(:all) do
+        Article.destroy_all
       end
     end
 
     context '機能テスト' do
       it '３点リーダーから記事の削除ができる' do
         # ログインユーザーの記事の３点リーダーから削除ボタンを押下する
-        
+        #binding.pry
         article_first = Article.first.id
         page.all('.btn', text: '︙')[1].click # click_link '︙', match: :first は ×
         #click_link '削除'
