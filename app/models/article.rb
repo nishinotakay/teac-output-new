@@ -25,7 +25,7 @@ class Article < ApplicationRecord
       .where('articles.created_at BETWEEN ? AND ?', start, finish)
       .where('users.name LIKE :author OR admins.name LIKE :author', author: "%#{filter[:author]}%")
       .order(created_at: "#{filter[:order]}")
-      .page(filter[:page]).per(30)
+      .page(filter[:page])
       .presence || Article.none
   end
 
