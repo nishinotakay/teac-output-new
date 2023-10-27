@@ -325,7 +325,7 @@ RSpec.describe 'Articles', type: :system do
       end
     end
 
-    context '機能テスト' do
+    describe '機能テスト' do
       it '３点リーダーから記事の削除ができる' do
         # ログインユーザーの記事の３点リーダーから削除ボタンを押下する
         #binding.pry
@@ -351,7 +351,43 @@ RSpec.describe 'Articles', type: :system do
         # 記事が削除されていることを確認する
         #sleep 1
       end
+
+      context '並べ替えボタン' do
+        before do
+          article_a_30
+          Article.create(title:'最新記事', sub_title:'最新記事サブ', content:'最新記事本文', user: user_b)
+          visit current_path
+        end
+        
+        context '新しい順を選択' do
+          it '降順になる' do
+            find_button(text: '並べ替え').click
+            #find('.form-select').click
+            find('.form-select', text: '新しい順').click
+            find_button(text: '並べ替える').click
+            expect(page).to have_content('最新記事サブ')
+          end
+        end
+        
+        context '古い順を選択' do
+          it '昇順になる' do
+            #binding.pry
+            find_button(text: '並べ替え').click
+            #find('.form-select').click
+            find('.form-select option[value="ASC"]').click
+            find_button(text: '並べ替える').click
+            #sleep 3
+            expect(page).to_not have_content('最新記事サブ')
+          end
+        end
+      end
+  
+      context '絞り込み検索ボタン' do
+        
+      end
     end
+
+    
   end
 
   describe '投稿した記事一覧画面' do # dashboard
