@@ -34,6 +34,6 @@ class ApplicationController < ActionController::Base
   end
 
   def set_profile_image
-    @user_profile_image = current_user.profile ? current_user.profile.decorate.image : "user_default.png"
+    @user_profile_image = current_user.profile&.image.present? ? current_user.profile.image : "user_default.png"
   end
 end
