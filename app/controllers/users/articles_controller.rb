@@ -9,7 +9,6 @@ module Users
 
     def index
       params[:order] ||= 'DESC'
-      # paramsを元にfilterを作成する
       filter = {
         author:   params[:author],
         title:    params[:title],
@@ -20,11 +19,10 @@ module Users
         order:    params[:order]
       }
   
-      # filterを元に記事一覧を取得する
       @articles = Article.paginated_and_sort_filter(filter).page(params[:page]).per(30)
 
       respond_to do |format|
-        format.html # index.html.erbをレンダリング
+        format.html
         format.json { render json: @articles }
       end
     end
@@ -35,7 +33,7 @@ module Users
       @article_comment = current_user.article_comments.new
 
       respond_to do |format|
-        format.html # index.html.erbをレンダリング
+        format.html
         format.json { render json: @article }
       end
     end
@@ -66,9 +64,9 @@ module Users
 
     def edit
       @show = params[:show].present?
-      
+
       respond_to do |format|
-        format.html # index.html.erbをレンダリング
+        format.html
         format.json { render json: @article }
       end
     end
