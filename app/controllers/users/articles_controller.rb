@@ -22,12 +22,22 @@ module Users
   
       # filterを元に記事一覧を取得する
       @articles = Article.paginated_and_sort_filter(filter).page(params[:page]).per(30)
+
+      respond_to do |format|
+        format.html # index.html.erbをレンダリング
+        format.json { render json: @articles }
+      end
     end
 
     def show
       @article = Article.find(params[:id])
       @article_comments = @article.article_comments.all.order(created_at: 'DESC')
       @article_comment = current_user.article_comments.new
+
+      respond_to do |format|
+        format.html # index.html.erbをレンダリング
+        format.json { render json: @article }
+      end
     end
 
     def new
@@ -36,17 +46,31 @@ module Users
 
     def create
       @article = current_user.articles.new(article_params)
-      if @article.save
-        flash[:notice] = '記事を作成しました。'
-        redirect_to users_article_url(@article, dashboard: params[:dashboard], page: params[:page])
-      else
-        flash.now[:alert] = '記事の作成に失敗しました。'
-        render :new
+    
+      respond_to do |format|
+        if @article.save
+          format.html do
+            flash[:notice] = '記事を作成しました。'
+            redirect_to users_article_url(@article, dashboard: params[:dashboard], page: params[:page])
+          end
+          format.json { render json: @article, status: :created }
+        else
+          format.html do
+            flash.now[:alert] = '記事の作成に失敗しました。'
+            render :new
+          end
+          format.json { render json: @article.errors, status: :unprocessable_entity }
+        end
       end
-    end
+    end    
 
     def edit
       @show = params[:show].present?
+      
+      respond_to do |format|
+        format.html # index.html.erbをレンダリング
+        format.json { render json: @article }
+      end
     end
 
     def update
