@@ -123,7 +123,7 @@ RSpec.describe Article, type: :model do
           expect(articles.count).to eq(1)
         end
       end
-      
+
       context '本文で検索をかけた場合' do
         it '完全一致する記事を返す' do
           filter = {
@@ -165,7 +165,7 @@ RSpec.describe Article, type: :model do
           expect(articles.first.content).to eq 'コンテント'
         end
       end
-      
+
       context '投稿者で検索をかけた場合' do
         it '完全一致する一致する記事を返す' do
           filter = {
@@ -207,7 +207,7 @@ RSpec.describe Article, type: :model do
           expect(articles.first.user.name).to eq '山田太郎'
         end
       end
-      
+
       context '日付範囲で検索をかけた場合' do
         it '指定日付範囲内の記事を返す' do
           filter = {
@@ -231,7 +231,7 @@ RSpec.describe Article, type: :model do
           end
         end
       end
-      
+
       context '指定開始日で検索をかけた場合' do
         it '指定開始日以降の記事を返す' do # 終了日は指定なし
           filter = {
@@ -254,7 +254,7 @@ RSpec.describe Article, type: :model do
           end
         end
       end
-      
+
       context '指定終了日で検索をかけた場合' do
         it '一致する記事を返す' do # 開始日は指定なし
           filter = {
@@ -276,7 +276,7 @@ RSpec.describe Article, type: :model do
           end
         end
       end
-      
+
       context '複数の条件で検索をかけた場合' do
         it '全ての条件を満たす記事を抽出できる' do
           filter = {
