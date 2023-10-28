@@ -20,9 +20,17 @@ module Admins
       @user = User.find(params[:id])
     end
 
+    def update
+      @user = User.find(params[:id])
+      if @user.update(users_params)
+        redirect_to admins_users_path, notice: 'ユーザー情報の更新が完了しました'
+      else
+        render :edit
+      end
+    end
+
     def destroy
       @user = User.find(params[:id])
-
       if @user.destroy
         flash[:success] = "#{@user.name}のデータを削除しました。"
         # ユーザー 一覧ページへリダイレクト
@@ -77,14 +85,6 @@ module Admins
       end
     end
 
-    def update
-      if @profile.update(profile_params)
-        redirect_to users_profile_path, notice: 'プロフィール情報の更新が完了しました'
-      else
-        render :edit
-      end
-    end
-
     private
 
     def find_profile
@@ -92,10 +92,8 @@ module Admins
       @profile = @user.profile
     end
 
-    def profile_params
-      params.require(:profile).permit(
-        :name, :learning_history, :purpose, :image, :created_at, :learning_start
-      )
+    def users_params
+      params.require(:user).permit(:name, :email, :password)
     end
   end
 end
