@@ -1,11 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe 'Articles', type: :system do
+  let(:user) { create(:user, confirmed_at: Date.today) }
   let(:user_a) { create(:user, :a, confirmed_at: Date.today) }
   let(:user_b) { create(:user, :b, confirmed_at: Date.today) }
+  let(:article) { Article.create(title:'RSpec', sub_title:'システム', content:'テスト', user: user) }
   let(:article_a) { create(:article, user: user_a) }
   let(:article_b) { create(:article, user: user_b) }
   let(:article_a_30) { create_list(:article, 30, user: user_a) }
+  
 
   before do
     sign_in(user_a)
@@ -94,12 +97,14 @@ RSpec.describe 'Articles', type: :system do
       context '並べ替えボタン' do
         it '表示されている' do
           expect(page).to have_button('並べ替え')
+          find_button(text: '並べ替え').click
         end
       end
 
       context '絞り込み検索ボタン' do
         it '表示されている' do
           expect(page).to have_button('絞り込み検索')
+          find_button(text: '絞り込み検索').click
         end
       end
     end
@@ -282,7 +287,8 @@ RSpec.describe 'Articles', type: :system do
 
         it '»を押下で、最終ページへ遷移する' do
           find('.page-link', text: '»').click
-          sleep 1
+          sleep 2
+          binding.pry
           page.execute_script('window.scroll(0, 1000)')
           background_color = find_link('5').native.css_value('background-color')
           #binding.pry
@@ -326,6 +332,7 @@ RSpec.describe 'Articles', type: :system do
     end
 
     describe '機能テスト' do
+      
       it '３点リーダーから記事の削除ができる' do
         # ログインユーザーの記事の３点リーダーから削除ボタンを押下する
         #binding.pry
@@ -383,7 +390,175 @@ RSpec.describe 'Articles', type: :system do
       end
   
       context '絞り込み検索ボタン' do
-        
+        before do
+          #binding.pry
+          article
+          find_button(text: '絞り込み検索').click
+        end
+
+        context '投稿者名を入力' do
+          context '条件を満たすデータが存在する場合' do
+            it '完全一致する記事を返す' do
+              fill_in "input-author", :with => '山田太郎'
+              find_button(text: '検索する').click
+              expect(page).to have_content article.title
+              expect(page).to have_content article.sub_title
+              expect(page).to have_content article.user.name
+            end
+
+            it '前方一致する記事を返す' do
+              fill_in "input-author", :with => '山'
+              find_button(text: '検索する').click
+              expect(page).to have_content article.title
+              expect(page).to have_content article.sub_title
+              expect(page).to have_content article.user.name
+            end
+
+            it '中央一致する記事を返す' do
+              fill_in "input-author", :with => '田太'
+              find_button(text: '検索する').click
+              expect(page).to have_content article.title
+              expect(page).to have_content article.sub_title
+              expect(page).to have_content article.user.name
+            end
+
+            it '後方一致する記事を返す' do
+              fill_in "input-author", :with => '郎'
+              find_button(text: '検索する').click
+              expect(page).to have_content article.title
+              expect(page).to have_content article.sub_title
+              expect(page).to have_content article.user.name
+            end
+          end
+
+          context '条件を満たすデータが存在しない場合' do
+            it '投稿なしと表示される' do
+              fill_in "input-author", :with => '存在しない名前'
+              find_button(text: '検索する').click
+              expect(page).to have_content '投稿なし'
+              expect(page).to_not have_content article.title
+            end
+          end
+        end
+
+        context 'タイトルを入力' do
+          it '完全一致する記事を返す' do
+            fill_in "input-title", :with => 'RSpec'
+            find_button(text: '検索する').click
+            expect(page).to have_content article.title
+            expect(page).to have_content article.sub_title
+            expect(page).to have_content article.user.name
+          end
+
+          it '前方一致する記事を返す' do
+            fill_in "input-title", :with => 'R'
+            find_button(text: '検索する').click
+            expect(page).to have_content article.title
+            expect(page).to have_content article.sub_title
+            expect(page).to have_content article.user.name
+          end
+
+          it '中央一致する記事を返す' do
+            fill_in "input-title", :with => 'Sp'
+            find_button(text: '検索する').click
+            expect(page).to have_content article.title
+            expect(page).to have_content article.sub_title
+            expect(page).to have_content article.user.name
+          end
+
+          it '後方一致する記事を返す' do
+            fill_in "input-title", :with => 'c'
+            find_button(text: '検索する').click
+            expect(page).to have_content article.title
+            expect(page).to have_content article.sub_title
+            expect(page).to have_content article.user.name
+          end
+        end
+
+        context 'サブタイトルを入力' do
+          it '完全一致する記事を返す' do
+            fill_in "input-subtitle", :with => 'システム'
+            find_button(text: '検索する').click
+            expect(page).to have_content article.title
+            expect(page).to have_content article.sub_title
+            expect(page).to have_content article.user.name
+          end
+
+          it '前方一致する記事を返す' do
+            fill_in "input-subtitle", :with => 'シス'
+            find_button(text: '検索する').click
+            expect(page).to have_content article.title
+            expect(page).to have_content article.sub_title
+            expect(page).to have_content article.user.name
+          end
+
+          it '中央一致する記事を返す' do
+            fill_in "input-subtitle", :with => 'ステ'
+            find_button(text: '検索する').click
+            expect(page).to have_content article.title
+            expect(page).to have_content article.sub_title
+            expect(page).to have_content article.user.name
+          end
+
+          it '後方一致する記事を返す' do
+            fill_in "input-subtitle", :with => 'テム'
+            find_button(text: '検索する').click
+            expect(page).to have_content article.title
+            expect(page).to have_content article.sub_title
+            expect(page).to have_content article.user.name
+          end
+        end
+
+        context '本文' do
+          it '完全一致する記事を返す' do
+            fill_in "input-content", :with => 'テスト'
+            find_button(text: '検索する').click
+            expect(page).to have_content article.title
+            expect(page).to have_content article.sub_title
+            expect(page).to have_content article.user.name
+          end
+
+          it '完全一致する記事を返す' do
+            fill_in "input-content", :with => 'テ'
+            find_button(text: '検索する').click
+            expect(page).to have_content article.title
+            expect(page).to have_content article.sub_title
+            expect(page).to have_content article.user.name
+          end
+
+          it '完全一致する記事を返す' do
+            fill_in "input-content", :with => 'ス'
+            find_button(text: '検索する').click
+            expect(page).to have_content article.title
+            expect(page).to have_content article.sub_title
+            expect(page).to have_content article.user.name
+          end
+
+          it '完全一致する記事を返す' do
+            fill_in "input-content", :with => 'ト'
+            find_button(text: '検索する').click
+            expect(page).to have_content article.title
+            expect(page).to have_content article.sub_title
+            expect(page).to have_content article.user.name
+          end
+        end
+
+        context '' do
+          it '' do
+          end
+        end
+        context '' do
+          it '' do
+          end
+        end
+        context '' do
+          it '' do
+          end
+        end
+        context '' do
+          it '' do
+          end
+        end
       end
     end
 
