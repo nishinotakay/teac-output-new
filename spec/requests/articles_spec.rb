@@ -20,9 +20,8 @@ RSpec.describe 'Articles', type: :request do
       it '全ての記事を取得できる' do
         expect(response.status).to eq 200
         json_response = JSON.parse(response.body)
-        articles_ids = json_response.map { |article| article["id"] }
+        articles_ids = json_response.map { |article| article['id'] }
         expect(articles_ids.count).to eq Article.count
-        #expect(assigns(:articles).count).to eq Article.count
       end
     end
 
@@ -49,7 +48,7 @@ RSpec.describe 'Articles', type: :request do
         get users_article_url(article_1), headers: { 'Accept' => 'application/json' }
         expect(response.status).to eq 200
         json_response = JSON.parse(response.body)
-        expect(json_response["id"]).to eq article_1.id
+        expect(json_response['id']).to eq article_1.id
       end
     end
 
@@ -62,8 +61,7 @@ RSpec.describe 'Articles', type: :request do
       it '記事詳細画面で記事を取得できる' do
         expect(response.status).to eq 200
         json_response = JSON.parse(response.body)
-        expect(json_response["id"]).to eq article_1.id
-        # expect(assigns(:article)).to eq article_1
+        expect(json_response['id']).to eq article_1.id
       end
     end
 
@@ -115,15 +113,13 @@ RSpec.describe 'Articles', type: :request do
       it '記事を取得できる' do
         get edit_users_article_url(article_1), headers: { 'Accept' => 'application/json' }
         expect(response.status).to eq 200
-        # expect(assigns(:article)).to eq article_1
         json_response = JSON.parse(response.body)
-        expect(json_response["id"]).to eq article_1.id
+        expect(json_response['id']).to eq article_1.id
       end
 
       it '記事編集画面へ遷移する' do
         get edit_users_article_url(article_1)
         expect(response.status).to eq 200
-        # expect(assigns(:article)).to eq article_1
         expect(response.body).to include article_1.title, article_1.sub_title, article_1.content
         expect(response.body).to include 'input', 'title-form', 'subtitle-form', 'textarea', 'markdown-editor', 'preview-side'
       end
@@ -165,14 +161,13 @@ RSpec.describe 'Articles', type: :request do
         expect { post users_articles_url(params: params), headers: { 'Accept' => 'application/json' } }.to change(Article, :count).by(1)
         expect(response.status).to eq 201
         json_response = JSON.parse(response.body)
-        expect(json_response["id"]).to eq Article.last.id
+        expect(json_response['id']).to eq Article.last.id
       end
 
       it '記事が保存され、記事詳細画面へリダイレクトする' do # レスポンスがHTMLの場合でテスト
         expect { post users_articles_url(params: params) }.to change(Article, :count).by(1)
         expect(response.status).to eq 302
         expect(flash[:notice]).to eq '記事を作成しました。'
-        # expect(assigns(:articles).count).to eq Article.count
         expect(response).to redirect_to users_article_url(user_1.articles.last, dashboard: false)
       end
     end
@@ -255,7 +250,7 @@ RSpec.describe 'Articles', type: :request do
 
         it '記事の編集に失敗し、記事編集画面が再表示される' do
           expect(response.status).to eq 200
-          expect(article_1.title).to_not eq nil
+          expect(article_1.title).not_to eq nil
           expect(flash[:alert]).to eq '記事の編集に失敗しました。'
           expect(response.body).to include 'input', 'title-form', 'subtitle-form', 'textarea', 'markdown-editor', 'preview-side'
         end
@@ -272,9 +267,9 @@ RSpec.describe 'Articles', type: :request do
 
       it '記事一覧画面へリダイレクトする' do
         expect(response.status).to eq 302
-        expect(article_1.title).to_not eq 'a'
-        expect(article_1.sub_title).to_not eq 'b'
-        expect(article_1.content).to_not eq 'c'
+        expect(article_1.title).not_to eq 'a'
+        expect(article_1.sub_title).not_to eq 'b'
+        expect(article_1.content).not_to eq 'c'
         expect(response).to redirect_to users_articles_url
         expect(flash[:danger]).to eq '不正な操作です。'
       end

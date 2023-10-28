@@ -251,7 +251,7 @@ RSpec.describe Article, type: :model do
       before(:each) do
         many_articles
       end
-    
+
       context '1ページ目' do
         it '30件の記事が新しい順で取得される' do
           filter = { order: 'DESC', page: 1 }
@@ -272,7 +272,7 @@ RSpec.describe Article, type: :model do
 
       context '作成日がフィルタリングされた場合' do
         it '作成日が新しい順で記事が取得される' do
-          filter = { order: 'DESC', page: 1, start: '2020-02-02'}
+          filter = { order: 'DESC', page: 1, start: '2020-02-02' }
           articles = described_class.paginated_and_sort_filter(filter)
           expect(articles).to eq articles.sort.reverse
         end
@@ -299,7 +299,7 @@ RSpec.describe Article, type: :model do
 
         context '作成日がフィルタリングされた場合' do
           it '作成日が新しい順で記事が取得される' do
-            filter = { order: 'DESC', page: 1, start: '2020-02-02'}
+            filter = { order: 'DESC', page: 1, start: '2020-02-02' }
             articles = described_class.paginated_and_sort_filter(filter)
             expect(articles).to eq articles.sort.reverse
           end
