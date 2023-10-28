@@ -223,7 +223,7 @@ RSpec.describe 'Articles', type: :request do
       article
     end
 
-    context 'ログインユーザーが投稿者であり' do
+    context 'ログインユーザーが投稿者である場合' do
       context '編集内容が適切な場合' do
         before(:each) do
           params = { article: { title: 'a', sub_title: 'b', content: 'c' } }
@@ -231,12 +231,15 @@ RSpec.describe 'Articles', type: :request do
           article_1.reload
         end
 
-        it '記事の編集が成功し、記事詳細画面へリダイレクトする' do
+        it '記事の編集が成功する' do
           expect(response.status).to eq 302
           expect(flash[:notice]).to eq '記事を編集しました。'
           expect(article_1.title).to eq 'a'
           expect(article_1.sub_title).to eq 'b'
           expect(article_1.content).to eq 'c'
+        end
+
+        it '記事詳細画面へリダイレクトする' do
           expect(response).to redirect_to users_article_url(Article.last, dashboard: false)
         end
       end
@@ -248,9 +251,12 @@ RSpec.describe 'Articles', type: :request do
           article.reload
         end
 
-        it '記事の編集に失敗し、記事編集画面が再表示される' do
+        it '記事の編集に失敗する' do
           expect(response.status).to eq 200
           expect(article_1.title).not_to eq nil
+        end
+
+        it '記事編集画面が再表示される' do
           expect(flash[:alert]).to eq '記事の編集に失敗しました。'
           expect(response.body).to include 'input', 'title-form', 'subtitle-form', 'textarea', 'markdown-editor', 'preview-side'
         end
@@ -299,29 +305,52 @@ RSpec.describe 'Articles', type: :request do
     end
 
     context 'ログインユーザーが投稿者である場合' do
-      it '記事の削除ができ、投稿した記事一覧画面へ遷移する' do
-        expect { delete users_article_url(article_1, dashboard: true) }.to change(Article, :count).by(-1)
-        expect(response.status).to eq 302
-        expect(flash[:notice]).to eq '記事を削除しました。'
-        expect(response).to redirect_to users_dash_boards_url(user_1)
-      end
+      context '投稿した記事一覧画面で削除を行った場合' do
+        before(:each) do
+          delete users_article_url(article_1, dashboard: true)
+        end
 
-      it '記事の削除ができ、記事一覧画面へ遷移する' do
-        expect { delete users_article_url(article_1, dashboard: false) }.to change(Article, :count).by(-1)
-        expect(response.status).to eq 302
-        expect(flash[:notice]).to eq '記事を削除しました。'
-        expect(response).to redirect_to users_articles_url
+        it '記事の削除ができる' do
+          expect(Article.find_by(id: article_1.id)).to be_nil
+          expect(response.status).to eq 302
+        end
+  
+        it '投稿した記事一覧画面へ遷移する' do
+          expect(flash[:notice]).to eq '記事を削除しました。'
+          expect(response).to redirect_to users_dash_boards_url(user_1)
+        end
+      end
+      
+
+      context '記事一覧画面で削除を行った場合' do
+        before(:each) do
+          delete users_article_url(article_1, dashboard: false)
+        end
+
+        it '記事の削除ができる' do
+          expect(Article.find_by(id: article_1.id)).to be_nil
+          expect(response.status).to eq 302
+        end
+
+        it '記事一覧画面へ遷移する' do
+          expect(flash[:notice]).to eq '記事を削除しました。'
+          expect(response).to redirect_to users_articles_url
+        end
       end
     end
 
     context 'ログインユーザーが投稿者ではない場合' do
       before(:each) do
         sign_in user_2
+        delete users_article_url(article_1)
       end
 
-      it '削除されず、記事一覧画面へリダイレクトする' do
-        expect { delete users_article_url(article_1) }.not_to change(Article, :count)
+      it '記事は削除されない' do
+        expect(Article.find_by(id: article_1.id)).to be_truthy
         expect(response.status).to eq 302
+      end
+
+      it '記事一覧画面へリダイレクトする' do
         expect(response).to redirect_to users_articles_url
         expect(flash[:danger]).to eq '不正な操作です。'
       end
