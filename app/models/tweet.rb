@@ -39,7 +39,7 @@ class Tweet < ApplicationRecord
     tweets.map do |tweet|
       {
         tweet: tweet,
-        image: tweet.user.profile&.image || 'user_default.png'
+        image: tweet.user.profile&.image&.attached? ? tweet.user.profile.image : 'user_default.png'
       }
     end
   end

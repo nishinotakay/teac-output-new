@@ -236,7 +236,7 @@ RSpec.describe Tweet, type: :model do
         end
       end
 
-      context 'start,finishともに日付範囲を指定しない場合' do
+      context '開始日,終了日ともに日付範囲を指定しない場合' do
         let(:filter) { { order: 'DESC' } }
         it '2022年1月1日から本日までをフィルタリングすること' do
           search_tweets = described_class.apply_and_sort_query(filter)
@@ -249,7 +249,7 @@ RSpec.describe Tweet, type: :model do
         end
       end
 
-      context 'start,finishともに日付範囲を指定する場合' do
+      context '開始日,終了日ともに日付範囲を指定する場合' do
         let(:filter) { { start: '2021-12-31', finish: '2023-10-01', order: 'DESC' } }
         it '指定した日付範囲がフィルタリングされること' do
           search_tweets = described_class.apply_and_sort_query(filter)
@@ -261,7 +261,7 @@ RSpec.describe Tweet, type: :model do
         end
       end
 
-      context 'startのみ日付範囲を指定する場合' do
+      context '開始日のみ日付範囲を指定する場合' do
         let(:filter) { { start: '2022-04-01', order: 'DESC' } }
         it '指定した日付から本日までの日付範囲がフィルタリングされること' do
           search_tweets = described_class.apply_and_sort_query(filter)
@@ -272,7 +272,7 @@ RSpec.describe Tweet, type: :model do
         end
       end
 
-      context 'finishのみ日付範囲を指定する場合' do
+      context '終了日のみ日付範囲を指定する場合' do
         let(:filter) { { finish: '2022-04-01', order: 'DESC' } }
         it '2022/1/1から指定された日までの日付範囲がフィルタリングされること' do
           search_tweets = described_class.apply_and_sort_query(filter)
@@ -353,6 +353,48 @@ RSpec.describe Tweet, type: :model do
           filter = described_class.build_filter(params)
           expect(filter[:order]).to eq('ASC')
         end
+      end
+    end
+  end
+
+  describe '#self.tweet_and_image' do
+    let(:user_with_image) { create(:user) }
+    let(:user_without_image) { create(:user) }
+    let(:profile_with_image) { create(:profile, user: user_with_image) }
+    let(:profile_without_image) { create(:profile, user: user_without_image) }
+
+    before do
+      profile_with_image.image.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'test1.png'),
+      filename: "test1.png", content_type: 'image/png'))
+      create_list(:tweet, 2, user: user_with_image)
+
+      profile_without_image
+      create_list(:tweet, 2, user: user_without_image)
+    end
+
+    context 'ユーザーがプロフィール画像を設定している場合' do
+
+      it 'ユーザーに関連するつぶやきは設定されたプロフィール画像を返すこと' do
+        tweets_with_image = described_class.tweet_and_image(Tweet.where(user: user_with_image))
+        tweets_with_image.each do |data|
+          expect(data[:image].filename.to_s).to eq profile_with_image.image.filename.to_s
+        end
+      end
+    end
+
+    context 'ユーザーがプロフィール画像を設定していない場合' do
+      it 'ユーザーに関連するつぶやきはデフォルト画像を返すこと' do
+        tweets_without_image = described_class.tweet_and_image(Tweet.where(user: user_without_image))
+        tweets_without_image.each do |data|
+          expect(data[:image]).to eq 'user_default.png'
+        end
+      end
+    end
+
+    context 'プロフィール画像を設定しているユーザーと設定していないユーザーが混在している場合' do
+      it '適切な数のツイートにプロフィール画像を返すこと' do
+      end
+      it '適切な数のツイートにデフォルト画像を返すこと' do
       end
     end
   end
