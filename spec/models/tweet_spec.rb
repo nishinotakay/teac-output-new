@@ -393,8 +393,16 @@ RSpec.describe Tweet, type: :model do
 
     context 'プロフィール画像を設定しているユーザーと設定していないユーザーが混在している場合' do
       it '適切な数のツイートにプロフィール画像を返すこと' do
+        tweets = described_class.tweet_and_image(Tweet.all)
+        count_with_image = tweets.count { |data|
+          data[:tweet].user == user_with_image && data[:image].filename.to_s == profile_with_image.image.filename.to_s }
+        expect(count_with_image).to eq(2)
       end
       it '適切な数のツイートにデフォルト画像を返すこと' do
+        tweets = described_class.tweet_and_image(Tweet.all)
+        count_without_image = tweets.count { |data|
+          data[:tweet].user == user_without_image && data[:image] == 'user_default.png' }
+        expect(count_without_image).to eq(2)
       end
     end
   end
