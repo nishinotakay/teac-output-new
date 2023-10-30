@@ -154,7 +154,7 @@ RSpec.describe Tweet, type: :model do
 
     context 'つぶやきを削除する場合' do
       it '3つの関連付けられたtweet_commentsが削除される' do
-        expect { tweet.destroy }.to change { TweetComment.count }.by(-3)
+        expect { tweet.destroy }.to change(TweetComment, :count).by(-3)
       end
     end
   end
@@ -162,9 +162,9 @@ RSpec.describe Tweet, type: :model do
   describe '#apply_and_sort_query' do
     let(:user) { create(:user, name: '山田太郎', email: Faker::Internet.email, password: 'password', created_at: '2021-12-31') }
     let!(:tweet) { create(:tweet, post: "it's a sunny day!", created_at: '2022-01-01 00:00:00', user: user) }
-    let(:user_1) { create(:user, name: '山下達郎', email: Faker::Internet.email, password: 'password') }
-    let!(:tweet_1) { create(:tweet, post: 'ミュージックday!', created_at: '2023-04-01', user: user_1) }
-    let!(:tweet_2) { create(:tweet, post: '2021年のポスト', created_at: '2021-12-31 23:59:59', user: user_1) }
+    let(:user1) { create(:user, name: '山下達郎', email: Faker::Internet.email, password: 'password') }
+    let!(:tweet1) { create(:tweet, post: 'ミュージックday!', created_at: '2023-04-01', user: user1) }
+    let!(:tweet2) { create(:tweet, post: '2021年のポスト', created_at: '2021-12-31 23:59:59', user: user1) }
 
     context '絞り込み検索' do
       context '投稿者の名前を完全一致で検索する場合' do
@@ -267,7 +267,7 @@ RSpec.describe Tweet, type: :model do
             expect(tweet.created_at).to be <= Time.zone.parse(Date.current.to_s).end_of_day
           end
           expect(search_tweets.count).to eq(2)
-          expect(search_tweets).not_to include(tweet_2)
+          expect(search_tweets).not_to include(tweet2)
         end
       end
 
@@ -305,7 +305,7 @@ RSpec.describe Tweet, type: :model do
             expect(tweet.created_at).to be >= Time.zone.parse('2022-01-01')
             expect(tweet.created_at).to be <= Time.zone.parse('2022-04-01')
           end
-          expect(search_tweets).not_to include(tweet_2)
+          expect(search_tweets).not_to include(tweet2)
         end
       end
     end
@@ -316,7 +316,7 @@ RSpec.describe Tweet, type: :model do
 
         it '降順の投稿日時の配列を返すこと' do
           search_tweets = described_class.apply_and_sort_query(filter)
-          expect(search_tweets.map { |tweet| tweet.created_at }).to eq [Time.zone.parse('2023-04-01'), Time.zone.parse('2022-01-01')]
+          expect(search_tweets.map(&:created_at)).to eq [Time.zone.parse('2023-04-01'), Time.zone.parse('2022-01-01')]
         end
       end
 
@@ -325,7 +325,7 @@ RSpec.describe Tweet, type: :model do
 
         it '昇順の投稿日時の配列を返すこと' do
           search_tweets = described_class.apply_and_sort_query(filter)
-          expect(search_tweets.map { |tweet| tweet.created_at }).to eq [Time.zone.parse('2022-01-01'), Time.zone.parse('2023-04-01')]
+          expect(search_tweets.map(&:created_at)).to eq [Time.zone.parse('2022-01-01'), Time.zone.parse('2023-04-01')]
         end
       end
     end
@@ -403,7 +403,7 @@ RSpec.describe Tweet, type: :model do
 
     context 'ユーザーがプロフィール画像を設定している場合' do
       it 'ユーザーに関連するつぶやきは設定されたプロフィール画像を返すこと' do
-        tweets_with_image = described_class.tweet_and_image(Tweet.where(user: user_with_image))
+        tweets_with_image = described_class.tweet_and_image(described_class.where(user: user_with_image))
         tweets_with_image.each do |data|
           expect(data[:image].filename.to_s).to eq profile_with_image.image.filename.to_s
         end
@@ -412,7 +412,7 @@ RSpec.describe Tweet, type: :model do
 
     context 'ユーザーがプロフィール画像を設定していない場合' do
       it 'ユーザーに関連するつぶやきはデフォルト画像を返すこと' do
-        tweets_without_image = described_class.tweet_and_image(Tweet.where(user: user_without_image))
+        tweets_without_image = described_class.tweet_and_image(described_class.where(user: user_without_image))
         tweets_without_image.each do |data|
           expect(data[:image]).to eq 'user_default.png'
         end
@@ -421,7 +421,7 @@ RSpec.describe Tweet, type: :model do
 
     context 'プロフィール画像を設定しているユーザーと設定していないユーザーが混在している場合' do
       it '適切な数のツイートにプロフィール画像を返すこと' do
-        tweets = described_class.tweet_and_image(Tweet.all)
+        tweets = described_class.tweet_and_image(described_class.all)
         count_with_image = tweets.count do |data|
           data[:tweet].user == user_with_image && data[:image].filename.to_s == profile_with_image.image.filename.to_s
         end
@@ -429,7 +429,7 @@ RSpec.describe Tweet, type: :model do
       end
 
       it '適切な数のツイートにデフォルト画像を返すこと' do
-        tweets = described_class.tweet_and_image(Tweet.all)
+        tweets = described_class.tweet_and_image(described_class.all)
         count_without_image = tweets.count do |data|
           data[:tweet].user == user_without_image && data[:image] == 'user_default.png'
         end
