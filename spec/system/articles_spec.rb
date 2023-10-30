@@ -2,22 +2,22 @@ require 'rails_helper'
 
 RSpec.describe 'Articles', type: :system do
   let(:user) { create(:user, confirmed_at: Date.today) }
-  let(:user_a) { create(:user, :a, confirmed_at: Date.today) }
-  let(:user_b) { create(:user, :b, confirmed_at: Date.today) }
+  let(:user_1) { create(:user, :a, confirmed_at: Date.today) }
+  let(:user_2) { create(:user, :b, confirmed_at: Date.today) }
   let(:article) { Article.create(title:'RSpec', sub_title:'システム', content:'テスト', user: user) }
-  let(:article_a) { create(:article, user: user_a) }
-  let(:article_b) { create(:article, user: user_b) }
-  let(:article_a_30) { create_list(:article, 30, user: user_a) }
+  let(:article_1) { create(:article, user: user_1) }
+  let(:article_2) { create(:article, user: user_2) }
+  let(:article_30) { create_list(:article, 30, user: user) }
   
 
   before do
-    sign_in(user_a)
-    article_a
+    sign_in(user)
+    article
   end
 
   describe '記事一覧画面' do # index
     before do
-      article_b
+      article_2
       visit users_articles_path(order: 'DESC')
     end
 
@@ -30,10 +30,17 @@ RSpec.describe 'Articles', type: :system do
       it '画面の見出しに記事一覧が表示される' do
         expect(page).to have_selector('h1', text:'記事一覧')
       end
+
+      it '正しいテーブルヘッダーが表示されていること' do
+        expect(page).to have_selector('th', text: 'タイトル')
+        expect(page).to have_selector('th', text: 'サブタイトル')
+        expect(page).to have_selector('th', text: '投稿者')
+        expect(page).to have_selector('th', text: '投稿日時')
+      end
       
       it '全ての記事が一覧表示される' do
         # 確認すべき内容を配列でまとめて、eachで回す
-        [article_a, article_b].each do |article|
+        [article, article_2].each do |article|
           expect(page).to have_content article.title
           expect(page).to have_content article.sub_title
           expect(page).to have_content article.user.name
@@ -49,7 +56,7 @@ RSpec.describe 'Articles', type: :system do
         context 'ログインユーザーの投稿記事' do
           context '３点リーダー押下' do
             before do
-              page.all(:button, '︙')[1].click # 一覧の2つ目[1]がログインユーザー（user_a）の記事
+              page.all(:button, '︙')[1].click # 一覧の2つ目[1]がログインユーザー（user）の記事
             end
 
             it '閲覧・編集・削除ボタンが表示される' do
@@ -78,7 +85,7 @@ RSpec.describe 'Articles', type: :system do
 
       context 'ページネーション' do
         before do
-          article_a_30
+          article_30
           visit current_path
         end
 
@@ -112,14 +119,14 @@ RSpec.describe 'Articles', type: :system do
     describe '遷移テスト' do
       context 'ログインユーザーの投稿記事を押下' do
         before do
-          find('.link-td', text: article_a.sub_title).click
+          find('.link-td', text: article.sub_title).click
         end
 
         it '記事詳細画面へ遷移する' do
-          expect(current_path).to eq users_article_path(article_a)
-          expect(page).to have_content article_a.title
-          expect(page).to have_content article_a.sub_title
-          expect(page).to have_content article_a.content
+          expect(current_path).to eq users_article_path(article)
+          expect(page).to have_content article.title
+          expect(page).to have_content article.sub_title
+          expect(page).to have_content article.content
         end
         
         it '編集・削除ボタンが表示される' do
@@ -130,15 +137,15 @@ RSpec.describe 'Articles', type: :system do
       
       context 'ログインユーザー以外の記事押下' do
         before do
-          find('.link-td', text: article_b.sub_title).click
+          find('.link-td', text: article_2.sub_title).click
         end
 
         it '記事詳細画面へ遷移する' do
-          expect(current_path).to eq users_article_path(article_b)
-          expect(page).to have_content article_b.title
-          expect(page).to have_content article_b.sub_title
-          expect(page).to have_content article_b.content
-          expect(page).to have_content user_b.name
+          expect(current_path).to eq users_article_path(article_2)
+          expect(page).to have_content article_2.title
+          expect(page).to have_content article_2.sub_title
+          expect(page).to have_content article_2.content
+          expect(page).to have_content user_2.name
         end
 
         it '編集・削除ボタンが表示されない' do
@@ -163,10 +170,10 @@ RSpec.describe 'Articles', type: :system do
           end
 
           it '記事詳細画面へ遷移する' do
-            expect(current_path).to eq users_article_path(article_a)
-            expect(page).to have_content(article_a.title) # ページ遅延エラー対策
-            expect(page).to have_content(article_a.sub_title)
-            expect(page).to have_content(article_a.content, wait: 10)
+            expect(current_path).to eq users_article_path(article)
+            expect(page).to have_content(article.title) # ページ遅延エラー対策
+            expect(page).to have_content(article.sub_title)
+            expect(page).to have_content(article.content, wait: 10)
           end
           
           it '編集・削除ボタンが表示される' do
@@ -181,10 +188,10 @@ RSpec.describe 'Articles', type: :system do
           end
 
           it '編集ボタン押下で記事詳細画面へ遷移する' do
-            expect(current_path).to eq edit_users_article_path(article_a)
-            expect(page).to have_field('article_title', with: article_a.title)
-            expect(page).to have_field('article_sub_title', with: article_a.sub_title)
-            expect(page).to have_field('article_content', with: article_a.content)
+            expect(current_path).to eq edit_users_article_path(article)
+            expect(page).to have_field('article_title', with: article.title)
+            expect(page).to have_field('article_sub_title', with: article.sub_title)
+            expect(page).to have_field('article_content', with: article.content)
           end
         end
       end
@@ -199,11 +206,11 @@ RSpec.describe 'Articles', type: :system do
 
         it '記事詳細画面へ遷移する' do
           sleep 1
-          expect(current_path).to eq users_article_path(article_b)
-          expect(page).to have_content article_b.title # ページ遅延エラー対策
-          expect(page).to have_content article_b.sub_title
-          expect(page).to have_content article_b.content
-          expect(page).to have_content user_b.name
+          expect(current_path).to eq users_article_path(article_2)
+          expect(page).to have_content article_2.title # ページ遅延エラー対策
+          expect(page).to have_content article_2.sub_title
+          expect(page).to have_content article_2.content
+          expect(page).to have_content user_2.name
         end
 
         it '編集・削除ボタンが表示されない' do
@@ -288,7 +295,6 @@ RSpec.describe 'Articles', type: :system do
         it '»を押下で、最終ページへ遷移する' do
           find('.page-link', text: '»').click
           sleep 2
-          binding.pry
           page.execute_script('window.scroll(0, 1000)')
           background_color = find_link('5').native.css_value('background-color')
           #binding.pry
@@ -343,10 +349,10 @@ RSpec.describe 'Articles', type: :system do
         expect{
           expect(page.accept_confirm).to eq '選択した記事を削除します。' # accept_confirm はデフォルトで OK 押下する
           expect(page).to have_content('記事を削除しました。', wait: 10)
-        }. to change(user_a.articles, :count).by(-1)
-        expect(page).to_not have_content article_a.title
-        expect(page).to_not have_content article_a.sub_title
-        expect(page).to_not have_content article_a.user.name
+        }. to change(user.articles, :count).by(-1)
+        expect(page).to_not have_content article.title
+        expect(page).to_not have_content article.sub_title
+        expect(page).to_not have_content article.user.name
         expect(Article.exists?(article_first)).to be_falsey  # DBに無い
         # expect(Article.where(id: article_first).count).to eq 0 # DBに無い
         #page.accept_confirm('選択した記事を削除します。') do # accept_confirm のデフォルトがOK押下する！
@@ -361,8 +367,8 @@ RSpec.describe 'Articles', type: :system do
 
       context '並べ替えボタン' do
         before do
-          article_a_30
-          Article.create(title:'最新記事', sub_title:'最新記事サブ', content:'最新記事本文', user: user_b)
+          article_30
+          Article.create(title:'最新記事', sub_title:'最新記事サブ', content:'最新記事本文', user: user_2)
           visit current_path
         end
         
@@ -392,7 +398,7 @@ RSpec.describe 'Articles', type: :system do
       context '絞り込み検索ボタン' do
         before do
           #binding.pry
-          article
+          #article
           find_button(text: '絞り込み検索').click
         end
 
@@ -543,26 +549,223 @@ RSpec.describe 'Articles', type: :system do
           end
         end
 
-        context '' do
-          it '' do
+        context '投稿日時で絞り込む' do
+          before do
+            article_2.update(created_at: "2022-01-01")
+            visit current_path
+            find_button(text: '絞り込み検索').click
           end
-        end
-        context '' do
-          it '' do
+
+          context '指定開始日' do
+            context 'テスト当日に指定した場合' do
+              before do
+                find('#input-start').set(Date.current)
+                find_button(text: '検索する').click
+              end
+              it '指定範囲の記事が表示される' do
+                #binding.pry
+                expect(page).to have_content article.title
+                expect(page).to have_content article.sub_title
+                expect(page).to have_content article.user.name
+              end
+
+              it '指定範囲外の記事は表示されない' do
+                expect(page).not_to have_content article_2.title
+                expect(page).not_to have_content article_2.sub_title
+                expect(page).not_to have_content article_2.user.name
+              end
+            end
+
+            context '2022-01-02に指定した場合（境界値・翌日）' do
+              before do
+                find('#input-start').set("02/01/2022")
+                find_button(text: '検索する').click
+              end
+              it 'aritcle_2(created_at:2022-01-01)の記事が表示されない' do
+                expect(page).not_to have_content article_2.title
+                expect(page).not_to have_content article_2.sub_title
+                expect(page).not_to have_content article_2.user.name
+              end
+
+              it '指定範囲の記事が表示される' do
+                expect(page).to have_content article.title
+                expect(page).to have_content article.sub_title
+                expect(page).to have_content article.user.name
+              end
+            end
+
+            context '2022-01-01に指定した場合（当日テスト）' do
+              it '指定日範囲の記事が表示される' do
+                find('#input-start').set("01/01/2022")
+                find_button(text: '検索する').click
+                expect(page).to have_content article.title
+                expect(page).to have_content article.sub_title
+                expect(page).to have_content article.user.name
+                expect(page).to have_content article_2.title
+                expect(page).to have_content article_2.sub_title
+                expect(page).to have_content article_2.user.name
+              end
+            end
+
+            context '2021-12-31に指定した場合（境界値・前日）' do
+              it '指定日範囲の記事が表示される' do
+                find('#input-start').set("01/01/2022")
+                find_button(text: '検索する').click
+                expect(page).to have_content article.title
+                expect(page).to have_content article.sub_title
+                expect(page).to have_content article.user.name
+                expect(page).to have_content article_2.title
+                expect(page).to have_content article_2.sub_title
+                expect(page).to have_content article_2.user.name
+              end
+            end
+
+            context '指定範囲に記事が存在しない場合' do
+              before do
+                article.update(created_at: "2022-01-01")
+                visit current_path
+                find_button(text: '絞り込み検索').click
+                find('#input-start').set(Date.current)
+                find_button(text: '検索する').click
+              end
+
+              it '投稿なしと表示される' do
+                expect(page).to have_content '投稿なし'
+              end
+
+              it '記事は表示されない' do
+                expect(page).to_not have_content article.title
+                expect(page).to_not have_content article_2.title
+              end
+              
+              it 'リセットボタンが表示される' do
+                expect(page).to have_button('リセット')
+              end
+
+              it 'リセットボタン押下で記事一覧が再表示される' do
+                find_button(text: 'リセット').click
+                expect(page).to have_content article.title
+                expect(page).to have_content article.sub_title
+                expect(page).to have_content article.user.name
+                expect(page).to have_content article_2.title
+                expect(page).to have_content article_2.sub_title
+                expect(page).to have_content article_2.user.name
+              end
+            end
           end
-        end
-        context '' do
-          it '' do
+          
+          context '指定終了日' do
+            context 'テスト当日に指定した場合' do
+              before do
+                find('#input-finish').set(Date.current)
+                find_button(text: '検索する').click
+              end
+
+              it '指定範囲の記事が表示される' do
+                expect(page).to have_content article.title
+                expect(page).to have_content article.sub_title
+                expect(page).to have_content article.user.name
+                expect(page).to have_content article_2.title
+                expect(page).to have_content article_2.sub_title
+                expect(page).to have_content article_2.user.name
+              end
+            end
+
+            context '2022-01-02に指定した場合（境界値・翌日）' do
+              before do
+                find('#input-finish').set("01/02/2022")
+                find_button(text: '検索する').click
+              end
+
+              it '指定範囲の記事が表示される' do
+                expect(page).to have_content article_2.title
+                expect(page).to have_content article_2.sub_title
+                expect(page).to have_content article_2.user.name
+              end
+
+              it '指定範囲外の記事は表示されない' do
+                expect(page).not_to have_content article.title
+                expect(page).not_to have_content article.sub_title
+                expect(page).not_to have_content article.user.name
+              end
+            end
+
+            context '2022-01-01に指定した場合（当日テスト）' do
+              before do
+                find('#input-finish').set("01/01/2022")
+                find_button(text: '検索する').click
+              end
+
+              it '指定範囲の記事が表示される' do
+                expect(page).to have_content article_2.title
+                expect(page).to have_content article_2.sub_title
+                expect(page).to have_content article_2.user.name
+              end
+
+              it '指定範囲外の記事は表示されない' do
+                expect(page).not_to have_content article.title
+                expect(page).not_to have_content article.sub_title
+                expect(page).not_to have_content article.user.name
+              end
+            end
+
+            context '2021-012-31に指定した場合（境界値・前日）' do
+              before do
+                visit current_path
+                find_button(text: '絞り込み検索').click
+                find('#input-finish').set("31/12/2021")
+                find_button(text: '検索する').click
+              end
+
+              it '投稿なしと表示される' do
+                expect(page).to have_content '投稿なし'
+                expect(page).to_not have_content article.title
+                expect(page).to_not have_content article_2.title
+              end
+
+              it '記事は表示されない' do
+                expect(page).to_not have_content article.title
+                expect(page).to_not have_content article_2.title
+              end
+
+              it 'リセットボタンが表示される' do
+                expect(page).to have_button('リセット')
+              end
+
+              it 'リセットボタン押下で記事一覧が再表示される' do
+                find_button(text: 'リセット').click
+                expect(page).to have_content article.title
+                expect(page).to have_content article.sub_title
+                expect(page).to have_content article.user.name
+                expect(page).to have_content article_2.title
+                expect(page).to have_content article_2.sub_title
+                expect(page).to have_content article_2.user.name
+              end
+            end
           end
-        end
-        context '' do
-          it '' do
+
+          context '指定開始日・終了日、両方を指定' do
+            before do
+              find('#input-start').set("01/02/2022")
+              find('#input-finish').set(Date.current)
+              find_button(text: '検索する').click
+            end
+            
+            it '指定範囲の記事が表示される' do
+              expect(page).to have_content article.title
+              expect(page).to have_content article.sub_title
+              expect(page).to have_content article.user.name
+            end
+
+            it '指定範囲外の記事は表示されない' do
+              expect(page).not_to have_content article_2.title
+              expect(page).not_to have_content article_2.sub_title
+              expect(page).not_to have_content article_2.user.name
+            end
           end
         end
       end
     end
-
-    
   end
 
   describe '投稿した記事一覧画面' do # dashboard
@@ -581,9 +784,9 @@ RSpec.describe 'Articles', type: :system do
       end
 
       it 'ログインユーザーが投稿した記事が一覧表示される' do
-        expect(page).to have_content article_a.title
-        expect(page).to have_content article_a.sub_title
-        expect(page).to have_content article_a.created_at.strftime('%Y/%m/%d %H:%M')
+        expect(page).to have_content article.title
+        expect(page).to have_content article.sub_title
+        expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
       end
     
       context '３点リーダー' do
@@ -597,7 +800,7 @@ RSpec.describe 'Articles', type: :system do
 
       context 'ページネーション' do
         before do
-          article_a_30
+          article_30
           visit current_path
         end
 
@@ -677,7 +880,7 @@ RSpec.describe 'Articles', type: :system do
           expect(current_path).to eq users_articles_path
           expect(page).to have_content '記事一覧'
           expect(page).to have_content '投稿者'
-          expect(page).to have_content article_a.user.name
+          expect(page).to have_content article.user.name
         end
       end
     
@@ -687,7 +890,7 @@ RSpec.describe 'Articles', type: :system do
           expect(current_path).to eq users_dash_boards_path
           expect(page).to have_content '投稿した記事一覧'
           expect(page).to_not have_content '投稿者'
-          expect(page).to_not have_content article_a.user.name, count: 2
+          expect(page).to_not have_content article.user.name, count: 2
         end
       end
 
@@ -696,9 +899,9 @@ RSpec.describe 'Articles', type: :system do
         expect(page).to have_content 'サブタイトル'
         expect(page).to have_content '投稿日'
         #binding.pry
-        expect(page).to have_content article_a.created_at.strftime('%Y/%m/%d %H:%M')
-        expect(page).to have_content article_a.title
-        expect(page).to have_content article_a.sub_title
+        expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
+        expect(page).to have_content article.title
+        expect(page).to have_content article.sub_title
         # binding.pry
         #expect(page).to have_button('︙')
         click_button('︙')
@@ -725,14 +928,14 @@ RSpec.describe 'Articles', type: :system do
 
       context 'edit' do
         it 'success' do
-          visit edit_users_article_path(article_a)
-          expect(current_path).to eq edit_users_article_path(article_a)
+          visit edit_users_article_path(article)
+          expect(current_path).to eq edit_users_article_path(article)
           expect(page).to have_content "記事編集"
           expect(page).to have_button '更新'
           expect(page).to have_field('article_title', with: article.title)
           expect(page).to have_field('article_sub_title', with: article.sub_title)
           expect(page).to have_field('article_content', with: article.content)
-          expect(page).to have_content article_a.content, count: 2 # ページ内で、article.contentの呼び出しが計2回ある
+          expect(page).to have_content article.content, count: 2 # ページ内で、article.contentの呼び出しが計2回ある
         end
       end
 
@@ -747,10 +950,10 @@ RSpec.describe 'Articles', type: :system do
     context 'X = show' do
       context 'writer' do
         it 'success' do
-          visit users_article_path(article_a)
+          visit users_article_path(article)
           expect(page).to have_content '編集'
           expect(page).to have_content '削除'
-          expect(page).to_not have_content article_a.user.name, count: 2
+          expect(page).to_not have_content article.user.name, count: 2
         end
       end
 
@@ -758,20 +961,20 @@ RSpec.describe 'Articles', type: :system do
         it 'success' do
           find('#dropdownMenuButton').click # dropdownmenu を探してクリック
           click_link 'ログアウト'  # click_button ×
-          sign_in(user_b)
-          visit users_article_path(article_a)
+          sign_in(user_2)
+          visit users_article_path(article)
           expect(page).to_not have_content '編集'
           expect(page).to_not have_content '削除'
           expect(page).to have_content '投稿者'
-          expect(page).to have_content article_a.user.name
+          expect(page).to have_content article.user.name
         end
       end
 
       after do
         expect(current_path).to eq users_article_path(article)
-        expect(page).to have_content article_a.title
-        expect(page).to have_content article_a.sub_title
-        expect(page).to have_content article_a.content
+        expect(page).to have_content article.title
+        expect(page).to have_content article.sub_title
+        expect(page).to have_content article.content
       end
     end
   end
@@ -796,8 +999,8 @@ RSpec.describe 'Articles', type: :system do
 
   describe 'edit article' do
     it 'success' do
-      visit edit_users_article_path(article_a)
-      prev_article_title = article_a.title
+      visit edit_users_article_path(article)
+      prev_article_title = article.title
       fill_in 'article[title]', with: 'たいとる'
       fill_in 'article[sub_title]', with: 'さぶたいとる'
       fill_in 'article[content]', with: 'こんてんつ'
@@ -805,17 +1008,17 @@ RSpec.describe 'Articles', type: :system do
       article.reload
       expect(current_path).to eq users_article_path(article)
       expect(page).to have_content '記事を編集しました。'
-      expect(page).to have_content article_a.title
+      expect(page).to have_content article.title
       #binding.pry
       expect(page).to_not have_content prev_article_title
     end
 
     it 'failure' do
-      visit edit_users_article_path(article_a)
+      visit edit_users_article_path(article)
       fill_in 'article[title]', with: nil
       click_button '更新'
       expect(page).to have_content '記事の編集に失敗しました。'
-      expect(page).to_not have_content article_a.title
+      expect(page).to_not have_content article.title
     end
   end
 
@@ -824,39 +1027,39 @@ RSpec.describe 'Articles', type: :system do
       it 'success' do
         #binding.pry
         visit users_dash_boards_path
-        expect(page).to have_content article_a.title
+        expect(page).to have_content article.title
         # page.find('.link-tr', text: article.title).click
-        page.first('.link-td', text: article_a.title).click
-        expect(current_path).to eq users_article_path(article_a)
+        page.first('.link-td', text: article.title).click
+        expect(current_path).to eq users_article_path(article)
         page.accept_confirm('表示中の記事を削除します。') do
           click_link "削除"
         end
         expect(page).to have_content '記事を削除しました。'
-        expect(current_path).to eq users_dash_boards_path(user_a)
-        expect(page).to_not have_content article_a.title
+        expect(current_path).to eq users_dash_boards_path(user)
+        expect(page).to_not have_content article.title
       end
     end
 
     context 'index to delete' do
       it 'success' do
         visit users_articles_path
-        expect(page).to have_content article_a.title
-        page.first('.link-td', text: article_a.title).click
+        expect(page).to have_content article.title
+        page.first('.link-td', text: article.title).click
         expect(current_path).to eq users_article_path(article)
         page.accept_confirm('表示中の記事を削除します。') do
           click_link "削除"
         end
         expect(page).to have_content '記事を削除しました。'
         expect(current_path).to eq users_articles_path
-        expect(page).to_not have_content article_a.title
+        expect(page).to_not have_content article.title
       end
     end
   end
   
   describe 'markdown with marked.js', js: true do # Marked.js によるマークダウン
     before do
-      article_a.content = "# This is h1.  \r\n```ruby:qiita.rb\r\nputs 'The best way to log and share programmers knowledge.'\r\n```"
-      article_a.save
+      article.content = "# This is h1.  \r\n```ruby:qiita.rb\r\nputs 'The best way to log and share programmers knowledge.'\r\n```"
+      article.save
     end
     
     describe 'new article page' do # 記事投稿画面で
@@ -868,7 +1071,7 @@ RSpec.describe 'Articles', type: :system do
       end
       
       it 'markdown to preview' do # プレビュー画面でマークダウンが機能している
-        @markd.set(article_a.content)
+        @markd.set(article.content)
         expect(@preview).to have_css('h1', text: 'This is h1.', wait: 1) # 「#」の文字列が、h1のcssになっていることを期待
       end
       
@@ -881,7 +1084,7 @@ RSpec.describe 'Articles', type: :system do
       end
       
       it 'to code block' do
-        @markd.set(article_a.content)
+        @markd.set(article.content)
         page.save_screenshot 'newページのコードブロック.png'
         expect(@preview).to have_selector('.code-frame', visible: true)
         frame = @preview.find('.code-frame')
@@ -894,7 +1097,7 @@ RSpec.describe 'Articles', type: :system do
 
     describe 'show article page' do
       it 'code copy' do
-        visit users_article_path(article_a)
+        visit users_article_path(article)
         page.execute_script("
           $('.container').append('<button class=\"copybtn\">コードコピー</button>')
           $('.container').append('<textarea class=\"paste\"></textarea>')
