@@ -6,6 +6,11 @@ module Admins
 
     def index
       @posts = Post.filtered_and_ordered_posts(params, params[:page], 30)
+
+      respond_to do |format|
+        format.html
+        format.json { render json: @posts }
+      end
     end
 
     def show
