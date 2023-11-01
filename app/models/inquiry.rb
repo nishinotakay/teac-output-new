@@ -1,11 +1,9 @@
 class Inquiry < ApplicationRecord
   belongs_to :user
 
-  def self.get_sort_and_filter_params(params)
+  def self.sort_and_filter(params)
     order = {
-      user_name: params[:ord_user_name], 
-      content: params[:ord_content], 
-      created_at: params[:ord_created_at]
+      created_at: params[:ord_created_at],
     }.compact
     filter = {
       user_name: params[:flt_user_name],
@@ -14,16 +12,16 @@ class Inquiry < ApplicationRecord
       finish: params[:flt_finish]
     }.compact
     
-    sort_and_filter_params = {order: order, filter: filter}
-    return sort_and_filter_params
+    sort_and_filter = {order: order, filter: filter}
+    return sort_and_filter
   end
   
-  def self.hidden_params(sort_and_filter_params)
-    if sort_and_filter_params[:filter][:hidden] == "1"
+  def self.hidden_params(sort_and_filter)
+    if sort_and_filter [:filter][:hidden] == "1"
       inquiries = where(hidden: false)
-    elsif sort_and_filter_params[:filter][:hidden] == "2"
+    elsif sort_and_filter [:filter][:hidden] == "2"
       hidden = where(hidden: true)
-    elsif sort_and_filter_params[:filter][:hidden] == "3"
+    elsif sort_and_filter [:filter][:hidden] == "3"
       both = where(hidden: [true, false])
     else
       inquiries = where(hidden: false)
@@ -31,19 +29,15 @@ class Inquiry < ApplicationRecord
     [inquiries, hidden, both]
   end
 
-  def self.inquiry_order(inquiry_order, sort_and_filter_params)
-    inquiry_order = inquiry_order.order(sort_and_filter_params[:order])
-  end
-  
-  def self.apply_filter(inquiry_scope, sort_and_filter_params)
-    if sort_and_filter_params[:filter][:user_name].present?
-      inquiry_scope = inquiry_scope.joins(:user).where("users.name LIKE ?", "%#{sort_and_filter_params[:filter][:user_name]}%")
+  def self.inquiry_filter(inquiry_filter, sort_and_filter)
+    if sort_and_filter[:filter][:user_name].present?
+      inquiry_filter = inquiry_filter.joins(:user).where("users.name LIKE ?", "%#{sort_and_filter[:filter][:user_name]}%")
     end
-    if sort_and_filter_params[:filter][:start].present? || sort_and_filter_params[:filter][:finish].present?
-      start = Time.zone.parse(sort_and_filter_params[:filter][:start].presence || '2022-01-01').beginning_of_day
-      finish = Time.zone.parse(sort_and_filter_params[:filter][:finish].presence || Date.current.to_s).end_of_day
-      inquiry_scope = inquiry_scope.where('created_at BETWEEN ? AND ?', start, finish)
+    if sort_and_filter[:filter][:start].present? || sort_and_filter [:filter][:finish].present?
+      start = Time.zone.parse(sort_and_filter[:filter][:start].presence || '2022-01-01').beginning_of_day
+      finish = Time.zone.parse(sort_and_filter[:filter][:finish].presence || Date.current.to_s).end_of_day
+      inquiry_filter = inquiry_filter.where('created_at BETWEEN ? AND ?', start, finish)
     end  
-    return inquiry_scope
+    return inquiry_filter
   end
 end
