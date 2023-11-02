@@ -150,7 +150,7 @@ RSpec.describe Tweet, type: :model do
   describe '#destroy' do
     let(:user) { create(:user, name: '山田太郎', email: Faker::Internet.email, password: 'password', created_at: '2021-12-31') }
     let!(:tweet) { create(:tweet, post: "it's a sunny day!", created_at: '2022-01-01 00:00:00', user: user) }
-    let!(:tweet_comment) { FactoryBot.create_list(:tweet_comment, 3, content: 'tweet_comment_test', user: user, tweet: tweet, recipient_id: tweet.user_id) }
+    let!(:tweet_comment) { create_list(:tweet_comment, 3, content: 'tweet_comment_test', user: user, tweet: tweet, recipient_id: tweet.user_id) }
 
     context 'つぶやきを削除する場合' do
       it '3つの関連付けられたtweet_commentsが削除される' do
@@ -398,11 +398,11 @@ RSpec.describe Tweet, type: :model do
       create_list(:tweet, 2, user: user_with_image)
 
       profile_without_image
-      create_list(:tweet, 2, user: user_without_image)
+      create_list(:tweet, 3, user: user_without_image)
     end
 
     context 'ユーザーがプロフィール画像を設定している場合' do
-      it 'ユーザーに関連するつぶやきは設定されたプロフィール画像を返すこと' do
+      it 'ユーザーのアイコンには設定されたプロフィール画像が設定されていること' do
         tweets_with_image = described_class.tweet_and_image(described_class.where(user: user_with_image))
         tweets_with_image.each do |data|
           expect(data[:image].filename.to_s).to eq profile_with_image.image.filename.to_s
@@ -411,7 +411,7 @@ RSpec.describe Tweet, type: :model do
     end
 
     context 'ユーザーがプロフィール画像を設定していない場合' do
-      it 'ユーザーに関連するつぶやきはデフォルト画像を返すこと' do
+      it 'ユーザーのアイコンにはデフォルト画像が設定されていること' do
         tweets_without_image = described_class.tweet_and_image(described_class.where(user: user_without_image))
         tweets_without_image.each do |data|
           expect(data[:image]).to eq 'user_default.png'
@@ -420,7 +420,7 @@ RSpec.describe Tweet, type: :model do
     end
 
     context 'プロフィール画像を設定しているユーザーと設定していないユーザーが混在している場合' do
-      it '適切な数のツイートにプロフィール画像を返すこと' do
+      it '適切なツイートにプロフィール画像を返すこと' do
         tweets = described_class.tweet_and_image(described_class.all)
         count_with_image = tweets.count do |data|
           data[:tweet].user == user_with_image && data[:image].filename.to_s == profile_with_image.image.filename.to_s
@@ -428,12 +428,12 @@ RSpec.describe Tweet, type: :model do
         expect(count_with_image).to eq(2)
       end
 
-      it '適切な数のツイートにデフォルト画像を返すこと' do
+      it '適切なツイートにデフォルト画像を返すこと' do
         tweets = described_class.tweet_and_image(described_class.all)
         count_without_image = tweets.count do |data|
           data[:tweet].user == user_without_image && data[:image] == 'user_default.png'
         end
-        expect(count_without_image).to eq(2)
+        expect(count_without_image).to eq(3)
       end
     end
   end
