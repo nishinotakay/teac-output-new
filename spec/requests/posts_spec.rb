@@ -379,7 +379,7 @@ RSpec.describe '/posts', type: :request do
     end
   end
 
-  describe 'DELETE /destroy (ユーザー)' do
+  describe 'DELETE /destroy' do
     let(:valid_user_post) { create(:post, title: 'Ruby', user: user) }
     let(:valid_admin_post) { create(:post, title: 'SQL', admin: admin) }
 
