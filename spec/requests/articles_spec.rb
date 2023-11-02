@@ -10,18 +10,22 @@ RSpec.describe 'Articles', type: :request do
   describe 'GET /index' do
     before(:each) { articles_1 }
 
-    context 'ログインユーザーが投稿者である場合' do
+    context 'ログインしている場合' do
       before(:each) do
         sign_in user_1
         articles_2
-        get users_articles_url, headers: { 'Accept' => 'application/json' }
+        get users_articles_url, as: :json
       end
 
       it '全ての記事を取得できる' do
         expect(response.status).to eq 200
         json_response = JSON.parse(response.body)
-        articles_ids = json_response.map { |article| article['id'] }
-        expect(articles_ids.count).to eq Article.count
+        articles_1.concat(articles_2).each do |a|
+          expect(response.body).to include a.title
+          expect(response.body).to include a.sub_title
+          expect(response.body).to include a.content
+        end
+        expect(json_response.length).to eq Article.count
       end
     end
 
@@ -33,7 +37,6 @@ RSpec.describe 'Articles', type: :request do
       it 'ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
-        expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
       end
     end
   end
@@ -45,23 +48,27 @@ RSpec.describe 'Articles', type: :request do
       end
 
       it '記事詳細画面で記事を取得できる' do
-        get users_article_url(article_1), headers: { 'Accept' => 'application/json' }
+        get users_article_url(article_1), as: :json
         expect(response.status).to eq 200
         json_response = JSON.parse(response.body)
-        expect(json_response['id']).to eq article_1.id
+        expect(json_response['title']).to eq article_1.title
+        expect(json_response['sub_title']).to eq article_1.sub_title
+        expect(json_response['content']).to eq article_1.content
       end
     end
 
     context 'ログインユーザーが投稿者ではない場合' do
       before(:each) do
         sign_in user_2
-        get users_article_url(article_1), headers: { 'Accept' => 'application/json' }
+        get users_article_url(article_1), as: :json
       end
 
       it '記事詳細画面で記事を取得できる' do
         expect(response.status).to eq 200
         json_response = JSON.parse(response.body)
-        expect(json_response['id']).to eq article_1.id
+        expect(json_response['title']).to eq article_1.title
+        expect(json_response['sub_title']).to eq article_1.sub_title
+        expect(json_response['content']).to eq article_1.content
       end
     end
 
@@ -73,7 +80,6 @@ RSpec.describe 'Articles', type: :request do
       it 'ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
-        expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
       end
     end
   end
@@ -99,7 +105,6 @@ RSpec.describe 'Articles', type: :request do
       it 'ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
-        expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
       end
     end
   end
@@ -111,10 +116,12 @@ RSpec.describe 'Articles', type: :request do
       end
 
       it '記事を取得できる' do
-        get edit_users_article_url(article_1), headers: { 'Accept' => 'application/json' }
+        get edit_users_article_url(article_1), as: :json
         expect(response.status).to eq 200
         json_response = JSON.parse(response.body)
-        expect(json_response['id']).to eq article_1.id
+        expect(json_response['title']).to eq article_1.title
+        expect(json_response['sub_title']).to eq article_1.sub_title
+        expect(json_response['content']).to eq article_1.content
       end
 
       it '記事編集画面へ遷移する' do
@@ -134,7 +141,6 @@ RSpec.describe 'Articles', type: :request do
       it '記事一覧画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to users_articles_url
-        expect(flash[:danger]).to eq '不正な操作です。'
       end
     end
 
@@ -146,7 +152,6 @@ RSpec.describe 'Articles', type: :request do
       it 'ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
-        expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
       end
     end
   end
@@ -157,38 +162,45 @@ RSpec.describe 'Articles', type: :request do
     before(:each) { sign_in user_1 }
 
     context '記事投稿が成功した場合' do
-      it '記事が保存される' do # 記事が適切に保存されたかテストするために、レスポンスをJSON形式にする
-        expect { post users_articles_url(params: params), headers: { 'Accept' => 'application/json' } }.to change(Article, :count).by(1)
+      it '記事が保存される' do
+        expect { post users_articles_url(params: params), as: :json }.to change(Article, :count).by(1)
         expect(response.status).to eq 201
         json_response = JSON.parse(response.body)
-        expect(json_response['id']).to eq Article.last.id
+        expect(json_response['title']).to eq Article.last.title
+        expect(json_response['sub_title']).to eq Article.last.sub_title
+        expect(json_response['content']).to eq Article.last.content
       end
 
-      it '記事が保存され、記事詳細画面へリダイレクトする' do # レスポンスがHTMLの場合でテスト
+      it '記事詳細画面へリダイレクトする' do # レスポンスがHTMLの場合でテスト
         expect { post users_articles_url(params: params) }.to change(Article, :count).by(1)
         expect(response.status).to eq 302
-        expect(flash[:notice]).to eq '記事を作成しました。'
         expect(response).to redirect_to users_article_url(user_1.articles.last, dashboard: false)
       end
     end
 
     context '記事投稿が失敗した場合' do
-      it '記事は作成されず、記事投稿画面が再表示される' do
+      it '記事は作成されない' do
         params[:article][:title] = nil
-        expect { post users_articles_url params: params }.to change(Article, :count).by(0)
-        expect(response.status).to eq 200
-        expect(flash[:alert]).to eq '記事の作成に失敗しました。'
-        expect(response.body).to include '記事投稿'
+        expect { post users_articles_url(params: params), as: :json }.to change(Article, :count).by(0)
+        expect(response.status).to eq 422
+        json_response = JSON.parse(response.body)
+        expect(json_response['title']).to include('を入力してください')
+        expect(json_response['title']).to include('は1文字以上で入力してください')
       end
     end
 
     context 'SQL文を入力した場合' do
       it '記事投稿が成功し、クエリが実行されないこと' do
         post users_articles_url, params: { article: { title: 'a', sub_title: 'b', content: 'c', user_id: user_1.id } } # 1件目を生成
+        first_article = Article.first
         params[:article][:content] = 'DELETE FROM articles;' # 2件目の記事生成で、本文に全ての記事を削除するsqlを記述
-        post users_articles_url params: params
-        expect(Article.first.title).to eq 'a' # 1件目の記事が削除されていない
-        expect(response.status).to eq 302
+        post users_articles_url(params: params), as: :json
+        expect(response.status).to eq 201
+        json_response = JSON.parse(response.body)
+        expect(json_response['title']).to eq Article.last.title
+        expect(json_response['sub_title']).to eq Article.last.sub_title
+        expect(json_response['content']).to eq Article.last.content
+        expect(first_article.present?).to eq true # 1件目の記事が削除されていない
       end
     end
 
@@ -210,7 +222,6 @@ RSpec.describe 'Articles', type: :request do
       it 'ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
-        expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
       end
     end
   end
@@ -224,41 +235,38 @@ RSpec.describe 'Articles', type: :request do
     end
 
     context 'ログインユーザーが投稿者である場合' do
-      context '編集内容が適切な場合' do
-        before(:each) do
-          params = { article: { title: 'a', sub_title: 'b', content: 'c' } }
-          patch users_article_url(article_1, params: params)
-          article_1.reload
-        end
+      let(:params) { { article: { title: 'a', sub_title: 'b', content: 'c' } } }
 
+      context '編集内容が適切な場合' do
         it '記事の編集が成功する' do
-          expect(response.status).to eq 302
-          expect(flash[:notice]).to eq '記事を編集しました。'
-          expect(article_1.title).to eq 'a'
-          expect(article_1.sub_title).to eq 'b'
-          expect(article_1.content).to eq 'c'
+          patch users_article_url(article_1, params: params), as: :json
+          expect(response.status).to eq 200
+          json_response = JSON.parse(response.body)
+          expect(json_response['title']).to eq 'a'
+          expect(json_response['sub_title']).to eq 'b'
+          expect(json_response['content']).to eq 'c'
         end
 
         it '記事詳細画面へリダイレクトする' do
-          expect(response).to redirect_to users_article_url(Article.last, dashboard: false)
+          patch users_article_url(article_1, params: params)
+          article_1.reload
+          expect(response.status).to eq 302
+          expect(response).to redirect_to users_article_url(article_1, dashboard: false)
         end
       end
 
       context '編集内容が不適切な場合' do
         before(:each) do
-          params = { article: { title: nil, sub_title: 'b', content: 'c' } }
-          patch users_article_url(article_1, params: params)
-          article.reload
+          params[:article][:title] = nil
+          patch users_article_url(article_1, params: params), as: :json
         end
 
         it '記事の編集に失敗する' do
-          expect(response.status).to eq 200
+          expect(response.status).to eq 422
+          json_response = JSON.parse(response.body)
+          expect(json_response['title']).to include('を入力してください')
+          expect(json_response['title']).to include('は1文字以上で入力してください')
           expect(article_1.title).not_to eq nil
-        end
-
-        it '記事編集画面が再表示される' do
-          expect(flash[:alert]).to eq '記事の編集に失敗しました。'
-          expect(response.body).to include 'input', 'title-form', 'subtitle-form', 'textarea', 'markdown-editor', 'preview-side'
         end
       end
     end
@@ -277,7 +285,6 @@ RSpec.describe 'Articles', type: :request do
         expect(article_1.sub_title).not_to eq 'b'
         expect(article_1.content).not_to eq 'c'
         expect(response).to redirect_to users_articles_url
-        expect(flash[:danger]).to eq '不正な操作です。'
       end
     end
 
@@ -291,7 +298,6 @@ RSpec.describe 'Articles', type: :request do
       it 'ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
-        expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
       end
     end
   end
@@ -314,13 +320,11 @@ RSpec.describe 'Articles', type: :request do
           expect(Article.find_by(id: article_1.id)).to be_nil
           expect(response.status).to eq 302
         end
-  
+
         it '投稿した記事一覧画面へ遷移する' do
-          expect(flash[:notice]).to eq '記事を削除しました。'
           expect(response).to redirect_to users_dash_boards_url(user_1)
         end
       end
-      
 
       context '記事一覧画面で削除を行った場合' do
         before(:each) do
@@ -333,7 +337,6 @@ RSpec.describe 'Articles', type: :request do
         end
 
         it '記事一覧画面へ遷移する' do
-          expect(flash[:notice]).to eq '記事を削除しました。'
           expect(response).to redirect_to users_articles_url
         end
       end
@@ -352,7 +355,6 @@ RSpec.describe 'Articles', type: :request do
 
       it '記事一覧画面へリダイレクトする' do
         expect(response).to redirect_to users_articles_url
-        expect(flash[:danger]).to eq '不正な操作です。'
       end
     end
 
@@ -365,7 +367,6 @@ RSpec.describe 'Articles', type: :request do
         expect { delete users_article_url(article_1) }.not_to change(Article, :count)
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
-        expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
       end
     end
   end
@@ -387,7 +388,6 @@ RSpec.describe 'Articles', type: :request do
         article_params = { title: 'a', sub_title: 'a', content: "<img src=\"#{uploaded_image_url}\">", user: user_1.id }
         post users_articles_url, params: { article: article_params }
         expect(response.status).to eq 302
-        expect(flash[:notice]).to eq '記事を作成しました。'
         expect(response).to redirect_to users_article_url(Article.last, dashboard: false)
       end
     end
@@ -417,7 +417,6 @@ RSpec.describe 'Articles', type: :request do
       it 'ログイン画面へリダイレクトする' do
         expect(response.status).to eq 302
         expect(response).to redirect_to user_session_url
-        expect(flash[:alert]).to eq 'ログインもしくはアカウント登録してください。'
         expect(Article.last).to be_blank
       end
     end

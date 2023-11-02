@@ -71,14 +71,23 @@ module Users
     end
 
     def update
-      if @article.update(article_params)
-        flash[:notice] = '記事を編集しました。'
-        redirect_to users_article_url(@article, dashboard: params[:dashboard], page: params[:page])
-      else
-        flash.now[:alert] = '記事の編集に失敗しました。'
-        render :edit
+      respond_to do |format|
+        if @article.update(article_params)
+          format.html do
+            flash[:notice] = '記事を編集しました。'
+            redirect_to users_article_url(@article, dashboard: params[:dashboard], page: params[:page])
+          end
+          format.json { render json: @article, status: :ok }
+        else
+          format.html do
+            flash.now[:alert] = '記事の編集に失敗しました。'
+            render :edit
+          end
+          format.json { render json: @article.errors, status: :unprocessable_entity }
+        end
       end
     end
+    
 
     def destroy
       flash[:notice] = '記事を削除しました。'
