@@ -298,7 +298,7 @@ RSpec.describe 'Articles', type: :system do
             click_link '編集'
           end
 
-          it '編集ボタン押下で記事詳細画面へ遷移する' do
+          it '編集ボタン押下で記事編集画面へ遷移する' do
             expect(page).to have_current_path edit_users_article_path(article), ignore_query: true
             expect(page).to have_field('article_title', with: article.title)
             expect(page).to have_field('article_sub_title', with: article.sub_title)
@@ -546,7 +546,7 @@ RSpec.describe 'Articles', type: :system do
           end
 
           it '前方一致する記事を返す' do
-            fill_in 'input-title', with: 'R'
+            fill_in 'input-title', with: 'RSp'
             find_button(text: '検索する').click
             expect(page).to have_content article.title
             expect(page).to have_content article.sub_title
@@ -554,7 +554,7 @@ RSpec.describe 'Articles', type: :system do
           end
 
           it '中央一致する記事を返す' do
-            fill_in 'input-title', with: 'Sp'
+            fill_in 'input-title', with: 'Spe'
             find_button(text: '検索する').click
             expect(page).to have_content article.title
             expect(page).to have_content article.sub_title
@@ -562,7 +562,7 @@ RSpec.describe 'Articles', type: :system do
           end
 
           it '後方一致する記事を返す' do
-            fill_in 'input-title', with: 'c'
+            fill_in 'input-title', with: 'pec'
             find_button(text: '検索する').click
             expect(page).to have_content article.title
             expect(page).to have_content article.sub_title
@@ -677,15 +677,15 @@ RSpec.describe 'Articles', type: :system do
                 expect(page).not_to have_content article_2.user.name
               end
 
-              it '指定範囲の記事が表示される' do
+              it '指定開始日からテスト当日までの記事が表示される' do
                 expect(page).to have_content article.title
                 expect(page).to have_content article.sub_title
                 expect(page).to have_content article.user.name
               end
             end
 
-            context '2022-01-01に指定した場合（当日テスト）' do
-              it '指定日範囲の記事が表示される' do
+            context '2022-01-01に指定した場合' do
+              it '指定開始日からテスト当日までの記事が表示される' do
                 find('#input-start').set('01/01/2022')
                 find_button(text: '検索する').click
                 expect(page).to have_content article.title
@@ -698,7 +698,7 @@ RSpec.describe 'Articles', type: :system do
             end
 
             context '2021-12-31に指定した場合（境界値・前日）' do
-              it '指定日範囲の記事が表示される' do
+              it '指定開始日からテスト当日までの記事が表示される' do
                 find('#input-start').set('31/12/2021')
                 find_button(text: '検索する').click
                 expect(page).to have_content article.title
@@ -1224,21 +1224,21 @@ RSpec.describe 'Articles', type: :system do
           end
 
           it '前方一致する記事を返す' do
-            fill_in 'input-title', with: 'R'
+            fill_in 'input-title', with: 'RSp'
             find_button(text: '検索する').click
             expect(page).to have_content article.title
             expect(page).to have_content article.sub_title
           end
 
           it '中央一致する記事を返す' do
-            fill_in 'input-title', with: 'Sp'
+            fill_in 'input-title', with: 'Spe'
             find_button(text: '検索する').click
             expect(page).to have_content article.title
             expect(page).to have_content article.sub_title
           end
 
           it '後方一致する記事を返す' do
-            fill_in 'input-title', with: 'c'
+            fill_in 'input-title', with: 'pec'
             find_button(text: '検索する').click
             expect(page).to have_content article.title
             expect(page).to have_content article.sub_title
