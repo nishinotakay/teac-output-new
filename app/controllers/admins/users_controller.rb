@@ -1,11 +1,10 @@
 module Admins
   class UsersController < Admins::Base
     require 'date'
-    before_action :authenticate_admin!, only: %i[new create edit update destroy admins_show]
-    before_action :find_profile, only: %i[edit update destroy]
+    before_action :authenticate_admin!, only: %i[show edit update destroy admins_show]
+    before_action :set_user, only: %i[show edit update destroy]
 
     def show
-      @user = User.find(params[:id])
       @profile = @user.profile
       today = Date.today.strftime('%Y%m%d').to_i
 
@@ -17,11 +16,9 @@ module Admins
     end
 
     def edit
-      @user = User.find(params[:id])
     end
 
     def update
-      @user = User.find(params[:id])
       if @user.update(users_params)
         redirect_to admins_users_path, notice: 'ユーザー情報の更新が完了しました'
       else
@@ -30,7 +27,6 @@ module Admins
     end
 
     def destroy
-      @user = User.find(params[:id])
       if @user.destroy
         flash[:success] = "#{@user.name}のデータを削除しました。"
         # ユーザー 一覧ページへリダイレクト
@@ -64,32 +60,15 @@ module Admins
                else
                  User.all&.page(params[:page])&.per(30)
                end
-
-      @profiles = Profile.all
     end
 
     def admins_show
     end
 
-    def new
-      @profile = Profile.new
-    end
-
-    def create
-      @profile = Profile.new(profile_params)
-      @profile.user = current_user
-      if @profile.save
-        redirect_to users_profiles_path, notice: 'プロフィール情報の入力が完了しました'
-      else
-        render :new
-      end
-    end
-
     private
 
-    def find_profile
+    def set_user
       @user = User.find(params[:id])
-      @profile = @user.profile
     end
 
     def users_params
