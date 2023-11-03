@@ -73,7 +73,7 @@ RSpec.describe Tweet, type: :model do
 
       it 'バリデーションをパスしない' do
         expect(tweet.valid?).to eq(false)
-        expect(tweet.errors.full_messages).to eq(['Imagesは4つまでしかアップロードできません。'])
+        expect(tweet.errors.full_messages).to eq(['画像は4つまでしかアップロードできません'])
       end
     end
 
@@ -97,7 +97,7 @@ RSpec.describe Tweet, type: :model do
 
       it 'バリデーションをパスしない' do
         expect(tweet.valid?).to eq(false)
-        expect(tweet.errors.full_messages).to eq(['Imagesは1つのファイル5MB以内にして下さい。'])
+        expect(tweet.errors.full_messages).to eq(['画像は1つのファイルにつき5MB以内にして下さい'])
       end
     end
 
@@ -108,7 +108,7 @@ RSpec.describe Tweet, type: :model do
 
       it 'バリデーションをパスしない' do
         expect(tweet.valid?).to eq(false)
-        expect(tweet.errors.full_messages).to eq(['Imagesはpng形式またはjpeg形式でアップロードして下さい。'])
+        expect(tweet.errors.full_messages).to eq(['画像はpng形式またはjpeg形式でアップロードして下さい'])
       end
     end
 
@@ -153,7 +153,7 @@ RSpec.describe Tweet, type: :model do
     let!(:tweet_comment) { create_list(:tweet_comment, 3, content: 'tweet_comment_test', user: user, tweet: tweet, recipient_id: tweet.user_id) }
 
     context 'つぶやきを削除する場合' do
-      it '3つの関連付けられたtweet_commentsが削除される' do
+      it '3つの関連付けられたコメントが削除される' do
         expect { tweet.destroy }.to change(TweetComment, :count).by(-3)
       end
     end
