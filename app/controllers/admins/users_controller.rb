@@ -29,7 +29,6 @@ module Admins
     def destroy
       if @user.destroy
         flash[:success] = "#{@user.name}のデータを削除しました。"
-        # ユーザー 一覧ページへリダイレクト
         redirect_to admins_users_path
       else
         render :index
