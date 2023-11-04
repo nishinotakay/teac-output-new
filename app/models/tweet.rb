@@ -21,18 +21,22 @@ class Tweet < ApplicationRecord
     finish = Time.zone.parse(filter[:finish].presence || Date.current.to_s).end_of_day
 
     query = with_attached_images
-            .includes(:user, { user: [:profile, { profile: :image_attachment }] }, :tweet_comments)
-            .page(page) # ここでページ番号を指定
-            .per(30)
+      .includes(:user, { user: [:profile, { profile: :image_attachment }] }, :tweet_comments)
+      .page(page) # ここでページ番号を指定
+      .per(30)
 
     query = user_id ? query.where(user_id: user_id) : query
 
-    query = filter.compact.blank? ? query : query.left_joins(:user)
-                                                   .where('tweets.post LIKE :post', post: "%#{filter[:post]}%")
-                                                   .where('tweets.created_at BETWEEN ? AND ?', start, finish)
-                                                   .where('users.name LIKE :author', author: "%#{filter[:author]}%")
+    query = if filter.compact.blank?
+              query
+            else
+              query.left_joins(:user)
+                .where('tweets.post LIKE :post', post: "%#{filter[:post]}%")
+                .where('tweets.created_at BETWEEN ? AND ?', start, finish)
+                .where('users.name LIKE :author', author: "%#{filter[:author]}%")
+            end
 
-    query.order("tweets.created_at #{filter[:order]}" || 'DESC' ).presence || Tweet.none
+    query.order("tweets.created_at #{filter[:order]}" || 'DESC').presence || Tweet.none
   end
 
   def self.tweet_and_image(tweets)

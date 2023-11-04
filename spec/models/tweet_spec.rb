@@ -10,7 +10,7 @@ RSpec.describe Tweet, type: :model do
         tweet.post = 'c' * 1
       end
 
-      it 'バリデーションをパスする' do
+      it 'バリデーションが通ること' do
         expect(tweet.valid?).to eq(true)
         expect(tweet.errors).to be_empty
       end
@@ -21,7 +21,7 @@ RSpec.describe Tweet, type: :model do
         tweet.post = ''
       end
 
-      it 'バリデーションをパスしない' do
+      it 'バリデーションが通らないこと' do
         expect(tweet.valid?).to eq(false)
         expect(tweet.errors.full_messages).to eq(['投稿内容を入力してください'])
       end
@@ -32,7 +32,7 @@ RSpec.describe Tweet, type: :model do
         tweet.post = 'c' * 255
       end
 
-      it 'バリデーションをパスする' do
+      it 'バリデーションが通ること' do
         expect(tweet.valid?).to eq(true)
         expect(tweet.errors).to be_empty
       end
@@ -43,7 +43,7 @@ RSpec.describe Tweet, type: :model do
         tweet.post = 'c' * 256
       end
 
-      it 'バリデーションをパスしない' do
+      it 'バリデーションが通らないこと' do
         expect(tweet.valid?).to eq(false)
         expect(tweet.errors.full_messages).to eq(['投稿内容は255文字以内で入力してください'])
       end
@@ -53,11 +53,11 @@ RSpec.describe Tweet, type: :model do
       before(:each) do
         4.times do |i|
           tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', "test#{i + 1}.png"),
-            filename: "test#{i + 1}.png", content_type: 'image/png'))
+          filename: "test#{i + 1}.png", content_type: 'image/png'))
         end
       end
 
-      it 'バリデーションをパスする。' do
+      it 'バリデーションが通ること' do
         expect(tweet.valid?).to eq(true)
         expect(tweet.errors).to be_empty
       end
@@ -71,7 +71,7 @@ RSpec.describe Tweet, type: :model do
         end
       end
 
-      it 'バリデーションをパスしない' do
+      it 'バリデーションが通らないこと' do
         expect(tweet.valid?).to eq(false)
         expect(tweet.errors.full_messages).to eq(['画像は4つまでしかアップロードできません'])
       end
@@ -83,7 +83,7 @@ RSpec.describe Tweet, type: :model do
           filename: 'test5mb.jpg', content_type: 'image/jpeg'))
       end
 
-      it 'バリデーションをパスする' do
+      it 'バリデーションが通ること' do
         expect(tweet.valid?).to eq(true)
         expect(tweet.errors).to be_empty
       end
@@ -95,7 +95,7 @@ RSpec.describe Tweet, type: :model do
           filename: 'test6mb.jpg', content_type: 'image/jpeg'))
       end
 
-      it 'バリデーションをパスしない' do
+      it 'バリデーションが通らないこと' do
         expect(tweet.valid?).to eq(false)
         expect(tweet.errors.full_messages).to eq(['画像は1つのファイルにつき5MB以内にして下さい'])
       end
@@ -106,7 +106,7 @@ RSpec.describe Tweet, type: :model do
         tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'test_csv.csv'), filename: 'test_csv.csv', content_type: 'text/csv'))
       end
 
-      it 'バリデーションをパスしない' do
+      it 'バリデーションが通らない' do
         expect(tweet.valid?).to eq(false)
         expect(tweet.errors.full_messages).to eq(['画像はpng形式またはjpeg形式でアップロードして下さい'])
       end
@@ -117,7 +117,7 @@ RSpec.describe Tweet, type: :model do
         tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', filename), filename: filename, content_type: content_type))
       end
 
-      it "#{content_type}はバリデーションをパスする" do
+      it "#{content_type}はバリデーションが通ること" do
         expect(tweet.valid?).to eq(true)
         expect(tweet.errors).to be_empty
       end
