@@ -62,7 +62,7 @@ admin = Admin.new(
 admin.skip_confirmation! # deviseの確認メールをスキップ
 admin.save!
 
-300.times do
+50.times do
   user = User.order('RAND()').first
 
   post = Post.new(
@@ -75,7 +75,40 @@ admin.save!
   post.save!
 end
 
-50.times do |n| # テナント作成
+Post.create!(title: 'Rspecについて_2',
+  body: 'Rspec勉強会続き',
+  youtube_url:'https://www.youtube.com/watch?v=w5KGJ7vJIug',
+  created_at: '2023-09-30',
+  user_id: '2'
+)
+Post.create!(title: 'Rspecについて',
+  body: 'Rspec勉強会',
+  youtube_url: 'https://www.youtube.com/watch?v=Li_pZRUKxV8',
+  created_at: '2023-08-30',
+  user_id: '5'
+)
+Post.create!(title: 'Docker入門 〜コンテナファイルの永久化〜',
+  body: 'Docker入門',
+  youtube_url: 'https://youtu.be/L18szoKQefI',
+  created_at: '2023-07-30',
+  user_id: '6'
+)
+Post.create!(title: 'フリーエンジニアになるために必要なこと',
+  body: 'rubocopの使い方、DBツールの使い方',
+  youtube_url: 'https://youtu.be/Or229iZHCR0',
+  created_at: '2023-10-01',
+  user_id: '1'
+)
+Post.create!(title: 'payjpを用いての決済機能について解説',
+  body: '質問コーナー',
+  youtube_url: 'https://youtu.be/UKKmjAtuwWY',
+  created_at: '2022-09-30',
+  user_id: '2'
+)
+
+puts "Posts Created"
+
+50.times do |n|
   Tenant.create!(name: "テナント#{n+1}")
 end
 
@@ -107,7 +140,7 @@ Profile.create!(birthday: '2000-12-25',
   hobby: '食べ歩き',
   user_id: '5')
 
-  puts "Profile Created"
+puts "Profile Created"
 
 User.all.each do |u|
   5.times do |i|
