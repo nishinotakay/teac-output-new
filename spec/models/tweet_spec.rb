@@ -176,7 +176,6 @@ RSpec.describe Tweet, type: :model do
         let(:filter) { { author: '山田太郎', order: 'DESC' } }
 
         it '一致した件数を返すこと' do
-          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(1)
         end
       end
