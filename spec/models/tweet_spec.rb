@@ -164,7 +164,7 @@ RSpec.describe Tweet, type: :model do
     let!(:tweet) { create(:tweet, post: "it's a sunny day!", created_at: '2022-01-01 00:00:00', user: user) }
     let(:user1) { create(:user, name: '山下達郎', email: Faker::Internet.email, password: 'password') }
     let!(:tweet1) { create(:tweet, post: 'ミュージックday!', created_at: '2023-04-01', user: user1) }
-    let!(:tweet2) { create(:tweet, post: '2021年のポスト', created_at: '2021-12-31 23:59:59', user: user1) }
+    let!(:tweet2) { create(:tweet, post: '2021年のポストday', created_at: '2021-12-31 23:59:59', user: user1) }
 
     context '絞り込み検索' do
       context '投稿者の名前を完全一致で検索する場合' do
@@ -329,6 +329,50 @@ RSpec.describe Tweet, type: :model do
         end
       end
     end
+
+
+    context '新しい順を押下し、かつ全ての条件を満たす検索する場合' do
+      let(:filter) { {
+                        author: '山',
+                        post: 'day',
+                        start: '2021-12-31',
+                        finish: '2023-04-01',
+                        order: 'DESC'
+                      }
+                    }
+
+      it '一致した件数を返すこと' do
+        search_tweets = described_class.apply_and_sort_query(filter)
+        expect(search_tweets.count).to eq(3)
+      end
+
+      it '降順の投稿日時の配列を返すこと' do
+        search_tweets = described_class.apply_and_sort_query(filter)
+        expect(search_tweets.map(&:created_at)).to eq [Time.zone.parse('2023-04-01'), Time.zone.parse('2022-01-01'), Time.zone.parse('2021-12-31 23:59:59')]
+      end
+    end
+
+    context '古い順を押下し、かつ全ての条件を満たす検索する場合' do
+      let(:filter) { {
+                        author: '山',
+                        post: 'day',
+                        start: '2021-12-31',
+                        finish: '2023-04-01',
+                        order: 'ASC'
+                      }
+                    }
+
+      it '一致した件数を返すこと' do
+        search_tweets = described_class.apply_and_sort_query(filter)
+        expect(search_tweets.count).to eq(3)
+      end
+
+      it '降順の投稿日時の配列を返すこと' do
+        search_tweets = described_class.apply_and_sort_query(filter)
+        expect(search_tweets.map(&:created_at)).to eq [Time.zone.parse('2021-12-31 23:59:59'), Time.zone.parse('2022-01-01'), Time.zone.parse('2023-04-01')]
+      end
+    end
+
   end
 
   describe '#build_filter' do
