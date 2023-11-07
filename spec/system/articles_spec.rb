@@ -55,10 +55,7 @@ RSpec.describe 'Articles', type: :system do
         context 'ログインユーザーの投稿記事' do
           context '３点リーダー押下' do
             before(:each) do
-              page.all(:button, '︙')[1].click # 一覧の1つ目[1]がログインユーザー（user）の記事
-              # find_button( '︙', match: :first).click
-              # click_button '︙', match: :first もOK
-              # find('button', text: '︙', match: :first).click もOK
+              page.all(:button, '︙')[1].click # 一覧の2つ目[1]がログインユーザー（user）の記事
             end
 
             it '閲覧・編集・削除ボタンが表示される' do
@@ -72,6 +69,9 @@ RSpec.describe 'Articles', type: :system do
         context 'ログインユーザー以外の記事' do
           before '３点リーダー押下' do
             page.all(:button, '︙')[0].click
+            # find_button( '︙', match: :first).click
+            # click_button '︙', match: :first もOK
+            # find('button', text: '︙', match: :first).click もOK
           end
 
           it '閲覧ボタンのみ表示される' do
@@ -90,13 +90,10 @@ RSpec.describe 'Articles', type: :system do
 
         it 'ページ割で表示される' do
           page.execute_script('window.scroll(0, 1000)') # ページ割部分まで下へスクロール
-          expect(page).to have_selector '.pagination' # 不要なテストかも
-          expect(page).to have_selector('.article-paginate') # 不要なテストかも
           expect(page).to have_link('1', class: 'page-link')
           expect(page).to have_link('2', class: 'page-link')
           expect(page).to have_link('›', class: 'page-link')
           expect(page).to have_link('»', class: 'page-link')
-          # expect(page).to have_link('...', class: 'page-link') 5ページ以上から...が表示される
         end
       end
 
@@ -266,7 +263,7 @@ RSpec.describe 'Articles', type: :system do
         end
       end
 
-      context 'ログインユーザーの記事３点リーダー' do # この箇所で、高速テストの影響で、不安定なエラー発生する！解決案は, wait: 10 か、sleep 1
+      context 'ログインユーザーの記事３点リーダー' do # 不安定なエラー発生する。解決案は, wait: 10 か、sleep 1
         before(:each) do
           page.all('.btn', text: '︙')[1].click # 2番目を押下
           # click_button '︙', match: :first 1番目を押下、この記述だと２番目以降を押下指定する実装不可
@@ -429,10 +426,8 @@ RSpec.describe 'Articles', type: :system do
 
     describe '機能テスト' do
       it '３点リーダーから記事の削除ができる' do
-        # ログインユーザーの記事の３点リーダーから削除ボタンを押下する
-
         article_first = Article.first.id
-        page.all('.btn', text: '︙')[1].click # click_link '︙', match: :first は ×
+        page.all('.btn', text: '︙')[1].click
         # click_link '削除'
         find_link('削除').click
         expect {
@@ -442,16 +437,7 @@ RSpec.describe 'Articles', type: :system do
         expect(page).not_to have_content article.title
         expect(page).not_to have_content article.sub_title
         expect(page).not_to have_content article.user.name
-        expect(Article.exists?(article_first)).to be_falsey # DBに無い
-        # expect(Article.where(id: article_first).count).to eq 0 # DBに無い
-        # page.accept_confirm('選択した記事を削除します。') do # accept_confirm のデフォルトがOK押下する！
-
-        # click_button "OK"
-        # confirm
-        # sleep 1 ここだとエラー！処理速度が速いせいで！
-        # end
-        # 記事が削除されていることを確認する
-        # sleep 1
+        expect(Article).not_to exist(article_first) # DBに無い
       end
 
       context '並べ替えボタン' do
@@ -479,7 +465,6 @@ RSpec.describe 'Articles', type: :system do
             find('.form-select option[value="ASC"]').click
             find_button(text: '並べ替える').click
             # sleep 3
-
             expect(find('#article-title', match: :first).text).to eq Article.first.title
           end
         end
@@ -487,7 +472,6 @@ RSpec.describe 'Articles', type: :system do
 
       context '絞り込み検索ボタン' do
         before(:each) do
-          # article
           find_button(text: '絞り込み検索').click
         end
 
@@ -888,7 +872,6 @@ RSpec.describe 'Articles', type: :system do
       it 'ログインユーザー以外の記事は表示されない' do
         expect(page).not_to have_content article_2.title
         expect(page).not_to have_content article_2.sub_title
-        # expect(page).not_to have_content article_2.created_at.strftime('%Y/%m/%d %H:%M')
       end
 
       context '３点リーダー' do
@@ -923,7 +906,6 @@ RSpec.describe 'Articles', type: :system do
           expect(page).to have_link('2', class: 'page-link')
           expect(page).to have_link('›', class: 'page-link')
           expect(page).to have_link('»', class: 'page-link')
-          # expect(page).to have_link('...', class: 'page-link') 5ページ以上から...が表示される
         end
       end
 
@@ -1042,7 +1024,7 @@ RSpec.describe 'Articles', type: :system do
 
           it '記事詳細画面へ遷移する' do
             expect(page).to have_current_path users_article_path(article), ignore_query: true
-            expect(page).to have_content(article.title) # ページ遅延エラー対策
+            expect(page).to have_content(article.title)
             expect(page).to have_content(article.sub_title)
             expect(page).to have_content(article.content, wait: 10)
           end
@@ -1101,10 +1083,8 @@ RSpec.describe 'Articles', type: :system do
         it '5を押下で、5ページ目へ遷移する' do
           find('.page-link', text: '5').click
           page.execute_script('window.scroll(0, 1000)')
-          # sleep 1
           sleep 1
           background_color = find_link('5').native.css_value('background-color')
-
           expect(background_color).to eq 'rgba(13, 110, 253, 1)'
           # sleep 2
           # expect(page).to have_selector('a', text: '5', class: 'page-link')
@@ -1115,7 +1095,6 @@ RSpec.describe 'Articles', type: :system do
           page.execute_script('window.scroll(0, 1000)')
           sleep 1
           background_color = find_link('2').native.css_value('background-color')
-
           expect(background_color).to eq 'rgba(13, 110, 253, 1)'
           # expect(page).to have_selector('a', text: '2', class: 'page-link')
         end
@@ -1125,7 +1104,6 @@ RSpec.describe 'Articles', type: :system do
           page.execute_script('window.scroll(0, 1000)')
           sleep 1
           background_color = find_link('5').native.css_value('background-color')
-
           expect(background_color).to eq 'rgba(13, 110, 253, 1)'
           # expect(page).to have_selector('a', text: '5', class: 'page-link')
           expect(page).not_to have_selector('a', text: '»', class: 'page-link')
@@ -1153,7 +1131,6 @@ RSpec.describe 'Articles', type: :system do
           sleep 2
           background_color = find('.page-link', text: '1').native.css_value('background-color')
           expect(background_color).to eq 'rgba(13, 110, 253, 1)'
-
           expect(page).not_to have_selector('.page-link', text: '«', class: 'page-link')
         end
       end
@@ -1172,7 +1149,7 @@ RSpec.describe 'Articles', type: :system do
         expect(page).not_to have_content article.title
         expect(page).not_to have_content article.sub_title
         expect(page).not_to have_content article.user.name
-        expect(Article.exists?(article_first)).to be_falsey
+        expect(Article).not_to exist(article_first)
         # sleep 1
       end
 
@@ -1208,7 +1185,6 @@ RSpec.describe 'Articles', type: :system do
         let(:user_article_2) { create(:article, user: user) }
 
         before(:each) do
-          # Article.create(title:'アール', sub_title:'スペック', content:'システム', user: user)
           user_article_2
           article_1
           visit current_path
