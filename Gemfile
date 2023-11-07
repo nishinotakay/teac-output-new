@@ -48,8 +48,8 @@ gem 'rails-i18n', '~> 6.0'
 
 gem 'dotenv-rails'
 gem 'rinku'
-gem 'rails-controller-testing'
 gem 'draper'
+
 group :development, :test do
   # ERD生成
   gem 'rails-erd'
