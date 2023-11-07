@@ -13,7 +13,12 @@ module Users
       end
     end
 
-    def show; end
+    def show
+      respond_to do |format|
+        format.html
+        format.json { render json: @post }
+      end
+    end
 
     def new
       @post = current_user.posts.new
