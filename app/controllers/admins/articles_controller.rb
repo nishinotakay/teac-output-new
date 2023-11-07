@@ -12,15 +12,11 @@ module Admins
         subtitle: params[:subtitle],
         content:  params[:content],
         start:    params[:start],
-        finish:   params[:finish]
+        finish:   params[:finish],
+        order:    params[:order]
       }
-      if (@paginate = filter.compact.blank?)
-        @articles = Article.includes(:admin).all.order(created_at: params[:order]).page(params[:page]).per(30)
-      else
-        (@paginate = filter.compact.present?)
-        filter[:order] = params[:order]
-        @articles = Article.includes(:admin).all.sort_filter(filter).page(params[:page]).per(30)
-      end
+  
+      @articles = Article.paginated_and_sort_filter(filter).page(params[:page])
     end
 
     def show; end
