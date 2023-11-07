@@ -53,7 +53,7 @@ RSpec.describe Tweet, type: :model do
       before(:each) do
         4.times do |i|
           tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', "test#{i + 1}.png"),
-            filename: "test#{i + 1}.png", content_type: 'image/png'))
+          filename: "test#{i + 1}.png", content_type: 'image/png'))
         end
       end
 
@@ -67,7 +67,7 @@ RSpec.describe Tweet, type: :model do
       before(:each) do
         5.times do |i|
           tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', "test#{i + 1}.png"),
-            filename: "test#{i + 1}.png", content_type: 'image/png'))
+          filename: "test#{i + 1}.png", content_type: 'image/png'))
         end
       end
 
@@ -80,7 +80,7 @@ RSpec.describe Tweet, type: :model do
     context '5MB以下の画像データをアップロードする場合' do
       before(:each) do
         tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'test_5mb.jpg'),
-          filename: 'test5mb.jpg', content_type: 'image/jpeg'))
+        filename: 'test5mb.jpg', content_type: 'image/jpeg'))
       end
 
       it 'バリデーションが通ること' do
@@ -92,7 +92,7 @@ RSpec.describe Tweet, type: :model do
     context '5MBよりも大きな画像データをアップロードする場合' do
       before(:each) do
         tweet.images.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'test_6mb.jpg'),
-          filename: 'test6mb.jpg', content_type: 'image/jpeg'))
+        filename: 'test6mb.jpg', content_type: 'image/jpeg'))
       end
 
       it 'バリデーションが通らないこと' do
@@ -165,17 +165,13 @@ RSpec.describe Tweet, type: :model do
     let(:user1) { create(:user, name: '山下達郎', email: Faker::Internet.email, password: 'password') }
     let!(:tweet1) { create(:tweet, post: 'ミュージックday!', created_at: '2023-04-01', user: user1) }
     let!(:tweet2) { create(:tweet, post: '2021年のポストday', created_at: '2021-12-31 23:59:59', user: user1) }
-    let(:search_tweets) { described_class.apply_and_sort_query(filter) }
-
-    before(:each) do
-      search_tweets
-    end
 
     context '絞り込み検索' do
       context '投稿者の名前を完全一致で検索する場合' do
         let(:filter) { { author: '山田太郎', order: 'DESC' } }
 
         it '一致した件数を返すこと' do
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(1)
         end
       end
@@ -184,6 +180,7 @@ RSpec.describe Tweet, type: :model do
         let(:filter) { { author: '山', order: 'DESC' } }
 
         it '一致した件数を返すこと' do
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(2)
         end
       end
@@ -192,6 +189,7 @@ RSpec.describe Tweet, type: :model do
         let(:filter) { { author: '田', order: 'DESC' } }
 
         it '一致した件数を返すこと' do
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(1)
         end
       end
@@ -200,6 +198,7 @@ RSpec.describe Tweet, type: :model do
         let(:filter) { { author: '郎', order: 'DESC' } }
 
         it '一致した件数を返すこと' do
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(2)
         end
       end
@@ -208,6 +207,7 @@ RSpec.describe Tweet, type: :model do
         let(:filter) { { author: '存在しない', order: 'DESC' } }
 
         it 'つぶやき一覧の件数が0になること' do
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(0)
         end
       end
@@ -216,6 +216,7 @@ RSpec.describe Tweet, type: :model do
         let(:filter) { { post: "it's a sunny day!", order: 'DESC' } }
 
         it '一致した件数を返すこと' do
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(1)
         end
       end
@@ -224,6 +225,7 @@ RSpec.describe Tweet, type: :model do
         let(:filter) { { post: "it's", order: 'DESC' } }
 
         it '一致した件数を返すこと' do
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(1)
         end
       end
@@ -232,6 +234,7 @@ RSpec.describe Tweet, type: :model do
         let(:filter) { { post: 'sunny', order: 'DESC' } }
 
         it '一致した件数を返すこと' do
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(1)
         end
       end
@@ -240,6 +243,7 @@ RSpec.describe Tweet, type: :model do
         let(:filter) { { post: 'day!', order: 'DESC' } }
 
         it '一致した件数を返すこと' do
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(2)
         end
       end
@@ -248,6 +252,7 @@ RSpec.describe Tweet, type: :model do
         let(:filter) { { post: '存在しない', order: 'DESC' } }
 
         it 'つぶやき投稿一覧の件数が0になる' do
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.count).to eq(0)
         end
       end
@@ -256,6 +261,7 @@ RSpec.describe Tweet, type: :model do
         let(:filter) { { order: 'DESC' } }
 
         it '2022年1月1日から本日までをフィルタリングすること' do
+          search_tweets = described_class.apply_and_sort_query(filter)
           search_tweets.each do |tweet|
             expect(tweet.created_at).to be >= Time.zone.parse('2022-01-01 00:00:00')
             expect(tweet.created_at).to be <= Time.zone.parse(Date.current.to_s).end_of_day
@@ -269,6 +275,7 @@ RSpec.describe Tweet, type: :model do
         let(:filter) { { start: '2021-12-31', finish: '2023-10-01', order: 'DESC' } }
 
         it '指定した日付範囲がフィルタリングされること' do
+          search_tweets = described_class.apply_and_sort_query(filter)
           search_tweets.each do |tweet|
             expect(tweet.created_at).to be >= Time.zone.parse(filter[:start])
             expect(tweet.created_at).to be <= Time.zone.parse(filter[:finish])
@@ -281,6 +288,7 @@ RSpec.describe Tweet, type: :model do
         let(:filter) { { start: '2022-04-01', order: 'DESC' } }
 
         it '指定した日付から本日までの日付範囲がフィルタリングされること' do
+          search_tweets = described_class.apply_and_sort_query(filter)
           search_tweets.each do |tweet|
             expect(tweet.created_at).to be >= Time.zone.parse('2022-04-01')
             expect(tweet.created_at).to be <= Time.zone.parse(Date.current.to_s).end_of_day
@@ -292,6 +300,7 @@ RSpec.describe Tweet, type: :model do
         let(:filter) { { finish: '2022-04-01', order: 'DESC' } }
 
         it '2022/1/1から指定された日までの日付範囲がフィルタリングされること' do
+          search_tweets = described_class.apply_and_sort_query(filter)
           search_tweets.each do |tweet|
             expect(tweet.created_at).to be >= Time.zone.parse('2022-01-01')
             expect(tweet.created_at).to be <= Time.zone.parse('2022-04-01')
@@ -306,6 +315,7 @@ RSpec.describe Tweet, type: :model do
         let(:filter) { { order: 'DESC' } }
 
         it '降順の投稿日時の配列を返すこと' do
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.map(&:created_at)).to eq [Time.zone.parse('2023-04-01'), Time.zone.parse('2022-01-01')]
         end
       end
@@ -314,6 +324,7 @@ RSpec.describe Tweet, type: :model do
         let(:filter) { { order: 'ASC' } }
 
         it '昇順の投稿日時の配列を返すこと' do
+          search_tweets = described_class.apply_and_sort_query(filter)
           expect(search_tweets.map(&:created_at)).to eq [Time.zone.parse('2022-01-01'), Time.zone.parse('2023-04-01')]
         end
       end
@@ -331,10 +342,12 @@ RSpec.describe Tweet, type: :model do
       end
 
       it '一致した件数を返すこと' do
+        search_tweets = described_class.apply_and_sort_query(filter)
         expect(search_tweets.count).to eq(3)
       end
 
       it '降順の投稿日時の配列を返すこと' do
+        search_tweets = described_class.apply_and_sort_query(filter)
         expect(search_tweets.map(&:created_at)).to eq [Time.zone.parse('2023-04-01'), Time.zone.parse('2022-01-01'), Time.zone.parse('2021-12-31 23:59:59')]
       end
     end
@@ -351,10 +364,12 @@ RSpec.describe Tweet, type: :model do
       end
 
       it '一致した件数を返すこと' do
+        search_tweets = described_class.apply_and_sort_query(filter)
         expect(search_tweets.count).to eq(3)
       end
 
       it '降順の投稿日時の配列を返すこと' do
+        search_tweets = described_class.apply_and_sort_query(filter)
         expect(search_tweets.map(&:created_at)).to eq [Time.zone.parse('2021-12-31 23:59:59'), Time.zone.parse('2022-01-01'), Time.zone.parse('2023-04-01')]
       end
     end
@@ -423,7 +438,7 @@ RSpec.describe Tweet, type: :model do
 
     before(:each) do
       profile_with_image.image.attach(fixture_file_upload(Rails.root.join('spec', 'fixtures', 'files', 'test1.png'),
-        filename: 'test1.png', content_type: 'image/png'))
+      filename: 'test1.png', content_type: 'image/png'))
       create_list(:tweet, 2, user: user_with_image)
 
       profile_without_image
