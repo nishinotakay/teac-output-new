@@ -28,8 +28,8 @@ class Post < ApplicationRecord
   end
 
   def self.apply_filters(filter)
-    start = Time.zone.parse(filter[:start].presence || '2022-01-01').beginning_of_day
-    finish = Time.zone.parse(filter[:finish].presence || Date.current.to_s).end_of_day
+    start = Time.zone.parse(filter[:start].to_s.presence || '2022-01-01').beginning_of_day
+    finish = Time.zone.parse(filter[:finish].to_s.presence || Date.current.to_s).end_of_day
 
     left_joins(:user, :admin)
       .where(['title LIKE ? AND body LIKE ?',
