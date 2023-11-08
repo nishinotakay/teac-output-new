@@ -47,8 +47,8 @@ RSpec.describe '/posts', type: :request do
   end
 
   describe 'GET /show' do
-    let!(:valid_user_post) { create(:post, title: 'Ruby', user: user) }
-    let!(:valid_admin_post) { create(:post, title: 'SQL', admin: admin) }
+    let!(:valid_user_post) { create(:post, title: 'Ruby', body: 'Ruby解説', youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo', user: user) }
+    let!(:valid_admin_post) { create(:post, title: 'SQL', body: 'SQL解説', youtube_url: 'https://www.youtube.com/watch?v=v-Mb2voyTbc', admin: admin) }
 
     context 'ユーザーがログインしている場合' do
       before(:each) do
@@ -68,10 +68,14 @@ RSpec.describe '/posts', type: :request do
         get users_post_url(valid_user_post), as: :json
         json = JSON.parse(response.body)
         expect(json['title']).to eq 'Ruby'
+        expect(json['body']).to eq 'Ruby解説'
+        expect(json['youtube_url']).to eq 'https://www.youtube.com/watch?v=AgeJhUvEezo'
 
         get users_post_url(valid_admin_post), as: :json
         json = JSON.parse(response.body)
         expect(json['title']).to eq 'SQL'
+        expect(json['body']).to eq 'SQL解説'
+        expect(json['youtube_url']).to eq 'https://www.youtube.com/watch?v=v-Mb2voyTbc'
       end
     end
 
@@ -93,10 +97,14 @@ RSpec.describe '/posts', type: :request do
         get admins_post_url(valid_user_post), as: :json
         json = JSON.parse(response.body)
         expect(json['title']).to eq 'Ruby'
+        expect(json['body']).to eq 'Ruby解説'
+        expect(json['youtube_url']).to eq 'https://www.youtube.com/watch?v=AgeJhUvEezo'
 
         get admins_post_url(valid_admin_post), as: :json
         json = JSON.parse(response.body)
         expect(json['title']).to eq 'SQL'
+        expect(json['body']).to eq 'SQL解説'
+        expect(json['youtube_url']).to eq 'https://www.youtube.com/watch?v=v-Mb2voyTbc'
       end
     end
   end
