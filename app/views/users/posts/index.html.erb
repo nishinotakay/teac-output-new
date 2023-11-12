@@ -42,7 +42,7 @@
             <ul class="dropdown-menu">
               <% if post.user_id == current_user.id %>
                 <li><%= link_to '閲覧', users_post_path(post), class:"nav-link" %></li>
-                <li><%= link_to '編集', edit_users_post_path(post), class:"nav-link" %></li>
+                <li><%= link_to '編集', edit_users_post_path(post), class:"nav-link", id:"post-edit" %></li>
                 <li><%= link_to '削除', users_post_path(post), method: :delete, class:"nav-link", data: {confirm: "#{post.title}を削除してもよろしいですか？"} %></li>
               <% else %>
                 <li><%= link_to '閲覧', users_post_path(post), class:"nav-link" %></li>
