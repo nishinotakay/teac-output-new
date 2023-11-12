@@ -70,65 +70,67 @@ RSpec.describe 'Posts', type: :system do
     end
 
     context '自分以外の投稿の場合' do
-      let(:user_a) { create(:user, name: 'タモリ') }
-      let(:other_post) {  create(:post, title: 'SQL', body: 'SQL説明動画パート１', youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo', user: user_a)}
+      let!(:user_a) { create(:user, name: 'タモリ') }
+      let!(:other_post) {  create(:post, title: 'SQL', body: 'SQL説明動画パート１', youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo', user: user_a)}
       it '編集できないこと' do
         visit users_posts_path
-        click_button '︙'
-        expect(page).to have_link('閲覧')
-        expect(page).not_to have_link('編集')
-        expect(page).not_to have_link('削除')       
+        # 一番上の「︙」ボタンをクリック
+        find('tbody tr:first-child td button.btn').click
+        # 一番上ドロップダウンメニュー内で「閲覧」のみが表示されていることを確認
+        expect(page).to have_selector('tbody tr:first-child td ul.dropdown-menu li a.nav-link', text: '閲覧')
+        expect(page).not_to have_selector('tbody tr:first-child td ul.dropdown-menu li .nav-link', text: '編集')
+        expect(page).not_to have_selector('tbody tr:first-child td ul.dropdown-menu li .nav-link', text: '削除') 
       end
     end
   end
   
-  # describe '動画投稿一覧' do
-  #   let!(:my_post) { create(:post), title: 'Ruby', user: user }
-  #   let!(:admin_post) { create(:post), body: 'SQLについての動画です', admin: admin }
-  #   let!(:other_post) { create(:post), youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo' }
+  describe '動画投稿一覧' do
+    let!(:my_post) { create(:post), title: 'Ruby', user: user }
+    let!(:admin_post) { create(:post), body: 'SQLについての動画です', admin: admin }
+    let!(:other_post) { create(:post), youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo' }
 
-  #   it '全ての動画投稿が表示されること' do
-  #     動画投稿一覧ページにアクセス     
-  #     expect(page).to have_content 'Ruby'
-  #     expect(page).to have_content 'SQLについての動画です'
-  #     expect(page).to have_content 'https://www.youtube.com/watch?v=AgeJhUvEezo'
-  #   end
+    it '全ての動画投稿が表示されること' do
+      動画投稿一覧ページにアクセス     
+      expect(page).to have_content 'Ruby'
+      expect(page).to have_content 'SQLについての動画です'
+      expect(page).to have_content 'https://www.youtube.com/watch?v=AgeJhUvEezo'
+    end
 
-  #   context '並び替えをする場合' do
-  #     動画投稿一覧ページにアクセス
-  #     並び替えボタンを押す
-  #     it '投稿日の古い順に並び替えができること' do
-  #       プルダウンで古い順を選択
-  #       並び替えるボタンを押す
-  #       一番古い投稿が一番上に表示
-  #     end
-  #     it '投稿日の新しい順に並び替えができること' do
-  #       プルダウンで新しい順を選択
-  #       並び替えるボタンを押す
-  #       一番新しい投稿が一番上に表示
-  #     end
-  #   end
+    context '並び替えをする場合' do
+      動画投稿一覧ページにアクセス
+      並び替えボタンを押す
+      it '投稿日の古い順に並び替えができること' do
+        プルダウンで古い順を選択
+        並び替えるボタンを押す
+        一番古い投稿が一番上に表示
+      end
+      it '投稿日の新しい順に並び替えができること' do
+        プルダウンで新しい順を選択
+        並び替えるボタンを押す
+        一番新しい投稿が一番上に表示
+      end
+    end
 
-  #   context '絞り込み検索をする場合' do
-  #     動画投稿一覧ページにアクセス
-  #     絞り込み検索ボタンを押す
-  #     it '投稿者名で絞り込みができること' do
-  #       投稿者フォームに名前を入力する
-  #       検索するボタンを押す
-  #       正しい投稿が表示されている
-  #     end
-  #     it 'タイトルで絞り込みができること' do
-  #       タイトルフォームに入力する
-  #       検索ボタンを押す
-  #       正しい投稿が表示されている
-  #     end
-  #     it '投稿日で絞り込みができること' do
-  #       開始日、終了日に日付を入力する
-  #       検索ボタンを押す
-  #       正しい投稿が表示されている
-  #     end
-  #   end
-  # end
+    context '絞り込み検索をする場合' do
+      動画投稿一覧ページにアクセス
+      絞り込み検索ボタンを押す
+      it '投稿者名で絞り込みができること' do
+        投稿者フォームに名前を入力する
+        検索するボタンを押す
+        正しい投稿が表示されている
+      end
+      it 'タイトルで絞り込みができること' do
+        タイトルフォームに入力する
+        検索ボタンを押す
+        正しい投稿が表示されている
+      end
+      it '投稿日で絞り込みができること' do
+        開始日、終了日に日付を入力する
+        検索ボタンを押す
+        正しい投稿が表示されている
+      end
+    end
+  end
 
   # describe '動画投稿削除のテスト' do
   #   let!(:my_post) { create(:post), title: 'Ruby', user: user }
