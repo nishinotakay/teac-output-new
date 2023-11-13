@@ -55,27 +55,48 @@ RSpec.describe '/posts', type: :request do
         user.confirm
         sign_in user
       end
-
-      it 'リクエストが成功すること' do
-        get users_post_url(valid_user_post)
-        expect(response).to have_http_status(:ok)
-
-        get users_post_url(valid_admin_post)
-        expect(response).to have_http_status(:ok)
+      context '自分の投稿を閲覧する場合' do
+        it 'リクエストが成功すること' do
+          get users_post_url(valid_user_post)
+          expect(response).to have_http_status(:ok)
+        end
+        it '正確なタイトル名が返ってきていること' do
+          get users_post_url(valid_user_post), as: :json
+          json = JSON.parse(response.body)
+          expect(json['title']).to eq 'Ruby'
+        end
+        it '正確な内容が返ってきていること' do
+          get users_post_url(valid_user_post), as: :json
+          json = JSON.parse(response.body)
+          expect(json['body']).to eq 'Ruby解説'
+        end
+        it '正確なURLが返ってきていること' do
+          get users_post_url(valid_user_post), as: :json
+          json = JSON.parse(response.body)
+          expect(json['youtube_url']).to eq 'https://www.youtube.com/watch?v=AgeJhUvEezo'
+        end
       end
 
-      it '正確な値が返ってきていること' do
-        get users_post_url(valid_user_post), as: :json
-        json = JSON.parse(response.body)
-        expect(json['title']).to eq 'Ruby'
-        expect(json['body']).to eq 'Ruby解説'
-        expect(json['youtube_url']).to eq 'https://www.youtube.com/watch?v=AgeJhUvEezo'
-
-        get users_post_url(valid_admin_post), as: :json
-        json = JSON.parse(response.body)
-        expect(json['title']).to eq 'SQL'
-        expect(json['body']).to eq 'SQL解説'
-        expect(json['youtube_url']).to eq 'https://www.youtube.com/watch?v=v-Mb2voyTbc'
+      context '他人の投稿を閲覧する場合' do
+        it 'リクエストが成功すること' do
+          get users_post_url(valid_admin_post)
+          expect(response).to have_http_status(:ok)
+        end
+        it '正確なタイトル名が返ってきていること' do
+          get users_post_url(valid_admin_post), as: :json
+          json = JSON.parse(response.body)
+          expect(json['title']).to eq 'SQL'
+        end
+        it '正確な内容が返ってきていること' do
+          get users_post_url(valid_admin_post), as: :json
+          json = JSON.parse(response.body)
+          expect(json['body']).to eq 'SQL解説'
+        end
+        it '正確なURLが返ってきていること' do 
+          get users_post_url(valid_admin_post), as: :json
+          json = JSON.parse(response.body)
+          expect(json['youtube_url']).to eq 'https://www.youtube.com/watch?v=v-Mb2voyTbc'
+        end
       end
     end
 
@@ -84,27 +105,48 @@ RSpec.describe '/posts', type: :request do
         admin.confirm
         sign_in admin
       end
-
-      it 'リクエストが成功すること' do
-        get admins_post_url(valid_user_post)
-        expect(response).to have_http_status(:ok)
-
-        get admins_post_url(valid_admin_post)
-        expect(response).to have_http_status(:ok)
+      context '自分の投稿を閲覧する場合' do
+        it 'リクエストが成功すること' do
+          get admins_post_url(valid_admin_post)
+          expect(response).to have_http_status(:ok)
+        end
+        it '正確なタイトル名が返ってきていること' do
+          get admins_post_url(valid_admin_post), as: :json
+          json = JSON.parse(response.body)
+          expect(json['title']).to eq 'SQL'
+        end
+        it '正確な内容が返ってきていること' do
+          get admins_post_url(valid_admin_post), as: :json
+          json = JSON.parse(response.body)
+          expect(json['body']).to eq 'SQL解説'
+        end
+        it '正確なURLが返ってきていること' do
+          get admins_post_url(valid_admin_post), as: :json
+          json = JSON.parse(response.body)
+          expect(json['youtube_url']).to eq 'https://www.youtube.com/watch?v=v-Mb2voyTbc'
+        end
       end
 
-      it '正確な値が返ってきていること' do
-        get admins_post_url(valid_user_post), as: :json
-        json = JSON.parse(response.body)
-        expect(json['title']).to eq 'Ruby'
-        expect(json['body']).to eq 'Ruby解説'
-        expect(json['youtube_url']).to eq 'https://www.youtube.com/watch?v=AgeJhUvEezo'
-
-        get admins_post_url(valid_admin_post), as: :json
-        json = JSON.parse(response.body)
-        expect(json['title']).to eq 'SQL'
-        expect(json['body']).to eq 'SQL解説'
-        expect(json['youtube_url']).to eq 'https://www.youtube.com/watch?v=v-Mb2voyTbc'
+      context '他人の投稿を閲覧する場合' do
+        it 'リクエストが成功すること' do
+          get admins_post_url(valid_user_post)
+          expect(response).to have_http_status(:ok)
+        end
+        it '正確なタイトル名が返ってきていること' do
+          get admins_post_url(valid_user_post), as: :json
+          json = JSON.parse(response.body)
+          expect(json['title']).to eq 'Ruby'
+        end
+        it '正確な内容が返ってきていること' do
+          get admins_post_url(valid_user_post), as: :json
+          json = JSON.parse(response.body)
+          expect(json['body']).to eq 'Ruby解説'
+        end
+        it '正確なURLが返ってきていること' do
+          get admins_post_url(valid_user_post), as: :json
+          json = JSON.parse(response.body)
+          expect(json['youtube_url']).to eq 'https://www.youtube.com/watch?v=AgeJhUvEezo'
+        end
       end
     end
   end
@@ -291,10 +333,8 @@ RSpec.describe '/posts', type: :request do
   end
 
   describe 'PATCH /update' do
-    let(:valid_user_post) { create(:post, title: 'Ruby', user: user) }
-    let(:valid_admin_post) { create(:post, title: 'SQL', admin: admin) }
-
     context 'ユーザーがログインしている場合' do
+      let(:valid_user_post) { create(:post, title: 'Ruby', user: user) }
       before(:each) do
         user.confirm
         sign_in user
@@ -310,13 +350,30 @@ RSpec.describe '/posts', type: :request do
           expect(response.status).to eq 302
         end
 
-        it '要求された動画を更新すること' do
-          post = valid_user_post
-          patch users_post_url(post), params: { post: new_valid_post }
-          post.reload
-          expect(post.title).to eq('Ruby on Rails解説動画')
-          expect(post.body).to eq('Rspecについて詳しく解説した動画です。')
-          expect(post.youtube_url).to eq('https://www.youtube.com/watch?v=AgeJhUvEezo')
+        it 'タイトルを更新できること' do
+          new_title = 'Ruby on Rails解説動画'
+          params = { post: { title: new_title, body: valid_user_post.body, youtube_url: valid_user_post.youtube_url } }
+        
+          patch users_post_url(valid_user_post), params: params
+          valid_user_post.reload
+          expect(valid_user_post.title).to eq('Ruby on Rails解説動画')
+        end
+        it '内容を更新できること' do
+          new_body = 'Rspecについて詳しく解説した動画です。'
+          params = { post: { title: valid_user_post.title, body: new_body, youtube_url: valid_user_post.youtube_url } }
+        
+          patch users_post_url(valid_user_post), params: params
+          valid_user_post.reload
+          expect(valid_user_post.body).to eq('Rspecについて詳しく解説した動画です。')
+
+        end
+        it 'URLを更新できること' do
+          new_youtube_url = 'https://www.youtube.com/watch?v=abcdefghijk'
+          params = { post: { title: valid_user_post.title, body: valid_user_post.body, youtube_url: new_youtube_url } }
+        
+          patch users_post_url(valid_user_post), params: params
+          valid_user_post.reload
+          expect(valid_user_post.youtube_url).to eq(new_youtube_url)
         end
 
         it '動画にリダイレクトすること' do
@@ -343,6 +400,7 @@ RSpec.describe '/posts', type: :request do
     end
 
     context '管理者がログインしている場合' do
+      let(:valid_admin_post) { create(:post, title: 'SQL', admin: admin) }
       before(:each) do
         admin.confirm
         sign_in admin
@@ -358,13 +416,29 @@ RSpec.describe '/posts', type: :request do
           expect(response.status).to eq 302
         end
 
-        it '要求された動画を更新すること' do
-          post = valid_admin_post
-          patch admins_post_url(post), params: { post: new_valid_post }
-          post.reload
-          expect(post.title).to eq('Ruby on Rails解説動画')
-          expect(post.body).to eq('Rspecについて詳しく解説した動画です。')
-          expect(post.youtube_url).to eq('https://www.youtube.com/watch?v=AgeJhUvEezo')
+        it 'タイトルを更新できること' do
+          new_title = 'Ruby on Rails解説動画'
+          params = { post: { title: new_title, body: valid_admin_post.body, youtube_url: valid_admin_post.youtube_url } }
+        
+          patch admins_post_url(valid_admin_post), params: params
+          valid_admin_post.reload
+          expect(valid_admin_post.title).to eq('Ruby on Rails解説動画')
+        end
+        it '内容を更新できること' do
+          new_body = 'Rspecについて詳しく解説した動画です。'
+          params = { post: { title: valid_admin_post.title, body: new_body, youtube_url: valid_admin_post.youtube_url } }
+        
+          patch admins_post_url(valid_admin_post), params: params
+          valid_admin_post.reload
+          expect(valid_admin_post.body).to eq('Rspecについて詳しく解説した動画です。')
+        end
+        it 'URLを更新できること' do
+          new_youtube_url = 'https://www.youtube.com/watch?v=abcdefghijk'
+          params = { post: { title: valid_admin_post.title, body: valid_admin_post.body, youtube_url: new_youtube_url } }
+        
+          patch admins_post_url(valid_admin_post), params: params
+          valid_admin_post.reload
+          expect(valid_admin_post.youtube_url).to eq(new_youtube_url)
         end
 
         it '動画にリダイレクトすること' do
