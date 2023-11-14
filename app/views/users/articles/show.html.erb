@@ -29,9 +29,9 @@
         <!-- いいね機能のボタン-->
         <div class="article-like-box">
           <% if current_user.liked_by?(@article.id)%>
-            <td>いいねを外す</td>
+            <td><%= link_to "いいねを外す", users_article_like_path(@article, @like.ids), method: :delete %><%= @article.likes.count %></td>
           <% else %>
-            <td>いいね</td>
+            <td><%= link_to "いいね", users_article_likes_path(@article), method: :post %></td>
           <% end %>
         </div>
       </div>

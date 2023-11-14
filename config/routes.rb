@@ -57,6 +57,7 @@ Rails.application.routes.draw do
     resources :dash_boards, only: [:index]
     resources :articles do
       resources :article_comments, only: %i[create destroy update] # 記事コメント機能
+      resources :likes, only: %i[create destroy]
     end
     resources :users, only: [:show]
     resources :posts
