@@ -40,4 +40,8 @@ class User < ApplicationRecord
       users.order(order[0] => order[1])
     end
   end
+
+  def liked_by?(article_id) 
+    Like.where(article_id: article_id).exists?
+  end
 end

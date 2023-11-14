@@ -26,6 +26,14 @@
         </div>
         <hr>
         <div class="m-4 article-content" data-article="<%= @article.sanitized_content %>"></div>
+        <!-- いいね機能のボタン-->
+        <div class="article-like-box">
+          <% if current_user.liked_by?(@article.id)%>
+            <td>いいねを外す</td>
+          <% else %>
+            <td>いいね</td>
+          <% end %>
+        </div>
       </div>
       <div class="article-comments-card mt-2">
         <div class="article-comments-list">
