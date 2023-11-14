@@ -7,6 +7,4 @@
 
 import './count';
 import './count_t';
-import '../stylesheets/users/application'
 import '../stylesheets/users/inquiries.scss';
-import '../stylesheets/users/chat_rooms/show.scss';
