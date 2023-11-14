@@ -1,84 +1,106 @@
 .chat-room-show-page {
-  max-width: 1000px;
+  position: relative;
+  max-width: 100%; /* 画面いっぱいに広がるように */
+  min-height: 100vh; /* 最小でも画面の高さと同じに */
+  width: 90%; 
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   background-color: #7494C0;
-  .chat-room {
-    &__header {
-      border-bottom: 1px solid #fafafa;
-    }
-    &__partner {
-      display: flex;
-      align-items: center;
-      &-name {
-        margin-right: 8px;
-        font-weight: bold;
-        color: #616161;
-        vertical-align: middle;
-      }
-      &-default-img {
-        height: 32px;
-        width: 32px;
-        border-radius: 50%;
-        background-image: url("../../../../public/uploads/article/image/44/user_default.png");
-        background-size: contain;
-      }
-      &-img {
-        height: 32px;
-        width: 32px;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-    }
-    &__message-form {
-      margin-top: auto;
-      border-top: 1px solid #e8e8e8;
-      padding: 24px 24px 0 24px;
-      width: 100%;
-      &_textarea {
-        width: 100%;
-        border: none;
-        white-space: normal;
-      }
-    }
-  }
 }
 
-.chat-message {
-  &__partner {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    &-default-img {
-      height: 24px;
-      width: 24px;
-      border-radius: 50%;
-      background-image: url("../../../../public/uploads/article/image/44/user_default.png");
-      background-size: contain;
-      margin-left: 8px;
-    }
-    &-img {
-      height: 24px;
-      width: 24px;
-      border-radius: 50%;
-      margin-left: 8px;
-    }
-  }
-  &__content {
-    margin: 4px 8px 4px;
-    padding: 8px 12px;
-    max-width: 70%;
-    color: #555;
-    font-size: 16px;
-    border-radius: 8px;
-    background: #f1f1f1;
-  }
-  &__current-user {
-    display: flex;
-    justify-content: flex-end;
-  }
+.chat-room-header {
+  position: sticky;
+  top: 0px;
+  border-bottom: 1px solid #fafafa;
+  background-color: #7494C0;
+  z-index: 10;
+}
+
+.chat-room-partner {
+  display: flex;
+  align-items: center;
+}
+
+.chat-room-partner-name {
+  margin-right: 8px;
+  font-weight: bold;
+  color: #616161;
+  vertical-align: middle;
+}
+
+.chat-room-partner-default-img {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  background-image: url("../../../../public/uploads/article/image/44/user_default.png");
+  background-size: contain;
+}
+
+.chat-room-partner-img {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.chat-messages-spacer {
+  height: 70px; /* フォームの高さに合わせて調整 */
+}
+
+.chat-room-fixed-form {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100; /* 必要に応じて調整 */
+  background-color: none; /* スクロール時の背景透過を防ぐ */
+}
+
+.chat-room-message-form {
+  margin: 0 auto;
+  width: 90%; /* フォームの幅を調整 */
+}
+
+.chat-room-message-form-textarea {
+  width: 100%; /* テキストエリアの幅を調整 */
+}
+
+.chat-message-partner {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.chat-message-partner-default-img {
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  background-image: url("../../../../public/uploads/article/image/44/user_default.png");
+  background-size: contain;
+  margin-left: 8px;
+}
+
+.chat-message-partner-img {
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  margin-left: 8px;
+}
+
+.chat-message-content {
+  margin: 4px 8px 4px;
+  padding: 8px 12px;
+  max-width: 70%;
+  color: #555;
+  font-size: 20px;
+  border-radius: 8px;
+  background: #f1f1f1;
+}
+
+.chat-message-current-user {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .main-color-bg {

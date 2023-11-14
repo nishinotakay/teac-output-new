@@ -1,18 +1,21 @@
-<div class="chat-messages">
-  <nav class="navbar navbar-light chat-room__header">
-
-    <div class="chat-room__partner">
-      <span class="chat-room__partner-name">
+<div class="chat-room-show-page">
+  <nav class="navbar navbar-light chat-room-header">
+    <div class="chat-room-partner">
+      <span class="chat-room-partner-name">
         <%= @chat_room_user.name %>
       </span>
     </div>
   </nav>
 
-  <div id='chat-messages'>
+  <div id='chat-messages' class="chat-messages-container">
     <%= render @chat_messages %>
+    
   </div>
+  <div class="chat-messages-spacer"></div>
 
-  <form class="chat-room__message-form">
-    <textarea data-behavior="chat_room_speaker" data-chat_room_id="<%= @chat_room.id %>" placeholder="メッセージを入力" class="chat-room__message-form_textarea"></textarea>
-  </form>
+  <div class="chat-room-fixed-form">
+    <form class="chat-room-message-form">
+      <textarea data-behavior="chat_room_speaker" data-chat_room_id="<%= @chat_room.id %>" placeholder="メッセージを入力" class="chat-room-message-form-textarea"></textarea>
+    </form>
+  </div>
 </div>

@@ -8,4 +8,4 @@ import '../stylesheets/users/application'
 import './count';
 import './count_t';
 import '../stylesheets/users/inquiries.scss';
-import '../stylesheets/users/chat_rooms/show.scss';
+import '../stylesheets/users/chat_rooms/custom_show.scss';

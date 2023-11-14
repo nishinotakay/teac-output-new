@@ -27,14 +27,21 @@ const appChatRoom = consumer.subscriptions.create("ChatRoomChannel", {
 
 // ==========ここから追加する==========
 if(/chat_rooms/.test(location.pathname)) {
-  $(document).on("keydown", ".chat-room__message-form_textarea", function(e) {
-    if (e.key === "Enter") {
-      const chat_room_id = $('textarea').data('chat_room_id')
-      appChatRoom.speak(e.target.value, chat_room_id);
-      // appChatRoom.speak(e.target.value);
-      e.target.value = '';
-      e.preventDefault();
+  $(document).on("keydown", ".chat-room-message-form-textarea", function(e) {
+    if (e.keyCode === 13 && !e.shiftKey) { // Shiftキーが押されていないことを確認
+      e.preventDefault(); // フォーム送信を阻止
+
+      const messageText = e.target.value.trim();
+      if (messageText === '') {
+        // 空白でエンターが押された場合は改行を行う
+        e.target.value = e.target.value + "\n";
+      } else {
+        // テキストが入力されている場合はメッセージを送信
+        const chat_room_id = $(this).data('chat_room_id');
+        appChatRoom.speak(messageText, chat_room_id);
+        e.target.value = ''; // テキストエリアをクリア
+        e.preventDefault(); // フォーム送信を阻止
+      }
     }
-  })
+  });
 }
-// ==========ここまで追加する==========
