@@ -6,7 +6,9 @@ RSpec.describe '/posts', type: :request do
 
   describe 'GET /index' do
     before(:each) do
-      create_list(:post, 3, user: user)
+      @post1 = create(:post, created_at: DateTime.new(2023, 11, 10))
+      @post2 = create(:post, created_at: DateTime.new(2023, 11, 11))
+      @post3 = create(:post, created_at: DateTime.new(2023, 11, 9))
     end
 
     context 'ユーザーがログインしている場合' do
@@ -20,10 +22,18 @@ RSpec.describe '/posts', type: :request do
         expect(response).to have_http_status(:ok)
       end
 
-      it 'すべての動画を取得できる' do
+      it 'すべての動画を取得できること' do
         get users_posts_url, as: :json
         json = JSON.parse(response.body)
         expect(json.length).to eq(3)
+      end
+
+      it '並び順が正しいこと' do
+        get users_posts_url, as: :json
+        json = JSON.parse(response.body)
+
+        expect(json.first['created_at']).to be >= @post2.created_at
+        expect(json.second['created_at']).to be >= @post3.created_at
       end
     end
 
@@ -38,10 +48,18 @@ RSpec.describe '/posts', type: :request do
         expect(response).to have_http_status(:ok)
       end
 
-      it 'すべての動画を取得できる' do
+      it 'すべての動画を取得できること' do
         get admins_posts_url, as: :json
         json = JSON.parse(response.body)
         expect(json.length).to eq 3
+      end
+
+      it '並び順が正しいこと' do
+        get admins_posts_url, as: :json
+        json = JSON.parse(response.body)
+
+        expect(json.first['created_at']).to be >= @post2.created_at
+        expect(json.second['created_at']).to be >= @post3.created_at
       end
     end
   end
@@ -189,24 +207,32 @@ RSpec.describe '/posts', type: :request do
       before(:each) do
         valid_user_post
         user.confirm
-        sign_in user
-        get edit_users_post_url(valid_user_post)
+        sign_in user      
       end
 
       it 'リクエストが成功すること' do
+        get edit_users_post_url(valid_user_post)
         expect(response).to have_http_status(:ok)
       end
 
-      it 'タイトルが表示されていること' do
-        expect(response.body).to include 'Ruby'
-      end
-
-      it '内容が表示されていること' do
-        expect(response.body).to include 'Ruby解説'
-      end
-
-      it 'URLが表示されていること' do
-        expect(response.body).to include 'https://www.youtube.com/watch?v=AgeJhUvEezo'
+      it '1件の動画が正確に返ってきていること' do
+        get edit_users_post_url(valid_user_post), as: :json
+      
+        json_response = JSON.parse(response.body)
+      
+        transformed_response = {
+          title: json_response['title'],
+          body: json_response['body'],
+          youtube_url: json_response['youtube_url']
+        }
+      
+        expected_data = {
+          title: valid_user_post.title,
+          body: valid_user_post.body,
+          youtube_url: valid_user_post.youtube_url
+        }
+      
+        expect(transformed_response).to eq(expected_data)
       end
     end
 
@@ -215,23 +241,32 @@ RSpec.describe '/posts', type: :request do
         valid_admin_post
         admin.confirm
         sign_in admin
-        get edit_admins_post_url(valid_admin_post)
+        
       end
 
       it 'リクエストが成功すること' do
+        get edit_admins_post_url(valid_admin_post)
         expect(response).to have_http_status(:ok)
       end
 
-      it 'タイトルが表示されていること' do
-        expect(response.body).to include 'SQL'
-      end
-
-      it '内容が表示されていること' do
-        expect(response.body).to include 'SQL解説'
-      end
-
-      it 'URLが表示されていること' do
-        expect(response.body).to include 'https://www.youtube.com/watch?v=v-Mb2voyTbc'
+      it '1件の動画が正確に返ってきていること' do
+        get edit_admins_post_url(valid_admin_post), as: :json
+      
+        json_response = JSON.parse(response.body)
+      
+        transformed_response = {
+          title: json_response['title'],
+          body: json_response['body'],
+          youtube_url: json_response['youtube_url']
+        }
+      
+        expected_data = {
+          title: valid_admin_post.title,
+          body: valid_admin_post.body,
+          youtube_url: valid_admin_post.youtube_url
+        }
+      
+        expect(transformed_response).to eq(expected_data)
       end
     end
   end
