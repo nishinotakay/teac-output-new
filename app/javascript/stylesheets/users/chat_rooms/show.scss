@@ -112,10 +112,10 @@ textarea:focus {
   outline: none;
 }
 
-@media (min-width: 414px) {
-  .chat-room-show-page {
-    border: 1px solid rgba(0, 0, 0, 0.125);
-    border-radius: 0.25rem;
-    margin: 8px auto;
+@media (max-width: 767px) {
+  .table-scroll {
+    overflow-x: auto;
+    display: block;
+    white-space: nowrap;
   }
 }
