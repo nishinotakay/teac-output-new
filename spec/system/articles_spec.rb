@@ -38,11 +38,11 @@ RSpec.describe 'Articles', type: :system do
         it 'サブタイトルと表示されていること' do
           expect(page).to have_selector('th', text: 'サブタイトル')
         end
-  
+
         it '投稿者と表示されていること' do
           expect(page).to have_selector('th', text: '投稿者')
         end
-  
+
         it '投稿日時と表示されていること' do
           expect(page).to have_selector('th', text: '投稿日時')
         end
@@ -135,7 +135,7 @@ RSpec.describe 'Articles', type: :system do
         end
 
         context '並べ替えボタン押下' do
-          before do
+          before(:each) do
             find_button(text: '並べ替え').click
           end
 
@@ -147,25 +147,25 @@ RSpec.describe 'Articles', type: :system do
             it 'タイトルに並び替えが表示される' do
               expect(page).to have_css('.modal-title', text: '並べ替え')
             end
-  
+
             it '投稿日時の項目が表示される' do
               expect(page).to have_content '投稿日時'
             end
-  
+
             it '並べ替えるボタンが表示される' do
               expect(page).to have_button '並べ替える'
             end
-            
+
             it '戻るボタンが表示される' do
               expect(page).to have_button '戻る'
             end
-  
+
             it 'セレクトフォームが表示される' do
               expect(page).to have_select('sort-select')
             end
-  
+
             context 'セレクトフォームをクリック' do
-              before do
+              before(:each) do
                 find_field('sort-select').click
               end
 
@@ -187,14 +187,14 @@ RSpec.describe 'Articles', type: :system do
         end
 
         context 'ボタン押下' do
-          before do
+          before(:each) do
             find_button(text: '絞り込み検索').click
           end
 
           it 'モーダルが表示される' do
             expect(page).to have_css('.modal.fade.show')
           end
-        
+
           it 'モーダルタイトルが「絞り込み検索」と表示される' do
             expect(page).to have_css('.modal-title', text: '絞り込み検索')
           end
@@ -202,7 +202,7 @@ RSpec.describe 'Articles', type: :system do
           it '検索ボタンが表示される' do
             expect(page).to have_button '検索する'
           end
-      
+
           it '戻るボタンが表示される' do
             expect(page).to have_button '戻る'
           end
@@ -233,23 +233,23 @@ RSpec.describe 'Articles', type: :system do
             it '投稿者フィールドの表示がある' do
               expect(page).to have_selector('input#input-author')
             end
-        
+
             it 'タイトルフィールドが表示される' do
               expect(page).to have_selector('input#input-title')
             end
-        
+
             it 'サブタイトルフィールドが表示される' do
               expect(page).to have_selector('input#input-subtitle')
             end
-        
+
             it '本文フィールドが表示される' do
               expect(page).to have_selector('input#input-content')
             end
-        
+
             it '投稿開始日フィールドが表示される' do
               expect(page).to have_selector('input#input-start[type="date"]')
             end
-  
+
             it '投稿終了日フィールドが表示される' do
               expect(page).to have_selector('input#input-finish[type="date"]')
             end
@@ -464,8 +464,7 @@ RSpec.describe 'Articles', type: :system do
 
     describe '機能テスト' do
       context '３点リーダーから削除ボタン押下' do
-        before do
-          article_first = Article.first.id
+        before(:each) do
           page.all('.btn', text: '︙')[1].click
           # click_link '削除'
           find_link('削除').click
@@ -478,7 +477,7 @@ RSpec.describe 'Articles', type: :system do
           }.to change(user.articles, :count).by(-1)
         end
       end
-      
+
       context '並べ替えボタン' do
         before(:each) do
           article_2.update(created_at: Time.current)
@@ -487,26 +486,28 @@ RSpec.describe 'Articles', type: :system do
         end
 
         context '新しい順を選択' do
-          before do
+          before(:each) do
             find_button(text: '並べ替え').click
             # find('.form-select').click
             find('.form-select', text: '新しい順').click
             find_button(text: '並べ替える').click
             # first_article_title = find('#article-title', match: :first).text
           end
+
           it '降順になる' do
             expect(find('#article-title', match: :first).text).to eq Article.last.title
           end
         end
 
         context '古い順を選択' do
-          before do
+          before(:each) do
             find_button(text: '並べ替え').click
             # find('.form-select').click
             find('.form-select option[value="ASC"]').click
             find_button(text: '並べ替える').click
             # sleep 3
           end
+
           it '昇順になる' do
             expect(find('#article-title', match: :first).text).to eq Article.first.title
           end
@@ -521,7 +522,7 @@ RSpec.describe 'Articles', type: :system do
         context '投稿者名' do
           context '条件を満たすデータが存在する' do
             context '完全一致する名前を入力し検索する押下' do
-              before do
+              before(:each) do
                 fill_in 'input-author', with: '山田太郎'
                 find_button(text: '検索する').click
               end
@@ -529,18 +530,18 @@ RSpec.describe 'Articles', type: :system do
               it 'タイトルが表示される' do
                 expect(page).to have_content article.title
               end
-  
+
               it 'サブタイトルが表示される' do
                 expect(page).to have_content article.sub_title
               end
-  
+
               it '投稿者名が表示される' do
                 expect(page).to have_content article.user.name
               end
             end
 
             context '前方一致する名前を入力し検索する押下' do
-              before do
+              before(:each) do
                 fill_in 'input-author', with: '山'
                 find_button(text: '検索する').click
               end
@@ -548,18 +549,18 @@ RSpec.describe 'Articles', type: :system do
               it 'タイトルが表示される' do
                 expect(page).to have_content article.title
               end
-  
+
               it 'サブタイトルが表示される' do
                 expect(page).to have_content article.sub_title
               end
-  
+
               it '投稿者名が表示される' do
                 expect(page).to have_content article.user.name
               end
             end
 
             context '中央一致する名前を入力し検索する押下' do
-              before do
+              before(:each) do
                 fill_in 'input-author', with: '田太'
                 find_button(text: '検索する').click
               end
@@ -567,18 +568,18 @@ RSpec.describe 'Articles', type: :system do
               it 'タイトルが表示される' do
                 expect(page).to have_content article.title
               end
-  
+
               it 'サブタイトルが表示される' do
                 expect(page).to have_content article.sub_title
               end
-  
+
               it '投稿者名が表示される' do
                 expect(page).to have_content article.user.name
               end
             end
 
             context '後方一致する名前を入力し検索する押下' do
-              before do
+              before(:each) do
                 fill_in 'input-author', with: '郎'
                 find_button(text: '検索する').click
               end
@@ -586,11 +587,11 @@ RSpec.describe 'Articles', type: :system do
               it 'タイトルが表示される' do
                 expect(page).to have_content article.title
               end
-  
+
               it 'サブタイトルが表示される' do
                 expect(page).to have_content article.sub_title
               end
-  
+
               it '投稿者名が表示される' do
                 expect(page).to have_content article.user.name
               end
@@ -608,7 +609,7 @@ RSpec.describe 'Articles', type: :system do
 
         context 'タイトル' do
           context '完全一致するタイトルを入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-title', with: 'RSpec'
               find_button(text: '検索する').click
             end
@@ -627,7 +628,7 @@ RSpec.describe 'Articles', type: :system do
           end
 
           context '前方一致するタイトルを入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-title', with: 'RSp'
               find_button(text: '検索する').click
             end
@@ -646,7 +647,7 @@ RSpec.describe 'Articles', type: :system do
           end
 
           context '中央一致するタイトルを入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-title', with: 'Spe'
               find_button(text: '検索する').click
             end
@@ -663,9 +664,9 @@ RSpec.describe 'Articles', type: :system do
               expect(page).to have_content article.user.name
             end
           end
-          
+
           context '後方一致するタイトルを入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-title', with: 'pec'
               find_button(text: '検索する').click
             end
@@ -686,7 +687,7 @@ RSpec.describe 'Articles', type: :system do
 
         context 'サブタイトル' do
           context '完全一致するサブタイトルを入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-subtitle', with: 'system'
               find_button(text: '検索する').click
             end
@@ -703,9 +704,9 @@ RSpec.describe 'Articles', type: :system do
               expect(page).to have_content article.user.name
             end
           end
-          
+
           context '前方一致するサブタイトルを入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-subtitle', with: 'sys'
               find_button(text: '検索する').click
             end
@@ -724,7 +725,7 @@ RSpec.describe 'Articles', type: :system do
           end
 
           context '中央一致するサブタイトルを入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-subtitle', with: 'ste'
               find_button(text: '検索する').click
             end
@@ -743,7 +744,7 @@ RSpec.describe 'Articles', type: :system do
           end
 
           context '後方一致するサブタイトルを入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-subtitle', with: 'tem'
               find_button(text: '検索する').click
             end
@@ -764,7 +765,7 @@ RSpec.describe 'Articles', type: :system do
 
         context '本文' do
           context '完全一致する本文を入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-content', with: 'test'
               find_button(text: '検索する').click
             end
@@ -783,7 +784,7 @@ RSpec.describe 'Articles', type: :system do
           end
 
           context '前方一致する本文を入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-content', with: 'tes'
               find_button(text: '検索する').click
             end
@@ -800,9 +801,9 @@ RSpec.describe 'Articles', type: :system do
               expect(page).to have_content article.user.name
             end
           end
-          
+
           context '中央一致する本文を入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-content', with: 'es'
               find_button(text: '検索する').click
             end
@@ -821,7 +822,7 @@ RSpec.describe 'Articles', type: :system do
           end
 
           context '後方一致する本文を入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-content', with: 'est'
               find_button(text: '検索する').click
             end
@@ -911,7 +912,7 @@ RSpec.describe 'Articles', type: :system do
             end
 
             context '2022-01-01に指定して検索' do
-              before do
+              before(:each) do
                 find('#input-start').set('01/01/2022')
                 find_button(text: '検索する').click
               end
@@ -933,7 +934,7 @@ RSpec.describe 'Articles', type: :system do
             end
 
             context '2021-12-31に指定した場合（境界値・前日）' do
-              before do
+              before(:each) do
                 find('#input-start').set('31/12/2021')
                 find_button(text: '検索する').click
               end
@@ -972,7 +973,7 @@ RSpec.describe 'Articles', type: :system do
               end
 
               context 'リセットボタン押下' do
-                before do
+                before(:each) do
                   find_button(text: 'リセット').click
                 end
 
@@ -1007,10 +1008,12 @@ RSpec.describe 'Articles', type: :system do
                 expect(page).to have_content article.title
                 expect(page).to have_content article_2.title
               end
+
               it '指定範囲の記事サブタイトルが表示される' do
                 expect(page).to have_content article.sub_title
                 expect(page).to have_content article_2.sub_title
               end
+
               it '指定範囲の記事投稿者名が表示される' do
                 expect(page).to have_content article.user.name
                 expect(page).to have_content article_2.user.name
@@ -1038,9 +1041,11 @@ RSpec.describe 'Articles', type: :system do
               it '指定範囲外の記事タイトルは表示されない' do
                 expect(page).not_to have_content article.title
               end
+
               it '指定範囲外の記事サブタイトルは表示されない' do
                 expect(page).not_to have_content article.sub_title
               end
+
               it '指定範囲外の記事投稿者名は表示されない' do
                 expect(page).not_to have_content article.user.name
               end
@@ -1067,9 +1072,11 @@ RSpec.describe 'Articles', type: :system do
               it '指定範囲外の記事タイトルは表示されない' do
                 expect(page).not_to have_content article.title
               end
+
               it '指定範囲外の記事サブタイトルは表示されない' do
                 expect(page).not_to have_content article.sub_title
               end
+
               it '指定範囲外の記事投稿者名は表示されない' do
                 expect(page).not_to have_content article.user.name
               end
@@ -1092,9 +1099,10 @@ RSpec.describe 'Articles', type: :system do
               end
 
               context 'リセットボタン押下' do
-                before do
+                before(:each) do
                   find_button(text: 'リセット').click
                 end
+
                 context '記事一覧が再表示され' do
                   it '記事タイトルが表示される' do
                     expect(page).to have_content article.title
@@ -1174,7 +1182,7 @@ RSpec.describe 'Articles', type: :system do
         it 'サブタイトルと表示されていること' do
           expect(page).to have_selector('th', text: 'サブタイトル')
         end
-  
+
         it '投稿日時と表示されていること' do
           expect(page).to have_selector('th', text: '投稿日時')
         end
@@ -1183,9 +1191,11 @@ RSpec.describe 'Articles', type: :system do
       it 'ログインユーザーが投稿した記事タイトルが表示される' do
         expect(page).to have_content article.title
       end
+
       it 'ログインユーザーが投稿した記事サブタイトルが表示される' do
         expect(page).to have_content article.sub_title
       end
+
       it 'ログインユーザーが投稿した記事投稿日時が表示される' do
         expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
       end
@@ -1193,7 +1203,7 @@ RSpec.describe 'Articles', type: :system do
       it 'ログインユーザー以外の記事タイトルは表示されない' do
         expect(page).not_to have_content article_2.title
       end
-      
+
       it 'ログインユーザー以外の記事サブタイトルは表示されない' do
         expect(page).not_to have_content article_2.sub_title
       end
@@ -1247,114 +1257,112 @@ RSpec.describe 'Articles', type: :system do
       end
 
       context '並べ替えボタン押下' do
-        before do
+        before(:each) do
           find_button(text: '並べ替え').click
         end
-      
+
         it 'モーダルが表示される' do
           expect(page).to have_css('.modal.fade.show')
         end
-      
+
         context 'モーダル内' do
           it 'タイトルに並び替えが表示される' do
             expect(page).to have_css('.modal-title', text: '並べ替え')
           end
-      
+
           it '投稿日時の項目が表示される' do
             expect(page).to have_content '投稿日時'
           end
-      
+
           it '並べ替えるボタンが表示される' do
             expect(page).to have_button '並べ替える'
           end
-          
+
           it '戻るボタンが表示される' do
             expect(page).to have_button '戻る'
           end
-      
+
           it 'セレクトフォームが表示される' do
             expect(page).to have_select('sort-select')
           end
-      
+
           context 'セレクトフォームをクリック' do
-            before do
+            before(:each) do
               find_field('sort-select').click
             end
-      
+
             it '新しい順のセレクタが表示される' do
               expect(page).to have_select('sort-select', selected: '新しい順')
             end
-      
+
             it '古い順のセレクタが表示される' do
               expect(page).to have_select('sort-select', text: '古い順')
             end
           end
         end
       end
-      
+
       context '絞り込み検索ボタン　' do
         it '表示されている' do
           expect(page).to have_button('絞り込み検索')
         end
-      
+
         context 'ボタン押下' do
-          before do
+          before(:each) do
             find_button(text: '絞り込み検索').click
           end
-      
+
           it 'モーダルが表示される' do
             expect(page).to have_css('.modal.fade.show')
           end
-        
+
           it 'モーダルタイトルが「絞り込み検索」と表示される' do
             expect(page).to have_css('.modal-title', text: '絞り込み検索')
           end
-      
+
           it '検索ボタンが表示される' do
             expect(page).to have_button '検索する'
           end
-      
+
           it '戻るボタンが表示される' do
             expect(page).to have_button '戻る'
           end
-      
+
           context 'ラベル' do
-      
             it 'タイトルの表示がある' do
               expect(page).to have_content 'タイトル'
             end
-      
+
             it 'サブタイトルの表示がある' do
               expect(page).to have_content 'サブタイトル'
             end
-      
+
             it '本文の表示がある' do
               expect(page).to have_content '本文'
             end
-      
+
             it '投稿日時の表示がある' do
               expect(page).to have_content '投稿日時'
             end
           end
-      
+
           context 'フィールド' do
-        
             it 'タイトルフィールドが表示される' do
               expect(page).to have_selector('input#input-title')
             end
-        
+
             it 'サブタイトルフィールドが表示される' do
               expect(page).to have_selector('input#input-subtitle')
             end
-        
+
             it '本文フィールドが表示される' do
               expect(page).to have_selector('input#input-content')
             end
-        
+
             it '投稿開始日フィールドが表示される' do
               expect(page).to have_selector('input#input-start[type="date"]')
             end
-      
+
             it '投稿終了日フィールドが表示される' do
               expect(page).to have_selector('input#input-finish[type="date"]')
             end
@@ -1509,12 +1517,12 @@ RSpec.describe 'Articles', type: :system do
 
     describe '機能テスト' do
       context '３点リーダーから削除ボタン押下' do
-        before do
-          article_first = Article.first.id
+        before(:each) do
           page.all('.btn', text: '︙')[0].click
           # click_link '削除'
           find_link('削除').click
         end
+
         it '記事の削除ができる' do
           expect {
             expect(page.accept_confirm).to eq '選択した記事を削除します。'
@@ -1522,41 +1530,43 @@ RSpec.describe 'Articles', type: :system do
           }.to change(user.articles, :count).by(-1)
         end
       end
-      
+
       context '並べ替えボタン' do
         before(:each) do
           article_2.update(created_at: Time.current)
           article_30
           visit current_path
         end
-      
+
         context '新しい順を選択' do
-          before do
+          before(:each) do
             find_button(text: '並べ替え').click
             # find('.form-select').click
             find('.form-select', text: '新しい順').click
             find_button(text: '並べ替える').click
             # first_article_title = find('#article-title', match: :first).text
           end
+
           it '降順になる' do
             expect(find('#article-title', match: :first).text).to eq Article.last.title
           end
         end
-      
+
         context '古い順を選択' do
-          before do
+          before(:each) do
             find_button(text: '並べ替え').click
             # find('.form-select').click
             find('.form-select option[value="ASC"]').click
             find_button(text: '並べ替える').click
             # sleep 3
           end
+
           it '昇順になる' do
             expect(find('#article-title', match: :first).text).to eq Article.first.title
           end
         end
       end
-      
+
       context '絞り込み検索ボタン' do
         let(:user_article_2) { create(:article, user: user) }
 
@@ -1569,14 +1579,15 @@ RSpec.describe 'Articles', type: :system do
 
         context 'タイトル' do
           context '完全一致するタイトルを入力し検索する押下' do
-            before do
+            before(:each) do
               fill_in 'input-title', with: 'RSpec'
               find_button(text: '検索する').click
             end
+
             it 'タイトルが表示される' do
               expect(page).to have_content article.title
             end
-    
+
             it 'サブタイトルが表示される' do
               expect(page).to have_content article.sub_title
             end
@@ -1587,15 +1598,15 @@ RSpec.describe 'Articles', type: :system do
           end
 
           context '前方一致するタイトルを入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-title', with: 'RSp'
               find_button(text: '検索する').click
             end
-      
+
             it 'タイトルが表示される' do
               expect(page).to have_content article.title
             end
-      
+
             it 'サブタイトルが表示される' do
               expect(page).to have_content article.sub_title
             end
@@ -1606,15 +1617,15 @@ RSpec.describe 'Articles', type: :system do
           end
 
           context '中央一致するタイトルを入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-title', with: 'Spe'
               find_button(text: '検索する').click
             end
-      
+
             it 'タイトルが表示される' do
               expect(page).to have_content article.title
             end
-      
+
             it 'サブタイトルが表示される' do
               expect(page).to have_content article.sub_title
             end
@@ -1625,15 +1636,15 @@ RSpec.describe 'Articles', type: :system do
           end
 
           context '後方一致するタイトルを入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-title', with: 'pec'
               find_button(text: '検索する').click
             end
-      
+
             it 'タイトルが表示される' do
               expect(page).to have_content article.title
             end
-      
+
             it 'サブタイトルが表示される' do
               expect(page).to have_content article.sub_title
             end
@@ -1644,7 +1655,7 @@ RSpec.describe 'Articles', type: :system do
           end
 
           context 'ログインユーザー以外の記事を絞り込み検索' do
-            before do
+            before(:each) do
               Article.first.destroy # ログインユーザーの投稿記事を削除
               fill_in 'input-title', with: article_1.title
               find_button(text: '検索する').click
@@ -1662,76 +1673,76 @@ RSpec.describe 'Articles', type: :system do
 
         context 'サブタイトル' do
           context '完全一致するサブタイトルを入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-subtitle', with: 'system'
               find_button(text: '検索する').click
             end
-      
+
             it 'タイトルが表示される' do
               expect(page).to have_content article.title
             end
-      
+
             it 'サブタイトルが表示される' do
               expect(page).to have_content article.sub_title
             end
-      
+
             it '投稿日時が表示される' do
               expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
             end
           end
-          
+
           context '前方一致するサブタイトルを入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-subtitle', with: 'sys'
               find_button(text: '検索する').click
             end
-      
+
             it 'タイトルが表示される' do
               expect(page).to have_content article.title
             end
-      
+
             it 'サブタイトルが表示される' do
               expect(page).to have_content article.sub_title
             end
-      
+
             it '投稿日時が表示される' do
               expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
             end
           end
-      
+
           context '中央一致するサブタイトルを入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-subtitle', with: 'ste'
               find_button(text: '検索する').click
             end
-      
+
             it 'タイトルが表示される' do
               expect(page).to have_content article.title
             end
-      
+
             it 'サブタイトルが表示される' do
               expect(page).to have_content article.sub_title
             end
-      
+
             it '投稿日時が表示される' do
               expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
             end
           end
-      
+
           context '後方一致するサブタイトルを入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-subtitle', with: 'tem'
               find_button(text: '検索する').click
             end
-      
+
             it 'タイトルが表示される' do
               expect(page).to have_content article.title
             end
-      
+
             it 'サブタイトルが表示される' do
               expect(page).to have_content article.sub_title
             end
-      
+
             it '投稿日時が表示される' do
               expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
             end
@@ -1740,76 +1751,76 @@ RSpec.describe 'Articles', type: :system do
 
         context '本文' do
           context '完全一致する本文を入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-content', with: 'test'
               find_button(text: '検索する').click
             end
-      
+
             it 'タイトルが表示される' do
               expect(page).to have_content article.title
             end
-      
+
             it 'サブタイトルが表示される' do
               expect(page).to have_content article.sub_title
             end
-      
+
             it '投稿日時が表示される' do
               expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
             end
           end
-      
+
           context '前方一致する本文を入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-content', with: 'tes'
               find_button(text: '検索する').click
             end
-      
+
             it 'タイトルが表示される' do
               expect(page).to have_content article.title
             end
-      
+
             it 'サブタイトルが表示される' do
               expect(page).to have_content article.sub_title
             end
-      
+
             it '投稿日時が表示される' do
               expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
             end
           end
-          
+
           context '中央一致する本文を入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-content', with: 'es'
               find_button(text: '検索する').click
             end
-      
+
             it 'タイトルが表示される' do
               expect(page).to have_content article.title
             end
-      
+
             it 'サブタイトルが表示される' do
               expect(page).to have_content article.sub_title
             end
-      
+
             it '投稿日時が表示される' do
               expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
             end
           end
-      
+
           context '後方一致する本文を入力して検索押下' do
-            before do
+            before(:each) do
               fill_in 'input-content', with: 'est'
               find_button(text: '検索する').click
             end
-      
+
             it 'タイトルが表示される' do
               expect(page).to have_content article.title
             end
-      
+
             it 'サブタイトルが表示される' do
               expect(page).to have_content article.sub_title
             end
-      
+
             it '投稿日時が表示される' do
               expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
             end
@@ -1833,7 +1844,7 @@ RSpec.describe 'Articles', type: :system do
               it '指定範囲の記事タイトルが表示される' do
                 expect(page).to have_content article.title
               end
-      
+
               it '指定範囲の記事サブタイトルが表示される' do
                 expect(page).to have_content article.sub_title
               end
@@ -1845,7 +1856,7 @@ RSpec.describe 'Articles', type: :system do
               it '指定範囲外の記事タイトルは表示されない' do
                 expect(page).not_to have_content user_article_2.title
               end
-      
+
               it '指定範囲外の記事サブタイトルは表示されない' do
                 expect(page).not_to have_content user_article_2.sub_title
               end
@@ -1864,11 +1875,11 @@ RSpec.describe 'Articles', type: :system do
               it '2022-01-01投稿の記事タイトルは表示されない' do
                 expect(page).not_to have_content user_article_2.title
               end
-      
+
               it '2022-01-01投稿の記事サブタイトルは表示されない' do
                 expect(page).not_to have_content user_article_2.sub_title
               end
-      
+
               it '2022-01-01投稿の記事投稿日時は表示されない' do
                 expect(page).not_to have_content user_article_2.created_at.strftime('%Y/%m/%d %H:%M')
               end
@@ -1876,16 +1887,18 @@ RSpec.describe 'Articles', type: :system do
               it '指定範囲の記事タイトルが表示される' do
                 expect(page).to have_content article.title
               end
+
               it '指定範囲の記事サブタイトルが表示される' do
                 expect(page).to have_content article.sub_title
               end
+
               it '指定範囲の記事投稿日時が表示される' do
                 expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
               end
             end
 
             context '2022-01-01に指定した場合（当日テスト）' do
-              before do
+              before(:each) do
                 find('#input-start').set('01/01/2022')
                 find_button(text: '検索する').click
               end
@@ -1894,10 +1907,12 @@ RSpec.describe 'Articles', type: :system do
                 expect(page).to have_content article.title
                 expect(page).to have_content user_article_2.title
               end
+
               it '指定日範囲の記事サブタイトルが表示される' do
                 expect(page).to have_content article.sub_title
                 expect(page).to have_content user_article_2.sub_title
               end
+
               it '指定日範囲の記事投稿日時が表示される' do
                 expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
                 expect(page).to have_content user_article_2.created_at.strftime('%Y/%m/%d %H:%M')
@@ -1905,7 +1920,7 @@ RSpec.describe 'Articles', type: :system do
             end
 
             context '2021-12-31に指定した場合（境界値・前日）' do
-              before do
+              before(:each) do
                 find('#input-start').set('31/12/2021')
                 find_button(text: '検索する').click
               end
@@ -1944,20 +1959,21 @@ RSpec.describe 'Articles', type: :system do
               end
 
               context 'リセットボタン押下' do
-                before do
+                before(:each) do
                   find_button(text: 'リセット').click
                 end
+
                 context '記事一覧が再表示され' do
                   it '記事タイトルが表示される' do
                     expect(page).to have_content article.title
                     expect(page).to have_content user_article_2.title
                   end
-      
+
                   it '記事サブタイトルが表示される' do
                     expect(page).to have_content article.sub_title
                     expect(page).to have_content user_article_2.sub_title
                   end
-      
+
                   it '記事投稿日時が表示される' do
                     expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
                     expect(page).to have_content user_article_2.created_at.strftime('%Y/%m/%d %H:%M')
@@ -1973,15 +1989,17 @@ RSpec.describe 'Articles', type: :system do
                 find('#input-finish').set(Date.current)
                 find_button(text: '検索する').click
               end
-      
+
               it '指定範囲の記事タイトルが表示される' do
                 expect(page).to have_content article.title
                 expect(page).to have_content user_article_2.title
               end
+
               it '指定範囲の記事サブタイトルが表示される' do
                 expect(page).to have_content article.sub_title
                 expect(page).to have_content user_article_2.sub_title
               end
+
               it '指定範囲の記事投稿日時が表示される' do
                 expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
                 expect(page).to have_content user_article_2.created_at.strftime('%Y/%m/%d %H:%M')
@@ -1993,25 +2011,27 @@ RSpec.describe 'Articles', type: :system do
                 find('#input-finish').set('01/02/2022')
                 find_button(text: '検索する').click
               end
-      
+
               it '指定範囲の記事タイトルが表示される' do
                 expect(page).to have_content user_article_2.title
               end
-      
+
               it '指定範囲の記事サブタイトルが表示される' do
                 expect(page).to have_content user_article_2.sub_title
               end
-      
+
               it '指定範囲の記事投稿日時が表示される' do
                 expect(page).to have_content user_article_2.created_at.strftime('%Y/%m/%d %H:%M')
               end
-      
+
               it '指定範囲外の記事タイトルは表示されない' do
                 expect(page).not_to have_content article.title
               end
+
               it '指定範囲外の記事サブタイトルは表示されない' do
                 expect(page).not_to have_content article.sub_title
               end
+
               it '指定範囲外の記事投稿日時は表示されない' do
                 expect(page).not_to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
               end
@@ -2022,25 +2042,27 @@ RSpec.describe 'Articles', type: :system do
                 find('#input-finish').set('01/01/2022')
                 find_button(text: '検索する').click
               end
-      
+
               it '指定範囲の記事タイトルが表示される' do
                 expect(page).to have_content user_article_2.title
               end
-      
+
               it '指定範囲の記事サブタイトルが表示される' do
                 expect(page).to have_content user_article_2.sub_title
               end
-      
+
               it '指定範囲の記事投稿日時が表示される' do
                 expect(page).to have_content user_article_2.created_at.strftime('%Y/%m/%d %H:%M')
               end
-      
+
               it '指定範囲外の記事タイトルは表示されない' do
                 expect(page).not_to have_content article.title
               end
+
               it '指定範囲外の記事サブタイトルは表示されない' do
                 expect(page).not_to have_content article.sub_title
               end
+
               it '指定範囲外の記事投稿日時は表示されない' do
                 expect(page).not_to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
               end
@@ -2063,20 +2085,21 @@ RSpec.describe 'Articles', type: :system do
               end
 
               context 'リセットボタン押下' do
-                before do
+                before(:each) do
                   find_button(text: 'リセット').click
                 end
+
                 context '記事一覧が再表示され' do
                   it '記事タイトルが表示される' do
                     expect(page).to have_content article.title
                     expect(page).to have_content user_article_2.title
                   end
-      
+
                   it '記事サブタイトルが表示される' do
                     expect(page).to have_content article.sub_title
                     expect(page).to have_content user_article_2.sub_title
                   end
-      
+
                   it '記事投稿日時が表示される' do
                     expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
                     expect(page).to have_content user_article_2.created_at.strftime('%Y/%m/%d %H:%M')
@@ -2092,27 +2115,27 @@ RSpec.describe 'Articles', type: :system do
               find('#input-finish').set(Date.current)
               find_button(text: '検索する').click
             end
-      
+
             it '指定範囲の記事タイトルが表示される' do
               expect(page).to have_content article.title
             end
-      
+
             it '指定範囲の記事サブタイトルが表示される' do
               expect(page).to have_content article.sub_title
             end
-      
+
             it '指定範囲の記事投稿日時が表示される' do
               expect(page).to have_content article.created_at.strftime('%Y/%m/%d %H:%M')
             end
-      
+
             it '指定範囲外の記事タイトルは表示されない' do
               expect(page).not_to have_content user_article_2.title
             end
-      
+
             it '指定範囲外の記事サブタイトルは表示されない' do
               expect(page).not_to have_content user_article_2.sub_title
             end
-      
+
             it '指定範囲外の記事投稿日時は表示されない' do
               expect(page).not_to have_content user_article_2.created_at.strftime('%Y/%m/%d %H:%M')
             end
