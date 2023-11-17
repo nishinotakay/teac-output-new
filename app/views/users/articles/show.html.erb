@@ -27,14 +27,9 @@
         <hr>
         <div class="m-4 article-content" data-article="<%= @article.sanitized_content %>"></div>
         <!-- いいね機能のボタン-->
-        <div class="article-like-box">
-          <% if current_user.liked_by?(@article.id)%>
-            <td><%= link_to "いいねを外す", users_article_like_path(@article, @like.ids), method: :delete %><%= @article.likes.count %></td>
-          <% else %>
-            <td><%= link_to "いいね", users_article_likes_path(@article), method: :post %></td>
-          <% end %>
-        </div>
-      </div>
+          <div id="article_<%= @article.id %>">
+            <%= render 'users/likes/article_likes', locals: { article: @article } %>
+          </div> 
       <div class="article-comments-card mt-2">
         <div class="article-comments-list">
           <% if @article_comments.present? %>

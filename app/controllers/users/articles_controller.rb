@@ -30,7 +30,7 @@ module Users
       @article = Article.find(params[:id])
       @article_comments = @article.article_comments.all.order(created_at: 'DESC')
       @article_comment = current_user.article_comments.new
-      @like = Like.where(article_id: @article.id, user_id: current_user.id)
+      @like = Like.find_by(user_id: current_user.id,article_id: @article.id)
 
       respond_to do |format|
         format.html
