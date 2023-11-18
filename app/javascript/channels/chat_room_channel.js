@@ -17,7 +17,7 @@ if(/chat_rooms/.test(location.pathname)) { // このif分岐内でappChatRoomを
   
     speak: function(chat_message, chat_room_id) { // ここでspeakというカスタム関数を定義
       return this.perform('speak', { chat_message: chat_message, chat_room_id: chat_room_id });
-    } // 引数の'speak'アクションはapp/channels/chat_room_channel.rbへ
+    } // this.performの引数 'speak' はapp/channels/chat_room_channel.rbのspeakアクションを指定している。
   });
   
   $(document).on("keydown", ".chat-room-message-form-textarea", function(e) {
