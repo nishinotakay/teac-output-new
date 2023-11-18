@@ -6,17 +6,32 @@ module Admins
 
     def index
       @posts = Post.filtered_and_ordered_posts(params, params[:page], 30)
+
+      respond_to do |format|
+        format.html
+        format.json { render json: @posts }
+      end
     end
 
     def show
       @post = Post.find(params[:id])
+
+      respond_to do |format|
+        format.html
+        format.json { render json: @post }
+      end
     end
 
     def new
       @post = current_admin.posts.new
     end
 
-    def edit; end
+    def edit
+      respond_to do |format|
+        format.html
+        format.json { render json: @post }
+      end
+    end
 
     def create
       @post = current_admin.posts.new(post_params)
