@@ -15,13 +15,23 @@ module Admins
 
     def show
       @post = Post.find(params[:id])
+
+      respond_to do |format|
+        format.html
+        format.json { render json: @post }
+      end
     end
 
     def new
       @post = current_admin.posts.new
     end
 
-    def edit; end
+    def edit
+      respond_to do |format|
+        format.html
+        format.json { render json: @post }
+      end
+    end
 
     def create
       @post = current_admin.posts.new(post_params)
