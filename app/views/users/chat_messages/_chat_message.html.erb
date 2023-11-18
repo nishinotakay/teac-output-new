@@ -7,15 +7,11 @@
         <div class="chat-room-partner-default-img"></div>
       <% end %>
 
-      <div class="chat-message-content">
-        <%= chat_message.content %>
-      </div>
+      <div class="chat-message-content"><%= chat_message.content %></div>
     </div>
   <% else %>
     <div class="chat-message-current-user">
-      <div class="chat-message-content main-color-bg">
-        <%= chat_message.content %>
-      </div>
+      <div class="chat-message-content main-color-bg"><%= chat_message.content %></div>
     </div>
   <% end %>
 </div>

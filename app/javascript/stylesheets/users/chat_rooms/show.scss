@@ -1,7 +1,7 @@
 .chat-room-show-page {
   position: relative;
   max-width: 100%; /* 画面いっぱいに広がるように */
-  min-height: 100vh; /* 最小でも画面の高さと同じに */
+  /* min-height: 100vh; /* 最小でも画面の高さと同じに */
   width: 70%; 
   margin: 0 auto;
   display: flex;
@@ -48,6 +48,12 @@
   height: 70px; /* フォームの高さに合わせて調整 */
 }
 
+#chat-messages {
+  max-height: calc(85vh - 120px); // ビューポートの高さからヘッダーとフッターの高さを引く
+  overflow-y: auto; // 縦方向のスクロールを有効にする
+  overflow-x: hidden;
+}
+
 .chat-room-fixed-form {
   position: absolute;
   bottom: 0;
@@ -64,6 +70,7 @@
 
 .chat-room-message-form-textarea {
   width: 100%; /* テキストエリアの幅を調整 */
+  resize: none;
 }
 
 .chat-message-partner {
@@ -96,6 +103,7 @@
   font-size: 20px;
   border-radius: 8px;
   background: #f1f1f1;
+  white-space: pre-wrap;
 }
 
 .chat-message-current-user {
@@ -106,6 +114,7 @@
 .main-color-bg {
   background: #8DE055;
   color: #000000;
+  white-space: pre-wrap;
 }
 
 textarea:focus {
