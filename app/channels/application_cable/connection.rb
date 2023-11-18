@@ -11,10 +11,12 @@ module ApplicationCable
     private
 
       def find_verified_user
-        # self.current_user = User.find_by(id: current_user.id) # env['warden'].user
+        # self.current_user = env['warden'].user
         if user_data = cookies.encrypted[Rails.application.config.session_options[:key]]['warden.user.user.key']
-          user_id = user_data[0]#[0] # ユーザーIDの取得
+          user_id = user_data[0][0] # ユーザーIDの取得
           User.find_by(id: user_id)
+        else
+          reject_unauthorized_connection
         end
       end
   end

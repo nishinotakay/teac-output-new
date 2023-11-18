@@ -7,13 +7,10 @@
       </span>
     </div>
   </nav>
-
   <div id='chat-messages' class="chat-messages-container">
     <%= render @chat_messages %>
-    
   </div>
   <div class="chat-messages-spacer"></div>
-
   <div class="chat-room-fixed-form">
     <form class="chat-room-message-form">
       <textarea data-behavior="chat_room_speaker" data-chat_room_id="<%= @chat_room.id %>" placeholder="メッセージを入力" class="chat-room-message-form-textarea"></textarea>

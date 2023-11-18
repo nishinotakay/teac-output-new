@@ -1,15 +1,13 @@
 class ChatRoomChannel < ApplicationCable::Channel
   
   def subscribed
-    # この行を編集する
-    stream_from "chat_room_channel"
+    stream_from "chat_room_channel" # chatroomに遷移すると、サーバーのchannel購読を開始。ないと非同期処理されない。
   end
 
   def unsubscribed
     # Any cleanup needed when channel is unsubscribed
   end
 
-  # ==========ここから編集する==========
   def speak(data)
     # ActionCable.server.broadcast 'chat_room_channel', {chat_message: data['chat_message']}
     ChatMessage.create!(
@@ -18,5 +16,4 @@ class ChatRoomChannel < ApplicationCable::Channel
       chat_room_id: data['chat_room_id']
     )
   end
-  # ==========ここまで編集する==========
 end
