@@ -102,8 +102,8 @@ ActiveRecord::Schema.define(version: 2023_11_14_034516) do
   end
 
   create_table "likes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "article_id"
+    t.bigint "user_id", null: false
+    t.bigint "article_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -218,6 +218,7 @@ ActiveRecord::Schema.define(version: 2023_11_14_034516) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "article_comments", "articles"
   add_foreign_key "article_comments", "users"
