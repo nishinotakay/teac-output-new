@@ -1,5 +1,6 @@
 class Users::LikesController < ApplicationController
-  before_action :set_article, only: %i[article_create article_destroy]  
+  before_action :set_article, only: %i[article_create article_destroy]
+  before_action :authenticate_user!, only: %i[article_create article_destroy]
 
   def article_create
     @like = current_user.likes.new(like_params)
