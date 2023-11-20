@@ -29,7 +29,7 @@
         <!-- いいね機能のボタン-->
           <div id="article_<%= @article.id %>">
             <%= render 'users/likes/article_likes', locals: { article: @article } %>
-          </div> 
+          </div>
       <div class="article-comments-card mt-2">
         <div class="article-comments-list">
           <% if @article_comments.present? %>

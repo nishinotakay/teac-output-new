@@ -32,6 +32,13 @@
                   <td class="link-td" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'>
                     <div class="d-flex align-items-center">
                       <%= article.title %>
+                      <% if article.likes.present? %>
+                        <% if current_user.article_already_liked?(article.id) %>
+                          <i class="fa-solid fa-heart ml-4 mr-2"></i><%= article.likes.count %>
+                        <% else %>
+                          <i class="fa-regular fa-heart ml-4 mr-2"></i><%= article.likes.count %>
+                        <% end %>
+                      <% end %>
                       <%if article.article_comments.present? %>
                         <i class="fa-regular fa-comment fa-sm ms-auto">&nbsp<%= article.article_comments.count %></i>
                       <% end %>

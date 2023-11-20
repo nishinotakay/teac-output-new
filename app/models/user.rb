@@ -41,7 +41,7 @@ class User < ApplicationRecord
     end
   end
 
-  def liked_by?(article_id)
-    Like.where(article_id: article_id).exists?
+  def article_already_liked?(article_id)
+    likes.where(article_id: article_id).exists?
   end
 end
