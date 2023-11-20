@@ -3,6 +3,10 @@ module Users
     before_action :authenticate_user!
 
     def create
+      if current_user.id == params[:user_id].to_i
+        redirect_to(users_index_path, alert: '不正な操作です。') and return
+      end
+
       current_user_chat_rooms = ChatRoomUser.where(user_id: current_user.id).map(&:chat_room)
       chat_room = ChatRoomUser.where(chat_room: current_user_chat_rooms, user_id: params[:user_id]).map(&:chat_room).first
       if chat_room.blank?
