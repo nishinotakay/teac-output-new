@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Comment Notification</title>
+  </head>
+  <body>
+    <h1>こんにちは！ <%= @tweet_owner.name %>さん。</h1>
+    <p><%= @commenter.name %>さんがあなたのつぶやきにコメントしました。</p>
+    <h3>コメント内容</h3>
+    <p><%= @comment_body %></p>
+    <p>詳細は<a href="<%= @tweet_url %>">こちら</a>から確認できます。</p>
+  </body>
+</html>
