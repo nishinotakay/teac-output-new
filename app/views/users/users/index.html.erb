@@ -29,14 +29,11 @@
               <tr>
                 <td><%= user.name %></td>
                 <td><%= user.email %></td>
-                <td><%= user.articles.count %></td>
-                <td><%= user.posts.count %></td>
+                <td><%= user.articles.size %></td>
+                <td><%= user.posts.size %></td>
                 <td>
                   <% if user != current_user %>
-                    <%= link_to  users_chat_rooms_path(params: { user_id: user.id }), method: :post, class: "chat-room-button" do %>
-                      <%= image_tag 'chat.svg', width: 16, height: 16, alt: "Chat Icon" %>
-                      open chat
-                    <% end %>
+                    <%= link_to 'open chat', users_chat_rooms_path(params: { user_id: user.id }), method: :post, class: "chat-room-button" %>
                   <% end %>
                 </td>
               </tr>

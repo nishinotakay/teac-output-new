@@ -21,15 +21,15 @@ module Users
       }
 
       @users = if order.count == 1
-                 User.sort_filter(order.first,
-                   filter)&.page(params[:page])&.per(30)
+                 User.sort_filter(order.first, filter).page(params[:page]).per(30)
                else
-                 User.all&.page(params[:page])&.per(30)
+                 User.all.includes(:articles, :posts).page(params[:page]).per(30)
                end
     end
 
+    # 管理者側で使用している登録ユーザー詳細画面のアクション、一般ユーザー側でも使用するか要確認
     def show
-      @user = User.find(params[:id]) # 該当idのユーザーレコードをとってくる様に設定
+      @user = User.find(params[:id])
       @profile = current_user.profile
     end
   end
