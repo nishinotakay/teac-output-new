@@ -14,10 +14,6 @@ class User < ApplicationRecord
   has_many :inquiries, dependent: :destroy
   has_many :tweet_comments, dependent: :destroy
   has_many :article_comments, dependent: :destroy
-  has_many :chat_room_users
-  has_many :chat_rooms, through: :chat_room_users
-  has_many :chat_messages
-
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
@@ -32,9 +28,9 @@ class User < ApplicationRecord
     artcl_max = filter[:articles_max].blank? ? Article.count : filter[:articles_max]
     posts_min = filter[:posts_min].blank? ? 0 : filter[:posts_min]
     posts_max = filter[:posts_max].blank? ? Post.count : filter[:posts_max]
-#binding.pry
-    users = includes(:articles, :posts).group("users.id")
-      .where(["name like ? and email like ?", "%#{filter[:name]}%", "%#{filter[:email]}%"])
+
+    users = where(["name like ? and email like ?", "%#{filter[:name]}%", "%#{filter[:email]}%"])
+      .left_joins(:articles).left_joins(:posts).group("users.id")
       .having("count(articles.id) between ? and ?", artcl_min, artcl_max)
       .having("count(posts.id) between ? and ?", posts_min, posts_max)
     if order[0] == :articles || order[0] == :posts || order[0] == :profiles
