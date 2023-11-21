@@ -53,7 +53,7 @@ Rails.application.routes.draw do
     resources :articles do
       resources :article_comments, only: %i[create destroy update] # 記事コメント機能
     end
-    get 'users', to: 'users#index', as: :index
+    get 'index', to: 'users#index'
     resources :users, only: [:show]
     resources :posts
     resources :articles
