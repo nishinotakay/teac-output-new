@@ -1,2 +1,1 @@
 import '../../stylesheets/users/application';
-
