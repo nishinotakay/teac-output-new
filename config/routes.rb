@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   }
 
   namespace :admins do
-    resources :posts, only: [:destroy]
+    resources :posts
     resources :dash_boards, only: [:index]
     resources :articles do
       member do
@@ -20,12 +20,6 @@ Rails.application.routes.draw do
         get 'users_edit'
         patch 'users_update'
         delete 'users_destroy'
-      end
-    end
-    resources :posts do
-      member do # id付与
-        get 'show'
-        delete 'show'
       end
     end
     namespace :articles do

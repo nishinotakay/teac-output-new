@@ -1,8 +1,7 @@
 module Users
   class DashBoardsController < Users::Base
+    
     def index
-      params[:order] ||= 'DESC'
-      # paramsを元にfilterを作成する
       filter = {
         author:   params[:author],
         title:    params[:title],
@@ -10,11 +9,16 @@ module Users
         content:  params[:content],
         start:    params[:start],
         finish:   params[:finish],
-        order:    params[:order]
+        order:    params[:order] ||= 'DESC'
       }
   
-      # filterを元に記事一覧を取得する
       @articles = current_user.articles.paginated_and_sort_filter(filter).page(params[:page]).per(30)
+
+      respond_to do |format|
+        format.any
+        format.html
+        format.json { render json: @articles }
+      end
     end
   end
 end
