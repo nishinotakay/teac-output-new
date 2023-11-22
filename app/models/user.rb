@@ -14,6 +14,7 @@ class User < ApplicationRecord
   has_many :inquiries, dependent: :destroy
   has_many :tweet_comments, dependent: :destroy
   has_many :article_comments, dependent: :destroy
+  has_many :likes, dependent: :destroy
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
@@ -38,5 +39,9 @@ class User < ApplicationRecord
     else
       users.order(order[0] => order[1])
     end
+  end
+
+  def article_already_liked?(article_id)
+    likes.where(article_id: article_id).exists?
   end
 end
