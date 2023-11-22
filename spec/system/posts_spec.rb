@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Posts', type: :system do
-  let(:user) { create(:user) }
+  let!(:user) { create(:user) }
   before do
     user.confirm
     sign_in(user)
@@ -85,71 +85,85 @@ RSpec.describe 'Posts', type: :system do
   end
   
   describe '動画投稿一覧' do
-    let!(:my_post) { create(:post), title: 'Ruby', user: user }
-    let!(:admin_post) { create(:post), body: 'SQLについての動画です', admin: admin }
-    let!(:other_post) { create(:post), youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo' }
+    let(:user_1) { create(:user, name: '鈴木一郎') }
+    let(:user_2) { create(:user, name: '大谷翔平') }
+    let!(:my_post) { create(:post, title: 'Ruby', body: 'Rubyについての動画です', youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo', created_at: DateTime.new(2023, 11, 10), user: user_1) }
+    let!(:post_1) { create(:post, title: 'SQL', body: 'SQLについての動画です', youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo', created_at: DateTime.new(2023, 11, 11), user: user_2) }
+    let!(:post_2) { create(:post, title: 'JS', body: 'Javascriptについての動画です', youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo', created_at: DateTime.new(2023, 11, 12), user: user_1) }
 
     it '全ての動画投稿が表示されること' do
-      動画投稿一覧ページにアクセス     
+      visit users_posts_path
       expect(page).to have_content 'Ruby'
       expect(page).to have_content 'SQLについての動画です'
-      expect(page).to have_content 'https://www.youtube.com/watch?v=AgeJhUvEezo'
+      expect(page).to have_selector('iframe[src*="youtube.com/embed"]')
     end
 
-    context '並び替えをする場合' do
-      動画投稿一覧ページにアクセス
-      並び替えボタンを押す
+    context '並べ替えをする場合' do
       it '投稿日の古い順に並び替えができること' do
-        プルダウンで古い順を選択
-        並び替えるボタンを押す
-        一番古い投稿が一番上に表示
+        visit users_posts_path
+        find('.btn-success.sort-modal-btn', visible: :all).click # 並べ替えボタンが非表示要素になっているため'click_on'並べ替え'が使えない
+        select '古い順', from: 'sort-select'
+        find('.btn-primary.submit-btn', visible: :all, match: :first).click
+        expect(page).to have_selector('.post-title:first-child', text: 'Ruby')
       end
       it '投稿日の新しい順に並び替えができること' do
-        プルダウンで新しい順を選択
-        並び替えるボタンを押す
-        一番新しい投稿が一番上に表示
+        visit users_posts_path
+        find('.btn-success.sort-modal-btn', visible: :all).click # 並べ替えボタンが非表示要素になっているため'click_on'並べ替え'が使えない
+        select '新しい順', from: 'sort-select'
+        find('.btn-primary.submit-btn', visible: :all, match: :first).click
+        expect(page).to have_selector('.post-title:first-child', text: 'JS')
       end
     end
 
     context '絞り込み検索をする場合' do
-      動画投稿一覧ページにアクセス
-      絞り込み検索ボタンを押す
       it '投稿者名で絞り込みができること' do
-        投稿者フォームに名前を入力する
-        検索するボタンを押す
-        正しい投稿が表示されている
+        visit users_posts_path
+        find('.btn-success.filter-modal-btn', visible: :all).click
+        fill_in 'input-author', with: '鈴木一郎'
+        find('.btn-primary.submit-btn', visible: :all, match: :first).click
+        expect(page).to have_content('Ruby')
+        expect(page).to have_content('JS')
       end
       it 'タイトルで絞り込みができること' do
-        タイトルフォームに入力する
-        検索ボタンを押す
-        正しい投稿が表示されている
+        visit users_posts_path
+        find('.btn-success.filter-modal-btn', visible: :all).click
+        fill_in 'input-title', with: 'SQL'
+        find('.btn-primary.submit-btn', visible: :all, match: :first).click
+        expect(page).to have_content('SQL')
+        expect(page).to have_content('SQLについての動画です')
       end
       it '投稿日で絞り込みができること' do
-        開始日、終了日に日付を入力する
-        検索ボタンを押す
-        正しい投稿が表示されている
+        visit users_posts_path
+        find('.btn-success.filter-modal-btn', visible: :all).click
+        fill_in 'input-start', with: '2023, 11, 10'
+        fill_in 'input-finish', with: '2023, 11, 11'
+        find('.btn-primary.submit-btn', visible: :all, match: :first).click
+        expect(page).to have_content('Ruby')
+        expect(page).to have_content('SQL')
       end
     end
   end
 
-  # describe '動画投稿削除のテスト' do
-  #   let!(:my_post) { create(:post), title: 'Ruby', user: user }
-  #   let!(:admin_post) { create(:post), body: 'SQLについての動画です', admin: admin }
-  #   let!(:other_post) { create(:post), youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo' }
+  describe '動画投稿削除のテスト' do
+    let(:user) { create(:user) }
+    let(:admin) { create(:admin) }
+    let!(:my_post) { create(:post, title: 'Ruby', body: 'Rubyについての動画です', youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo', created_at: DateTime.new(2023, 11, 10), user: user) }
+    let!(:admin_post) { create(:post, title: 'SQL', body: 'SQLについての動画です', youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo', created_at: DateTime.new(2023, 11, 11), admin: admin) }
+    # let!(:other_post) { create(:post, title: 'Ruby', body: 'Rubyについての動画です', youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo', created_at: DateTime.new(2023, 11, 10), user: user }
 
-  #   動画投稿一覧ページにアクセス
-  #   it '自分の投稿を削除できること' do
-  #     自分の投稿の三点リーダをクリック
-  #     削除ボタンを押す
-  #     OKボタンを押す
-  #     一覧ページに削除した投稿が表示されていない
-  #   end
+    it '自分の投稿を削除できること' do
+      visit users_posts_path
+      find('tbody tr:nth-child(2) td button.btn-menu').click
+      find('.dropdown-menu li:contains("削除") a.nav-link').click
+      expect(page).not_to have_content('Ruby')
+    end
 
-  #   it '他人の投稿を削除できないこと ' do
-  #     他人の三点リーダをクリック
-  #     削除ボタンが表示されていない
-  #   end
+    it '他人の投稿を削除できないこと ' do
+      visit users_posts_path
+      find('tbody tr:first-child td button.btn-menu').click
+      expect(page).not_to have_selector('tbody tr:first-child td ul.dropdown-menu li .nav-link', text: '削除')
+    end
 
-  # end
+  end
   
 end
