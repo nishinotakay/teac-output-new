@@ -50,6 +50,12 @@ gem 'dotenv-rails'
 gem 'rinku'
 gem 'draper'
 
+# 下の二つのGEMはLINEログイン機能を実装するために追加
+gem 'omniauth-line'
+gem 'omniauth-rails_csrf_protection'
+gem 'omniauth', '~> 2.0'
+
+
 group :development, :test do
   # ERD生成
   gem 'rails-erd'
