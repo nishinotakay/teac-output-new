@@ -1,1 +1,1 @@
-import '../../stylesheets/users/chat_rooms_show';
+import '../../stylesheets/users/application';
