@@ -1,0 +1,9 @@
+<% if current_user.article_already_liked?(@article.id) %>
+  <%= link_to article_destroy_users_article_likes_path(@article), class:'text-decoration-none', method: :delete, remote: true do %>
+    <i class="fa-solid fa-heart ml-4 mr-2 mb-4"></i><%= @article.likes.count %>
+  <% end %>
+<% else %>
+  <%= link_to article_create_users_article_likes_path(@article), class:'text-decoration-none', method: :post, remote: true do %>
+    <i class="fa-regular fa-heart ml-4 mr-2 mb-4"></i><%= @article.likes.count %>
+  <% end %>
+<% end %>
