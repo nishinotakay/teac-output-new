@@ -52,6 +52,10 @@ Rails.application.routes.draw do
     resources :chat_rooms, only: [:create, :show]
     resources :articles do
       resources :article_comments, only: %i[create destroy update] # 記事コメント機能
+      resource :likes, only: [] do
+        post 'article_create', on: :member
+        delete 'article_destroy', on: :member
+      end
     end
     get 'index', to: 'users#index'
     resources :users, only: [:show]

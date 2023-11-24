@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_11_10_104628) do
-
+ActiveRecord::Schema.define(version: 2023_11_14_034516) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -125,6 +124,13 @@ ActiveRecord::Schema.define(version: 2023_11_10_104628) do
     t.index ["user_id"], name: "index_inquiries_on_user_id"
   end
 
+  create_table "likes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "article_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "managers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -229,13 +235,14 @@ ActiveRecord::Schema.define(version: 2023_11_10_104628) do
     t.integer "gender"
     t.integer "learning_history"
     t.string "purpose"
+    t.string "provider"
+    t.string "uid"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
-  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "article_comments", "articles"
   add_foreign_key "article_comments", "users"
