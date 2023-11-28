@@ -50,6 +50,10 @@ gem 'dotenv-rails'
 gem 'rinku'
 gem 'draper'
 
+gem 'omniauth', '~> 2.0'
+gem 'omniauth-google-oauth2'
+gem 'omniauth-rails_csrf_protection'
+
 group :development, :test do
   # ERD生成
   gem 'rails-erd'
