@@ -4,13 +4,13 @@ class Inquiry < ApplicationRecord
   def self.sort_and_filter(params)
     order = {
       created_at: params[:ord_created_at],
-    }.compact
+    }
     filter = {
       user_name: params[:flt_user_name],
       hidden: params[:flt_hidden],
       start: params[:flt_start],
       finish: params[:flt_finish]
-    }.compact
+    }
     
     sort_and_filter = {order: order, filter: filter}
     return sort_and_filter
