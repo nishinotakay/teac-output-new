@@ -57,7 +57,6 @@ Rails.application.routes.draw do
         delete 'article_destroy', on: :member
       end
     end
-    get 'index', to: 'users#index'
     resources :users, only: [:show]
     resources :posts
     resources :articles
