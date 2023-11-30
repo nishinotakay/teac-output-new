@@ -2,19 +2,10 @@ module Admins
   class InquiriesController < Admins::Base
     def index
       sort_and_filter_params = Inquiry.sort_and_filter(params)
-      session[:ord_created_at] = params[:ord_created_at] if params[:ord_created_at]
       @inquiries, @hidden, @both = Inquiry.hidden_params(sort_and_filter_params)
       [@inquiries, @hidden, @both].compact.each do |inquiry_hidden|
-        if params[:ord_created_at].present?
-          @inquiry_scope = Inquiry.inquiry_filter(inquiry_hidden, sort_and_filter_params).order(created_at: params[:ord_created_at])
-        elsif session[:ord_created_at].blank?
-          sort_direction = "asc"
-          @inquiry_scope = Inquiry.inquiry_filter(inquiry_hidden, sort_and_filter_params).order(created_at: sort_direction)
-        else
-          @inquiry_scope = Inquiry.inquiry_filter(inquiry_hidden, sort_and_filter_params).order(created_at: session[:ord_created_at])
-        end
+        @inquiry_scope = Inquiry.inquiry_filter(inquiry_hidden, sort_and_filter_params).order(created_at: params[:ord_created_at])
       end
-    
       @users = User.page(params[:page]).per(30)
     end
 
