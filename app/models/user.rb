@@ -46,8 +46,7 @@ class User < ApplicationRecord
   def article_already_liked?(article_id)
     likes.where(article_id: article_id).exists?
   end
-
-
+  
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.name = auth.info.name
