@@ -1,0 +1,1 @@
+$('#post_<%= @post.id %>').html("<%= j(render "post_likes", post: @post, like: @like )%>")
