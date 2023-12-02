@@ -33,13 +33,7 @@
         <tr>
           <td onclick='window.location="<%= users_post_path(id: post.id) %>"'><%= post.title %></td>
           <td>
-            <% if post.likes.present? %>
-              <% if current_user.post_already_liked?(post.id) %>
-                <i class="fa-solid fa-heart ml-4 mr-2"></i><%= post.likes.count %>
-              <% else %>
-                <i class="fa-regular fa-heart ml-4 mr-2"></i><%= post.likes.count %>
-              <% end %>
-            <% end %>
+            <%= post.decorate.formatted_likes(current_user) %>
           </td>
           <td onclick='window.location="<%= users_post_path(id: post.id) %>"'><%= simple_format(post.body) %></td>
           <td width="150" onclick='window.location="<%= users_post_path(id: post.id) %>"'>
