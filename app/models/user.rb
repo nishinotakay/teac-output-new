@@ -5,7 +5,8 @@ class User < ApplicationRecord
   # :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :validatable,
-    :confirmable
+    :confirmable,
+    :omniauthable, omniauth_providers: %i[google_oauth2]
 
   has_many :articles, dependent: :destroy
   has_many :posts, dependent: :destroy
@@ -21,6 +22,7 @@ class User < ApplicationRecord
   validates :name,  presence: true, length: { in: 1..10 }
   validates :age,   allow_nil: true, numericality: { greater_than_or_equal_to: 10 }
   validates :profile, length: { maximum: 200 } # 追記
+  validates :uid, uniqueness: { scope: :provider }
 
   enum gender: { male: 0, female: 1, other: 2 }
 
@@ -44,6 +46,16 @@ class User < ApplicationRecord
   def article_already_liked?(article_id)
     likes.where(article_id: article_id).exists?
   end
+  
+  def self.from_omniauth(auth)
+    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+      user.name = auth.info.name
+      user.email = auth.info.email
+      user.password = Devise.friendly_token[0,20]
+      user.confirmed_at = Time.now
+    end
+  end
+
 
   def post_already_liked?(post_id)
     likes.where(post_id: post_id).exists?
