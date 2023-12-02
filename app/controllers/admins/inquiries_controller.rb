@@ -1,10 +1,11 @@
 module Admins
   class InquiriesController < Admins::Base
     def index
+      params[:ord_created_at] ||= 'desc'
       sort_and_filter_params = Inquiry.sort_and_filter(params)
       @inquiries, @hidden, @both = Inquiry.hidden_params(sort_and_filter_params)
       [@inquiries, @hidden, @both].compact.each do |inquiry_hidden|
-        @inquiry_scope = Inquiry.inquiry_filter(inquiry_hidden, sort_and_filter_params).order(created_at: params[:ord_created_at])
+        @inquiry_scope = Inquiry.inquiry_filter(inquiry_hidden, sort_and_filter_params).order('inquiries.created_at': params[:ord_created_at])
       end
       @users = User.page(params[:page]).per(30)
     end
