@@ -8,7 +8,7 @@ RSpec.describe 'Posts', type: :system do
     sign_in(user)
   end
 
-  describe '動画投稿新規登録のテスト' do
+  describe '動画投稿新規登録' do
     context '入力内容が正しい場合' do
       it '投稿に成功する' do
         visit new_users_post_path
@@ -36,7 +36,7 @@ RSpec.describe 'Posts', type: :system do
     end
   end
 
-  describe '動画投稿編集のテスト' do
+  describe '動画投稿編集' do
     let!(:post) { create(:post, title: 'Ruby', body: 'Ruby初心者向け', youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo', user: user) }
 
     context '編集内容が正しい場合' do
@@ -151,7 +151,7 @@ RSpec.describe 'Posts', type: :system do
     end
   end
 
-  describe '動画投稿削除のテスト' do
+  describe '動画投稿削除' do
     let(:user) { create(:user) }
     let(:admin) { create(:admin) }
     let!(:my_post) { create(:post, title: 'Ruby', body: 'Rubyについての動画です', youtube_url: 'https://www.youtube.com/watch?v=AgeJhUvEezo', created_at: DateTime.new(2023, 11, 10), user: user) }
