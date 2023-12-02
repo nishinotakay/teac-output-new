@@ -46,7 +46,7 @@ module Users
       url = params[:post][:youtube_url].last(11)
       @post.youtube_url = url
       if @post.update(post_params)
-        redirect_to users_posts_path(@post), flash: { success: '動画情報を更新しました' }
+        redirect_to users_post_path(@post), flash: { success: '動画情報を更新しました' }
       else
         render :edit
       end
