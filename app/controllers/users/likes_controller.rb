@@ -5,7 +5,6 @@ class Users::LikesController < ApplicationController
 
   def article_create
     @like = current_user.likes.new(like_params)
-    # binding.irb
     @like.save
   end
 
