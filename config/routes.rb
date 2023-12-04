@@ -58,7 +58,12 @@ Rails.application.routes.draw do
       end
     end
     resources :users, only: [:show]
-    resources :posts
+    resources :posts do
+      resource :likes, only: [] do
+        post 'post_create', on: :member
+        delete 'post_destroy', on: :member
+      end
+    end
     resources :articles
     namespace :articles do
       post 'image'

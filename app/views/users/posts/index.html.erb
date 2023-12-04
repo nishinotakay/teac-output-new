@@ -18,6 +18,7 @@
   <thead>
     <tr>
       <th>タイトル</th>
+      <th></th>
       <th>内容</th>
       <th>Youtube</th>
       <th>投稿者</th>
@@ -32,6 +33,9 @@
         <tr>
           <td class="post-title" onclick="window.location='<%= users_post_path(id: post.id) %>'">
             <%= post.title %>
+          </td>
+          <td>
+            <%= post.decorate.formatted_likes(current_user) %>
           </td>
           <td class="post-body" onclick='window.location="<%= users_post_path(id: post.id) %>"'><%= simple_format(post.body) %></td>
           <td class="post-url" width="150" onclick='window.location="<%= users_post_path(id: post.id) %>"'>
