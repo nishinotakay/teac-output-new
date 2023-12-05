@@ -25,6 +25,11 @@
               <%= button_to '動画一覧', users_posts_path, method: :get ,class: "btn btn-primary" %><br>
             <% end %>
           </td>
+          <td>
+            <div id="post_<%= @post.id %>">
+              <%= render 'users/likes/post_likes', locals: { post: @post } %>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>

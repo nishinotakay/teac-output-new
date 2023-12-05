@@ -44,7 +44,8 @@ Rails.application.routes.draw do
     sessions:      'users/sessions',
     passwords:     'users/passwords',
     confirmations: 'users/confirmations',
-    registrations: 'users/registrations'
+    registrations: 'users/registrations',
+    omniauth_callbacks: 'users/omniauth_callbacks'
   }
 
   namespace :users do
@@ -58,7 +59,12 @@ Rails.application.routes.draw do
       end
     end
     resources :users, only: [:show]
-    resources :posts
+    resources :posts do
+      resource :likes, only: [] do
+        post 'post_create', on: :member
+        delete 'post_destroy', on: :member
+      end
+    end
     resources :articles
     namespace :articles do
       post 'image'
