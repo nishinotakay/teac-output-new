@@ -1,4 +1,4 @@
-<%= javascript_pack_tag "admins/inquiry" %>
+<%= javascript_pack_tag "admins/dashboards_index" %>
 <button type="button" class="btn btn-success sort-modal-btn ml-5" data-bs-toggle="modal" data-bs-target="#sortFilterModal" style="display: none;">
   並べ替え
 </button>
@@ -70,9 +70,9 @@
         </div>
         <div class="filter-modal" style="display: none;">
           <div class="form-group row my-5">
-            <label for="input-user_name" class="col-sm-4 col-form-label"><%= Inquiry.human_attribute_name(:user_name) %></label>
+            <label for="input-subject" class="col-sm-4 col-form-label"><%= Inquiry.human_attribute_name(:user) %></label>
             <div class="col-md-8">
-              <input type="text" aria-label="user" id="input-user_name" class="form-control" value="<%= params[:flt_user_name] %>">
+              <input type="text" aria-label="subject" id="input-subject" class="form-control" value="<%= params[:flt_user] %>">
             </div>
           </div>
           <div class="form-group row my-5">

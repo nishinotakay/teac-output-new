@@ -152,33 +152,33 @@ Inquiry.create!(
   user_id: '1',
   subject: 'サポート要求',
   content: 'サポートが必要です',
-  created_at: '2023-11-20'
+  created_at: '2023-09-30'
 )
 
 Inquiry.create!(
   user_id: '2',
   subject: '料金に関する問い合わせ',
   content: '料金詳細を知りたい',
-  created_at: '2023-11-03'
+  created_at: '2023-10-03'
 )
 
 Inquiry.create!(
   user_id: '3',
   subject: 'サービス利用方法',
   content: 'どのようにサービスを利用するのか説明してください',
-  created_at: '2023-11-02'
+  created_at: '2023-10-02'
 )
 
 Inquiry.create!(
   user_id: '4',
   subject: 'アカウントの問題',
   content: 'ログインできない',
-  created_at: '2023-11-22'
+  created_at: '2023-09-28'
 )
 
 Inquiry.create!(
   user_id: '5',
   subject: '提案',
   content: '新しい機能の提案があります',
-  created_at: '2023-11-05'
+  created_at: '2023-10-05'
 )
