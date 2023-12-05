@@ -6,11 +6,12 @@
       <textarea id="subject" name="subject" rows="2" cols="90" readonly style="resize: none; font-size: 16px;"><%= @inquiry.subject %></textarea>
     </div>
     <br>
+    <div class="field mb-3">
+      <label><%= @user.name %>様のメールアドレス</label>
+      <textarea rows="2" cols="90" readonly style="resize: none; font-size: 16px;"><%= @user.email %></textarea>
+    </div>
     <div class="field">
      <label>内容</label>
       <textarea id="content" name="content" rows="9" cols="90" readonly style="resize: none; font-size: 16px;"><%= @inquiry.content %></textarea>
     </div>
 </div>
-
-
-
