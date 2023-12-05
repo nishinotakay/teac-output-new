@@ -30,8 +30,8 @@ $(function(){
   })
 
   function search_order(search){
-    var keys = ["ord_name", "ord_email", "ord_articles", "ord_posts"]
-    var order = 'ord_id=DESC'
+    var keys = ["ord_created_at"]
+    var order = 'ord_created_at'
     $.each(keys, function(){
       if(search.indexOf(this) >= 0){
         order = search.indexOf("DESC") != -1 ? this + '=DESC' : this + '=ASC'
