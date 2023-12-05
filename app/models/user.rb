@@ -16,6 +16,9 @@ class User < ApplicationRecord
   has_many :tweet_comments, dependent: :destroy
   has_many :article_comments, dependent: :destroy
   has_many :likes, dependent: :destroy
+  has_many :chat_room_users
+  has_many :chat_rooms, through: :chat_room_users
+  has_many :chat_messages
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
