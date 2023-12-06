@@ -27,6 +27,9 @@
             <th>
               <i class="fas fa-flag"></i>
                 趣味</th>
+            <th>
+              <i class="fas fa-comments"></i>
+                チャット</th>
             <th><!--三点リーダーテーブル--></th>
           </tr>
         </thead>
@@ -46,6 +49,11 @@
                 </td>
                 <td>
                   <%= profile.hobby %>
+                </td>
+                <td>
+                  <% if profile.user != current_user %>
+                    <%= link_to 'open chat', users_chat_rooms_path(params: { user_id: profile.user.id }), method: :post, class: "chat-room-button" %>
+                  <% end %>
                 </td>
                 <td>
                   <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>

@@ -50,6 +50,7 @@ Rails.application.routes.draw do
 
   namespace :users do
     resources :dash_boards, only: [:index]
+    resources :chat_rooms, only: [:create, :show]
     resources :articles do
       resources :article_comments, only: %i[create destroy update] # 記事コメント機能
       resource :likes, only: [] do
