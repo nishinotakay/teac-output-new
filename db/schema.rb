@@ -91,30 +91,6 @@ ActiveRecord::Schema.define(version: 2023_11_30_012835) do
     t.index ["user_id"], name: "index_articles_on_user_id"
   end
 
-  create_table "chat_messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "chat_room_id", null: false
-    t.bigint "user_id", null: false
-    t.text "content"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["chat_room_id"], name: "index_chat_messages_on_chat_room_id"
-    t.index ["user_id"], name: "index_chat_messages_on_user_id"
-  end
-
-  create_table "chat_room_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "chat_room_id", null: false
-    t.bigint "user_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["chat_room_id"], name: "index_chat_room_users_on_chat_room_id"
-    t.index ["user_id"], name: "index_chat_room_users_on_user_id"
-  end
-
-  create_table "chat_rooms", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "inquiries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "subject", null: false
     t.text "content", null: false
@@ -175,7 +151,6 @@ ActiveRecord::Schema.define(version: 2023_11_30_012835) do
   create_table "profiles", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "learning_history"
-    t.string "purpose"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.date "learning_start"
@@ -237,8 +212,8 @@ ActiveRecord::Schema.define(version: 2023_11_30_012835) do
     t.integer "gender"
     t.integer "learning_history"
     t.string "purpose"
-    t.string "provider"
     t.string "uid"
+    t.string "provider"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -250,10 +225,6 @@ ActiveRecord::Schema.define(version: 2023_11_30_012835) do
   add_foreign_key "article_comments", "users"
   add_foreign_key "articles", "admins"
   add_foreign_key "articles", "users"
-  add_foreign_key "chat_messages", "chat_rooms"
-  add_foreign_key "chat_messages", "users"
-  add_foreign_key "chat_room_users", "chat_rooms"
-  add_foreign_key "chat_room_users", "users"
   add_foreign_key "inquiries", "users"
   add_foreign_key "posts", "admins"
   add_foreign_key "posts", "users"
