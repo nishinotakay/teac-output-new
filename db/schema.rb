@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_08_07_080430) do
+ActiveRecord::Schema.define(version: 2023_11_30_012835) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -101,6 +101,14 @@ ActiveRecord::Schema.define(version: 2023_08_07_080430) do
     t.index ["user_id"], name: "index_inquiries_on_user_id"
   end
 
+  create_table "likes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "article_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "post_id"
+  end
+
   create_table "managers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -132,10 +140,10 @@ ActiveRecord::Schema.define(version: 2023_08_07_080430) do
     t.string "title"
     t.text "body"
     t.string "youtube_url"
-    t.bigint "user_id", null: false
-    t.integer "admin_id"
+    t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "admin_id"
     t.index ["admin_id"], name: "index_posts_on_admin_id"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
@@ -143,7 +151,6 @@ ActiveRecord::Schema.define(version: 2023_08_07_080430) do
   create_table "profiles", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "learning_history"
-    t.string "purpose"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.date "learning_start"
@@ -205,19 +212,21 @@ ActiveRecord::Schema.define(version: 2023_08_07_080430) do
     t.integer "gender"
     t.integer "learning_history"
     t.string "purpose"
+    t.string "uid"
+    t.string "provider"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
-  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "article_comments", "articles"
   add_foreign_key "article_comments", "users"
   add_foreign_key "articles", "admins"
   add_foreign_key "articles", "users"
   add_foreign_key "inquiries", "users"
+  add_foreign_key "posts", "admins"
   add_foreign_key "posts", "users"
   add_foreign_key "profiles", "users"
   add_foreign_key "tweet_comments", "tweets"

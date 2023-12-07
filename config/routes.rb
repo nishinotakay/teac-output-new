@@ -44,16 +44,27 @@ Rails.application.routes.draw do
     sessions:      'users/sessions',
     passwords:     'users/passwords',
     confirmations: 'users/confirmations',
-    registrations: 'users/registrations'
+    registrations: 'users/registrations',
+    omniauth_callbacks: 'users/omniauth_callbacks'
   }
 
   namespace :users do
     resources :dash_boards, only: [:index]
+    resources :chat_rooms, only: [:create, :show]
     resources :articles do
       resources :article_comments, only: %i[create destroy update] # 記事コメント機能
+      resource :likes, only: [] do
+        post 'article_create', on: :member
+        delete 'article_destroy', on: :member
+      end
     end
     resources :users, only: [:show]
-    resources :posts
+    resources :posts do
+      resource :likes, only: [] do
+        post 'post_create', on: :member
+        delete 'post_destroy', on: :member
+      end
+    end
     resources :articles
     namespace :articles do
       post 'image'

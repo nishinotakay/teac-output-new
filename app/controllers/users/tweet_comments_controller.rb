@@ -5,6 +5,8 @@ module Users
     def create
       @tweet_comment = current_user.tweet_comments.new(tweet_comment_params)
       if @tweet_comment.save
+        tweet = @tweet_comment.tweet
+        TweetMailer.comment_notification(tweet.user, current_user, @tweet_comment.content, users_tweet_url(tweet)).deliver_later
         redirect_to users_tweet_path(@tweet_comment.tweet), notice: 'コメントを投稿しました。'
       else
         redirect_to users_tweet_path(@tweet_comment.tweet), alert: @tweet_comment.errors.full_messages.join("\n")
