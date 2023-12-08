@@ -15,13 +15,17 @@ module Admins
     end
 
     def update
-      @inquiries = Inquiry.find(params[:id])
-      if @inquiries.update(hidden: true)
-         flash[:notice] = 'お問い合わせを非表示にしました'
-         redirect_to admins_inquiries_path
+      @inquiry = Inquiry.find(params[:id])
+      if @inquiry.update(hidden: !@inquiry.hidden)
+        if @inquiry.hidden
+          flash[:notice] = 'お問い合わせを非表示にしました'
+        else
+          flash[:notice] = 'お問い合わせを表示しました'
+        end
       else
-        flash[:notice] = 'お問い合わせを表示しました'
+        flash[:alert] = '更新に失敗しました'
       end
+      redirect_to admins_inquiries_path
     end
   
     private
