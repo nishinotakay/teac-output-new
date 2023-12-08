@@ -36,7 +36,7 @@
                 <li><%= link_to '詳細', admins_inquiry_path(inquiry), class:"nav-link" %></li>
                 <li>
                   <% if inquiry.hidden %>
-                    <%= link_to '表示', admins_inquiry_path(inquiry, hidden: true), method: :patch, class:"nav-link", data: { confirm: '本当に表示にしますか？' } %>
+                    <%= link_to '再表示', admins_inquiry_path(inquiry, hidden: true), method: :patch, class:"nav-link", data: { confirm: '再表示しますか？' } %>
                   <% else %>
                     <%= link_to '非表示', admins_inquiry_path(inquiry, hidden: false), method: :patch, class:"nav-link", data: { confirm: '本当に非表示にしますか？' } %>
                   <% end %>
