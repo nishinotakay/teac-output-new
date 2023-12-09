@@ -54,7 +54,7 @@
                   <div class="content mt-4 mb-3">
                     <div class="text-center">
                       <button type="button" class="btn btn-success" style="width:100px">
-                       <%= link_to "投稿記事",users_articles_path,class: "Editlink" %>
+                       <%= link_to "投稿記事",users_dash_boards_path(user_id: @user),class: "Editlink" %>
                       </button>
                       <button type="button" class="btn btn-danger" style="width:100px">
                        <%= link_to "投稿動画",users_posts_path,class: "Editlink" %>

@@ -1,4 +1,5 @@
-<%= form_with(model: [@article, @article_comment], url: users_article_article_comments_path(@article, @article_comment), method: :post) do |form| %>
+<% unless current_admin.present? %>
+  <%= form_with(model: [@article, @article_comment], url: users_article_article_comments_path(@article, @article_comment), method: :post) do |form| %>
   <div class="article-comment-post-box">
     <div class="article-comment-post-header d-flex align-items-center">
       <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
@@ -12,4 +13,5 @@
       </div>
     </div>
   </div>
+  <% end %>
 <% end %>

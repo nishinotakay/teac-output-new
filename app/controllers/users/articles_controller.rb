@@ -6,6 +6,7 @@ module Users
     before_action :check_article_owner, only: %i[edit update destroy]
     before_action :set_article, except: %i[index show new create image]
     before_action :set_dashboard, only: %i[show new create edit update destroy]
+    skip_before_action :authenticate_user!, only: %i[show], if: :admin_signed_in?
 
     def index
       filter = {
@@ -29,7 +30,7 @@ module Users
     def show
       @article = Article.find(params[:id])
       @article_comments = @article.article_comments.all.order(created_at: 'DESC')
-      @article_comment = current_user.article_comments.new
+      @article_comment = current_user.article_comments.new unless current_admin.present?
 
       respond_to do |format|
         format.html
