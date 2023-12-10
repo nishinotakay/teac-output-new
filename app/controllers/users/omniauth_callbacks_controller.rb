@@ -3,33 +3,36 @@
 module Users
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     layout 'users_auth'
-    # You should configure your model like this:
-    # devise :omniauthable, omniauth_providers: [:twitter]
 
     # You should also create an action method in this controller like this:
     # def twitter
     # end
-      def line
-        # ここにLINE認証後の処理を記述します。
-        # 例: ユーザー情報を取得し、データベースに保存する、
-        #     セッションを作成する、リダイレクトを行うなど。
-        basic_action
+    def line
+      # ここにLINE認証後の処理を記述します。
+      # 例: ユーザー情報を取得し、データベースに保存する、
+      #     セッションを作成する、リダイレクトを行うなど。
+      basic_action
+    end
+
+    def google_oauth2
+      callback_for(:google)
+    end
+
+    def callback_for(provider)
+      @user = User.from_omniauth(request.env["omniauth.auth"])
+
+      unless @user.confirmed?
+        @user.confirmed_at = Time.now
+        @user.save
       end
 
-    # More info at:
-    # https://github.com/heartcombo/devise#omniauth
+      sign_in_and_redirect @user, event: :authentication
+      set_flash_message(:notice, :success, kind: "#{provider.capitalize}") if is_navigational_format?
+    end
 
-    # GET|POST /resource/auth/twitter
-    # def passthru
-    #   super
-    # end
-
-    # GET|POST /users/auth/twitter/callback
-    # def failure
-    #   super
-    # end
-
-    # protected
+    def failure
+      redirect_to root_path
+    end
 
     # The path used when OmniAuth fails
     # def after_omniauth_failure_path_for(scope)
