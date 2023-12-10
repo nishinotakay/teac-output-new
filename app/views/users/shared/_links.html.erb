@@ -20,6 +20,7 @@
 
 <%- if devise_mapping.omniauthable? %>
   <%- resource_class.omniauth_providers.each do |provider| %>
+    <%= link_to t('.sign_in_with_provider', provider: OmniAuth::Utils.camelize(provider)), omniauth_authorize_path(resource_name, provider), method: :post %><br />
     <% display_provider = provider.to_s == 'google_oauth2' ? 'Google' : OmniAuth::Utils.camelize(provider) %>
     <%= link_to t('.sign_in_with_provider', provider: display_provider), omniauth_authorize_path(resource_name, provider), method: :post %><br />
   <% end %>
