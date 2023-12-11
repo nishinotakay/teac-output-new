@@ -28,10 +28,8 @@ module Admins
   
     private
 
-
     def inquiry_params
       params.require(:inquiry).permit(:subject, :content)
-    end
-    
+    end    
   end
 end
