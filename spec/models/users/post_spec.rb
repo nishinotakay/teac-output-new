@@ -103,9 +103,9 @@ RSpec.describe Post, type: :model do
     end
 
     describe '絞り込み検索機能' do
-      let!(:user_1) { create(:user, name: '山田太郎', email: Faker::Internet.email, password: 'password', uid: Faker::Alphanumeric.alphanumeric(number: 10)) }
-      let!(:user_2) { create(:user, name: '伊東美咲', email: Faker::Internet.email, password: 'password', uid: Faker::Alphanumeric.alphanumeric(number: 10)) }
-      let!(:user_3) { create(:user, name: '伊藤英明', email: Faker::Internet.email, password: 'password', uid: Faker::Alphanumeric.alphanumeric(number: 10)) }
+      let!(:user_1) { create(:user, name: '山田太郎') }
+      let!(:user_2) { create(:user, name: '伊東美咲') }
+      let!(:user_3) { create(:user, name: '伊藤英明') }
 
       context '名前を指定する場合' do
         let!(:post_1) { create(:post, user: user_1) }
