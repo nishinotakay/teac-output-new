@@ -34,7 +34,13 @@
               <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px">︙</button>
               <ul class="dropdown-menu">
                 <li><%= link_to '詳細', admins_inquiry_path(inquiry), class:"nav-link" %></li>
-                <li><%= link_to '非表示', admins_inquiry_path(inquiry), method: :patch, class:"nav-link", data: { confirm: '本当に非表示にしますか？' } %></li>
+                <li>
+                  <% if inquiry.hidden %>
+                    <%= link_to '再表示', admins_inquiry_path(inquiry, hidden: true), method: :patch, class:"nav-link", data: { confirm: '再表示しますか？' } %>
+                  <% else %>
+                    <%= link_to '非表示', admins_inquiry_path(inquiry, hidden: false), method: :patch, class:"nav-link", data: { confirm: '本当に非表示にしますか？' } %>
+                  <% end %>
+                </li>
               </ul>
             </td>
           </tr>
