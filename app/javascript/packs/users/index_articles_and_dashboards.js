@@ -60,9 +60,31 @@ $(function(){
         search += '&' + value + '=' + input
         search += search.indexOf('reset=') != -1 ? '' : '&reset=true'
       }
-    })
-    window.location.search = search
-  })
+    });
+
+    if ($('#sort-select-admin').length) {
+      var sortValueAdmin = $('#sort-select-admin option:selected').val();
+      var searchParams = new URLSearchParams();
+      searchParams.set('order', sortValueAdmin);
+  
+      var userId = new URLSearchParams(window.location.search).get('user_id');
+      if (userId) {
+        searchParams.set('user_id', userId);
+      }
+  
+      var values = ['author', 'title', 'subtitle', 'content', 'start', 'finish', 'body', 'post'];
+      $.each(values, function(index, value) {
+        var input = $('#input-' + value).val();
+        if (input) {
+          searchParams.set(value, input);
+        }
+      });
+  
+      window.location.search = searchParams.toString();
+    } else {
+      window.location.search = search;
+    }
+  });
 
   $('.submit-btn-admin').on('click', function(){
     var search = "order=DESC"
@@ -76,4 +98,4 @@ $(function(){
     })
     window.location.search = search
   })
-})
+});

@@ -99,6 +99,7 @@
         <button type="button" class="modal-close btn-close mr-3" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body text-right">
+       <% if current_admin.nil? %>
         <div class="sort-modal" style="display: none;">
           <div class="form-group row my-5">
             <label for="sort-select" class="col-sm-3 col-form-label"><%= Article.human_attribute_name(:created_at) %></label>
@@ -110,6 +111,19 @@
                 <option value="<%= order.keys[0] %>"><%= order[order.keys[0]] %></option>
               </select>
             </div>
+        <% else %>
+         <div class="sort-modal" style="display: none;">
+          <div class="form-group row my-5">
+            <label for="sort-select" class="col-sm-3 col-form-label"><%= Article.human_attribute_name(:created_at) %></label>
+            <div class="col-md-9">
+              <% order = {'DESC': '新しい順', 'ASC': '古い順'} %>
+              <% params[:order] ||= 'DESC' %>
+              <select id="sort-select-admin" class="form-select" aria-label="Default select desc">
+                <option value="<%= params[:order] %>" selected><%= order.delete(:"#{params[:order]}") %></option>
+                <option value="<%= order.keys[0] %>"><%= order[order.keys[0]] %></option>
+              </select>
+            </div>        
+        <% end %>
           </div>
         </div>
         <div class="filter-modal" style="display: none;">
