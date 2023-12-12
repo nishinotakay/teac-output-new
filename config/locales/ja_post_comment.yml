@@ -1,0 +1,10 @@
+ja:
+  activerecord:
+    models:
+      post_comment: '動画コメント'
+    attributes:
+      post_comment:
+        id: 'id'
+        content: 'コメント'
+        created_at: '投稿日時'
+        updated_at: '編集日時'
