@@ -4,68 +4,66 @@ RSpec.describe Post, type: :model do
   let(:user) { create(:user) }
   let(:post) { build(:post, user: user) }
 
-  describe 'ユーザー' do
-    describe 'バリデーション' do
-      context '全ての項目が正しく入力されている時' do
-        it '有効である' do
-          expect(post).to be_valid
-        end
+  describe 'バリデーション' do
+    context '全ての項目が正しく入力されている時' do
+      it '有効である' do
+        expect(post).to be_valid
       end
+    end
 
-      context 'タイトルの文字数が30文字の場合' do
-        it '有効である' do
-          post = build(:post, user: user)
-          post.title = Faker::Lorem.characters(number: 30)
-          expect(post).to be_valid
-        end
+    context 'タイトルの文字数が30文字の場合' do
+      it '有効である' do
+        post = build(:post, user: user)
+        post.title = Faker::Lorem.characters(number: 30)
+        expect(post).to be_valid
       end
+    end
 
-      context 'タイトルの文字数が31文字以上の場合' do
-        it '無効である' do
-          post = build(:post, user: user)
-          post.title = Faker::Lorem.characters(number: 31)
-          expect(post).to be_invalid
-          expect(post.errors[:title]).to include('は30文字以内で入力してください')
-        end
+    context 'タイトルの文字数が31文字以上の場合' do
+      it '無効である' do
+        post = build(:post, user: user)
+        post.title = Faker::Lorem.characters(number: 31)
+        expect(post).to be_invalid
+        expect(post.errors[:title]).to include('は30文字以内で入力してください')
       end
+    end
 
-      context 'タイトルが空白の時' do
-        it '無効である' do
-          post = build(:post, title: nil, user: user)
-          expect(post).to be_invalid
-          expect(post.errors[:title]).to include('を入力してください')
-        end
+    context 'タイトルが空白の時' do
+      it '無効である' do
+        post = build(:post, title: nil, user: user)
+        expect(post).to be_invalid
+        expect(post.errors[:title]).to include('を入力してください')
       end
+    end
 
-      context '内容の文字数が240文字の場合' do
-        it '有効である' do
-          post.body = Faker::Lorem.characters(number: 240)
-          expect(post).to be_valid
-        end
+    context '内容の文字数が240文字の場合' do
+      it '有効である' do
+        post.body = Faker::Lorem.characters(number: 240)
+        expect(post).to be_valid
       end
+    end
 
-      context '内容の文字数が241文字以上の場合' do
-        it '無効である' do
-          post.body = Faker::Lorem.characters(number: 241)
-          expect(post).to be_invalid
-          expect(post.errors[:body]).to include('は240文字以内で入力してください')
-        end
+    context '内容の文字数が241文字以上の場合' do
+      it '無効である' do
+        post.body = Faker::Lorem.characters(number: 241)
+        expect(post).to be_invalid
+        expect(post.errors[:body]).to include('は240文字以内で入力してください')
       end
+    end
 
-      context '内容が空白の時' do
-        it '無効である' do
-          post = build(:post, body: nil, user: user)
-          expect(post).to be_invalid
-          expect(post.errors[:body]).to include('を入力してください')
-        end
+    context '内容が空白の時' do
+      it '無効である' do
+        post = build(:post, body: nil, user: user)
+        expect(post).to be_invalid
+        expect(post.errors[:body]).to include('を入力してください')
       end
+    end
 
-      context 'URLが空白の時' do
-        it '無効である' do
-          post = build(:post, youtube_url: nil, user: user)
-          expect(post).to be_invalid
-          expect(post.errors[:youtube_url]).to include('を入力してください')
-        end
+    context 'URLが空白の時' do
+      it '無効である' do
+        post = build(:post, youtube_url: nil, user: user)
+        expect(post).to be_invalid
+        expect(post.errors[:youtube_url]).to include('を入力してください')
       end
     end
   end
