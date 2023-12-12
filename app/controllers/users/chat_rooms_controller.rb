@@ -3,7 +3,10 @@ module Users
     before_action :authenticate_user!
 
     def create
-      if current_user.id == params[:user_id].to_i
+
+      partner_user_id = chat_room_params[:user_id]
+
+      if current_user.id == partner_user_id.to_i
         redirect_to(users_index_path, danger: 'アクセス権限がありません') and return
       end
 
@@ -13,7 +16,7 @@ module Users
       if chat_room.blank?
         chat_room = ChatRoom.create
         ChatRoomUser.create(chat_room: chat_room, user_id: current_user.id)
-        ChatRoomUser.create(chat_room: chat_room, user_id: params[:user_id])
+        ChatRoomUser.create(chat_room: chat_room, user_id: partner_user_id)
       end
       redirect_to action: :show, id: chat_room.id
     end
@@ -27,5 +30,11 @@ module Users
       @chat_room_user = @chat_room.chat_room_users.where.not(user_id: current_user.id).first.user
       @chat_messages = ChatMessage.includes(:user).where(chat_room: @chat_room)
     end
+
+    private
+
+      def chat_room_params
+        params.permit(:user_id)
+      end
   end
 end
