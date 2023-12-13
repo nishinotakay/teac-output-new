@@ -8,8 +8,7 @@ class ChatRoomUser < ApplicationRecord
   private
 
   def validate_users_count_within_limit
-    binding.pry
-    if chat_room.chat_room_users.size > 2
+    if chat_room.chat_room_users.count > 2
       errors.add(:base, 'チャットルームは最大2人までです。')
     end
   end
