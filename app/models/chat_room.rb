@@ -8,6 +8,6 @@ class ChatRoom < ApplicationRecord
   private
 
   def users_count_within_limit
-    errors.add(:users, 'は最大2人までです。') if users.size >= 2
+    errors.add(:users, 'は最大2人までです。') if users.size > 2
   end
 end
