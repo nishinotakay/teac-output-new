@@ -11,4 +11,10 @@ class PostDecorator < Draper::Decorator
     end
   end
 
+  def formatted_comment_count
+    if self.post_comments.present?
+      h.content_tag(:i, '', class: 'fa-regular fa-comment fa-sm ms-auto') + object.post_comments.count.to_s  
+    end
+  end
+
 end
