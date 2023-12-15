@@ -1,14 +1,14 @@
 <head><script src="https://kit.fontawesome.com/c3f6f3c4db.js" crossorigin="anonymous"></script></head>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
-  <% if current_admin.nil? %>
+  <% unless current_admin.present? %>
     <%= link_to users_dash_boards_path, class:"brand-link", method: :get do %>
       <%= image_tag "AdminLTELogo.png", class:"brand-image img-circle elevation-3 brand_link", style: "opacity: .8" %>
       <span class="brand-text font-weight-light">TecPutt</span>
     <% end %>
   <% else %>
     <div class="brand-link">
-      <%= image_tag "AdminLTELogo.png", class:"brand-image img-circle elevation-3 brand_link", style: "opacity: .8" %>
+      <%= image_tag "AdminLTELogo.png", class:"brand-image img-circle elevation-3", style: "opacity: .8" %>
       <span class="brand-text font-weight-light">TecPutt</span>
     </div>
   <% end %>

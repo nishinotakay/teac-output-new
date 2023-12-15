@@ -77,6 +77,7 @@ $(function(){
         var input = $('#input-' + value).val();
         if (input) {
           searchParams.set(value, input);
+          searchParams.set('reset_admin', 'true');
         }
       });
   

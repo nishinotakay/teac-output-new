@@ -13,7 +13,7 @@ module Users
         order:    params[:order] ||= 'DESC'
       }
       
-      if current_admin.present?
+      if current_admin.present? && current_user.nil?
         user = User.find(params[:user_id])
         @articles = user.articles.paginated_and_sort_filter(filter).page(params[:page]).per(30)
       else

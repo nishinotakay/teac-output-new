@@ -67,10 +67,7 @@
           <hr style="height:0.5px">
           <li style="padding-left:3px"><%= link_to "詳細画面", users_user_path(current_user), method: :get, class: "d-block" %></li>
           <li style="padding-left:3px"><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
-        <% elsif current_admin.present? %>
-          <!-- 管理者用の表示内容 -->
         <% end %>
       </ul>
-
   </div>
 </nav>
