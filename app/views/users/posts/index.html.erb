@@ -1,4 +1,10 @@
 <%= javascript_pack_tag "users/index_articles_and_dashboards" %>
+<%
+=begin%>
+ <%= stylesheet_link_tag 'users/posts', media: 'all', 'data-turbolinks-track': 'reload' %> 
+<%
+=end%>
+
 <% provide(:title,  "動画投稿一覧") %>
 <%= form_tag(users_posts_path, :method => "get") do %>
   <button type="button" class="btn btn-success sort-modal-btn ml-5" data-bs-toggle="modal" data-bs-target="#sortFilterModal" style="display: none;">
@@ -14,22 +20,54 @@
   <%= render partial: 'modal', locals: { posts: @posts, order: params[:order] } %>
 <% end %>
 
-<table class="table table-hover table-scroll">
-  <thead>
-    <tr>
-      <th class="col-sm-2">タイトル</th>
-      <th class="col-sm-1"></th>
-      <th class="col-sm-3">内容</th>
-      <th>Youtube</th>
-      <th>投稿者</th>
-      <th class="col-sm-1">投稿日</th>
-      <th class="col-sm-1"></th>
-    </tr>
-  </thead>
-
-  <tbody>      
     <% if @posts&.exists? %>
-      <% @posts.each do |post| %>
+      <div class="row">
+        <% @posts.each do |post| %>
+          <div class="col-md-4">
+            <div class="card mb-3">
+              <iframe width="100%" height="200" src="https://www.youtube.com/embed/<%= post.youtube_url %>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              <div class="card-body">
+                <% truncated_title = truncate(post.title, length: 20, omission: '...') %>
+                <h5 class="card-title bold-title" onclick="window.location='<%= users_post_path(id: post.id) %>'" title="<%= post.title %>"><%= truncated_title %></h5>
+                
+                <% truncated_content = truncate(post.body.gsub(/[\r\n]+/, ' '), length: 45, omission: '...') %>
+                <p class="card-text post-body gray-content" onclick='window.location="<%= users_post_path(id: post.id) %>"' title="<%= post.body %>">
+                  <%= simple_format(sanitize(truncated_content, tags: [])) %>
+                </p>
+                
+                <p class="card-text">
+                  <%= post.decorate.formatted_likes(current_user) %>
+                  <%= post.decorate.formatted_comment_count %>
+                </p>
+                <p class="card-text post-author" onclick='window.location="<%= users_post_path(id: post.id) %>"'>
+                  <%= post.admin ? post.admin.name : post.user.name %>
+                </p>
+                <p class="card-text post-created_at" onclick='window.location="<%= users_post_path(id: post.id) %>"'>
+                  <%= post.created_at.strftime('%Y/%m/%d') %>
+                </p>
+                <div class="dropdown">
+                  <button class="btn btn-menu" data-bs-toggle="dropdown" style="width: 66.5px">︙</button>
+                  <ul class="dropdown-menu">
+                    <% if post.user_id == current_user.id %>
+                      <li><%= link_to '閲覧', users_post_path(post), class:"nav-link" %></li>
+                      <li><%= link_to '編集', edit_users_post_path(post), class:"nav-link", id:"post-edit" %></li>
+                      <li><%= link_to '削除', users_post_path(post), method: :delete, class:"nav-link", data: {confirm: "#{post.title}を削除してもよろしいですか？"} %></li>
+                    <% else %>
+                      <li><%= link_to '閲覧', users_post_path(post), class:"nav-link" %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+
+
+      <%
+=begin%>
+ <% @posts.each do |post| %>
         <tr>
           <td class="post-title" onclick="window.location='<%= users_post_path(id: post.id) %>'">
             <%= post.title %>
@@ -57,10 +95,12 @@
             </ul>
           </td> 
         </tr>
-      <% end %>
+      <% end %> 
+<%
+=end%>
     <% else %>
       <%= render 'users/shared/table_without_record' %>
     <% end %>
-  </tbody>
-</table>
+
+
 <%= paginate @posts, theme: 'bootstrap-5' %>
