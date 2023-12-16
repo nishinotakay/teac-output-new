@@ -5,6 +5,7 @@ FactoryBot.define do
     name { '山田太郎' }
     email { Faker::Internet.email }
     password { 'password' }
+    uid { Faker::Alphanumeric.alphanumeric(number: 10) }
 
     trait :a do
       id { 2 }

@@ -2,6 +2,7 @@ class Post < ApplicationRecord
   belongs_to :admin, optional: true
   belongs_to :user, optional: true
   has_many :likes
+  has_many :post_comments, dependent: :destroy
 
   validates :user_id, presence: true, if: -> { admin_id.blank? }
   validates :admin_id, presence: true, if: -> { user_id.blank? }
@@ -29,8 +30,8 @@ class Post < ApplicationRecord
   end
 
   def self.apply_filters(filter)
-    start = Time.zone.parse(filter[:start].presence || '2022-01-01').beginning_of_day
-    finish = Time.zone.parse(filter[:finish].presence || Date.current.to_s).end_of_day
+    start = Time.zone.parse(filter[:start].to_s.presence || '2022-01-01').beginning_of_day
+    finish = Time.zone.parse(filter[:finish].to_s.presence || Date.current.to_s).end_of_day
 
     left_joins(:user, :admin)
       .where(['title LIKE ? AND body LIKE ?',
