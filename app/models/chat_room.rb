@@ -8,6 +8,6 @@ class ChatRoom < ApplicationRecord
   private
 
   def users_count_within_limit
-    errors.add(:users, 'は最大2人までです。') if users.count > 2
+    errors.add(:base, 'チャットルームは既に2人が登録済みです。') if users.count >= 2
   end
 end
