@@ -17,10 +17,6 @@ module Users
           chat_room = ChatRoom.create!
           ChatRoomUser.create(chat_room: chat_room, user_id: current_user.id)
           ChatRoomUser.create(chat_room: chat_room, user_id: partner_user_id)
-          if chat_room.chat_room_users.count > 2 ||
-             chat_room.chat_room_users.map(&:user_id) != [current_user.id, partner_user_id]
-            raise ActiveRecord::RecordInvalid
-          end
         end
         redirect_to action: :show, id: chat_room.id
       end
