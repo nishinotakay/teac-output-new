@@ -31,6 +31,10 @@ $(function(){
     $('.filter-modal').hide()
   })
 
+  if ($('.reset-btn-admin').length) {
+    $('.reset-btn-admin').insertAfter('.filter-modal-btn');
+  }
+
   $('.reset-btn').on('click', function(){
     var search = location.search
     if(search.indexOf("order=") != -1){
@@ -39,6 +43,30 @@ $(function(){
       window.location.search = ''
     }
   })
+
+  $('.reset-btn-admin').on('click',function(){
+    var searchParams = new URLSearchParams(window.location.search);
+    var userId = searchParams.get('user_id');
+
+    if (userId) {
+      searchParams.set('user_id', userId);
+    }
+
+    var order = searchParams.get('order') === 'DESC' ? 'DESC' : 'ASC';
+    searchParams.set('order', order);
+
+    searchParams.delete('author');
+    searchParams.delete('title');
+    searchParams.delete('subtitle');
+    searchParams.delete('content');
+    searchParams.delete('created_at');
+    searchParams.delete('start');
+    searchParams.delete('finish');
+
+    searchParams.delete('reset_admin');
+
+    window.location.search = searchParams.toString();
+  });
 
   // テーブルにコンテンツを追加するときにコメントイン
   // $('.link-tr').hover(function(){
