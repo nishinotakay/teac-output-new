@@ -14,6 +14,9 @@ module Users
     end
 
     def show
+      @post_comments = @post.post_comments.includes(:user).order(created_at: :desc)
+      @post_comment = current_user.post_comments.new
+
       respond_to do |format|
         format.html
         format.json { render json: @post }

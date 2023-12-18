@@ -17,13 +17,13 @@
 <table class="table table-hover table-scroll">
   <thead>
     <tr>
-      <th>タイトル</th>
-      <th></th>
-      <th>内容</th>
+      <th class="col-sm-2">タイトル</th>
+      <th class="col-sm-1"></th>
+      <th class="col-sm-3">内容</th>
       <th>Youtube</th>
       <th>投稿者</th>
-      <th>投稿日</th>
-      <th></th>
+      <th class="col-sm-1">投稿日</th>
+      <th class="col-sm-1"></th>
     </tr>
   </thead>
 
@@ -36,6 +36,7 @@
           </td>
           <td>
             <%= post.decorate.formatted_likes(current_user) %>
+            <%= post.decorate.formatted_comment_count %>
           </td>
           <td class="post-body" onclick='window.location="<%= users_post_path(id: post.id) %>"'><%= simple_format(post.body) %></td>
           <td class="post-url" width="150" onclick='window.location="<%= users_post_path(id: post.id) %>"'>

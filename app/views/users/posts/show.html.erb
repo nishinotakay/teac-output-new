@@ -33,5 +33,72 @@
         </tr>
       </tbody>
     </table>
+    <!-- コメント欄 -->
+    <div class="post-comments-card mt-2">
+      <%= render "users/posts/comment_form_and_preview", dashboard: false %>
+      
+      <div class="post-comments-list">
+        <% if @post_comments.present? %>
+          <% @post_comments.each do |post_comment| %>
+            <!-- コメント編集Modal -->
+            <%= form_with model: [@post, post_comment], url: users_post_post_comment_path(@post, post_comment), method: :patch do |form| %>
+              <div class="modal fade" id="postCommentUpdateModal-<%=post_comment.id %>" tabindex="-1" aria-labelledby="postCommentUpdateModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="postCommentUpdateModalLabel">コメントの編集</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <%= form.text_area :content, class:"form-control" %>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                      <%= form.submit "更新する", class: "btn btn-primary" %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+            <!-- コメント編集Modalここまで -->
+            <div class="post-comment-box">
+              <div class='post-comment-info d-flex align-items-center'> <%# 投稿者の名前、プロフィール写真、投稿日時 %>
+                <% image = post_comment.user.profile.present? && post_comment.user.profile.image.present? ? post_comment.user.profile&.image : "user_default.png" %>
+                <%=image_tag image, class: 'rounded-circle', size: '30x30' %>
+                <strong><%= post_comment.user.name %></strong>
+                <div class='post-comment-info-rightside d-flex align-items-center ms-auto'>
+                  <time><%= l(post_comment.created_at, format: :long) %></time>
+                  <div class="dropdown">
+                    <button class="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">︙</button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <% if post_comment.user == current_user %>
+                        <li>
+                          <!-- Button trigger modal -->
+                          <button type="button" class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#postCommentUpdateModal-<%=post_comment.id %>">編集</button>
+                          <!-- Button trigger modalここまで -->
+                        </li>
+                        <li>
+                          <%= link_to '削除', users_post_post_comment_path(@post, post_comment), method: :delete, data: { confirm: '削除してよろしいですか?' }, class: 'dropdown-item' %>
+                        </li>
+                      <% else %>
+                        <li>
+                          <%= link_to 'このコメントを報告する', '#', class: 'dropdown-item' %></li>
+                        <li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class='post-comment-content'>
+                <%= format_and_linkify_text(post_comment.content) %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="has_no_comments">コメントがありません</p>
+        <% end %>
+      </div>
+
+    </div>
   </div>
 </div>

@@ -1,0 +1,14 @@
+<%= form_with(model: [@post, @post_comment], url: users_post_post_comments_path(@post, @post_comment), method: :post) do |form| %>
+  <div class="post-comment-post-box">
+    <div class="post-comment-post-header d-flex align-items-center">
+      <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
+      <%=image_tag image, class: 'rounded-circle', size: '60x60' %>
+    </div>
+    <div class="post-comment-form">
+      <%= form.text_area :content, placeholder: "コメントしましょう！", class: "form-control" %>
+      <div class="btn-comment-submit">
+        <%= form.submit 'コメントする', class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+<% end %>
