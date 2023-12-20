@@ -58,7 +58,7 @@
       <div class="nav-link" id="dropdownMenuButton button_group" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b class="caret"></b> 
         <% if current_user.present? %>
-        <%= image_tag(@user_profile_image.presence || 'default_profile_image.png', class: "rounded-circle", size: "30x30") %>
+          <%= image_tag(@user_profile_image.presence || 'default_profile_image.png', class: "rounded-circle", size: "30x30") %>
         <% end %>
       </div>
       <ul class="dropdown-menu dropdown-menu-right dropdown-menu-header">
