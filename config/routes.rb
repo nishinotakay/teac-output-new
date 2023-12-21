@@ -60,6 +60,9 @@ Rails.application.routes.draw do
     end
     resources :users, only: [:show]
     resources :posts do
+      member do
+        get 'index_user'
+      end
       resources :post_comments, only: %i[create destroy update]
       resource :likes, only: [] do
         post 'post_create', on: :member

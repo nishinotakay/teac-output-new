@@ -63,6 +63,11 @@ module Users
       end
     end
 
+    def index_user
+      user = User.find(params[:id])
+      @posts = user.posts
+    end
+
     private
 
       def set_post
