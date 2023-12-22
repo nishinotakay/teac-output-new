@@ -14,46 +14,53 @@
   <%= render partial: 'modal', locals: { posts: @posts, order: params[:order] } %>
 <% end %>
 
-<table class="table table-hover table-scroll">
-  <thead>
-    <tr>
-      <th>タイトル</th>
-      <th>内容</th>
-      <th>Youtube</th>
-      <th>投稿者</th>
-      <th>投稿日</th>
-      <th></th>
-    </tr>
-  </thead>
+<% if @posts&.exists? %>
+      <div class="row">
+        <% @posts.each do |post| %>
+          <div class="col-md-4">
+            <div class="card mb-3">
+              <iframe width="100%" height="200" src="https://www.youtube.com/embed/<%= post.youtube_url %>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              <div class="card-body mx-3">
+                <% truncated_title = truncate(post.title, length: 20, omission: '...') %>
+                <h5 class="card-title bold-title" onclick="window.location='<%= admins_post_path(id: post.id) %>'" title="<%= post.title %>"><%= truncated_title %></h5>
+                
+                <% truncated_content = truncate(post.body.gsub(/[\r\n]+/, ' '), length: 25, omission: '...') %>
+                <div class="card-text post-body gray-content" onclick='window.location="<%= admins_post_path(id: post.id) %>"' title="<%= post.body %>">
+                  <%= simple_format(sanitize(truncated_content, tags: [])) %>
+                </div>
 
-  <tbody>      
-    <% if @posts&.exists? %>
-      <% @posts.each do |post| %>
-        <tr>
-          <td onclick='window.location="<%= admins_post_path(id: post.id) %>"'><%= post.title %></td>
-          <td onclick='window.location="<%= admins_post_path(id: post.id) %>"'><%= simple_format(post.body) %></td>
-          <td width="150" onclick='window.location="<%= admins_post_path(id: post.id) %>"'>
-            <iframe width="289" height="180" src="https://www.youtube.com/embed/<%=post.youtube_url %>"  frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          </td>
-          <td onclick='window.location="<%= admins_post_path(id: post.id) %>"'><%= post.admin ? post.admin.name : post.user.name %></td>
-          <td onclick='window.location="<%= admins_post_path(id: post.id) %>"'><%= post.created_at.strftime('%Y/%m/%d') %></td> 
-          <td>
-            <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
-            <ul class="dropdown-menu">
-              <% if post.admin_id == current_admin.id %>
-                <li><%= link_to '閲覧', admins_post_path(post), class:"nav-link" %></li>
-                <li><%= link_to '編集', edit_admins_post_path(post), class:"nav-link" %></li>
-                <li><%= link_to '削除', admins_post_path(post), method: :delete, class:"nav-link", data: {confirm: "#{post.title}を削除してもよろしいですか？"} %></li>
-              <% else %>
-                <li><%= link_to '閲覧', admins_post_path(post), class:"nav-link" %></li>
-              <% end %>
-            </ul>
-          </td> 
-        </tr>
-      <% end %>
+                <div class="card-text post-author" onclick='window.location="<%= admins_post_path(id: post.id) %>"'>
+                  <%= post.admin ? post.admin.name : post.user.name %>
+                </div>
+                
+                <div class="card-text-container" style="display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <%= post.decorate.formatted_likes(current_user) %>
+                    <%= post.decorate.formatted_comment_count %>
+                  </div>
+                  <div style="display: flex; align-items: center;">
+                    <time class="timestamp" datetime="<%= post.created_at.strftime('%Y-%m-%d') %>">
+                      <%= post.created_at.strftime('%Y-%m-%d') %>
+                    </time>
+                    <button class="btn btn-menu" data-bs-toggle="dropdown" style="width: 30px; margin-left: 8px;">︙</button>
+                    <ul class="dropdown-menu">
+                      <% if post.admin_id == current_admin.id %>
+                        <li><%= link_to '閲覧', admins_post_path(id: post.id), class: "nav-link" %></li>
+                        <li><%= link_to '編集', edit_admins_post_path(id: post.id), class: "nav-link" %></li>
+                        <li><%= link_to '削除', admins_post_path(id: post.id), method: :delete, data: {confirm: "選択した記事を削除します。"}, class: "nav-link" %></li>
+                      <% else %>
+                        <li><%= link_to '閲覧', admins_post_path(id: post.id), class: "nav-link" %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
     <% else %>
       <%= render 'users/shared/table_without_record' %>
     <% end %>
-  </tbody>
-</table>
+
 <%= paginate @posts, theme: 'bootstrap-5' %>
