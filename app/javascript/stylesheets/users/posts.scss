@@ -89,6 +89,13 @@
 }
 
 .gray-content {
-  color: gray; /* グレーに変更 */
-  font-size: 0.9rem; /* 文字サイズを少し小さく変更 */
+  color: gray;
+  font-size: 0.9rem;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
