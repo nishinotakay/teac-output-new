@@ -25,14 +25,14 @@
                 <% truncated_title = truncate(post.title, length: 20, omission: '...') %>
                 <h5 class="card-title bold-title" onclick="window.location='<%= users_post_path(id: post.id) %>'" title="<%= post.title %>"><%= truncated_title %></h5>
                 
-                <% truncated_content = truncate(post.body.gsub(/[\r\n]+/, ' '), length: 45, omission: '...') %>
-                <p class="card-text post-body" id="gray-content" onclick='window.location="<%= users_post_path(id: post.id) %>"' title="<%= post.body %>">
+                <% truncated_content = truncate(post.body.gsub(/[\r\n]+/, ' '), length: 25, omission: '...') %>
+                <div class="card-text post-body gray-content" onclick='window.location="<%= users_post_path(id: post.id) %>"' title="<%= post.body %>">
                   <%= simple_format(sanitize(truncated_content, tags: [])) %>
-                </p>
+                </div>
 
-                <p class="card-text post-author" onclick='window.location="<%= users_post_path(id: post.id) %>"'>
+                <div class="card-text post-author" onclick='window.location="<%= users_post_path(id: post.id) %>"'>
                   <%= post.admin ? post.admin.name : post.user.name %>
-                </p>
+                </div>
                 
                 <div class="card-text-container" style="display: flex; justify-content: space-between; align-items: center;">
                   <div>
@@ -44,6 +44,15 @@
                       <%= post.created_at.strftime('%Y-%m-%d') %>
                     </time>
                     <button class="btn btn-menu" data-bs-toggle="dropdown" style="width: 30px; margin-left: 8px;">︙</button>
+                    <ul class="dropdown-menu">
+                      <% if post.user_id == current_user.id %>
+                        <li><%= link_to '閲覧', users_post_path(id: post.id), class: "nav-link" %></li>
+                        <li><%= link_to '編集', edit_users_post_path(id: post.id), class: "nav-link" %></li>
+                        <li><%= link_to '削除', users_post_path(id: post.id), method: :delete, data: {confirm: "選択した記事を削除します。"}, class: "nav-link" %></li>
+                      <% else %>
+                        <li><%= link_to '閲覧', users_post_path(id: post.id), class: "nav-link" %></li>
+                      <% end %>
+                    </ul>
                   </div>
                 </div>
               </div>
