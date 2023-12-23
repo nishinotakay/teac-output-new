@@ -42,7 +42,7 @@
           <td class="post-url" width="150" onclick='window.location="<%= users_post_path(id: post.id) %>"'>
             <iframe width="289" height="180" src="https://www.youtube.com/embed/<%=post.youtube_url %>"  frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </td>
-          <td class="post-author" onclick='window.location="<%= users_post_path(id: post.id) %>"'><%= post.admin ? post.admin.name : post.user.name %></td>
+          <td class="post-author"><%=link_to post.admin ? post.admin.name : post.user.name, index_user_users_posts_path(user_id: post.admin ? post.admin.id : post.user.id ) %></td>
           <td class="post-created_at" onclick='window.location="<%= users_post_path(id: post.id) %>"'><%= post.created_at.strftime('%Y/%m/%d') %></td> 
           <td>
             <button class="btn btn-menu" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
