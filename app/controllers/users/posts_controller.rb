@@ -64,8 +64,8 @@ module Users
     end
 
     def index_user
-      user = User.find(params[:user_id])
-      @posts = user.posts.filtered_and_ordered_posts(params, params[:page], 30)
+      @user = User.find(params[:user_id])
+      @posts = @user.posts.filtered_and_ordered_posts(params, params[:page], 30)
     end
 
     private
