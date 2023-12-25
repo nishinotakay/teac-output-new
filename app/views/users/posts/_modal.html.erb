@@ -24,14 +24,14 @@
           </div>
         </div>
         <div class="filter-modal" style="display: none;"> 
-         <% unless params[:user_id] %>
+          <% unless params[:user_id] %>
           <div class="form-group row my-4">
             <label for="input-author" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:user) %></label>
             <div class="col-md-8">
               <input type="text" aria-label="author" id="input-author" class="form-control" value="<%= params[:author] %>">
             </div>
           </div>
-         <% end %>
+          <% end %>
           <div class="form-group row my-4">
             <label for="input-title" class="col-sm-4 col-form-label"><%= Post.human_attribute_name(:title) %></label>
             <div class="col-md-8">

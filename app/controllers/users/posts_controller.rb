@@ -1,7 +1,7 @@
 module Users
   class PostsController < Users::Base
-    before_action :authenticate_user!, only: %i[show index new create edit update destroy ]
-    before_action :set_post, only: %i[show edit update destroy ]
+    before_action :authenticate_user!, only: %i[show index new create edit update destroy index_user]
+    before_action :set_post, only: %i[show edit update destroy]
     before_action :prevent_url, only: %i[edit update destroy]
 
     def index
