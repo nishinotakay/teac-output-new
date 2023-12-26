@@ -45,7 +45,7 @@
               <p>動画投稿</p>
             <% end %>
           </li>
-        <% elsif request.fullpath == "/users/tweets" %>
+        <% elsif request.fullpath == "/users/tweets" && current_admin.nil? %>
           <li class="nav-item">
             <%= link_to new_users_tweet_path, class: "nav-link", remote: true, method: :get do %>
               <p>つぶやき投稿</p>

@@ -1,11 +1,13 @@
 <%= javascript_pack_tag "users/tweets","users/index_articles_and_dashboards" %>
 <% provide(:title, "つぶやき一覧") %>
-<% number_of_comment_notifications = @comment_notifications.count %>
-<% if number_of_comment_notifications > 0 %>
+<% unless current_admin.present? %>
+  <% number_of_comment_notifications = @comment_notifications.count %>
+  <% if number_of_comment_notifications > 0 %>
   <!-- モーダルのトリガー -->
   <a class= "modalTrriger" href="#" data-bs-toggle="modal" data-bs-target="#commentNotificationModal">
     <%= number_of_comment_notifications %>件の未確認のコメントがあります。
   </a>
+<% end %>  
   <!-- モーダルの設定 -->
   <div class="modal fade" id="commentNotificationModal" tabindex="-1" aria-labelledby="commentNotificationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">

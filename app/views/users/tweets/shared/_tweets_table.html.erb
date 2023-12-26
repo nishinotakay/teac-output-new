@@ -30,13 +30,15 @@
                 <div class="d-flex align-items-center ms-auto">
                   <div class="dropdown">
                     <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
-                    <ul class="dropdown-menu test-color">
-                      <li><%= link_to '詳細', users_tweet_path(data[:tweet].id), class:"dropdown-item" %></li>
-                      <% if data[:tweet].user.name == current_user.name %>
-                        <li><%= link_to '編集', edit_users_tweet_path(data[:tweet]), remote: true, class:"dropdown-item" %></li>
-                        <li><%= link_to '削除', users_tweet_path(data[:tweet]), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
+                      <ul class="dropdown-menu test-color">
+                        <li><%= link_to '詳細', users_tweet_path(data[:tweet].id), class:"dropdown-item" %></li>
+                      <% unless current_admin.present? %>  
+                        <% if data[:tweet].user.name == current_user.name %>
+                          <li><%= link_to '編集', edit_users_tweet_path(data[:tweet]), remote: true, class:"dropdown-item" %></li>
+                          <li><%= link_to '削除', users_tweet_path(data[:tweet]), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
+                        <% end %>
                       <% end %>
-                    </ul>
+                      </ul>
                   </div>
                 </div>
               </div>
