@@ -82,3 +82,20 @@
   background-color: white;
   border-radius: 5px;
 }
+
+/* 動画投稿一覧  */
+.bold-title {
+  font-weight: bold;
+}
+
+.gray-content {
+  color: gray;
+  font-size: 0.9rem;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
