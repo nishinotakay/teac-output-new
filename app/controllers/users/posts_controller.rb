@@ -1,6 +1,6 @@
 module Users
   class PostsController < Users::Base
-    before_action :authenticate_user!, only: %i[show index new create edit update destroy]
+    before_action :authenticate_user!, only: %i[show index new create edit update destroy index_user]
     before_action :set_post, only: %i[show edit update destroy]
     before_action :prevent_url, only: %i[edit update destroy]
 
@@ -61,6 +61,11 @@ module Users
       else
         redirect_to :index
       end
+    end
+
+    def index_user
+      @user = User.find(params[:user_id])
+      @posts = @user.posts.filtered_and_ordered_posts(params, params[:page], 30)
     end
 
     private
