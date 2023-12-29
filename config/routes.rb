@@ -58,6 +58,11 @@ Rails.application.routes.draw do
         delete 'article_destroy', on: :member
       end
     end
+    resources :users do
+      resource :posts, only: [] do
+        get 'index_user', on: :member
+      end
+    end
     resources :users, only: [:show]
     resources :posts do
       resources :post_comments, only: %i[create destroy update]

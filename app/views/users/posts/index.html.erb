@@ -30,8 +30,8 @@
               <%= simple_format(sanitize(truncated_content, tags: [])) %>
             </div>
 
-            <div class="card-text post-author" onclick='window.location="<%= users_post_path(id: post.id) %>"'>
-              <%= post.admin ? post.admin.name : post.user.name %>
+            <div class="card-text post-author">
+              <%=link_to post.admin ? post.admin.name : post.user.name, index_user_users_user_posts_path(post.admin ? post.admin.id : post.user.id ) %>
             </div>
             
             <div class="card-text-container" style="display: flex; justify-content: space-between; align-items: center;">
