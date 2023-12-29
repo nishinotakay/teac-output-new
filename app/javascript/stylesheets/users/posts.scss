@@ -99,3 +99,55 @@
   justify-content: space-between;
   height: 100%;
 }
+
+/* 動画詳細ページ */
+
+.post-show {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.post-title,
+.post-body {
+  margin-left: 20px;
+}
+
+.video-container {
+  position: relative;
+  width: 50%;
+  height: 0%;
+  padding-bottom: 28.125%; /* 16:9 aspect ratio */
+  margin-bottom: 10px; /* Add margin for spacing */
+  margin-left: 30px;
+}
+
+.video-container iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 10px;
+}
+
+.post-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  margin-left: 20px;
+}
+
+.post-author,
+.timestamp-and-menu {
+  margin-right: 10px;
+}
+
+.post-likes {
+  margin-right: 20px;
+  margin-bottom: 0;
+}
+
+.btn-post-show-menu {
+  margin-right: 40px;
+}
