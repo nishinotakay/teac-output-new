@@ -17,6 +17,7 @@
           <td width="230"><%= simple_format(@post.body) %></td>
           <td><iframe width="600" height="315" src="https://www.youtube.com/embed/<%=@post.youtube_url%>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
           <td>
+          <% if current_user.present? && current_admin.nil? %>
             <% if @post.user_id == current_user.id %>
               <%= button_to '動画一覧', users_posts_path, method: :get ,class: "btn btn-primary" %><br>
               <%= button_to '編集画面', edit_users_post_path(@post), method: :get ,class: "btn btn-success" %><br>
@@ -24,6 +25,7 @@
             <% else %>
               <%= button_to '動画一覧', users_posts_path, method: :get ,class: "btn btn-primary" %><br>
             <% end %>
+          <% end %>
           </td>
           <td>
             <div id="post_<%= @post.id %>">

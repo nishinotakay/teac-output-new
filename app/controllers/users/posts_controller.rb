@@ -3,6 +3,7 @@ module Users
     before_action :authenticate_user!, only: %i[show index new create edit update destroy index_user]
     before_action :set_post, only: %i[show edit update destroy]
     before_action :prevent_url, only: %i[edit update destroy]
+    skip_before_action :authenticate_user!, only: %i[show], if: :admin_signed_in?
 
     def index
       @posts = Post.filtered_and_ordered_posts(params, params[:page], 30)
@@ -15,7 +16,7 @@ module Users
 
     def show
       @post_comments = @post.post_comments.includes(:user).order(created_at: :desc)
-      @post_comment = current_user.post_comments.new
+      @post_comment = current_user.post_comments.new unless current_admin.present?
 
       respond_to do |format|
         format.html
@@ -64,8 +65,9 @@ module Users
     end
 
     def index_user
-      @user = User.find(params[:user_id])
+      @user = User.includes(:posts).find(params[:user_id])
       @posts = @user.posts.filtered_and_ordered_posts(params, params[:page], 30)
+      @post = @user.posts
     end
 
     private

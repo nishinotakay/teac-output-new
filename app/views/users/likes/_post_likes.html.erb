@@ -1,9 +1,17 @@
+<% unless current_admin.present? %>
 <% if current_user.post_already_liked?(@post.id) %>
   <%= link_to post_destroy_users_post_likes_path(@post), class:'text-decoration-none', method: :delete, remote: true do %>
     <i class="fa-solid fa-heart ml-4 mr-2 mb-4"></i><%= @post.likes.count %>
   <% end %>
 <% else %>
   <%= link_to post_create_users_post_likes_path(@post), class:'text-decoration-none', method: :post, remote: true do %>
+    <i class="fa-regular fa-heart ml-4 mr-2 mb-4"></i><%= @post.likes.count %>
+  <% end %>
+<% end %>
+<% else %>
+  <% if @post.likes.present? %>
+    <i class="fa-solid fa-heart ml-4 mr-2 mb-4"></i><%= @post.likes.count %>
+  <% else %>
     <i class="fa-regular fa-heart ml-4 mr-2 mb-4"></i><%= @post.likes.count %>
   <% end %>
 <% end %>
