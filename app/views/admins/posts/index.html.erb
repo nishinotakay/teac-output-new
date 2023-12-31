@@ -25,7 +25,7 @@
             <h5 class="card-title bold-title" onclick="window.location='<%= admins_post_path(id: post.id) %>'" title="<%= post.title %>"><%= truncated_title %></h5>
             
             <% truncated_content = truncate(post.body.gsub(/[\r\n]+/, ' '), length: 25, omission: '...') %>
-            <div class="card-text post-body gray-content" onclick='window.location="<%= admins_post_path(id: post.id) %>"' title="<%= post.body %>">
+            <div class="card-text post-index-body gray-content" onclick='window.location="<%= admins_post_path(id: post.id) %>"' title="<%= post.body %>">
               <%= simple_format(sanitize(truncated_content, tags: [])) %>
             </div>
 

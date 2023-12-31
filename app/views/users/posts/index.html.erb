@@ -26,7 +26,7 @@
             <h5 class="card-title bold-title" onclick="window.location='<%= users_post_path(id: post.id) %>'" title="<%= post.title %>"><%= truncated_title %></h5>
             
             <% truncated_content = truncate(post.body.gsub(/[\r\n]+/, ' '), length: 25, omission: '...') %>
-            <div class="card-text post-body gray-content" onclick='window.location="<%= users_post_path(id: post.id) %>"' title="<%= post.body %>">
+            <div class="card-text post-index-body gray-content" onclick='window.location="<%= users_post_path(id: post.id) %>"' title="<%= post.body %>">
               <%= simple_format(sanitize(truncated_content, tags: [])) %>
             </div>
 
@@ -43,7 +43,7 @@
                 <time class="timestamp" datetime="<%= post.created_at.strftime('%Y-%m-%d') %>">
                   <%= post.created_at.strftime('%Y-%m-%d') %>
                 </time>
-                <button class="btn btn-menu" data-bs-toggle="dropdown" style="width: 30px; margin-left: 8px;">︙</button>
+                <button class="btn btn-menu" data-bs-toggle="dropdown" style="width: 30px;">︙</button>
                 <ul class="dropdown-menu">
                   <% if post.user_id == current_user.id %>
                     <li><%= link_to '閲覧', users_post_path(id: post.id), class: "nav-link" %></li>

@@ -10,8 +10,12 @@
 
       <div class="post-info" style="display: flex; justify-content: space-between; align-items: center;">
         <div class="post-author">
-          <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
-          <%=image_tag image, class: 'rounded-circle', size: '40x40' %>
+          <% if @post.admin_id.present? %>
+            <%= image_tag "admin.png", class: 'rounded-circle', size: '30x30' %>
+          <% else %>
+            <% image = @post.user.present? && @post.user.profile.present? && @post.user.profile.image.present? ? @post.user.profile.image : "user_default.png" %>
+            <%= image_tag image, class: 'rounded-circle', size: '30x30' %>
+          <% end %> 
           <%= @post.admin ? @post.admin.name : @post.user.name %>
         </div>
 
@@ -24,15 +28,14 @@
             <%= @post.created_at.strftime('%Y-%m-%d') %>
           </time>
 
-          <button class="btn btn-post-show-menu" data-bs-toggle="dropdown">︙</button>
-          <ul class="dropdown-menu">
-            <% if @post.user_id == current_user.id %>
+          <% if @post.user_id == current_user.id %>
+            <button class="btn btn-post-show-menu" data-bs-toggle="dropdown">︙</button>
+            <ul class="dropdown-menu">
               <li><%= link_to '編集', edit_users_post_path(id: @post.id), class: "nav-link" %></li>
               <li><%= link_to '削除', users_post_path(id: @post.id), method: :delete, data: { confirm: "選択した記事を削除します。" }, class: "nav-link" %></li>
-            <% else %>
-              <li><%= link_to '閲覧', users_post_path(id: @post.id), class: "nav-link" %></li>
-            <% end %>
-          </ul>
+            </ul>
+          <% end %>
+
         </div>
       </div>
 
