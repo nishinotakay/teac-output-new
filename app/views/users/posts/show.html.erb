@@ -70,7 +70,6 @@
                 <strong><%= post_comment.user.name %></strong>
                 <div class='post-comment-info-rightside d-flex align-items-center ms-auto'>
                   <time><%= l(post_comment.created_at, format: :long) %></time>
-                  <% unless current_admin.present? %>
                   <div class="dropdown">
                     <button class="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">︙</button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -90,7 +89,6 @@
                       <% end %>
                     </ul>
                   </div>
-                  <% end %>
                 </div>
               </div>
               <div class='post-comment-content'>
