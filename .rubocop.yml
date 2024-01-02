@@ -2,12 +2,13 @@ require:
   - rubocop-rspec
 
 AllCops:
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.0.3
   Exclude:
     - 'db/**/*'                                   # DBのマイグレーション関連ファイル
     - 'vendor/**/*'                               # ベンダーが提供するファイル
     - 'bin/{bundle,rails,rake,setup,update,yarn}' # Railsが生成するスクリプト
   SuggestExtensions: false
+  NewCops: enable
 
 # エイリアスの指定を `alias_method` に統一
 Style/Alias:
@@ -123,7 +124,7 @@ Layout/LineLength:
   Exclude:
     - 'app/admin/**/*'                  # ActiveAdminのDSL
     - 'app/libs/admins/components/**/*' # ActiveAdminのコンポーネントDSL
-  IgnoredPatterns:
+  AllowedPatterns:
     - "'.+'"                                                               # 文字リテラルが含まれる行
     - '".+"'                                                               # 文字リテラルが含まれる行
     - '#.+'                                                                # コメントが含まれる行
@@ -176,7 +177,7 @@ Metrics/BlockLength:
     - 'spec/**/*'                             # RspecのDSL
     - 'lib/tasks/helpers/test_data_helper.rb' # テストデータ定義
     - '*.gemspec'                             # Gem定義
-  ExcludedMethods:
+  AllowedMethods:
     - 'configure'
     - 'class_eval'
     - 'extended'

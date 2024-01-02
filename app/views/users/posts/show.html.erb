@@ -1,106 +1,115 @@
-<% provide(:title,  "動画詳細") %>
-<div class="container">
+<% provide(:title, "動画詳細") %>
+<div class="container post-show">
   <div class="row">
-    <table class="table table-hover table-scroll">
-      <thead>
-        <tr>
-          <th width="100">タイトル</th>
-          <th>内容</th>
-          <th>Youtube</th>
-          <th width="300" colspan="3"></th>
-        </tr>
-      </thead>
+    <div class="video-container">
+      <iframe width="100%" height="0%" src="https://www.youtube.com/embed/<%= @post.youtube_url %>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
 
-      <tbody>
-        <tr>
-          <td width="230"><%= @post.title %></td>
-          <td width="230"><%= simple_format(@post.body) %></td>
-          <td><iframe width="600" height="315" src="https://www.youtube.com/embed/<%=@post.youtube_url%>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
-          <td>
-          <% if current_user.present? && current_admin.nil? %>
-            <% if @post.user_id == current_user.id %>
-              <%= button_to '動画一覧', users_posts_path, method: :get ,class: "btn btn-primary" %><br>
-              <%= button_to '編集画面', edit_users_post_path(@post), method: :get ,class: "btn btn-success" %><br>
-              <%= button_to '削除', users_post_path(@post), method: :delete ,class: "btn btn-danger", data: {confirm: "#{@post.title}を削除してもよろしいですか？"} %>
-            <% else %>
-              <%= button_to '動画一覧', users_posts_path, method: :get ,class: "btn btn-primary" %><br>
-            <% end %>
+    <div class="post-details">
+      <h2 class="post-title"><%= @post.title %></h2>
+
+      <div class="post-info" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="post-author">
+          <% if @post.admin_id.present? %>
+            <%= image_tag "admin.png", class: 'rounded-circle', size: '30x30' %>
+          <% else %>
+            <% image = @post.user.present? && @post.user.profile.present? && @post.user.profile.image.present? ? @post.user.profile.image : "user_default.png" %>
+            <%= image_tag image, class: 'rounded-circle', size: '30x30' %>
+          <% end %> 
+          <%=link_to @post.admin ? @post.admin.name : @post.user.name, index_user_users_user_posts_path(user_id: @post.admin ? @post.admin.id : @post.user.id) %>
+        </div>
+
+        <div class="post-metadata" style="display: flex; align-items: center;">
+          <div class="post-likes" id="post_<%= @post.id %>">
+            <%= render 'users/likes/post_likes', locals: { post: @post } %>
+          </div>
+
+          <time class="timestamp" datetime="<%= @post.created_at.strftime('%Y-%m-%d') %>">
+            <%= @post.created_at.strftime('%Y-%m-%d') %>
+          </time>
+
+          <% unless current_admin.present? %>
+          <% if @post.user_id == current_user.id %>
+            <button class="btn btn-post-show-menu" data-bs-toggle="dropdown">︙</button>
+            <ul class="dropdown-menu">
+              <li><%= link_to '編集', edit_users_post_path(id: @post.id), class: "nav-link" %></li>
+              <li><%= link_to '削除', users_post_path(id: @post.id), method: :delete, data: { confirm: "選択した記事を削除します。" }, class: "nav-link" %></li>
+            </ul>
           <% end %>
-          </td>
-          <td>
-            <div id="post_<%= @post.id %>">
-              <%= render 'users/likes/post_likes', locals: { post: @post } %>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <!-- コメント欄 -->
-    <div class="post-comments-card mt-2">
-      <%= render "users/posts/comment_form_and_preview", dashboard: false %>
-      
-      <div class="post-comments-list">
-        <% if @post_comments.present? %>
-          <% @post_comments.each do |post_comment| %>
-            <!-- コメント編集Modal -->
-            <%= form_with model: [@post, post_comment], url: users_post_post_comment_path(@post, post_comment), method: :patch do |form| %>
-              <div class="modal fade" id="postCommentUpdateModal-<%=post_comment.id %>" tabindex="-1" aria-labelledby="postCommentUpdateModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="postCommentUpdateModalLabel">コメントの編集</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <%= form.text_area :content, class:"form-control" %>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
-                      <%= form.submit "更新する", class: "btn btn-primary" %>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            <% end %>
-            <!-- コメント編集Modalここまで -->
-            <div class="post-comment-box">
-              <div class='post-comment-info d-flex align-items-center'> <%# 投稿者の名前、プロフィール写真、投稿日時 %>
-                <% image = post_comment.user.profile.present? && post_comment.user.profile.image.present? ? post_comment.user.profile&.image : "user_default.png" %>
-                <%=image_tag image, class: 'rounded-circle', size: '30x30' %>
-                <strong><%= post_comment.user.name %></strong>
-                <div class='post-comment-info-rightside d-flex align-items-center ms-auto'>
-                  <time><%= l(post_comment.created_at, format: :long) %></time>
-                  <div class="dropdown">
-                    <button class="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">︙</button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <% if post_comment.user == current_user %>
-                        <li>
-                          <!-- Button trigger modal -->
-                          <button type="button" class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#postCommentUpdateModal-<%=post_comment.id %>">編集</button>
-                          <!-- Button trigger modalここまで -->
-                        </li>
-                        <li>
-                          <%= link_to '削除', users_post_post_comment_path(@post, post_comment), method: :delete, data: { confirm: '削除してよろしいですか?' }, class: 'dropdown-item' %>
-                        </li>
-                      <% else %>
-                        <li>
-                          <%= link_to 'このコメントを報告する', '#', class: 'dropdown-item' %></li>
-                        <li>
-                      <% end %>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div class='post-comment-content'>
-                <%= format_and_linkify_text(post_comment.content) %>
-              </div>
-            </div>
           <% end %>
-        <% else %>
-          <p class="has_no_comments">コメントがありません</p>
-        <% end %>
+        </div>
       </div>
 
+      <div class="post-body">
+        <%= @post.body %>
+      </div>     
+    </div>
+  </div>
+
+  <!-- コメント欄 -->
+  <div class="post-comments-card mt-2">
+    <%= render "users/posts/comment_form_and_preview", dashboard: false %>
+    
+    <div class="post-comments-list">
+      <% if @post_comments.present? %>
+        <% @post_comments.each do |post_comment| %>
+          <!-- コメント編集Modal -->
+          <%= form_with model: [@post, post_comment], url: users_post_post_comment_path(@post, post_comment), method: :patch do |form| %>
+            <div class="modal fade" id="postCommentUpdateModal-<%=post_comment.id %>" tabindex="-1" aria-labelledby="postCommentUpdateModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="postCommentUpdateModalLabel">コメントの編集</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <%= form.text_area :content, class:"form-control" %>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                    <%= form.submit "更新する", class: "btn btn-primary" %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          <!-- コメント編集Modalここまで -->
+          <div class="post-comment-box">
+            <div class='post-comment-info d-flex align-items-center'> <%# 投稿者の名前、プロフィール写真、投稿日時 %>
+              <% image = post_comment.user.profile.present? && post_comment.user.profile.image.present? ? post_comment.user.profile&.image : "user_default.png" %>
+              <%=image_tag image, class: 'rounded-circle', size: '30x30' %>
+              <strong><%= post_comment.user.name %></strong>
+              <div class='post-comment-info-rightside d-flex align-items-center ms-auto'>
+                <time><%= l(post_comment.created_at, format: :long) %></time>
+                <div class="dropdown">
+                  <button class="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">︙</button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <% if post_comment.user == current_user %>
+                      <li>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#postCommentUpdateModal-<%=post_comment.id %>">編集</button>
+                        <!-- Button trigger modalここまで -->
+                      </li>
+                      <li>
+                        <%= link_to '削除', users_post_post_comment_path(@post, post_comment), method: :delete, data: { confirm: '削除してよろしいですか?' }, class: 'dropdown-item' %>
+                      </li>
+                    <% else %>
+                      <li>
+                        <%= link_to 'このコメントを報告する', '#', class: 'dropdown-item' %></li>
+                      <li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class='post-comment-content'>
+              <%= format_and_linkify_text(post_comment.content) %>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="has_no_comments">コメントがありません</p>
+      <% end %>
     </div>
   </div>
 </div>
