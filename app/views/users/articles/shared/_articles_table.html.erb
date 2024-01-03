@@ -6,6 +6,8 @@
 </button>
 <% if params[:reset] %>
   <button type="button" class="btn btn-outline-success reset-btn ml-3">リセット</button>
+<% elsif params[:reset_admin] %>
+  <button type="button" class="btn btn-outline-success reset-btn-admin ml-3">リセット</button>
 <% end %>
 
 <div class="content">
@@ -32,11 +34,17 @@
                   <td class="link-td" id="article-title" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'>
                     <div class="d-flex align-items-center">
                       <%= article.title %>
-                      <% if article.likes.present? %>
-                        <% if current_user.article_already_liked?(article.id) %>
+                      <% unless current_admin.present? %>
+                        <% if article.likes.present? %>
+                          <% if current_user.article_already_liked?(article.id) %>
+                            <i class="fa-solid fa-heart ml-4 mr-2"></i><%= article.likes.count %>
+                          <% else %>
+                            <i class="fa-regular fa-heart ml-4 mr-2"></i><%= article.likes.count %>
+                          <% end %>
+                        <% end %>
+                      <% else %>
+                        <% if article.likes.present? %>
                           <i class="fa-solid fa-heart ml-4 mr-2"></i><%= article.likes.count %>
-                        <% else %>
-                          <i class="fa-regular fa-heart ml-4 mr-2"></i><%= article.likes.count %>
                         <% end %>
                       <% end %>
                       <%if article.article_comments.present? %>
@@ -56,12 +64,17 @@
                   <td>
                     <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
                     <ul class="dropdown-menu">
-                      <% if article.user_id == current_user.id %>
-                        <li><%= link_to '閲覧', users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
-                        <li><%= link_to '編集', edit_users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
-                        <li><%= link_to '削除', users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), method: :delete, data: {confirm: "選択した記事を削除します。"}, class: "nav-link" %></li>
-                      <% else %>
-                        <li><%= link_to '閲覧', users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
+                      <% if current_user.present? && current_admin.nil? %>
+                        <% if article.user_id == current_user.id %>
+                          <li><%= link_to '閲覧', users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
+                          <li><%= link_to '編集', edit_users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
+                          <li><%= link_to '削除', users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), method: :delete, data: {confirm: "選択した記事を削除します。"}, class: "nav-link" %></li>
+                        <% else %>
+                          <li><%= link_to '閲覧', users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
+                        <% end %>
+                      <% end %>
+                      <% if current_admin.present? %>
+                       <li><%= link_to '閲覧', users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
                       <% end %>
                     </ul>
                   </td>
@@ -88,6 +101,7 @@
         <button type="button" class="modal-close btn-close mr-3" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body text-right">
+      <% if current_admin.nil? %>
         <div class="sort-modal" style="display: none;">
           <div class="form-group row my-5">
             <label for="sort-select" class="col-sm-3 col-form-label"><%= Article.human_attribute_name(:created_at) %></label>
@@ -100,7 +114,22 @@
               </select>
             </div>
           </div>
+        </div>    
+      <% else %>
+        <div class="sort-modal" style="display: none;">
+          <div class="form-group row my-5">
+            <label for="sort-select" class="col-sm-3 col-form-label"><%= Article.human_attribute_name(:created_at) %></label>
+            <div class="col-md-9">
+              <% order = {'DESC': '新しい順', 'ASC': '古い順'} %>
+              <% params[:order] ||= 'DESC' %>
+              <select id="sort-select-admin" class="form-select" aria-label="Default select desc">
+                <option value="<%= params[:order] %>" selected><%= order.delete(:"#{params[:order]}") %></option>
+                <option value="<%= order.keys[0] %>"><%= order[order.keys[0]] %></option>
+              </select>
+            </div>        
+          </div>
         </div>
+      <% end %>
         <div class="filter-modal" style="display: none;">
           <% if !dashboard %>
             <div class="form-group row my-4">

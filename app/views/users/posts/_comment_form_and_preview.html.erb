@@ -1,3 +1,4 @@
+<% unless current_admin.present? %>
 <%= form_with(model: [@post, @post_comment], url: users_post_post_comments_path(@post, @post_comment), method: :post) do |form| %>
   <div class="post-comment-post-box">
     <div class="post-comment-post-header d-flex align-items-center">
@@ -11,4 +12,5 @@
       </div>
     </div>
   </div>
+<% end %>
 <% end %>

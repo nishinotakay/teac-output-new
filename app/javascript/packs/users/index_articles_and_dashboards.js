@@ -31,6 +31,10 @@ $(function(){
     $('.filter-modal').hide()
   })
 
+  if ($('.reset-btn-admin').length) {
+    $('.reset-btn-admin').insertAfter('.filter-modal-btn');
+  }
+
   $('.reset-btn').on('click', function(){
     var search = location.search
     if(search.indexOf("order=") != -1){
@@ -39,6 +43,30 @@ $(function(){
       window.location.search = ''
     }
   })
+
+  $('.reset-btn-admin').on('click',function(){
+    var searchParams = new URLSearchParams(window.location.search);
+    var userId = searchParams.get('user_id');
+
+    if (userId) {
+      searchParams.set('user_id', userId);
+    }
+
+    var order = searchParams.get('order') === 'DESC' ? 'DESC' : 'ASC';
+    searchParams.set('order', order);
+
+    searchParams.delete('author');
+    searchParams.delete('title');
+    searchParams.delete('subtitle');
+    searchParams.delete('content');
+    searchParams.delete('created_at');
+    searchParams.delete('start');
+    searchParams.delete('finish');
+
+    searchParams.delete('reset_admin');
+
+    window.location.search = searchParams.toString();
+  });
 
   // テーブルにコンテンツを追加するときにコメントイン
   // $('.link-tr').hover(function(){
@@ -60,9 +88,32 @@ $(function(){
         search += '&' + value + '=' + input
         search += search.indexOf('reset=') != -1 ? '' : '&reset=true'
       }
-    })
-    window.location.search = search
-  })
+    });
+
+    if ($('#sort-select-admin').length) {
+      var sortValueAdmin = $('#sort-select-admin option:selected').val();
+      var searchParams = new URLSearchParams();
+      searchParams.set('order', sortValueAdmin);
+  
+      var userId = new URLSearchParams(window.location.search).get('user_id');
+      if (userId) {
+        searchParams.set('user_id', userId);
+      }
+  
+      var values = ['author', 'title', 'subtitle', 'content', 'start', 'finish', 'body', 'post'];
+      $.each(values, function(index, value) {
+        var input = $('#input-' + value).val();
+        if (input) {
+          searchParams.set(value, input);
+          searchParams.set('reset_admin', 'true');
+        }
+      });
+  
+      window.location.search = searchParams.toString();
+    } else {
+      window.location.search = search;
+    }
+  });
 
   $('.submit-btn-admin').on('click', function(){
     var search = "order=DESC"
@@ -76,4 +127,4 @@ $(function(){
     })
     window.location.search = search
   })
-})
+});
