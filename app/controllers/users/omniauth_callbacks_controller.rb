@@ -18,6 +18,10 @@ module Users
       callback_for(:google)
     end
 
+    def facebook
+      callback_for(:facebook)
+    end
+
     def callback_for(provider)
       @user = User.from_omniauth(request.env["omniauth.auth"])
 

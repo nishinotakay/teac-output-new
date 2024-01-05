@@ -54,13 +54,13 @@
                   <div class="content mt-4 mb-3">
                     <div class="text-center">
                       <button type="button" class="btn btn-success" style="width:100px">
-                       <%= link_to "投稿記事",users_articles_path,class: "Editlink" %>
+                       <%= link_to "投稿記事",users_dash_boards_path(user_id: @user),class: "Editlink" %>
                       </button>
                       <button type="button" class="btn btn-danger" style="width:100px">
-                       <%= link_to "投稿動画",users_posts_path,class: "Editlink" %>
+                       <%= link_to "投稿動画",index_user_users_user_posts_path(user_id: @user),class: "Editlink" %>
                       </button>
                       <button type="button" class="btn btn-info" style="width:100px font-size:10px">
-                       <%= link_to "投稿つぶやき",users_tweets_path,class: "Editlink" %>
+                       <%= link_to "投稿つぶやき",index_user_users_tweet_path(user_id: @user),class: "Editlink" %>
                       </button>
                     </div>
                   </div>
