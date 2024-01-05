@@ -24,6 +24,7 @@
             <% end %>
         </div>
       </div>
+      <% unless current_admin.present? %>
       <div class="comment-create-form form-group">
         <%= form_with(model: [@tweet, @tweet_comment], url: users_tweet_tweet_comments_path(@tweet, @tweet_comment), method: :post) do |form| %>
           <%= form.text_area :content, placeholder: "コメントしましょう！", class: "form-control mt-2" %>
@@ -33,6 +34,7 @@
           <%= form.submit 'コメントする', class: "btn btn-primary comment-submit" %>
         <% end %>
       </div>
+      <% end %>
       <% if @tweet_comments.exists? %>
         <p class="comment-list fw-bold">〜コメント一覧〜</p>
       <% end %>

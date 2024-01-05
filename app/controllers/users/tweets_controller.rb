@@ -7,6 +7,7 @@ module Users
     before_action :set_tweet, only: %i[show edit update destroy]
     # 投稿をしたユーザーでないと編集・削除できない
     before_action :correct_tweet_user, only: %i[edit update destroy]
+    skip_before_action :authenticate_user!, only: %i[show], if: :admin_signed_in?
 
     def index
       fetch_tweets_and_images
@@ -14,7 +15,7 @@ module Users
 
     def show
       @tweet_comments = @tweet.tweet_comments.order(created_at: :desc)
-      @tweet_comment = current_user.tweet_comments.new
+      @tweet_comment = current_user.tweet_comments.new unless current_admin.present?
     end
 
     def new

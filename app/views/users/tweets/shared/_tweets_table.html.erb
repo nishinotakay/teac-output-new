@@ -21,7 +21,7 @@
                   <% end %>
                 <div class="d-flex align-items-start flex-column justify-content-start"> <%# flex-colmunは縦並び %>
                   <div class="px-0">
-                    <%= link_to index_user_users_tweet_path(data[:tweet].user_id), style: "text-decoration: underline;" do %>
+                    <%= link_to_if current_user.present?,  data[:tweet].user.name, index_user_users_tweet_path(data[:tweet].user_id), class:'fw-bold', style: "text-decoration: underline;" do %>
                       <strong><%= data[:tweet].user.name %>&nbsp;</strong>
                     <% end %>
                   </div>
@@ -30,13 +30,15 @@
                 <div class="d-flex align-items-center ms-auto">
                   <div class="dropdown">
                     <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
-                    <ul class="dropdown-menu test-color">
-                      <li><%= link_to '詳細', users_tweet_path(data[:tweet].id), class:"dropdown-item" %></li>
-                      <% if data[:tweet].user.name == current_user.name %>
-                        <li><%= link_to '編集', edit_users_tweet_path(data[:tweet]), remote: true, class:"dropdown-item" %></li>
-                        <li><%= link_to '削除', users_tweet_path(data[:tweet]), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
+                      <ul class="dropdown-menu test-color">
+                        <li><%= link_to '詳細', users_tweet_path(data[:tweet].id), class:"dropdown-item" %></li>
+                      <% unless current_admin.present? %>  
+                        <% if data[:tweet].user.name == current_user.name %>
+                          <li><%= link_to '編集', edit_users_tweet_path(data[:tweet]), remote: true, class:"dropdown-item" %></li>
+                          <li><%= link_to '削除', users_tweet_path(data[:tweet]), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
+                        <% end %>
                       <% end %>
-                    </ul>
+                      </ul>
                   </div>
                 </div>
               </div>
@@ -99,6 +101,7 @@
           </div>
         </div>
         <div class="filter-modal" style="display: none;">
+          <% unless current_admin.present? %>
           <div class="form-group row my-4">
             <label for="input-author" class="col-sm-4 col-form-label">
               <%= Tweet.human_attribute_name(:author) %>
@@ -106,6 +109,7 @@
             <div class="col-md-8">
               <input type="text" aria-label="author" id="input-author" class="form-control" value="<%= params[:author] %>">
             </div>
+          <% end %>
           </div>
           <div class="form-group row my-4">
             <label for="input-post" class="col-sm-4 col-form-label">
