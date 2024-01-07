@@ -26,7 +26,7 @@ class User < ApplicationRecord
   validates :name,  presence: true, length: { in: 1..10 }
   validates :age,   allow_nil: true, numericality: { greater_than_or_equal_to: 10 }
   validates :profile, length: { maximum: 200 } # 追記
-  validates :uid, uniqueness: { scope: :provider }
+  validates :uid, uniqueness: { scope: :provider }, allow_nil: true
 
   enum gender: { male: 0, female: 1, other: 2 }
 
