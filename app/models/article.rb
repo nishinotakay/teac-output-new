@@ -9,6 +9,7 @@ class Article < ApplicationRecord
   belongs_to :user, optional: true
   has_many :article_comments, dependent: :destroy
   has_many :likes, dependent: :destroy
+  has_many :stocks, dependent: :destroy
 
   validates :title, presence: true, length: { in: 1..40 }
   validates :sub_title, allow_nil: true, length: { maximum: 50 }
