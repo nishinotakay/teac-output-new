@@ -27,8 +27,12 @@
         <hr>
         <div class="m-4 article-content" data-article="<%= @article.sanitized_content %>"></div>
         <!-- いいね機能のボタン-->
-          <div id="article_<%= @article.id %>">
+          <div id="article_<%= @article.id %>" class="d-inline">
             <%= render 'users/likes/article_likes', locals: { article: @article } %>
+          </div>
+        <!-- ストック機能のボタン -->
+          <div id="article_stock_<%= @article.id %>" class="d-inline ml-3">
+            <%= render 'users/stocks/stock', locals: { article: @article, stock: @stock } %>
           </div>
       </div>  
       <div class="article-comments-card mt-2">

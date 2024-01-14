@@ -85,4 +85,8 @@ class User < ApplicationRecord
   def post_already_liked?(post_id)
     likes.where(post_id: post_id).exists?
   end
+
+  def stock?(article)
+    stocks.exists?(article_id: article.id)
+  end
 end

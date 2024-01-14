@@ -1,0 +1,1 @@
+$("#article_stock_<%= @article.id %>").html("<%= escape_javascript(render partial: 'users/stocks/stock', locals: { post: @article, stock: @stock }) %>");

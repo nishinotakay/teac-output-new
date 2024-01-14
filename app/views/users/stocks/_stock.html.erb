@@ -1,0 +1,13 @@
+<% if current_user.stock?(@article) %>
+  <%= link_to users_article_stock_path(@article, @stock), method: :delete, remote: true do %>
+    <%= button_tag(class: "btn btn-dark") do %>
+      <i class="fas fa-folder-minus"></i>
+    <% end %>
+  <% end %>
+<% else %>
+  <%= link_to users_article_stocks_path(@article), method: :post, remote: true do %>
+    <%= button_tag(class: "btn btn-outline-dark") do %>
+      <i class="fas fa-folder-plus"></i>
+     <% end %>
+  <% end %>
+<% end %>
