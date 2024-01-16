@@ -1,0 +1,49 @@
+<% provide(:title, "ストックした記事一覧") %>
+
+<div class="content">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <table class="table articles-table table-scroll">
+          <thead>
+            <tr>
+              <th class="px-5"><%= Article.human_attribute_name(:title) %></th>
+              <th class="px-5"><%= Article.human_attribute_name(:sub_title) %></th>
+              <th class="px-5"><%= Article.human_attribute_name(:user) %></th>
+              <th class="px-5"><%= Article.human_attribute_name(:created_at) %></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+              <% @stock_article.each do |article| %>
+                <tr>
+                  <td class="link-td" id="article-title">
+                    <div class="d-flex align-items-center">
+                      <%= link_to article.title,users_article_path(article.id), class: 'text-decoration-none text-secondary' %>
+                        <% if article.likes.present? %>
+                          <% if current_user.article_already_liked?(article.id) %>
+                            <i class="fa-solid fa-heart ml-4 mr-2"></i><%= article.likes.count %>
+                          <% else %>
+                            <i class="fa-regular fa-heart ml-4 mr-2"></i><%= article.likes.count %>
+                          <% end %>
+                        <% end %>
+                      <%if article.article_comments.present? %>
+                        <i class="fa-regular fa-comment fa-sm ms-auto">&nbsp<%= article.article_comments.count %></i>
+                      <% end %>
+                    </div>
+                  </td>
+                  <td class="link-td" id="article-subtitle"><%= link_to article.sub_title, users_article_path(article.id), class: 'text-decoration-none text-secondary' %></td>
+                  <% if article.admin.present? %>
+                    <td class="link-td" id="article-authur"><%= article.admin.name %></td>
+                  <% end %>
+                  <td class="link-td" id="article-authur"><%= article.user.name %></td>
+                  <td class="link-td" id="article-createdat"><%= l(article.created_at, format: :long) %></td>
+                  <td></td>
+                </tr>
+              <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
