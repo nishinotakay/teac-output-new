@@ -1,20 +1,29 @@
-class Users::StocksController < ApplicationController
+module Users
+  class Users::StocksController < Users::Base
+    before_action :set_article, only: %i[create destroy]
 
   def create
-    @article = Article.find(params[:article_id])
-    @stock = current_user.stocks.create(article_id: params[:article_id])
+    @stock = current_user.stocks.create(stock_params)
   end
 
   def destroy
-    @article = Article.find(params[:article_id])
-    @stock = Stock.find_by(
-      article_id: params[:article_id],
-      user_id: current_user.id
-    )
+    @stock = Stock.find_by(stock_params)
     @stock.destroy
   end
 
   def index
-    @stocks = Stock.where(user_id: current_user.id)
+    @stock_article = Stock.get_stock_article(current_user)
+  end
+
+  private
+
+  def set_article
+    @article = Article.find(params[:article_id])
+  end
+
+  def stock_params
+    params.permit(:article_id,:id)
+  end
+
   end
 end
