@@ -8,7 +8,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-50.times do |i|
+30.times do |i|
   user = User.new(
     email:    "test_user#{i}@gmail.com", # sample: test_user1@gmail.com
     name:     "テストuser#{i}",
@@ -34,7 +34,7 @@ emails = %i[ikezawa@test.com sugawara@test.com yosei@test.com motonaga@test.com 
 end
 
 User.all.each do |u|
-  50.times do |i|
+  5.times do |i|
     article = u.articles.new(
       title:     "たいとる#{i} author #{u.name}",
       sub_title: "さぶたいとる#{i} author #{u.name}",
@@ -62,7 +62,7 @@ admin = Admin.new(
 admin.skip_confirmation! # deviseの確認メールをスキップ
 admin.save!
 
-50.times do
+35.times do
   user = User.order('RAND()').first
 
   post = Post.new(
@@ -108,7 +108,7 @@ Post.create!(title: 'payjpを用いての決済機能について解説',
 
 puts "Posts Created"
 
-50.times do |n|
+35.times do |n|
   Tenant.create!(name: "テナント#{n+1}")
 end
 
