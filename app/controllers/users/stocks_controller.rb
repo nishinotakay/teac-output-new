@@ -13,6 +13,7 @@ module Users
 
   def index
     @stock_article = Stock.get_stock_article(current_user)
+    @stock_articles = Kaminari.paginate_array(@stock_article).page(params[:page]).per(30)
   end
 
   private
