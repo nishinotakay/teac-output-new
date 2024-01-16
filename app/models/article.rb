@@ -13,6 +13,9 @@ class Article < ApplicationRecord
   validates :title, presence: true, length: { in: 1..40 }
   validates :sub_title, allow_nil: true, length: { maximum: 50 }
   validates :content, presence: true
+  # バリデーション: adminが記事をupdateするときにarticle_typeの値が必須、userがupdateするときはnilでもOK
+  # また、create時にも適用する
+  validates :article_type, presence: true, if: :admin_updating_or_creating?
 
   def self.paginated_and_sort_filter(filter)
     
@@ -34,4 +37,11 @@ class Article < ApplicationRecord
   def sanitized_content
     self.content.gsub(/<script>.*<\/script>/m, '').gsub(/<iframe[\s\S]*?<\/iframe>/m, '')
   end
+
+  private
+
+    def admin_updating_or_creating?
+      # idが存在すれば更新、存在しなければ新規作成
+      id.present? || admin_id.present?
+    end
 end

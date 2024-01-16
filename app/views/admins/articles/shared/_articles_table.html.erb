@@ -18,6 +18,7 @@
             <tr>
               <th class="px-5"><%= Article.human_attribute_name(:title) %></th>
               <th class="px-5"><%= Article.human_attribute_name(:sub_title) %></th>
+              <th></th>
               <% unless dashboard %>
                 <th class="px-5"><%= Article.human_attribute_name(:user) %></th>
               <% end %>
@@ -32,9 +33,11 @@
                   <% if article.admin %>
                     <td class="link-td" onclick='window.location="<%= admins_article_path(article.id, dashboard: dashboard) %>"'><%= article.title %></td>
                     <td class="link-td" onclick='window.location="<%= admins_article_path(article.id, dashboard: dashboard) %>"'><%= article.sub_title %></td>
+                    <td><%= article.article_type %></td>
                   <% elsif article.user %>
                     <td class="link-td" onclick='window.location="<%= users_show_admins_article_path(article.id) %>"'><%= article.title %></td>
                     <td class="link-td" onclick='window.location="<%= users_show_admins_article_path(article.id) %>"'><%= article.sub_title %></td>
+                    <td></td>
                   <% end %>
                   <% if !dashboard && article.admin %>
                     <td class="link-td" onclick='window.location="<%= admins_article_path(article.id, dashboard: dashboard) %>"'><%= article.admin.name %></td>
