@@ -24,8 +24,8 @@ class Article < ApplicationRecord
     
     left_joins(:user, :admin)
       .includes(:admin, :user, :article_comments)
-      .where(['title LIKE ? AND sub_title LIKE ? AND content LIKE ?',
-              "%#{filter[:title]}%", "%#{filter[:subtitle]}%", "%#{filter[:content]}%"])
+      .where(['title LIKE ? AND sub_title LIKE ? AND content LIKE ? AND (articles.article_type != ? OR articles.article_type IS NULL)',
+              "%#{filter[:title]}%", "%#{filter[:subtitle]}%", "%#{filter[:content]}%", 'e-learning'])
       .where('articles.created_at BETWEEN ? AND ?', start, finish)
       .where('users.name LIKE :author OR admins.name LIKE :author', author: "%#{filter[:author]}%")
       .order(created_at: "#{filter[:order]}")
