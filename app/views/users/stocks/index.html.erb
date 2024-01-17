@@ -35,8 +35,9 @@
                   <td class="link-td" id="article-subtitle"><%= link_to article.sub_title, users_article_path(article.id), class: 'text-decoration-none text-secondary' %></td>
                   <% if article.admin.present? %>
                     <td class="link-td" id="article-authur"><%= article.admin.name %></td>
-                  <% end %>
-                  <td class="link-td" id="article-authur"><%= article.user.name %></td>
+                  <% else %>
+                    <td class="link-td" id="article-authur"><%= article.user.name %></td>
+                  <% end %>  
                   <td class="link-td" id="article-createdat"><%= l(article.created_at, format: :long) %></td>
                   <td></td>
                 </tr>
