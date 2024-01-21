@@ -47,10 +47,18 @@
             <p>
               つぶやき一覧
               <% if @comment_notifications.present? %>
-               <% if @comment_notifications.count > 0 %>
-                 <span class="badge rounded-pill badge-success"><%= @comment_notifications.count %></span> <%# コメント通知件数をバッジ通知する %>
-               <% end %>
+                <% if @comment_notifications.count > 0 %>
+                  <span class="badge rounded-pill badge-success"><%= @comment_notifications.count %></span> <%# コメント通知件数をバッジ通知する %>
+                <% end %>
               <% end %>
+            </p>
+          <% end %>
+        </li>
+        <li class="nav-item">
+          <%= link_to e_learning_index_users_articles_path, class:"nav-link", method: :get do %>
+            <i class="nav-icon fa-sharp fa-solid fa-book-open"></i> 
+            <p>
+              e-learning
             </p>
           <% end %>
         </li>

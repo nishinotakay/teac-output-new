@@ -13,6 +13,7 @@ class Article < ApplicationRecord
   validates :title, presence: true, length: { in: 1..40 }
   validates :sub_title, allow_nil: true, length: { maximum: 50 }
   validates :content, presence: true
+  validates :article_type, presence: true, if: :admin_updating_or_creating?
 
   def self.paginated_and_sort_filter(filter)
     
@@ -21,8 +22,8 @@ class Article < ApplicationRecord
     
     left_joins(:user, :admin)
       .includes(:admin, :user, :article_comments)
-      .where(['title LIKE ? AND sub_title LIKE ? AND content LIKE ?',
-              "%#{filter[:title]}%", "%#{filter[:subtitle]}%", "%#{filter[:content]}%"])
+      .where(['title LIKE ? AND sub_title LIKE ? AND content LIKE ? AND (articles.article_type != ? OR articles.article_type IS NULL)',
+              "%#{filter[:title]}%", "%#{filter[:subtitle]}%", "%#{filter[:content]}%", 'e-learning'])
       .where('articles.created_at BETWEEN ? AND ?', start, finish)
       .where('users.name LIKE :author OR admins.name LIKE :author', author: "%#{filter[:author]}%")
       .order(created_at: "#{filter[:order]}")
@@ -34,4 +35,10 @@ class Article < ApplicationRecord
   def sanitized_content
     self.content.gsub(/<script>.*<\/script>/m, '').gsub(/<iframe[\s\S]*?<\/iframe>/m, '')
   end
+
+  private
+
+    def admin_updating_or_creating?
+      id.present? || admin_id.present?
+    end
 end

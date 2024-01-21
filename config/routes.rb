@@ -57,6 +57,12 @@ Rails.application.routes.draw do
         post 'article_create', on: :member
         delete 'article_destroy', on: :member
       end
+      collection do
+        get 'e_learning_index'
+      end
+      member do
+        get 'e_learning_show'
+      end
     end
     resources :users do
       resource :posts, only: [] do
