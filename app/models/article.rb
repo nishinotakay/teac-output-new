@@ -31,6 +31,24 @@ class Article < ApplicationRecord
       .presence || Article.none
   end
 
+  def self.stock_paginated_and_sort_filter(filter,user)
+    
+    start = Time.zone.parse(filter[:start].presence || '2020-01-01').beginning_of_day
+    finish = Time.zone.parse(filter[:finish].presence || Date.current.to_s).end_of_day
+    
+    left_joins(:user, :admin)
+      .joins(:stocks)
+      .includes(:admin, :user, :article_comments)
+      .where(['title LIKE ? AND sub_title LIKE ? AND content LIKE ?',
+              "%#{filter[:title]}%", "%#{filter[:subtitle]}%", "%#{filter[:content]}%"])
+      .where('articles.created_at BETWEEN ? AND ?', start, finish)
+      .where('users.name LIKE :author OR admins.name LIKE :author', author: "%#{filter[:author]}%")
+      .where('stocks.user_id = ?', user.id)
+      .order(created_at: "#{filter[:order]}")
+      .page(filter[:page]).per(30)
+      .presence || Article.none
+  end
+
   # scriptタグとiframeタグを取り除くメソッド
   def sanitized_content
     self.content.gsub(/<script>.*<\/script>/m, '').gsub(/<iframe[\s\S]*?<\/iframe>/m, '')

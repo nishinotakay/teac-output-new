@@ -25,7 +25,7 @@
             </tr>
           </thead>
           <tbody>
-              <% @stock_article.each do |article| %>
+              <% @stocks.each do |article| %>
                 <tr>
                   <td class="link-td" id="article-title">
                     <div class="d-flex align-items-center">
@@ -55,7 +55,7 @@
           </tbody>
         </table>
         <div class="article-paginate">
-          <%= paginate @stock_articles, theme: 'bootstrap-5' %>
+          <%= paginate @stocks, theme: 'bootstrap-5' %>
         </div>
       </div>
     </div>

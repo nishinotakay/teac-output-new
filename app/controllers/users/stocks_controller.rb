@@ -12,8 +12,22 @@ module Users
   end
 
   def index
-    @stock_article = Stock.get_stock_article(current_user)
-    @stock_articles = Kaminari.paginate_array(@stock_article).page(params[:page]).per(30)
+    filter = {
+      author: params[:author],
+      title: params[:title],
+      subtitle: params[:subtitle],
+      content: params[:content],
+      start: params[:start],
+      finish: params[:finish],
+      order: params[:order] ||= 'DESC'
+    }
+
+    @stocks = Article.stock_paginated_and_sort_filter(filter,current_user).page(params[:page]).per(30)
+    respond_to do |format|
+      format.html
+      format.json { render json: @stocks }
+    end
+
   end
 
   private
