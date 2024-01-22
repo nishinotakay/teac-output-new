@@ -111,29 +111,38 @@ module Users
       end
     end
 
-    private
-
-    def article_params
-      params.require(:article).permit(:title, :sub_title, :content)
+    def e_learning_index
+      @e_learning_articles = Article.where(article_type: 'e-learning').page(params[:page]).per(10)
     end
 
-    # before_action
-
-    def set_article
-      @article = current_user.articles.find_by(id: params[:id])
-    end
-
-    def check_article_owner
-      @article = Article.find_by(id: params[:id])
-      unless current_user.id == @article.user_id
-        flash[:danger] = '不正な操作です。'
-        redirect_to users_articles_path(page: params[:page])
+    def e_learning_show
+      @article = Article.find(params[:id])
+      if @article.admin_id.present?
+        render 'admins/articles/show', layout: 'users'
       end
     end
-    
-    def set_dashboard
-      params[:dashboard] ||= 'false'
-      @dashboard = !(params[:dashboard] == 'false')
-    end
+
+    private
+
+      def article_params
+        params.require(:article).permit(:title, :sub_title, :content)
+      end
+
+      def set_article
+        @article = current_user.articles.find_by(id: params[:id])
+      end
+
+      def check_article_owner
+        @article = Article.find_by(id: params[:id])
+        unless current_user.id == @article.user_id
+          flash[:danger] = '不正な操作です。'
+          redirect_to users_articles_path(page: params[:page])
+        end
+      end
+      
+      def set_dashboard
+        params[:dashboard] ||= 'false'
+        @dashboard = !(params[:dashboard] == 'false')
+      end
   end
 end

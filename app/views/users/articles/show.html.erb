@@ -19,7 +19,11 @@
                   <%= link_to "削除", users_article_path(@article, dashboard: @dashboard, page: params[:page]), method: :delete, data: {confirm: "表示中の記事を削除します。"}, class: "btn btn-danger ml-1" %>
                 </div>
               <% else %>
-                <%= Article.human_attribute_name(:user) %>：<%= @article.user.name %>
+                <% if @article.admin.present? %>
+                  <%= Article.human_attribute_name(:user) %>：<%= @article.admin.name %>
+                <% else %>
+                  <%= Article.human_attribute_name(:user) %>：<%= @article.user.name %>
+                <% end %>
               <% end %>
             </div>
           </div>

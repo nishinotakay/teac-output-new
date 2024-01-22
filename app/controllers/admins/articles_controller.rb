@@ -1,6 +1,7 @@
 module Admins
   class ArticlesController < Admins::Base
     protect_from_forgery
+    before_action :authenticate_admin!
     before_action :set_article, except: %i[index new create image]
     before_action :set_dashboard, only: %i[show new create edit update destroy]
 
@@ -91,7 +92,7 @@ module Admins
     private
 
     def article_params
-      params.require(:article).permit(:title, :sub_title, :content)
+      params.require(:article).permit(:title, :sub_title, :content, :article_type)
     end
 
     # before_action
