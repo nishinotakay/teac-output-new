@@ -36,8 +36,7 @@ class Article < ApplicationRecord
     start = Time.zone.parse(filter[:start].presence || '2020-01-01').beginning_of_day
     finish = Time.zone.parse(filter[:finish].presence || Date.current.to_s).end_of_day
     
-    left_joins(:user, :admin)
-      .joins(:stocks)
+    left_joins(:user, :admin, :stocks)
       .includes(:admin, :user, :article_comments)
       .where(['title LIKE ? AND sub_title LIKE ? AND content LIKE ?',
               "%#{filter[:title]}%", "%#{filter[:subtitle]}%", "%#{filter[:content]}%"])
