@@ -8,6 +8,6 @@
   <%= link_to users_stocks_path(article_id: @article), method: :post, remote: true do %>
     <%= button_tag(class: "btn btn-outline-dark") do %>
       <span class="pr-2"><i class="fas fa-folder-plus"></i></span><%= @article.stocks.count %>
-     <% end %>
+    <% end %>
   <% end %>
 <% end %>
