@@ -4,35 +4,26 @@
 <div class="content">
   <div class="container">
     <div class="row">
-      <div class="col-12">
-        <% hover = @e_learning_articles.present? ? "table-hover" : "" %>
-        <table class="table articles-table <%= hover %> table-scroll">
-          <thead>
-            <tr>
-              <th class="px-5"><%= Article.human_attribute_name(:title) %></th>
-              <th class="px-5"><%= Article.human_attribute_name(:sub_title) %></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% if hover.present? %>
-              <% @e_learning_articles.each_with_index do |article, index| %>
-                <tr>
-                  <td class="link-td" id="article-title" onclick='window.location="<%= e_learning_show_users_article_path(id: article.id) %>"'>
-                    <div class="d-flex align-items-center">
-                      <%= article.title %>                     
-                    </div>
-                  </td>
-                  <td class="link-td" id="article-subtitle" onclick='window.location="<%= e_learning_show_users_article_path(id: article.id) %>"'><%= article.sub_title %></td>
-                </tr>
-              <% end %>
-            <% else %>
-              <%= render 'users/shared/table_without_record' %>
-            <% end %>
-          </tbody>
-        </table>
-        <div class="article-paginate">
-          <%= paginate @e_learning_articles, theme: 'bootstrap-5' %>
-        </div>
+      <% @e_learning_articles.each_with_index do |article, index| %>
+        <div class="col-12 col-sm-8 offset-sm-2">
+          <div class="card tweets-index-item">
+            <div class="d-flex align-items-center">
+              <div class="d-flex align-items-start flex-column justify-content-start">
+                <div class="link-td" id="article-title" onclick='window.location="<%= e_learning_show_users_article_path(id: article.id) %>"'>
+                  <div class="d-flex align-items-center">
+                    <%= article.title %>                     
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="link-td" id="article-subtitle" onclick='window.location="<%= e_learning_show_users_article_path(id: article.id) %>"'><%= article.sub_title %>
+              <%= article.sub_title %>
+            </div>
+          </div>
+        </div>  
+      <% end %>
+      <div class="article-paginate">
+        <%= paginate @e_learning_articles, theme: 'bootstrap-5' %>
       </div>
     </div>
   </div>
