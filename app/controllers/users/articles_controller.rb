@@ -36,6 +36,8 @@ module Users
         format.html
         format.json { render json: @article }
       end
+
+      @stock = Stock.find_by(user_id: current_user.id, article_id: @article)
     end
 
     def new
