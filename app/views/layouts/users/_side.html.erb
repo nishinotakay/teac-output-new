@@ -18,6 +18,14 @@
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item">
+          <%= link_to e_learning_index_users_articles_path, class:"nav-link", method: :get do %>
+            <i class="nav-icon fa-sharp fa-solid fa-book-open"></i> 
+            <p>
+              e-learning
+            </p>
+          <% end %>
+        </li>
+        <li class="nav-item">
           <%= link_to users_articles_path, class:"nav-link", method: :get do %>
             <i class="nav-icon fas fa-newspaper"></i>
             <p>
@@ -51,14 +59,6 @@
                   <span class="badge rounded-pill badge-success"><%= @comment_notifications.count %></span> <%# コメント通知件数をバッジ通知する %>
                 <% end %>
               <% end %>
-            </p>
-          <% end %>
-        </li>
-        <li class="nav-item">
-          <%= link_to e_learning_index_users_articles_path, class:"nav-link", method: :get do %>
-            <i class="nav-icon fa-sharp fa-solid fa-book-open"></i> 
-            <p>
-              e-learning
             </p>
           <% end %>
         </li>

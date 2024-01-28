@@ -1,30 +1,29 @@
 <%= javascript_pack_tag "users/index_articles_and_dashboards" %>
+<%= stylesheet_pack_tag 'users/e_learning', media: 'all', 'data-turbolinks-track': 'reload' %>
+
 <% provide(:title,  "e-learning一覧") %>
 
-<div class="content">
-  <div class="container">
-    <div class="row">
-      <% @e_learning_articles.each_with_index do |article, index| %>
-        <div class="col-12 col-sm-8 offset-sm-2">
-          <div class="card tweets-index-item">
-            <div class="d-flex align-items-center">
-              <div class="d-flex align-items-start flex-column justify-content-start">
-                <div class="link-td" id="article-title" onclick='window.location="<%= e_learning_show_users_article_path(id: article.id) %>"'>
-                  <div class="d-flex align-items-center">
-                    <%= article.title %>                     
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="link-td" id="article-subtitle" onclick='window.location="<%= e_learning_show_users_article_path(id: article.id) %>"'><%= article.sub_title %>
+<div class="container">
+  <div class="row">
+    <% @e_learning_articles.each do |article| %>
+      <div class="col-sm-6 offset-sm-1">
+        <div class="card e-learning-index-item">
+          <h5 class="card-header">
+            <button type="button" class="btn btn-outline-secondary btn-xs e-learning-status" disabled>未完了</button>
+            <%= article.title %>
+          </h5>
+          <div class="card-body">
+            <p class="card-text e-learning-index-item">
               <%= article.sub_title %>
-            </div>
+            </p>
+            <a href="<%= e_learning_show_users_article_path(id: article.id) %>" class="btn btn-primary article-button">記事を読む</a>
           </div>
-        </div>  
-      <% end %>
-      <div class="article-paginate">
-        <%= paginate @e_learning_articles, theme: 'bootstrap-5' %>
+        </div>
       </div>
+    <% end %>
+    <div class="article-paginate">
+      <%= paginate @e_learning_articles, theme: 'bootstrap-5' %>
     </div>
   </div>
 </div>
+
