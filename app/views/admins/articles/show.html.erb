@@ -19,10 +19,11 @@
       </div>
       <hr>
       <div class="m-4 article-content" data-article="<%= @article.content %>"></div>
-      <div class="text-center mt-3">
-        <%= link_to "読了したら次へ", e_learning_index_users_articles_path, class: 'btn btn-block nextButton' %>
-      </div>
-
+      <% unless current_admin.present? %>
+        <div class="text-center mt-3">
+          <%= link_to "読了したら次へ", e_learning_index_users_articles_path, class: 'btn btn-block nextButton' %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>
