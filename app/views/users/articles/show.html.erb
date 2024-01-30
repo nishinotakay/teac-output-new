@@ -38,6 +38,11 @@
           <div id="article_stock_<%= @article.id %>" class="d-inline ml-3">
             <%= render 'users/stocks/stock', locals: { article: @article, stock: @stock } %>
           </div>
+        <!-- フォロー機能のボタン -->
+          <div class="ml-3">
+            <p class="mr-1">投稿者:<%= @article.user.name %></p>
+            <%= render 'users/relationships/follow', locals: { article: @article, user: @user } %>
+          </div>
       </div>  
       <div class="article-comments-card mt-2">
         <div class="article-comments-list">
