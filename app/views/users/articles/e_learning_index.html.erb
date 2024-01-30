@@ -5,7 +5,7 @@
 
 <div class="container">
   <div class="row">
-    <% @e_learning_articles.each do |article| %>
+    <% @e_learning_articles.each_with_index do |article, index| %>
       <div class="col-sm-6 offset-sm-1">
         <div class="card e-learning-index-item">
           <h5 class="card-header">
@@ -13,10 +13,16 @@
             <%= article.title %>
           </h5>
           <div class="card-body">
-            <p class="card-text e-learning-index-item">
+            <div class="card-text e-learning-index-item">
               <%= article.sub_title %>
-            </p>
-            <a href="<%= e_learning_show_users_article_path(id: article.id) %>" class="btn btn-primary article-button">記事を読む</a>
+            </div>
+            <div>
+              <% if index == 0 %>
+                <%= link_to "記事を読む", e_learning_show_users_article_path(id: article.id), class: "btn article-button" %>
+              <% else %>
+                <button type="button" class="btn article-button" disabled>記事を読む</button>
+              <% end %>
+            </div>
           </div>
         </div>
       </div>
