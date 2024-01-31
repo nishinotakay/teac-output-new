@@ -39,9 +39,8 @@
             <%= render 'users/stocks/stock', locals: { article: @article, stock: @stock } %>
           </div>
         <!-- フォロー機能のボタン -->
-          <div class="ml-3">
-            <p class="mr-1">投稿者:<%= @article.user.name %></p>
-            <%= render 'users/relationships/follow', locals: { article: @article, user: @user } %>
+          <div id="user_follow_<%= @user.id %>" class="ml-4">
+            <%= render 'users/relationships/follow', locals: { user: @user } %>
           </div>
       </div>  
       <div class="article-comments-card mt-2">

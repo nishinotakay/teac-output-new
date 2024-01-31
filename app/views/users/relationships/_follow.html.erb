@@ -1,7 +1,13 @@
-<% if current_user != @article.user %>
+<% if current_user != @user %>  
   <% if current_user.following?(@user) %>
-    <%= link_to "フォローを外す", users_user_relationships_path(user_id: @user.id), method: :delete %>
+    <%= @user.name %>
+    <%= link_to users_user_relationships_path(user_id: @user), method: :delete, remote: true do %>
+      <button type="button" class="btn btn-success btn-sm ml-2">フォロー中</button>
+    <% end %>
   <% else %>
-    <%= link_to "フォローをする", users_user_relationships_path(user_id: @user.id), method: :post %>  
+    <%= @user.name %>
+    <%= link_to users_user_relationships_path(user_id: @user), method: :post, remote: true do %>
+      <button type="button" class="btn btn-success btn-sm ml-2">フォローする</button>
+    <% end %>  
   <% end %>
 <% end %>
