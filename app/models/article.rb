@@ -11,6 +11,9 @@ class Article < ApplicationRecord
   has_many :likes, dependent: :destroy
   has_many :stocks, dependent: :destroy
 
+  has_many :learnings
+  has_many :users, through: :learnings
+
   validates :title, presence: true, length: { in: 1..40 }
   validates :sub_title, allow_nil: true, length: { maximum: 50 }
   validates :content, presence: true
