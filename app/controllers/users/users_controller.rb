@@ -6,5 +6,11 @@ module Users
       @user = User.find(params[:id]) # 該当idのユーザーレコードをとってくる様に設定
       @profile = current_user.profile
     end
+
+    def followings
+      user = User.find(params[:user_id])
+      @users = user.followings
+    end
+
   end
 end

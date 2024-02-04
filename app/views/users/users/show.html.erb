@@ -20,6 +20,20 @@
                     <i class="fas fa-user"></i>
                     <span><%= current_user.name %></span>
                   </div>
+                  <div class="follow text-center mt-3">
+                    <div class="row justify-content-md-center">
+                      <div class="col col-md-auto">
+                        <%= link_to followings_users_user_path(user_id: @user), class: "text-decoration-none text-secondary", remote: true do %>
+                          <%= @user.followings.count %><br>フォロー
+                        <% end %>
+                      </div>
+                      <div class="col-md-auto">
+                      <%= link_to followers_users_user_path(user_id: @user), class: "text-decoration-none text-secondary", remote: true do %>
+                        <%= @user.followers.count %><br>フォロワー
+                      <% end %>
+                      </div>
+                    </div>  
+                  </div>
                     <hr>
                   <div class="profile-indent text-center">
                     <i class="fas fa-envelope"></i>
@@ -70,3 +84,5 @@
     <div class="col align-self-end"><!--右余白--></div><!--右余白-->
   </div>
 </div>
+
+<div id="followings-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div> 
