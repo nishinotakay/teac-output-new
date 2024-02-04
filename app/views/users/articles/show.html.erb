@@ -40,6 +40,7 @@
           </div>
         <!-- フォロー機能のボタン -->
           <div id="user_follow_<%= @user.id %>" class="ml-4">
+            <%= @user.name %>
             <%= render 'users/relationships/follow', locals: { user: @user } %>
           </div>
       </div>  
