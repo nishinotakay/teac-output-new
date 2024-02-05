@@ -1,0 +1,35 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header text-center">
+      <span class="fs-4">フォロー</span>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-12">
+          <% @users.each do |user| %>
+          <table class="table table-hover table-borderless">               
+            <tr>
+              <!-- プロフィール画像 -->
+              <td>
+                <% image = user.profile.present? && user.profile.image.present? ? user.profile.image : "user_default.png" %>
+                <%= image_tag image , class: "rounded-circle", size: "60x60" %>
+              </td>
+              <!-- ユーザー名 -->
+              <td class="align-middle">
+                <%= user.name %>
+              </td>
+              <!-- フォローボタン -->
+              <td class="align-middle">
+                <div id="user_follow_<%= user.id %>" class="ml-4">
+                  <%= render 'users/users/index_follow', user: user %>
+                </div>
+              </td>
+            </tr>
+          </table>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>  
