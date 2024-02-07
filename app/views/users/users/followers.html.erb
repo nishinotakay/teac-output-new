@@ -41,6 +41,9 @@
             </tr>
           </table>
         <% end %>
+        <div class="follow-paginate">
+          <%= paginate @users, theme: 'bootstrap-5' %>
+        </div>
       </div>
     <% else %>
       <p>ユーザーがいません</p>

@@ -20,7 +20,6 @@
     </div>
      </div>
 
-    <!-- 右側のコンテンツ -->
     <% if @users.exists? %>
       <div class="col-md-7 offset-1">
         <h2 class="fs-5">フォローしているユーザー</h2>
@@ -42,6 +41,9 @@
             </tr>
           </table>
         <% end %>
+        <div class="follow-paginate">
+          <%= paginate @users, theme: 'bootstrap-5' %>
+        </div>
       </div>
     <% else %>
       <p>ユーザーがいません</p>
