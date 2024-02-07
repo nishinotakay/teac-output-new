@@ -1,0 +1,50 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="user-image text-center">
+        <% image = @user.profile.present? && @user.profile.image.present? ? @user.profile.image : "user_default.png" %>
+        <%= image_tag image, class: "rounded-circle", size: "90x90" %>
+      </div>
+      <div class="user-info text-center">
+        <div class="user-name fw-bold">
+          <%= @user.name %>
+        </div>
+      </div>
+      <div class="d-flex justify-content-md-center mt-5">
+        <div class="col col-md-auto text-center">
+          記事投稿: <%= @user.articles.count %>
+        </div>
+        <div class="col col-md-auto text-center">
+          趣味:<%= @user.profile.hobby %>
+      </div>
+    </div>
+     </div>
+
+    <% if @users.exists? %>
+      <div class="col-md-7 offset-1">
+        <h2 class="fs-5">フォロワー</h2>
+        <% @users.each do |user| %>
+          <table class="table table-borderless mt-4">               
+            <tr class="border-bottom">
+              <td class="align-middle d-inline-block">
+                <% image = user.profile.present? && user.profile.image.present? ? user.profile.image : "user_default.png" %>
+                <%= image_tag image, class: "rounded-circle", size: "60x60" %>
+              </td>
+              <td class="align-middle d-inline-block">
+                <%= user.name %>
+              </td>
+              <td class="align-middle text-right">
+                <div id="user_follow_<%= user.id %>" class="ml-4">
+                  <%= render 'users/users/index_follow', user: user %>
+                </div>
+              </td>
+            </tr>
+          </table>
+        <% end %>
+      </div>
+    <% else %>
+      <p>ユーザーがいません</p>
+    <% end %>
+  </div>
+</div>
+
