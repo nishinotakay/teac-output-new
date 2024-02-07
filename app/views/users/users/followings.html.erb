@@ -41,8 +41,10 @@
             </tr>
           </table>
         <% end %>
-        <div class="follow-paginate">
-          <%= paginate @users, theme: 'bootstrap-5' %>
+        <div data-turbolinks='false'>
+          <div class="follow-paginate">
+            <%= paginate @users, theme: 'bootstrap-5' %>
+          </div>
         </div>
       </div>
     <% else %>
