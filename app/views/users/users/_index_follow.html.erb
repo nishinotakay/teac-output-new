@@ -1,6 +1,6 @@
 <% if current_user != user %>  
   <% if current_user.following?(user) %>
-    <%= link_to users_user_relationships_path(user_id: user), method: :delete, remote: true do %>
+    <%= link_to users_user_relationships_path(user_id: user), method: :delete, data: {confirm: "#{user.name}を削除しますか？"}, remote: true do %>
       <button type="button" class="btn btn-success btn-sm ml-2">フォロー中</button>
     <% end %>
   <% else %>
