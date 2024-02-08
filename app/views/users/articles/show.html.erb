@@ -41,7 +41,11 @@
         <!-- フォロー機能のボタン -->
         <div class="user-follow mt-2 ml-4 d-inline">
           <% if current_user != @user%>
-            <%=link_to @user.name, users_profile_path(id: @user.profile), data: { turbolinks: false }, class:"text-decoration-none" %>
+            <% if @user.profile.present? %>
+              <%= link_to @user.name, users_profile_path(id: @user.profile), data: { turbolinks: false }, class:"text-decoration-none" %>
+            <% else %>
+              <%= @user.name %>
+            <% end %>
           <% end %>
           <div id="user_follow_<%= @user.id %>" class="ml-1 d-inline">
             <%= render 'users/relationships/follow', locals: { user: @user } %>
