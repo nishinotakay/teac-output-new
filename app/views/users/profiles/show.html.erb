@@ -43,13 +43,6 @@
                   </div>
                     <hr>
                   <div class="profile-indent" style="padding-left:30px">
-                    <i class="fas fa-gift"></i>
-                    年齢
-                    <% age = @profile.present? && @age.present? ? @age : "―" %>
-                    <span class="profile-indent" style="padding-right:10px"><%= age %>歳</span>
-                  </div>
-                    <hr>
-                  <div class="profile-indent" style="padding-left:30px">
                     <i class="fas fa-book-open"></i>
                     登録日
                     <td class="text-muted"><%= @profile.registration_date %></td>
