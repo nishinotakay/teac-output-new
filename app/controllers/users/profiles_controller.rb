@@ -18,6 +18,7 @@ module Users
       @study_period = (today - learning_startday) / 10000 if learning_startday.present?
       birthday = @profile.birthday.strftime('%Y%m%d').to_i if @profile.present? && @profile.birthday?
       @age = (today - birthday) / 10000 if birthday.present?
+      @user = @profile.user
     end
 
     def new
