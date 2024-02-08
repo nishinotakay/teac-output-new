@@ -1,0 +1,14 @@
+<div class="follow text-center mt-3">
+  <div class="row justify-content-md-center">
+    <div class="col col-md-auto">
+      <%= link_to followings_users_user_path(user_id: @user), data: { turbolinks: false }, class: "text-decoration-none text-secondary" do %>
+        <div id="followings-count"><%= @user.followings.count %><br>フォロー</div>
+      <% end %>
+    </div>  
+    <div class="col col-md-auto">
+    <%= link_to followers_users_user_path(user_id: @user), data: { turbolinks: false }, class: "text-decoration-none text-secondary" do %>
+      <div id="followers-count"><%= @user.followers.count %><br>フォロワー</div>
+    <% end %>
+    </div>
+  </div>  
+</div>
