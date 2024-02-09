@@ -15,13 +15,13 @@
           記事投稿: <%= @user.articles.count %>
         </div>
         <div class="col col-md-auto text-center">
-          趣味:<%= @user.profile.hobby %>
+           趣味:<%= @user.profile.present? ? @user.profile.hobby : "-" %>
       </div>
     </div>
-     </div>
+    </div>
 
-    <% if @users.exists? %>
       <div class="col-md-7 offset-1">
+        <% if @users.exists? %>
         <h2 class="fs-5">フォローしているユーザー</h2>
         <% @users.each do |user| %>
           <table class="table table-borderless mt-4">               
@@ -41,14 +41,14 @@
             </tr>
           </table>
         <% end %>
+        <% else %>
+        <p>ユーザーがいません</p>
+      </div>
         <div data-turbolinks='false'>
           <div class="follow-paginate">
             <%= paginate @users, theme: 'bootstrap-5' %>
           </div>
         </div>
-      </div>
-    <% else %>
-      <p>ユーザーがいません</p>
-    <% end %>
+        <% end %>
   </div>
 </div>
