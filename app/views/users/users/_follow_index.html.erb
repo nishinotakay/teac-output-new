@@ -6,9 +6,9 @@
       <% end %>
     </div>  
     <div class="col col-md-auto">
-    <%= link_to followers_users_user_path(user_id: @user), data: { turbolinks: false }, class: "text-decoration-none text-secondary" do %>
-      <div id="followers-count"><%= @user.followers.count %><br>フォロワー</div>
-    <% end %>
+      <%= link_to followers_users_user_path(user_id: @user), data: { turbolinks: false }, class: "text-decoration-none text-secondary" do %>
+        <div id="followers-count"><%= @user.followers.count %><br>フォロワー</div>
+      <% end %>
     </div>
   </div>  
 </div>
