@@ -42,15 +42,15 @@
             </tr>
           </table>
         <% end %>
-      <% else %>
-        <p>ユーザーがいません</p>
-
+          
         <div data-turbolinks='false'>
           <div class="follow-paginate">
             <%= paginate @users, theme: 'bootstrap-5' %>
           </div>
         </div>
-        
+          
+      <% else %>
+        <p>ユーザーがいません</p>
       <% end %>
     </div><!-- ./ col-md-7 offset-1 -->
 
