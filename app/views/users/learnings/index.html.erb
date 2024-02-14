@@ -9,7 +9,11 @@
       <div class="col-sm-6 offset-sm-1">
         <div class="card e-learning-index-item">
           <h5 class="card-header">
-            <button type="button" class="btn btn-outline-secondary btn-xs e-learning-status" disabled>未完了</button>
+            <% if current_user.completed?(article) %>
+              <button type="button" class="btn btn-outline-secondary btn-xs learning-status-completed" disabled>完了</button>
+            <% else %>
+              <button type="button" class="btn btn-outline-secondary btn-xs learning-status-incomplete" disabled>未完了</button>
+            <% end %>
             <%= article.title %>
           </h5>
           <div class="card-body">
@@ -17,11 +21,12 @@
               <%= article.sub_title %>
             </div>
             <div>
-              <% if index == 0 %>
+              <% next_article = @e_learning_articles[index + 1] %>
+              <% if next_article && !current_user.completed?(next_article) %>
                 <%= link_to "記事を読む", users_learning_path(id: article.id), class: "btn article-button" %>
               <% else %>
                 <button type="button" class="btn article-button" disabled>記事を読む</button>
-              <% end %>
+              <% end %> 
             </div>
           </div>
         </div>

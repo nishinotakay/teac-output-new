@@ -5,16 +5,20 @@
     <div class="offset-1 col-10 article-show">
       <div class="col-12">
         <div class="mx-2 mt-4 mb-3">
-          <h1><%= @article.title %></h1>
+          <h1><%= @learning_article.title %></h1>
         </div>
         <div class="d-flex justify-content-between">
-          <h4 class="ml-5"><%= @article.sub_title %></h4>
+          <h4 class="ml-5"><%= @learning_article.sub_title %></h4>
         </div>
       </div>
       <hr>
-      <div class="m-4 article-content" data-article="<%= @article.content %>"></div>
+      <div class="m-4 article-content" data-article="<%= @learning_article.content %>"></div>
       <div class="text-center mt-3">
-        <%= link_to "読了したら次へ", users_learnings_path, class: 'btn btn-block nextButton' %>
+        <%= form_with(model: @learning, url: users_learnings_path, local: true) do |f| %>
+          <%= f.hidden_field :user_id, value: current_user.id %>
+          <%= f.hidden_field :article_id, value: @learning_article.id %>
+          <%= f.submit "読了したら次へ", class: 'btn btn-block nextButton' %>
+        <% end %>
       </div>
     </div>
   </div>
