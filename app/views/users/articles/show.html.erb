@@ -44,7 +44,7 @@
             <%= @user.profile.present? ? link_to(@user.name, users_profile_path(id: @user.profile), data: { turbolinks: false }, class: "text-decoration-none") : @user.name %>
           <% end %>
           <div id="user_follow_<%= @user.id %>" class="ml-1 d-inline">
-            <%= render 'users/relationships/follow', locals: { user: @user } %>
+            <%= render partial: 'users/relationships/follow', locals: { user: @user } %>
           </div>
         </div>
       </div>  
