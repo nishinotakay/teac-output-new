@@ -21,12 +21,11 @@
               <%= article.sub_title %>
             </div>
             <div>
-              <% next_article = @e_learning_articles[index + 1] %>
-              <% if next_article && !current_user.completed?(next_article) %>
+              <% if index == 0 || current_user.completed?(@e_learning_articles[index - 1]) %>
                 <%= link_to "記事を読む", users_learning_path(id: article.id), class: "btn article-button" %>
               <% else %>
                 <button type="button" class="btn article-button" disabled>記事を読む</button>
-              <% end %> 
+              <% end %>
             </div>
           </div>
         </div>

@@ -12,10 +12,11 @@ module Users
 
     def create
       article = Article.find(params[:article_id])
-      if current_user.completed?(article)
+      learning = current_user.learning_status.find_or_initialize_by(learned_article_id: article.id)
+      if learning.completed
         redirect_to users_learnings_path
       else
-        current_user.completed(article)
+        learning.update(completed: true)
         redirect_to users_learnings_path
       end
     end
