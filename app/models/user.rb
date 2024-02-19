@@ -94,4 +94,16 @@ class User < ApplicationRecord
   def stock?(article)
     stocks.exists?(article_id: article.id)
   end
+
+  def follow(user)
+    active_relationships.create(followed_id: user.id)
+  end
+
+  def unfollow(user)
+    active_relationships.find_by(followed_id: user.id).destroy
+  end
+
+  def following?(user)
+    followings.include?(user)
+  end
 end
