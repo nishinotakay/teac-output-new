@@ -38,6 +38,7 @@ module Users
       end
 
       @stock = Stock.find_by(user_id: current_user.id, article_id: @article)
+      @user = @article.user
     end
 
     def new

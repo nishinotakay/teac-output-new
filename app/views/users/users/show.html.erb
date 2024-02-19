@@ -20,6 +20,7 @@
                     <i class="fas fa-user"></i>
                     <span><%= current_user.name %></span>
                   </div>
+                    <%= render partial: 'users/users/follow_index', locals: { user: @user } %>
                     <hr>
                   <div class="profile-indent text-center">
                     <i class="fas fa-envelope"></i>

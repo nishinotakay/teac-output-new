@@ -3,7 +3,7 @@
 <div class="container">
   <div class="row">
     <div class="offset-1 col-10">
-      <div class="article-show">
+      <div class="article-show pt-1 pb-1">
         <div class="col-12">
           <div class="mx-0 mt-4 mb-3">
             <h1><%= @article.title %></h1>
@@ -38,6 +38,15 @@
           <div id="article_stock_<%= @article.id %>" class="d-inline ml-3">
             <%= render 'users/stocks/stock', locals: { article: @article, stock: @stock } %>
           </div>
+        <!-- フォロー機能のボタン -->
+        <div class="user-follow mt-2 ml-4 d-inline">
+          <% if current_user != @user%>
+            <%= @user.profile.present? ? link_to(@user.name, users_profile_path(id: @user.profile), data: { turbolinks: false }, class: "text-decoration-none") : @user.name %>
+          <% end %>
+          <div id="user_follow_<%= @user.id %>" class="ml-1 d-inline">
+            <%= render partial: 'users/relationships/follow', locals: { user: @user } %>
+          </div>
+        </div>
       </div>  
       <div class="article-comments-card mt-2">
         <div class="article-comments-list">

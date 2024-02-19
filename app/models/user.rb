@@ -21,6 +21,10 @@ class User < ApplicationRecord
   has_many :chat_messages
   has_many :post_comments, dependent: :destroy
   has_many :stocks, dependent: :destroy
+  has_many :active_relationships, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
+  has_many :passive_relationships, class_name: "Relationship", foreign_key: "followed_id", dependent: :destroy
+  has_many :followings, through: :active_relationships, source: :followed
+  has_many :followers, through: :passive_relationships, source: :follower
   has_many :learning_status, class_name: "Learning", foreign_key: "learner_id", dependent: :destroy #学習している関連付け
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
@@ -89,9 +93,5 @@ class User < ApplicationRecord
 
   def stock?(article)
     stocks.exists?(article_id: article.id)
-  end
-
-  def completed?(article)
-    learning_status.exists?(learned_article_id: article.id, completed: true)
   end
 end
