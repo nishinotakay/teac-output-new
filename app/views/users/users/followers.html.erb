@@ -13,7 +13,7 @@
       </div>
       <div class="d-flex justify-content-md-center mt-5 ml-4">
         <div class="col col-md-auto text-center">
-          記事: <%= @user.articles.count %>
+          記事投稿: <%= @user.articles.count %>
         </div>
         <div class="col col-md-auto text-center">
           <%= link_to "フォロー", followings_users_user_path(user_id: @user), data: { turbolinks: false }, class: "text-decoration-none text-dark" %>
