@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
 
-    <div class="col-md-3">
+    <div class="col-md-3 ml-5">
       <div class="user-image text-center">
         <% image = @user.profile.present? && @user.profile.image.present? ? @user.profile.image : "user_default.png" %>
         <%= image_tag image, class: "rounded-circle", size: "90x90" %>
@@ -11,12 +11,17 @@
           <%= @user.name %>
         </div>
       </div>
-      <div class="d-flex justify-content-md-center mt-5">
+      <div class="d-flex justify-content-md-center mt-5 ml-4">
         <div class="col col-md-auto text-center">
           記事投稿: <%= @user.articles.count %>
         </div>
         <div class="col col-md-auto text-center">
-          趣味:<%= @user.profile.present? ? @user.profile.hobby : "-" %>
+          <%= link_to "フォロー", followings_users_user_path(user_id: @user), data: { turbolinks: false }, class: "text-decoration-none text-dark" %>
+          : <%= @user.followings.count %>
+        </div>
+        <div class="col col-md-auto text-center">
+          <%= link_to "フォロワー", followers_users_user_path(user_id: @user), data: { turbolinks: false }, class: "text-decoration-none text-dark" %>
+          : <%= @user.followers.count %>
         </div>
       </div>
     </div><!-- ./ col-md-3 -->
@@ -50,7 +55,8 @@
         </div>
           
       <% else %>
-        <p>ユーザーがいません</p>
+        <h2 class="fs-5">フォローしているユーザー</h2>
+          <p class="text-secondary">ユーザーがいません</p>
       <% end %>
     </div><!-- ./ col-md-7 offset-1 -->
 
