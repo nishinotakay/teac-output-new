@@ -177,6 +177,16 @@
   width: 450px;
 }
 
+.user-follow-btn {
+  text-align: center;
+}
+
+.profile-follow-btn button {
+  min-width: 180px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
 .chat-room-button {
   padding: 6px 6px;
   background-color: #cad9ef;
