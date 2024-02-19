@@ -16,9 +16,15 @@
                     <% image = @profile.present? && @profile.image.present? ? @profile.image : "user_default.png" %>
                     <%= image_tag image , class: "rounded-circle", size: "120x120" %>
                   </div>
-                  <div class="profile-indent text-center">
+                  <div class="profile-indent text-center mt-3">
                     <i class="fas fa-user"></i>
                     <span><%= @profile.user.name %></span>
+                  </div>
+                    <%= render partial: 'users/users/follow_index', locals: { user: @user } %>
+                  <div class="user-follow-btn mt-3">
+                    <div id="user_follow_<%= @user.id %>" class="ml-1 mt-3 profile-follow-btn">
+                      <%= render partial: 'users/relationships/follow', locals: { user: @user } %>
+                    </div>
                   </div>
                     <hr>
                   <div class="profile-indent" style="padding-left:30px">
@@ -26,13 +32,6 @@
                     性別
                     <% gender = @profile.present? && @profile.gender_i18n.present? ? @profile.gender_i18n : "―" %>
                     <span class="profile-indent"><%= gender %></span>
-                  </div>
-                    <hr>
-                  <div class="profile-indent" style="padding-left:30px">
-                    <i class="fas fa-gift"></i>
-                    年齢
-                    <% age = @profile.present? && @age.present? ? @age : "―" %>
-                    <span class="profile-indent" style="padding-right:10px"><%= age %>歳</span>
                   </div>
                     <hr>
                   <div class="profile-indent" style="padding-left:30px">

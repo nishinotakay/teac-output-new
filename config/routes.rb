@@ -69,6 +69,8 @@ Rails.application.routes.draw do
       resource :posts, only: [] do
         get 'index_user', on: :member
       end
+      resource :relationships, only: [:index, :create, :destroy]
+        get :followings, :followers, on: :member
     end
     resources :users, only: [:show]
     resources :posts do
