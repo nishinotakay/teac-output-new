@@ -1,0 +1,1 @@
+$("#user_follow_<%= @user.id %>").html("<%= escape_javascript(render partial: 'users/relationships/follow', locals: { user: @user }) %>");

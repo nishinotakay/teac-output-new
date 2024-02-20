@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_01_11_042545) do
+ActiveRecord::Schema.define(version: 2024_02_14_022102) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -127,6 +127,14 @@ ActiveRecord::Schema.define(version: 2024_01_11_042545) do
     t.index ["user_id"], name: "index_inquiries_on_user_id"
   end
 
+  create_table "learnings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.boolean "completed", default: false
+    t.integer "learner_id", null: false
+    t.integer "learned_article_id", null: false
+  end
+
   create_table "likes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "article_id"
@@ -196,6 +204,16 @@ ActiveRecord::Schema.define(version: 2024_01_11_042545) do
     t.date "registration_date", null: false
     t.string "hobby", null: false
     t.index ["user_id"], name: "index_profiles_on_user_id"
+  end
+
+  create_table "stocks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "article_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["article_id"], name: "index_stocks_on_article_id"
+    t.index ["user_id", "article_id"], name: "index_stocks_on_user_id_and_article_id", unique: true
+    t.index ["user_id"], name: "index_stocks_on_user_id"
   end
 
   create_table "tenants", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -273,6 +291,8 @@ ActiveRecord::Schema.define(version: 2024_01_11_042545) do
   add_foreign_key "posts", "admins"
   add_foreign_key "posts", "users"
   add_foreign_key "profiles", "users"
+  add_foreign_key "stocks", "articles"
+  add_foreign_key "stocks", "users"
   add_foreign_key "tweet_comments", "tweets"
   add_foreign_key "tweet_comments", "users"
   add_foreign_key "tweets", "users"

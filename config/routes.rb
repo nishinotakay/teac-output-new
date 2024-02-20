@@ -51,23 +51,21 @@ Rails.application.routes.draw do
   namespace :users do
     resources :dash_boards, only: [:index]
     resources :chat_rooms, only: [:create, :show]
+    resources :stocks, only:[:create, :destroy, :index]
+    resources :learnings, only: [:index, :show, :create]
     resources :articles do
       resources :article_comments, only: %i[create destroy update] # 記事コメント機能
       resource :likes, only: [] do
         post 'article_create', on: :member
         delete 'article_destroy', on: :member
       end
-      collection do
-        get 'e_learning_index'
-      end
-      member do
-        get 'e_learning_show'
-      end
     end
     resources :users do
       resource :posts, only: [] do
         get 'index_user', on: :member
       end
+      resource :relationships, only: [:index, :create, :destroy]
+        get :followings, :followers, on: :member
     end
     resources :users, only: [:show]
     resources :posts do

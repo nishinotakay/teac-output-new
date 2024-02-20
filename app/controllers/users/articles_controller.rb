@@ -36,6 +36,9 @@ module Users
         format.html
         format.json { render json: @article }
       end
+
+      @stock = Stock.find_by(user_id: current_user.id, article_id: @article)
+      @user = @article.user
     end
 
     def new
@@ -106,17 +109,6 @@ module Users
         render json: { name: @article.image.identifier, url: @article.image.url }
       else
         render json: { error: '画像の挿入に失敗しました。' }, status: :unauthorized
-      end
-    end
-
-    def e_learning_index
-      @e_learning_articles = Article.where(article_type: 'e-learning').page(params[:page]).per(10)
-    end
-
-    def e_learning_show
-      @article = Article.find(params[:id])
-      if @article.admin_id.present?
-        render 'admins/articles/show', layout: 'users'
       end
     end
 
