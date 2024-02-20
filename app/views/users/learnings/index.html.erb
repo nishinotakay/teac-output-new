@@ -1,0 +1,39 @@
+<%= javascript_pack_tag "users/index_articles_and_dashboards" %>
+<%= stylesheet_pack_tag 'users/e_learning', media: 'all', 'data-turbolinks-track': 'reload' %>
+
+<% provide(:title,  "e-learning一覧") %>
+
+<div class="container">
+  <div class="row">
+    <% @e_learning_articles.each_with_index do |article, index| %>
+      <div class="col-sm-6 offset-sm-1">
+        <div class="card e-learning-index-item">
+          <h5 class="card-header">
+            <% if current_user.completed?(article) %>
+              <button type="button" class="btn btn-outline-secondary btn-xs learning-status-completed" disabled>完了</button>
+            <% else %>
+              <button type="button" class="btn btn-outline-secondary btn-xs learning-status-incomplete" disabled>未完了</button>
+            <% end %>
+            <%= article.title %>
+          </h5>
+          <div class="card-body">
+            <div class="card-text e-learning-index-item">
+              <%= article.sub_title %>
+            </div>
+            <div>
+              <% if index == 0 || current_user.completed?(@e_learning_articles[index - 1]) %>
+                <%= link_to "記事を読む", users_learning_path(id: article.id), class: "btn article-button" %>
+              <% else %>
+                <button type="button" class="btn article-button" disabled>記事を読む</button>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <div class="article-paginate">
+      <%= paginate @e_learning_articles, theme: 'bootstrap-5' %>
+    </div>
+  </div>
+</div>
+

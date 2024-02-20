@@ -112,17 +112,6 @@ module Users
       end
     end
 
-    def e_learning_index
-      @e_learning_articles = Article.where(article_type: 'e-learning').page(params[:page]).per(10)
-    end
-
-    def e_learning_show
-      @article = Article.find(params[:id])
-      if @article.admin_id.present?
-        render 'admins/articles/show', layout: 'users'
-      end
-    end
-
     private
 
       def article_params
