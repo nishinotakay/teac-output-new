@@ -22,6 +22,7 @@ $(function(){
     var content = article.data("article")
     if($.type(content) == "string"){
       content = mathtodollars(content);
+      content = marked(content);
       // 新しい仮想DOM要素を作成し、マークダウンをHTMLに変換する前のコンテンツを適用します。
       var virtualArticle = $("<div>");
       virtualArticle.html(content);
