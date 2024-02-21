@@ -106,4 +106,8 @@ class User < ApplicationRecord
   def following?(user)
     followings.include?(user)
   end
+
+  def completed?(article)
+    learning_status.exists?(learned_article_id: article.id, completed: true)
+  end 
 end

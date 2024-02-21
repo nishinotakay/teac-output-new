@@ -60,6 +60,6 @@ class Article < ApplicationRecord
   private
 
     def admin_updating_or_creating?
-      id.present? || admin_id.present?
+      admin_id.present?
     end
 end
