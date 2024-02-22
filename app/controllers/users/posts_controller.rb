@@ -6,7 +6,7 @@ module Users
     skip_before_action :authenticate_user!, only: %i[show], if: :admin_signed_in?
 
     def index
-      @posts = Post.filtered_and_ordered_posts(params, params[:page], 30)
+      @posts = Post.includes(:likes,:post_comments).filtered_and_ordered_posts(params, params[:page], 30)
 
       respond_to do |format|
         format.html
