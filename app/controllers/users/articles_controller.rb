@@ -19,7 +19,7 @@ module Users
         order:    params[:order] ||= 'DESC'
       }
   
-      @articles = Article.paginated_and_sort_filter(filter).includes(:likes).page(params[:page]).per(30)
+      @articles = Article.includes(:likes).paginated_and_sort_filter(filter).page(params[:page]).per(30)
 
       respond_to do |format|
         format.html
