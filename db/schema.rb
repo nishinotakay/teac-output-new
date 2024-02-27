@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_02_14_022102) do
+ActiveRecord::Schema.define(version: 2024_02_27_085926) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -90,6 +90,23 @@ ActiveRecord::Schema.define(version: 2024_02_14_022102) do
     t.string "article_type"
     t.index ["admin_id"], name: "index_articles_on_admin_id"
     t.index ["user_id"], name: "index_articles_on_user_id"
+  end
+
+  create_table "articles_categories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "article_id", null: false
+    t.bigint "category_id", null: false
+    t.integer "sort"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["article_id"], name: "index_articles_categories_on_article_id"
+    t.index ["category_id"], name: "index_articles_categories_on_category_id"
+  end
+
+  create_table "categories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "sort"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "chat_messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -206,6 +223,13 @@ ActiveRecord::Schema.define(version: 2024_02_14_022102) do
     t.index ["user_id"], name: "index_profiles_on_user_id"
   end
 
+  create_table "relationships", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "follower_id", null: false
+    t.integer "followed_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "stocks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "article_id", null: false
@@ -281,6 +305,8 @@ ActiveRecord::Schema.define(version: 2024_02_14_022102) do
   add_foreign_key "article_comments", "users"
   add_foreign_key "articles", "admins"
   add_foreign_key "articles", "users"
+  add_foreign_key "articles_categories", "articles"
+  add_foreign_key "articles_categories", "categories"
   add_foreign_key "chat_messages", "chat_rooms"
   add_foreign_key "chat_messages", "users"
   add_foreign_key "chat_room_users", "chat_rooms"
