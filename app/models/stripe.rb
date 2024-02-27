@@ -12,5 +12,4 @@ if Rails.env.production?
   }
 end
 
-#それぞれの環境に適したstripeAPIキーをセットしておく。
 Stripe.api_key = Rails.configuration.stripe[:secret_key]
