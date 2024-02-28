@@ -54,6 +54,7 @@ gem 'omniauth', '~> 2.0'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-facebook'
+gem 'stripe'
 
 group :development, :test do
   # ERD生成

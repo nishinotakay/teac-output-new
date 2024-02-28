@@ -53,6 +53,7 @@ Rails.application.routes.draw do
     resources :chat_rooms, only: [:create, :show]
     resources :stocks, only:[:create, :destroy, :index]
     resources :learnings, only: [:index, :show, :create]
+    resources :checkouts, only: [:new, :create]
     resources :articles do
       resources :article_comments, only: %i[create destroy update] # 記事コメント機能
       resource :likes, only: [] do
