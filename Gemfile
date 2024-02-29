@@ -42,7 +42,6 @@ gem 'rexml', '~> 3.2', '>= 3.2.4'
 gem 'bootsnap', '>= 1.9.3', require: false
 
 gem 'devise'
-gem 'devise_token_auth'
 gem 'devise-bootstrap-views', '~> 1.0'
 gem 'devise-i18n'
 gem 'rails-i18n', '~> 6.0'
