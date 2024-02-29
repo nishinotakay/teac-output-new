@@ -5,7 +5,7 @@ $(document).ready(function() {
 });
 
 function confirmedOrder(){
-  var confirmOrderUrl = '/users/checkouts'; // 
+  var confirmOrderUrl = '/users/checkouts';
   $.ajax({
     url: confirmOrderUrl,
     type: 'POST',
