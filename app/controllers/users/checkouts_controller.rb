@@ -21,8 +21,8 @@ class Users::CheckoutsController < Users::Base
         price_data: {
           currency: 'jpy',
           product_data: {
-            name: 'テスト商品',
-            description: '受講料',
+            name: '受講料',
+            description: 'テスト',
           },
           unit_amount: 1000,
         },
