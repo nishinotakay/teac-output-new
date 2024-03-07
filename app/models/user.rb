@@ -26,6 +26,9 @@ class User < ApplicationRecord
   has_many :followings, through: :active_relationships, source: :followed
   has_many :followers, through: :passive_relationships, source: :follower
   has_many :learning_status, class_name: "Learning", foreign_key: "learner_id", dependent: :destroy #学習している関連付け
+  has_many :user_categories
+  has_many :categories, through: :user_categories
+  
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }

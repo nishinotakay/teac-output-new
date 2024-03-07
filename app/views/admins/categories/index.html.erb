@@ -1,0 +1,64 @@
+<% provide(:title, "カテゴリー一覧") %>
+
+<div class="container">
+  <div class="row">
+    <% @categories.each_with_index do |category, index| %>
+      <div class="col-sm-8 offset-sm-1">
+        <div class="card category-index-item">
+          <h5 class="card-header d-flex align-items-center">
+            <%= category.name %>
+            <div>
+              <%= link_to edit_admins_category_path(category), class:"btn category-edit text-primary", data: { toggle: "modal", target: "#categoryEditModal", whatever: "@category", category_id: category.id } do %>
+                <i class="nav-icon fas fa-pencil-alt"></i> 
+                カテゴリー名編集
+              <% end %>
+            </div> 
+          </h5>
+          <div class="d-flex justify-content-center align-items-center">
+            <%= link_to "#", class:"btn category-show btn-outline-primary" do%>
+              <i class="nav-icon fas fa-plus"></i> 
+              記事の追加・編集
+            <% end %>
+          </div>         
+        </div>
+      </div>
+    <% end %>
+    <div class="col-sm-8 offset-sm-1 category-new-btn d-flex justify-content-center align-items-center">
+      <%= link_to new_admins_category_path, class: "btn category-new", data: { toggle: "modal", target: "#categoryNewModal", whatever: "@category" } do %>
+        カテゴリーの追加
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="categoryNewModal" tabindex="-1" aria-labelledby="categorNewModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="category-new-title">
+        <h2>カテゴリーの作成</h2>
+      </div>
+      <%= render "modal_category_form", category: @new_category %>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="categoryEditModal" tabindex="-1" aria-labelledby="categorEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="category-new-title">
+        <h2>カテゴリー編集</h2>
+      </div>
+      <%= render "modal_category_form", category: @category %>
+    </div>
+  </div>
+</div> 

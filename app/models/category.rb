@@ -1,4 +1,6 @@
 class Category < ApplicationRecord
   has_many :aritcles_categories
   has_many :articles, through: :aritcles_categories
+
+  validates :name, presence: true
 end

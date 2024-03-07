@@ -1,0 +1,19 @@
+<%= form_with(model: category, url: category.persisted? ? admins_category_path(category) : admins_categories_path, remote: true) do |form| %>
+
+  <div id="modal_category_messages-error">
+    <%= render 'layouts/error_messages', model: form.object %>
+  </div>
+
+  <div class="field">
+    <% if category.persisted? %>
+      <%= form.text_field :name, class: 'category-edit-text-field' %>
+    <% else %>
+      <%= form.text_field :name, placeholder: 'カテゴリー名を入力してください', value: category.name, class: 'category-new-text-field' %>
+    <% end %>
+  </div>
+
+  <div class="modal_submit">
+    <%= form.submit %>
+  </div>
+<% end %>
+
