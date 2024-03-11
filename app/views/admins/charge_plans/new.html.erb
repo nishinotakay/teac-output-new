@@ -1,19 +1,20 @@
 <%= javascript_pack_tag "admins/charge" %>
-<div class="text-center"><h2>受講料 設定</h2></div>
-  <div class="d-flex justify-content-center mt-5 text-center">
-    <div class="w-25 h-50 p-3 border bg-secondary">1.入力</div>
-    <div class="w-25 h-50 p-3 border">2.確認</div>
-    <div class="w-25 h-50 p-3 border">3.完了</div>
+<div class="text-center w-50 m-auto pb-3"><h2>受講料金 設定</h2></div>
+
+  <div class="d-flex justify-content-center mt-4 pb-5 text-center">
+    <div class="charge-guide current-guide">1.入力</div>
+    <div class="charge-guide">2.確認</div>
+    <div class="charge-guide">3.完了</div>
   </div>
 
 <%= form_with model: @charge_plan, url: confirm_admins_charge_plans_path, method: :get, local: true do |f| %>
   <div class="field mt-5">
     <%= f.label :price %>
-    <%= f.number_field :price, id: "price_field", step: "100", min: "0", class: 'text-center form-control-sm price' %>
+    <%= f.number_field :price, id: "price_field", step: "100", min: "0", data: { default: '0' }, class: 'text-center form-control-sm price' %>
   </div>
   <div class="field mt-3">
     <%= f.label :quantity %>
-    <%= f.number_field :quantity, id: "quantity_field", step: "10", min: "0", class: 'text-center form-control-sm' %>
+    <%= f.number_field :quantity, id: "quantity_field", step: "10", min: "0", data: { default: '0' }, class: 'text-center form-control-sm' %>
   </div>
   <div class="field mt-3">
     <%= f.label :charge_type %>
@@ -21,7 +22,7 @@
   </div>
   <div class="field mt-5">
     <p id="total_amount" class="fw-bold">合計金額</p>
-    <!-- <%= @charge_plan.amount %> -->
+      <%= f.hidden_field :amount, value: amount_calc(@charge_plan.price, @charge_plan.quantity) %>
   </div>
   <div class="text-center mt-3 mb-4">
     <%= f.submit "確認画面へ", class: 'btn btn-dark mt-3' %>
