@@ -12,4 +12,9 @@ module ApplicationHelper
     linked_str = Rinku.auto_link(sanitized_str, :all, 'target="_blank"')
     linked_str.html_safe
   end
+
+  def amount_calc(price, quantity)
+    @charge_plan.amount = (price * quantity)
+  end
+
 end
