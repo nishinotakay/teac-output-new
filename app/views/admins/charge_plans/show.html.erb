@@ -1,0 +1,22 @@
+<h2 class="text-center">料金設定</h2>
+
+<table class="table mt-5 text-center">
+  <thead>
+    <tr>
+      <td>受講料金</td>
+      <td>受講人数</td>
+      <td>合計金額</td>
+      <td>料金体系</td>
+      <td></td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><%= @charge_plan.price %></td>
+      <td><%= @charge_plan.quantity %></td>
+      <td></td>
+      <td><%= @charge_plan.charge_type %></td>
+      <td>編集</td>
+    </tr>
+  </tbody>
+</table>
