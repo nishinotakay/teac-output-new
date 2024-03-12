@@ -24,7 +24,6 @@
   </div>
   <div class="field mt-5">
     <p id="total_amount" class="fw-bold">合計金額</p>
-      <%= f.hidden_field :amount, value: amount_calc(@charge_plan.price, @charge_plan.quantity) %>
   </div>
   <div class="text-center mt-3 mb-4">
     <%= f.submit "確認画面へ", class: 'btn btn-dark mt-3' %>
