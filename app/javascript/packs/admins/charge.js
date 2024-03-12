@@ -14,13 +14,27 @@ $(document).on('turbolinks:load', function() {
 
   function handleChargeTypeChange() {
 
-    var isFree = $chargeTypeSelect.val() === '無料';
-    $priceField.val(isFree ? 0 : $priceField.data('default'));
-    $quantityField.val(isFree ? 0 : $quantityField.data('default'));
-    $priceField.prop('disabled', isFree);
-    $quantityField.prop('disabled', isFree);
-    $totalAmount.text("合計金額:" + (isFree ? "0" : total) + "円");
-  }
+    var chargeType = $chargeTypeSelect.val();
+    var isFree = chargeType === '無料';
+
+    if(!isFree && $priceField.data('user-input') !== undefined){
+      $priceField.val($priceField.data('user-input'));
+      $quantityField.val($quantityField.data('user-input'));
+    } else {
+      $priceField.val(isFree ? 0 : $priceField.val());
+      $quantityField.val(isFree ? 0: $quantityField.val());
+      $priceField.prop('disabled', isFree);
+      $quantityField.prop('disabled', isFree);
+    }
+    updateTotalAmount()
+  }  
+
+    $priceField.change(function(){
+      $priceField.data('user-input', $priceField.val());
+    });
+    $quantityField.change(function(){
+      $quantityField.data('user-input', $quantityField.val());
+    });
 
   $priceField.on("input", updateTotalAmount);
   $quantityField.on("input", updateTotalAmount);
