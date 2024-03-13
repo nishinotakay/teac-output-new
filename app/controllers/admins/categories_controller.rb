@@ -5,13 +5,10 @@ module Admins
 
     def index
       @categories = Category.all
-      @categories.each do |category|
-        @category = category
-      end
-      @new_category = Category.new
     end
 
     def new
+      @category = Category.new
     end
 
     def create
