@@ -1,0 +1,12 @@
+<div class="text-center"><h2>完了</h2></div>
+
+  <div class="d-flex justify-content-center mt-4 pb-5 text-center">
+    <div class="charge-guide">1.入力</div>
+    <div class="charge-guide">2.確認</div>
+    <div class="charge-guide current-guide">3.完了</div>
+  </div>
+
+  <div class="container text-center mb-5">
+    <p>料金設定が完了しました。</p>
+    <%= link_to "受講料 設定画面に戻る", admins_charge_plan_path(current_admin.id), class: 'btn btn-dark mt-5'%>
+  </div>

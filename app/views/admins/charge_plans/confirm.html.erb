@@ -26,7 +26,7 @@
   <%= f.hidden_field :price %>
   <%= f.hidden_field :quantity %>
   <%= f.hidden_field :charge_type %>
-  <%= f.hidden_field :amount, value: amount_calc(@charge_plan.price, @charge_plan.quantity) %>
+  <%= f.hidden_field :amount, id: "amount_field" %>
   <div class="confirm-btn text-center">
     <%= f.submit "料金設定を保存", class: 'mt-5 m-auto' %>
   </div>

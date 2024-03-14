@@ -7,4 +7,5 @@ ja:
       charge_plan:
         price: "受講生10人あたりの料金"
         quantity: "参加人数"
+        amount: "合計金額"
         charge_type: "料金体系"

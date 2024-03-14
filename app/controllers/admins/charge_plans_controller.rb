@@ -18,9 +18,13 @@ class Admins::ChargePlansController < Admins::Base
     @charge_plan = ChargePlan.new(charge_plan_params)
     @charge_plan.admin_id = current_admin.id
     @charge_plan.save
+    render :complete
   end
 
   def complete
+  end
+
+  def index
   end
 
   def show
@@ -28,9 +32,13 @@ class Admins::ChargePlansController < Admins::Base
   end
 
   def edit
+    @charge_plan = ChargePlan.find(params[:id])
   end
 
   def update
+    @charge_plan = ChargePlan.find(params[:id])
+    @charge_plan.update(charge_plan_params)
+    render action: :show
   end
 
   private

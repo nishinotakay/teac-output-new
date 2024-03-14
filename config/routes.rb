@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   namespace :admins do
     resources :posts
     resources :dash_boards, only: [:index]
-    resources :charge_plans, only: [:new, :create, :show, :update, :edit] do
+    resources :charge_plans, only: [:new, :create, :index, :show, :update, :edit] do
       collection do
         get 'confirm'
         post 'back'

@@ -1,7 +1,8 @@
-$(document).on('turbolinks:load', function() {
+$(document).ready(function() {
 
   var $priceField = $("#price_field");
   var $quantityField = $("#quantity_field");
+  var $amountField = $("#amount_field");
   var $chargeTypeSelect = $('#charge_plan_charge_type');
   var $totalAmount = $("#total_amount");
 
@@ -10,6 +11,7 @@ $(document).on('turbolinks:load', function() {
     var quantity = parseInt($quantityField.val()) || 0;
     var total = price * quantity;
     $totalAmount.text("合計金額: " + total + "円");
+    $amountField.val(total);
   }
 
   function handleChargeTypeChange() {
