@@ -24,9 +24,9 @@ $(document).ready(function() {
       $quantityField.val($quantityField.data('user-input'));
     } else {
       $priceField.val(isFree ? 0 : $priceField.val());
-      $quantityField.val(isFree ? 0: $quantityField.val());
-      $priceField.prop('disabled', isFree);
-      $quantityField.prop('disabled', isFree);
+      $quantityField.val(isFree ? 0 : $quantityField.val());
+      $priceField.prop('readonly', isFree);
+      $quantityField.prop('readonly', isFree);
     }
     updateTotalAmount()
   }  
