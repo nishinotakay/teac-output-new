@@ -6,11 +6,13 @@ class Admins::ChargePlansController < Admins::Base
 
   def confirm
     @charge_plan = ChargePlan.new(charge_plan_params)
+    @charge_plan.admin_id = current_admin.id
     render :new if @charge_plan.invalid?
   end
 
   def back
     @charge_plan = ChargePlan.new(charge_plan_params)
+    @charge_plan.admin_id = current_admin.id
     render :new
   end
 
@@ -22,9 +24,6 @@ class Admins::ChargePlansController < Admins::Base
   end
 
   def complete
-  end
-
-  def index
   end
 
   def show

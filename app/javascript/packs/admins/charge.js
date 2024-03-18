@@ -38,11 +38,11 @@ $(document).ready(function() {
       $quantityField.data('user-input', $quantityField.val());
     });
 
-  $priceField.on("input", updateTotalAmount);
-  $quantityField.on("input", updateTotalAmount);
-  $chargeTypeSelect.change(handleChargeTypeChange);
+    $priceField.on("input", updateTotalAmount);
+    $quantityField.on("input", updateTotalAmount);
+    $chargeTypeSelect.change(handleChargeTypeChange);
 
-  handleChargeTypeChange();
-  updateTotalAmount();
-
+    handleChargeTypeChange();
+    updateTotalAmount();
+    
 });

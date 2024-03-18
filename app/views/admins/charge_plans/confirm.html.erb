@@ -1,4 +1,4 @@
-<div class="text-center w-50 m-auto pb-1 border-bottom border-1 border-dark"><h2>確認画面</h2></div>
+<div class="text-center w-50 m-auto pb-2 border-bottom border-1 border-dark"><h2>確認画面</h2></div>
 
   <div class="d-flex justify-content-center mt-4 pb-5 text-center">
     <div class="charge-guide">1.入力</div>
@@ -10,7 +10,7 @@
     <p class="fs-5 fw-bold text-danger">ご入力内容をご確認ください。</p>
   </div>
   <div class="field mt-3">
-    <p class="fs-5">受講料: <%= @charge_plan.price %>円</p>
+    <p class="fs-5">受講料金: <%= @charge_plan.price %>円</p>
   </div>
   <div class="field mt-3">
     <p class="fs-5">参加人数: <%= @charge_plan.quantity %>人</p>
@@ -32,7 +32,7 @@
   </div>
 <% end %>
 
-<%= form_with model: @charge_plan, url: back_admins_charge_plans_path, method: :new, local: true do |f| %>
+<%= form_with model: @charge_plan, url: back_admins_charge_plans_path, method: :get, local: true do |f| %>
   <%= f.hidden_field :price %>
   <%= f.hidden_field :quantity %>
   <%= f.hidden_field :charge_type %>

@@ -17,8 +17,8 @@
     <%= f.select :charge_type, [["定額決済", "定額決済"], ["一括払い", "一括払い"], ["無料", "無料"]], { include_blank: "選択してください" }, { class: 'custom-select-field' } %>
   </div>
   <div class="field mt-5">
-      <p id="total_amount" class="fw-bold">合計金額</p>
-      <%= f.hidden_field :amount, id: "amount_field" %>
+    <p id="total_amount" class="fw-bold">合計金額</p>
+    <%= f.hidden_field :amount, id: "amount_field" %>
   </div>
   <div class="text-center mt-3 mb-4">
     <%= f.submit "更新", class: 'btn btn-dark mt-3' %>

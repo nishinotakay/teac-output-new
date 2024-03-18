@@ -13,8 +13,7 @@ class ChargePlan < ApplicationRecord
   private
 
     def not_free_plan
-      return true if charge_type == "定額決済" || charge_type === "一括決済"
-      false
+      charge_type == "定額決済" || charge_type === "一括決済"
     end
 
 end
