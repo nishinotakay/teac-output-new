@@ -1,4 +1,5 @@
 class Admins::ChargePlansController < Admins::Base
+  before_action :check_double_charge, only: %i[new]
 
   def new
     @charge_plan = ChargePlan.new
@@ -44,6 +45,11 @@ class Admins::ChargePlansController < Admins::Base
 
     def charge_plan_params
       params.require(:charge_plan).permit(:admin_id, :price, :quantity, :amount, :charge_type)
+    end
+
+    def check_double_charge
+      @charge_plan = ChargePlan.find_by(id: current_admin.charge_plan.id)
+      redirect_to admins_charge_plan_path(@charge_plan) if @charge_plan.present?
     end
 
 end
