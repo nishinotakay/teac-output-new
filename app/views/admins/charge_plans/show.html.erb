@@ -1,0 +1,25 @@
+<h2 class="text-center">決済設定</h2>
+
+  <table class="table table-bordered border-2 text-center mt-5 w-75 m-auto">
+    <thead>
+      <tr>
+        <td>受講料金</td>
+        <td>受講人数</td>
+        <td>合計金額</td>
+        <td>料金体系</td>
+        <td></td>
+      </tr>
+    </thead>
+  <tbody>
+    <tr>
+      <td class="align-middle"><%= @charge_plan.price %>円</td>
+      <td class="align-middle"><%= @charge_plan.quantity %>人</td>
+      <td class="align-middle"><%= @charge_plan.amount %>円</td>
+      <td class="align-middle"><%= @charge_plan.charge_type %></td>
+      <td><%= link_to "編集", edit_admins_charge_plan_path(@charge_plan), class: 'btn btn-secondary', data: {"turbolinks"=>false} %></td>
+    </tr>
+  </tbody>
+  </table>
+
+
+
