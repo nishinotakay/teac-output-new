@@ -3,7 +3,7 @@ class ChargePlan < ApplicationRecord
   validates :quantity, presence: true, numericality: { greater_than: 0,}, if: :not_free_plan
   validates :amount, presence: true
   validates :charge_type, presence: true
-  validate :check_double_charge
+  validate :check_double_charge, on: :create
 
   belongs_to :admin
 
@@ -18,7 +18,8 @@ class ChargePlan < ApplicationRecord
     end
 
     def check_double_charge 
-      if self.price.present? && self.quantity.present? && self.charge_type.present?
+      charge_plan = ChargePlan.find_by(admin_id: self.admin_id)
+      if charge_plan.present?
         errors.add(:deadline, "すでに受講料金が設定されています。")
       end
     end

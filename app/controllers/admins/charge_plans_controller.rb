@@ -60,18 +60,18 @@ class Admins::ChargePlansController < Admins::Base
 
     def check_double_charge   
       charge_plan = current_admin.charge_plan
-      if @charge_plan.present?
-        redirect_to admins_charge_plan_path(@charge_plan)
+      if charge_plan.present?
+        redirect_to admins_charge_plan_path(charge_plan)
       end
     end
 
     def check_charge_plan_owner
-        charge_plan = current_admin.charge_plan
-        if charge_plan.present?
-          @charge_plan = ChargePlan.find_by(id: current_admin.charge_plan.id)
+      charge_plan = current_admin.charge_plan
+      if charge_plan.present?
+        @charge_plan = ChargePlan.find_by(id: current_admin.charge_plan.id)
           if current_admin.id != @charge_plan.admin_id
             redirect_to admins_dash_boards_path
           end
-        end
+      end
     end
 end
