@@ -18,6 +18,9 @@ module Admins
         filter[:order] = params[:order]
         @articles = current_admin.articles.sort_filter(filter).page(params[:page]).per(30)
       end
+
+      @categories = Category.pluck(:name, :id)
+      @categories << ["一般記事", "normal"]
     end
   end
 end

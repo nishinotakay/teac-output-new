@@ -4,6 +4,7 @@ module Admins
     before_action :authenticate_admin!
     before_action :set_article, except: %i[index new create image]
     before_action :set_dashboard, only: %i[show new create edit update destroy]
+    before_action :set_categories, only: %i[new create edit update]
 
     def index
       params[:order] ||= 'DESC'
@@ -38,6 +39,7 @@ module Admins
 
     def new
       @article = current_admin.articles.new
+      @article.articles_categories.build 
     end
 
     def create
@@ -92,10 +94,8 @@ module Admins
     private
 
     def article_params
-      params.require(:article).permit(:title, :sub_title, :content, :article_type)
+      params.require(:article).permit(:title, :sub_title, :content, articles_categories_attributes: [:category_id])
     end
-
-    # before_action
 
     def set_article
       @article = Article.find(params[:id])
@@ -104,6 +104,11 @@ module Admins
     def set_dashboard
       params[:dashboard] ||= 'false'
       @dashboard = (params[:dashboard] != 'false')
+    end
+
+    def set_categories
+      @categories = Category.pluck(:name, :id)
+      @categories << ["一般記事", "normal"]
     end
   end
 end
