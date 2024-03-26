@@ -20,11 +20,14 @@ class Admins::ChargePlansController < Admins::Base
 
   def create
     @charge_plan.admin_id = current_admin.id
-      if @charge_plan.save
-        render :complete
-      else
-        render :confrim
+      if @charge_plan.charge_type == "定額決済"
+        create_stripe_plan
       end
+        if @charge_plan.save
+          render :complete
+        else
+          render :confrim
+        end
   end
 
   def complete
@@ -38,6 +41,9 @@ class Admins::ChargePlansController < Admins::Base
 
   def update
     if @charge_plan.update(charge_plan_params)
+      if @charge_plan.charge_type == "定額決済"
+        create_stripe_plan
+      end
       render action: :show
     else
       render :edit
@@ -74,4 +80,19 @@ class Admins::ChargePlansController < Admins::Base
           end
       end
     end
+
+    def create_stripe_plan
+      product = Stripe::Product.create(
+        name: '受講料',
+        type: 'service'
+      )
+
+      Stripe::Plan.create(
+        product: product.id,
+        interval: "month",
+        currency: "jpy",
+        amount: @charge_plan.amount,
+      )
+    end
+
 end

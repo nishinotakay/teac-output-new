@@ -2,9 +2,9 @@ $(document).ready(function() {
   $('#goToOrderPage').click(function(){
     confirmedOrder();
   });
-});
 
 function confirmedOrder(){
+  
   var confirmOrderUrl = '/users/checkouts';
   $.ajax({
     url: confirmOrderUrl,
@@ -20,3 +20,18 @@ function confirmedOrder(){
     }
   });
 }
+
+  var $privacyPolicy = $('#privacyPolicy');
+  var $agreeCheckbox = $('#agreeCheckbox');
+  var $goToOrderPage = $('#goToOrderPage');
+
+  $privacyPolicy.scroll(function(){
+    if ($privacyPolicy[0].scrollHeight - $privacyPolicy.scrollTop() <= $privacyPolicy.outerHeight()) {
+      $agreeCheckbox.prop('disabled', false);
+    }
+  });
+
+  $agreeCheckbox.change(function() {
+    $goToOrderPage.prop('disabled', !$agreeCheckbox.prop('checked'));
+  });
+});
