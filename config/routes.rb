@@ -60,7 +60,9 @@ Rails.application.routes.draw do
     resources :chat_rooms, only: [:create, :show]
     resources :stocks, only:[:create, :destroy, :index]
     resources :learnings, only: [:index, :show, :create]
-    resources :checkouts, only: [:new, :create]
+    resources :checkouts, only: [:new, :create] do
+      get 'complete', on: :collection
+    end
     resources :subscriptions, only: [:new, :create] do
       get 'complete', on: :collection
     end
