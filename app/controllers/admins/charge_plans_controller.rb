@@ -82,17 +82,23 @@ class Admins::ChargePlansController < Admins::Base
     end
 
     def create_stripe_plan
+      admin_id = current_admin.id
       product = Stripe::Product.create(
         name: '受講料',
-        type: 'service'
+        type: 'service',
+        metadata: {admin_id: admin_id}
       )
 
-      Stripe::Plan.create(
+      plan = Stripe::Plan.create(
         product: product.id,
         interval: "month",
         currency: "jpy",
         amount: @charge_plan.amount,
+        metadata: {admin_id: admin_id}
       )
+
+      @charge_plan.update(stripe_plan_id: plan.id)
+      # update用のprivateアクションを作成する必要がある
     end
 
 end
