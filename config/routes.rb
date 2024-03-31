@@ -61,6 +61,7 @@ Rails.application.routes.draw do
     resources :stocks, only:[:create, :destroy, :index]
     resources :learnings, only: [:index, :show, :create]
     resources :checkouts, only: [:new, :create]
+    resources :subscriptions, only: [:new, :create]
     resources :articles do
       resources :article_comments, only: %i[create destroy update] # 記事コメント機能
       resource :likes, only: [] do
