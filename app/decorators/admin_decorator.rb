@@ -6,7 +6,7 @@ class AdminDecorator < ApplicationDecorator
       if charge_plan_id
         "<li style=\"padding-left:3px\">#{h.link_to '料金設定', h.admins_charge_plan_path(charge_plan_id)}</li>".html_safe
       else
-        "li style=\"padding-left:3px\">#{h.link_to '料金設定の新規作成', h.new_admins_charge_plan_path }</li>".html_safe
+        "<li style=\"padding-left:3px\">#{h.link_to '料金設定の新規作成', h.new_admins_charge_plan_path }</li>".html_safe
       end
   end
 
