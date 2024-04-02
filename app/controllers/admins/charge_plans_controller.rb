@@ -1,7 +1,7 @@
 class Admins::ChargePlansController < Admins::Base
   before_action :check_double_charge, only: %i[new]
   before_action :set_charge_plan, only: %i[confirm back create]
-  before_action :find_charge_plan, only: %i[show edit update]
+  before_action :find_charge_plan, only: %i[show edit update destroy]
   before_action :check_charge_plan_owner, only: %i[show edit]
 
   def new
@@ -47,6 +47,14 @@ class Admins::ChargePlansController < Admins::Base
       render action: :show
     else
       render :edit
+    end
+  end
+
+  def destroy
+    if @charge_plan.destroy
+      redirect_to admins_dash_boards_path
+    else
+      redirect_to admins_charge_plan_path
     end
   end
 
@@ -98,7 +106,6 @@ class Admins::ChargePlansController < Admins::Base
       )
 
       @charge_plan.update(stripe_plan_id: plan.id)
-      # update用のprivateアクションを作成する必要がある
     end
 
 end

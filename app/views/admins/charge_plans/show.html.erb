@@ -8,6 +8,7 @@
         <td>合計金額</td>
         <td>料金体系</td>
         <td></td>
+        <td></td>
       </tr>
     </thead>
   <tbody>
@@ -17,6 +18,7 @@
       <td class="align-middle"><%= @charge_plan.amount %>円</td>
       <td class="align-middle"><%= @charge_plan.charge_type %></td>
       <td><%= link_to "編集", edit_admins_charge_plan_path(@charge_plan), class: 'btn btn-secondary', data: {"turbolinks"=>false} %></td>
+      <td><%= link_to "削除", admins_charge_plan_path(@charge_plan), class: 'btn btn-danger', method: :delete, data: {confirm: "本当に削除しますか?" }%></td>
     </tr>
   </tbody>
   </table>
