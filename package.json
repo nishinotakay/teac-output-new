@@ -25,7 +25,7 @@
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^4.11.1"
   },
-  "engines": {
-    "node": "16.x"
+  "scripts": {
+    "start": "NODE_OPTIONS='--openssl-legacy-provider' node app.js"
   }
 }
