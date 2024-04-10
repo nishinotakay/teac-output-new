@@ -1,0 +1,76 @@
+.category-index-item {
+  padding: 10px 10px 10px 10px;
+}
+
+// .learning-status-completed {
+//   padding: 0.25rem 0.5rem;
+//   font-size: 0.75rem;
+//   margin-right: 5px;
+// }
+
+// .learning-status-incomplete {
+//   padding: 0.25rem 0.5rem;
+//   font-size: 0.75rem;
+//   margin-right: 5px;
+//   color: #FFDEAD;
+//   background-color: #FFDEAD;
+// }
+
+// .article-button {
+//   padding: 0.2rem 0.5rem;
+//   margin-right: 5px;
+//   width: 100px;
+//   background-color: #3498db;
+//   color: #ffffff;
+//   font-size: 0.75rem;
+//   margin-left: 5px;
+// }
+
+.category-new {
+  background-color: #3498db;
+  color: #ffffff;
+}
+
+// モーダル
+.category-new-title {
+  text-align: center;
+}
+
+.modal-header {
+  text-align: center;
+  border-bottom: none;
+}
+
+.modal-dialog {
+  max-width: 1000px;
+}
+
+.modal_submit {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.category-new-text-field {
+  text-align: center;
+  height: 40px;
+  width: 600px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.category-edit-text-field {
+  text-align: center;
+  height: 40px;
+  width: 600px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.category-edit {
+  font-size: 0.75rem;
+}
+
+.category-show {
+  font-size: 0.75rem;
+  margin-top: 15px;
+}

@@ -10,14 +10,15 @@ class Article < ApplicationRecord
   has_many :article_comments, dependent: :destroy
   has_many :likes, dependent: :destroy
   has_many :stocks, dependent: :destroy
-
   has_many :learnings
   has_many :users, through: :learnings
+  has_many :articles_categories
+  has_many :categories, through: :articles_categories
+  accepts_nested_attributes_for :articles_categories
 
   validates :title, presence: true, length: { in: 1..40 }
   validates :sub_title, allow_nil: true, length: { maximum: 50 }
   validates :content, presence: true
-  validates :article_type, presence: true, if: :admin_updating_or_creating?
 
   def self.paginated_and_sort_filter(filter)
     
