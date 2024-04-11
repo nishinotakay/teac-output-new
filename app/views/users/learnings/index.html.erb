@@ -5,7 +5,8 @@
 
 <div class="container">
   <div class="row">
-    <% @e_learning_articles.each_with_index do |article, index| %>
+    <% if @e_learning_articles.present? %>
+      <% @e_learning_articles.each_with_index do |article, index| %>
       <div class="col-sm-6 offset-sm-1">
         <div class="card e-learning-index-item">
           <h5 class="card-header">
@@ -30,6 +31,7 @@
           </div>
         </div>
       </div>
+      <% end %>
     <% end %>
     <div class="article-paginate">
       <%= paginate @e_learning_articles, theme: 'bootstrap-5' %>
