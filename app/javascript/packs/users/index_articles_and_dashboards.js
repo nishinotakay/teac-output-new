@@ -1,4 +1,5 @@
 import '../../stylesheets/users/articles'
+import '../../stylesheets/users/e_learning'
 
 $(function(){
   var title = $('h1')
