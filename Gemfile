@@ -48,6 +48,12 @@ gem 'rails-i18n', '~> 6.0'
 
 gem 'dotenv-rails'
 gem 'rinku'
+gem 'draper'
+gem 'omniauth-line'
+gem 'omniauth', '~> 2.0'
+gem 'omniauth-google-oauth2'
+gem 'omniauth-rails_csrf_protection'
+gem 'omniauth-facebook'
 
 group :development, :test do
   # ERD生成

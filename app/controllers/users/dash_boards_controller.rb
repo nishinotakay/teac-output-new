@@ -1,22 +1,29 @@
 module Users
   class DashBoardsController < Users::Base
+    skip_before_action :authenticate_user!, only: %i[index], if: :admin_signed_in?
+    
     def index
-      params[:order] ||= 'DESC'
       filter = {
         author:   params[:author],
         title:    params[:title],
         subtitle: params[:subtitle],
         content:  params[:content],
         start:    params[:start],
-        finish:   params[:finish]
+        finish:   params[:finish],
+        order:    params[:order] ||= 'DESC'
       }
-
-      if (@paginate = filter.compact.blank?)
-        @articles = current_user.articles.order(created_at: params[:order]).page(params[:page]).per(30)
+      
+      if current_admin.present? && current_user.nil?
+        user = User.find(params[:user_id])
+        @articles = user.articles.paginated_and_sort_filter(filter).page(params[:page]).per(30)
       else
-        (@paginate = filter.compact.present?)
-        filter[:order] = params[:order]
-        @articles = current_user.articles.sort_filter(filter).page(params[:page]).per(30)
+        @articles = current_user.articles.paginated_and_sort_filter(filter).page(params[:page]).per(30)
+
+      respond_to do |format|
+        format.any
+        format.html
+        format.json { render json: @articles }
+      end
       end
     end
   end

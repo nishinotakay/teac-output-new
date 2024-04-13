@@ -37,43 +37,30 @@
                   </div>
                     <hr style="height:0.1px">
                   <div class="profile-indent" style="padding-left:30px">
-                    <i class="fas fa-gift"></i>
-                    誕生日
-                    <span class="profile-indent" style="padding-right:10px">
-                    <% birthday = @profile.present? && @profile.birthday.present? ? @profile.birthday : "―" %>
-                    <%= birthday %></span>
-                    年齢
-                    <span class="profile-indent" style="padding-right:10px">
-                    <%= @age %>歳</span>
-                  </div>
-                    <hr style="height:0.1px">
-                  <div class="profile-indent" style="padding-left:30px">
                     <i class="fas fa-book-open"></i>
-                    プログラミング学習
-                    <td>
-                    <% learning_start = @profile.present? && @profile.learning_start.present? ? @profile.learning_start : "―" %>
-                    <%= learning_start %>開始
-                    <%= @study_period %>ヶ月</td>
+                    登録日
+                    <span class="profile-indent">
+                    <% registration_date = @profile.present? && @profile.registration_date.present? ? @profile.registration_date : "―" %>
+                    <%= registration_date %></span>
                   </div>
                     <hr style="height:0.1px">
                   <div class="profile-indent" style="padding-left:30px">
                     <i class="fas fa-flag"></i>
-                    プログラミング学習の目的
-                    <td class="text-muted">
-                    <% purpose = @profile.present? && @profile.purpose.present? ? @profile.purpose : "―" %>
-                    <%= purpose %></td>
+                    趣味
+                    <span class="profile-indent">
+                    <% hobby = @profile.present? && @profile.hobby.present? ? @profile.hobby : "―" %>
+                    <%= hobby %></span>
                   </div>
-                    <hr style="height:0.1px">
-                  <div class="content">
+                  <div class="content mt-4 mb-3">
                     <div class="text-center">
                       <button type="button" class="btn btn-success" style="width:100px">
-                       <%= link_to "投稿記事",users_articles_path,class: "Editlink" %>
+                       <%= link_to "投稿記事",users_dash_boards_path(user_id: @user),class: "Editlink" %>
                       </button>
                       <button type="button" class="btn btn-danger" style="width:100px">
-                       <%= link_to "投稿動画",users_posts_path,class: "Editlink" %>
+                       <%= link_to "投稿動画",index_user_users_user_posts_path(user_id: @user),class: "Editlink" %>
                       </button>
                       <button type="button" class="btn btn-info" style="width:100px font-size:10px">
-                       <%= link_to "投稿つぶやき",users_tweets_path,class: "Editlink" %>
+                       <%= link_to "投稿つぶやき",index_user_users_tweet_path(user_id: @user),class: "Editlink" %>
                       </button>
                     </div>
                   </div>

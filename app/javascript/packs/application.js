@@ -7,3 +7,5 @@
 import './count';
 import './count_t';
 import '../stylesheets/users/inquiries.scss';
+import '../stylesheets/users/posts.scss';
+import 'stylesheets/users/e_learning';

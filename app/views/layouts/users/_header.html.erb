@@ -10,9 +10,11 @@
     <li class="nav-item">
       <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
     </li>
-    <li class="nav-item d-none d-sm-inline-block">
-      <%= link_to "投稿した記事一覧", users_dash_boards_path, class:"nav-link", method: :get %>
-    </li>
+    <% unless current_admin.present? %>
+      <li class="nav-item d-none d-sm-inline-block">
+        <%= link_to "投稿した記事一覧", users_dash_boards_path, class:"nav-link", method: :get %>
+      </li>
+    <% end %>
   </ul>
   <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
@@ -37,13 +39,13 @@
               <% end %>
             </li>
           <% end %>
-        <% elsif request.fullpath == "/users/posts" %>
+        <% elsif request.fullpath == "/users/posts" && current_admin.nil? %>
           <li class="nav-item">
             <%= link_to new_users_post_path, class: "nav-link", method: :get do %>
               <p>動画投稿</p>
             <% end %>
           </li>
-        <% elsif request.fullpath == "/users/tweets" %>
+        <% elsif request.fullpath == "/users/tweets" && current_admin.nil? %>
           <li class="nav-item">
             <%= link_to new_users_tweet_path, class: "nav-link", remote: true, method: :get do %>
               <p>つぶやき投稿</p>
@@ -54,14 +56,19 @@
     </ul>
   <div class="dropdown navbar-nav" style="padding-bottom:6px">
       <div class="nav-link" id="dropdownMenuButton button_group" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
-        <%= image_tag image , class: "rounded-circle", size: "30x30" %><b class="caret"></b> 
+        <b class="caret"></b> 
+        <% if current_user.present? %>
+          <%= image_tag(@user_profile_image.presence || 'default_profile_image.png', class: "rounded-circle", size: "30x30") %>
+        <% end %>
       </div>
-    <ul class="dropdown-menu dropdown-menu-right dropdown-menu-header">
-        <li style="padding-left:3px"><%= current_user.name %></li>
-        <hr style="height:0.5px">
-        <li style="padding-left:3px"><%= link_to "詳細画面", users_user_path(current_user), method: :get, class: "d-block" %></li>
-        <li style="padding-left:3px"><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
-    </ul>
+      <ul class="dropdown-menu dropdown-menu-right dropdown-menu-header">
+        <% if current_user.present? %>
+          <li style="padding-left:3px"><%= current_user.name %></li>
+          <hr style="height:0.5px">
+          <li style="padding-left:3px"><%= link_to "詳細画面", users_user_path(current_user), method: :get, class: "d-block" %></li>
+          <li style="padding-left:3px"><%= link_to "ストック一覧", users_stocks_path, method: :get %></li>
+          <li style="padding-left:3px"><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
+        <% end %>
+      </ul>
   </div>
 </nav>

@@ -50,8 +50,12 @@
     <ul class="dropdown-menu dropdown-menu-right dropdown-menu-header">
       <li style="padding-left:3px"><%= current_admin.name %></li>
       <hr style="height:0.5px">
-      <li style="padding-left:3px"><%= link_to "詳細画面", admins_show_admins_profiles_path, method: :get %></li>
-      <li style="padding-left:3px"><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
+      <li style="padding-left:3px"><%= link_to "詳細画面", admins_show_admins_users_path, method: :get %></li>
+      <% if current_user.present? %>
+        <li style="padding-left:3px"><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
+      <% elsif current_admin.present? %>
+        <li style="padding-left:3px"><%= link_to "ログアウト", destroy_admin_session_path, method: :delete %></li>
+      <% end %>
     </ul>
   </div>
 </nav>

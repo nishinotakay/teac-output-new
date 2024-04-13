@@ -3,7 +3,7 @@
 <div class="container">
   <div class="row">
     <div class="offset-1 col-10">
-      <div class="article-show">
+      <div class="article-show pt-1 pb-1">
         <div class="col-12">
           <div class="mx-0 mt-4 mb-3">
             <h1><%= @article.title %></h1>
@@ -19,14 +19,35 @@
                   <%= link_to "削除", users_article_path(@article, dashboard: @dashboard, page: params[:page]), method: :delete, data: {confirm: "表示中の記事を削除します。"}, class: "btn btn-danger ml-1" %>
                 </div>
               <% else %>
-                <%= Article.human_attribute_name(:user) %>：<%= @article.user.name %>
+                <% if @article.admin.present? %>
+                  <%= Article.human_attribute_name(:user) %>：<%= @article.admin.name %>
+                <% else %>
+                  <%= Article.human_attribute_name(:user) %>：<%= @article.user.name %>
+                <% end %>
               <% end %>
             </div>
           </div>
         </div>
         <hr>
         <div class="m-4 article-content" data-article="<%= @article.sanitized_content %>"></div>
-      </div>
+        <!-- いいね機能のボタン-->
+          <div id="article_<%= @article.id %>" class="d-inline">
+            <%= render 'users/likes/article_likes', locals: { article: @article } %>
+          </div>
+        <!-- ストック機能のボタン -->
+          <div id="article_stock_<%= @article.id %>" class="d-inline ml-3">
+            <%= render 'users/stocks/stock', locals: { article: @article, stock: @stock } %>
+          </div>
+        <!-- フォロー機能のボタン -->
+        <div class="user-follow mt-2 ml-4 d-inline">
+          <% if current_user != @user%>
+            <%= @user.profile.present? ? link_to(@user.name, users_profile_path(id: @user.profile), data: { turbolinks: false }, class: "text-decoration-none") : @user.name %>
+          <% end %>
+          <div id="user_follow_<%= @user.id %>" class="ml-1 d-inline">
+            <%= render partial: 'users/relationships/follow', locals: { user: @user } %>
+          </div>
+        </div>
+      </div>  
       <div class="article-comments-card mt-2">
         <div class="article-comments-list">
           <% if @article_comments.present? %>

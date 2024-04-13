@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   }
 
   namespace :admins do
-    resources :posts, only: [:destroy]
+    resources :posts
     resources :dash_boards, only: [:index]
     resources :articles do
       member do
@@ -22,21 +22,12 @@ Rails.application.routes.draw do
         delete 'users_destroy'
       end
     end
-    resources :posts do
-      member do # id付与
-        get 'show'
-        delete 'show'
-      end
-    end
     namespace :articles do
       post 'image'
     end
-    resources :profiles do
+    resources :users do
       collection do
         get 'admins_show'
-        get 'users_show'
-        get 'users_edit'
-        delete 'user_destroy'
       end
     end
     resources :inquiries
@@ -53,16 +44,37 @@ Rails.application.routes.draw do
     sessions:      'users/sessions',
     passwords:     'users/passwords',
     confirmations: 'users/confirmations',
-    registrations: 'users/registrations'
+    registrations: 'users/registrations',
+    omniauth_callbacks: 'users/omniauth_callbacks'
   }
 
   namespace :users do
     resources :dash_boards, only: [:index]
+    resources :chat_rooms, only: [:create, :show]
+    resources :stocks, only:[:create, :destroy, :index]
+    resources :learnings, only: [:index, :show, :create]
     resources :articles do
       resources :article_comments, only: %i[create destroy update] # 記事コメント機能
+      resource :likes, only: [] do
+        post 'article_create', on: :member
+        delete 'article_destroy', on: :member
+      end
+    end
+    resources :users do
+      resource :posts, only: [] do
+        get 'index_user', on: :member
+      end
+      resource :relationships, only: [:index, :create, :destroy]
+        get :followings, :followers, on: :member
     end
     resources :users, only: [:show]
-    resources :posts
+    resources :posts do
+      resources :post_comments, only: %i[create destroy update]
+      resource :likes, only: [] do
+        post 'post_create', on: :member
+        delete 'post_destroy', on: :member
+      end
+    end
     resources :articles
     namespace :articles do
       post 'image'
@@ -100,7 +112,7 @@ Rails.application.routes.draw do
         get 'managers_show'
       end
     end
-  end    
+  end
   # =================================================================
 
   # 共通==============================================================

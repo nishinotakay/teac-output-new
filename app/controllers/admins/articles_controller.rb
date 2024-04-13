@@ -1,6 +1,7 @@
 module Admins
   class ArticlesController < Admins::Base
     protect_from_forgery
+    before_action :authenticate_admin!
     before_action :set_article, except: %i[index new create image]
     before_action :set_dashboard, only: %i[show new create edit update destroy]
 
@@ -12,15 +13,11 @@ module Admins
         subtitle: params[:subtitle],
         content:  params[:content],
         start:    params[:start],
-        finish:   params[:finish]
+        finish:   params[:finish],
+        order:    params[:order]
       }
-      if (@paginate = filter.compact.blank?)
-        @articles = Article.order(created_at: params[:order]).page(params[:page]).per(30)
-      else
-        (@paginate = filter.compact.present?)
-        filter[:order] = params[:order]
-        @articles = Article.sort_filter(filter).page(params[:page]).per(30)
-      end
+  
+      @articles = Article.paginated_and_sort_filter(filter).page(params[:page])
     end
 
     def show; end
@@ -95,7 +92,7 @@ module Admins
     private
 
     def article_params
-      params.require(:article).permit(:title, :sub_title, :content)
+      params.require(:article).permit(:title, :sub_title, :content, :article_type)
     end
 
     # before_action

@@ -7,28 +7,15 @@ module Users
     before_action :set_tweet, only: %i[show edit update destroy]
     # 投稿をしたユーザーでないと編集・削除できない
     before_action :correct_tweet_user, only: %i[edit update destroy]
+    skip_before_action :authenticate_user!, only: %i[show], if: :admin_signed_in?
 
     def index
-      params[:order] ||= 'DESC'
-      filter = {
-        author: params[:author],
-        post: params[:post],
-        start: params[:start],
-        finish: params[:finish]
-      }
-
-      if filter.compact.blank?
-        @tweets = Tweet.order(created_at: params[:order]).page(params[:page]).per(30)
-      else
-        filter[:order] = params[:order]
-        @tweets = Tweet.sort_filter(filter).page(params[:page]).per(30)
-      end
+      fetch_tweets_and_images
     end
 
     def show
-      @tweet = Tweet.find(params[:id])
-      @tweet_comments = @tweet.tweet_comments.all.order(created_at: :desc)
-      @tweet_comment = current_user.tweet_comments.new
+      @tweet_comments = @tweet.tweet_comments.order(created_at: :desc)
+      @tweet_comment = current_user.tweet_comments.new unless current_admin.present?
     end
 
     def new
@@ -40,7 +27,7 @@ module Users
       if @tweet.save
         flash[:success] = 'つぶやきを作成しました。'
       else
-        flash[:danger] = @tweet.errors.full_messages.join
+        flash[:danger] = @tweet.errors.full_messages.join('・')
       end
       redirect_back(fallback_location: root_path)
     end
@@ -53,7 +40,6 @@ module Users
 
     def update
       if @tweet.update(tweet_params)
-        @tweet.save
         flash[:success] = '編集成功しました。'
         redirect_to users_tweets_url
       else
@@ -69,8 +55,8 @@ module Users
     end
 
     def index_user
-      @tweets = Tweet.where(user_id: params[:id]).page(params[:page]).per(30)
       @user = User.find(params[:id])
+      fetch_tweets_and_images(@user.id)
     end
 
     private
@@ -79,20 +65,22 @@ module Users
       params.require(:tweet).permit(:post, images: [])
     end
 
+    def fetch_tweets_and_images(user_id = nil)
+      filter = Tweet.build_filter(params)
+      @tweets = Tweet.apply_and_sort_query(filter, user_id, params[:page])
+      @tweets_with_images = Tweet.tweet_and_image(@tweets)
+    end
+
+
     # beforeフィルター
     def set_tweet
       @tweet = Tweet.find(params[:id])
     end
 
     def correct_tweet_user
-      @tweet = Tweet.find(params[:id])
       if @tweet.user != current_user
-        if authenticate_user!
-          flash[:alart] = 'アクセスできません'
-          redirect_to users_dash_boards_path
-        else
-          redirect_to root_path
-        end
+        flash[:alert] = 'アクセスできません'
+        redirect_to users_dash_boards_path
       end
     end
   end

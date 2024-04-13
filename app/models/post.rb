@@ -1,29 +1,44 @@
 class Post < ApplicationRecord
+  belongs_to :admin, optional: true
+  belongs_to :user, optional: true
+  has_many :likes
+  has_many :post_comments, dependent: :destroy
 
   validates :user_id, presence: true, if: -> { admin_id.blank? }
   validates :admin_id, presence: true, if: -> { user_id.blank? }
-
-  belongs_to :admin, optional: true
-  belongs_to :user, optional: true
-
   validates :title, presence: true, length: { maximum: 30 }
   validates :body, presence: true, length: { maximum: 240 }
   validates :youtube_url, presence: true
-  def self.search(search) # self.はcurrent_user.posts.を意味する
-    if search
-      where(['body LIKE ? OR title LIKE ?', "%#{search}%", "%#{search}%"]) # 検索とtitleとbodyの部分一致を表示。
-    else
-      all # 全て表示させる
+
+  def self.filtered_and_ordered_posts(params, page, per_page)
+    params[:order] ||= 'DESC'
+    filter = {
+      author: params[:author],
+      body:   params[:body],
+      title:  params[:title],
+      start:  params[:start],
+      finish: params[:finish],
+      order:  params[:order]
+    }
+    posts = self.includes(:user, :admin)
+
+    if params.present?
+      posts = posts.apply_filters(params)
     end
+
+    posts.order(created_at: 'DESC').page(page).per(per_page)
   end
 
-  # 絞り込み検索(モーダル)
-  def self.sort_filter(filter)
-    result = all
-    result = result.joins(:user).where('name LIKE ?', "%#{filter[:author]}%") if filter[:author].present?
-    result = result.where('title LIKE ?', "%#{filter[:title]}%") if filter[:title].present?
-    result = result.where('body LIKE ?', "%#{filter[:body]}%") if filter[:body].present?
-    result = result.where(created_at: filter[:start]..filter[:finish]) if filter[:start].present? && filter[:finish].present?
-    result.order(created_at: filter[:order])
-  end
+  def self.apply_filters(filter)
+    start = Time.zone.parse(filter[:start].to_s.presence || '2022-01-01').beginning_of_day
+    finish = Time.zone.parse(filter[:finish].to_s.presence || Date.current.to_s).end_of_day
+
+    left_joins(:user, :admin)
+      .where(['title LIKE ? AND body LIKE ?',
+              "%#{filter[:title]}%", "%#{filter[:body]}%"])
+      .where('posts.created_at BETWEEN ? AND ?', start, finish)
+      .where('users.name LIKE :author OR admins.name LIKE :author', author: "%#{filter[:author]}%")
+      .order("posts.created_at #{filter[:order]}")
+      .presence || Post.none
+  end 
 end

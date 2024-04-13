@@ -27,6 +27,9 @@
             <th>
               <i class="fas fa-flag"></i>
                 趣味</th>
+            <th>
+              <i class="fas fa-comments"></i>
+                チャット</th>
             <th><!--三点リーダーテーブル--></th>
           </tr>
         </thead>
@@ -46,6 +49,11 @@
                 </td>
                 <td>
                   <%= profile.hobby %>
+                </td>
+                <td>
+                  <% if profile.user != current_user %>
+                    <%= link_to 'open chat', users_chat_rooms_path(params: { user_id: profile.user.id }), method: :post, class: "chat-room-button" %>
+                  <% end %>
                 </td>
                 <td>
                   <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
@@ -80,11 +88,11 @@
           <div class="form-group row my-5">
             <label for="sort-select" class="col-sm-3 col-form-label"><%= Profile.human_attribute_name(:registration_date) %></label>
             <div class="col-md-9">
-              <% order = {'DESC': '新しい順', 'ASC': '古い順'} %>
-              <% params[:order] ||= 'DESC' %>
+              <% ord_select = {'DESC': '新しい順', 'ASC': '古い順'} %>
+              <% params[:ord_select] ||= 'DESC' %>
               <select id="sort-select" class="form-select" aria-label="Default select desc">
-                <option value="<%= params[:order] %>" selected><%= order.delete(:"#{params[:order]}") %></option>
-                <option value="<%= order.keys[0] %>"><%= order[order.keys[0]] %></option>
+                <option value="<%= params[:ord_select] %>" selected><%= ord_select.delete(:"#{params[:ord_select]}") %></option>
+                <option value="<%= ord_select.keys[0] %>"><%= ord_select[ord_select.keys[0]] %></option>
               </select>
             </div>
           </div>

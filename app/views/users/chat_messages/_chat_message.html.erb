@@ -1,0 +1,14 @@
+<div class="chat-messages-container">
+  <% if chat_message.user.id != current_user.id %>
+    <div class="chat-message-partner">
+      <%= image_tag @user_profile_image, class: "chat-room-partner-img" %>
+      <div class="chat-message-content"><%= chat_message.content %></div>
+      <div class="chat-message-post-date-time"><%= l(chat_message.created_at, format: :short) %></div>
+    </div>
+  <% else %>
+    <div class="chat-message-current-user" data-date="<%= chat_message.created_at.to_i %>">
+      <div class="chat-message-post-date-time"><%= l(chat_message.created_at, format: :short) %></div>
+      <div class="chat-message-content main-color-bg"><%= chat_message.content %></div>
+    </div>
+  <% end %>
+</div>
