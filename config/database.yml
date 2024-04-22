@@ -1,4 +1,3 @@
-
 default: &default
   adapter: mysql2
   encoding: utf8mb4
@@ -17,4 +16,4 @@ test:
 
 production:
   <<: *default
-  url: <%= ENV['DATABASE_URL'] %>
+  url: <%= ENV['JAWSDB_URL'] %>
