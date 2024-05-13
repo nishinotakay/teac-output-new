@@ -4,6 +4,7 @@ import { marked } from 'marked'
 import '../../stylesheets/users/articles'
 
 marked.setOptions({
+  breaks: true,
   highlight: function (code, lang) {
     if(lang && lang.indexOf(":") >= 0){
       lang = lang.split(":")[0]
