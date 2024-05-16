@@ -1,6 +1,6 @@
 window.hljs = require('highlight.js');
 import { marked } from 'marked'
-import '../../stylesheets/users/articles'
+import '../../stylesheets/admins/articles'
 
 marked.setOptions({
   breaks: true,
