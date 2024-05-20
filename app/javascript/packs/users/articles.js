@@ -5,6 +5,7 @@ import '../../stylesheets/users/articles'
 
 marked.setOptions({
   breaks: true,
+  //sanitize: false,
   highlight: function (code, lang) {
     if(lang && lang.indexOf(":") >= 0){
       lang = lang.split(":")[0]
@@ -18,6 +19,17 @@ marked.setOptions({
     }
   }
 });
+
+const renderer = {
+  heading(text, level) {
+    return `
+      <h${level} class="marked-heading">
+        ${text}
+      </h${level}>`;
+  }
+};
+
+marked.use({ renderer });
 
 window.makecodeblock = function(pre){
   pre.wrap('<div class="code-frame"></div>')
