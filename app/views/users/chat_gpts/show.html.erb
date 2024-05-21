@@ -1,0 +1,52 @@
+<!-- app/views/users/chatgpts/show.html.erb -->
+
+<% if user_signed_in? %>
+  <div class="show-page-container">
+    <div class="main-content">
+      <h3 class="show-page-title">質問詳細ページ</h3>
+      <p>作成日：<%= @chatgpt.created_at.strftime("%Y/%m/%d %H:%M") %></p>
+      <p><strong>タイトル：</strong> <%= @title %></p>
+      <div class="show-page-card">
+        <div class="show-page-card-body">
+          <% if @content.present? %>
+            <% questions_and_answers = split_questions_and_answers(@content) %>
+            <% questions_and_answers.each_with_index do |(question, answer), index| %>
+              <div class="qa-block">
+                <p><strong>質問No. <%= index + 1 %>:</strong>
+                作成日：<%= @chatgpt.created_at.strftime("%Y/%m/%d %H:%M") %></p>
+                <p><strong>質問：</strong> <%= question.strip if question.present? %></p>
+                <p><strong>回答<%= index + 1 %>：</strong></p>
+                <% title_match = answer.match(/タイトル:\s*(.*)/) %>
+                <% if title_match %>
+                  <p><strong>タイトル：</strong> <%= title_match[1].strip %></p>
+                  <p><strong>回答：</strong> <%= answer.sub(title_match[0], '').strip.html_safe if answer.present? %></p>
+                <% else %>
+                  <p><strong>回答：</strong> <%= answer.strip.html_safe if answer.present? %></p>
+                <% end %>
+              </div>
+              <hr>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+      <div class="form-group mt-3">
+        <%= form_with url: continue_question_users_chat_gpt_path(@chatgpt), method: :post, local: true do %>
+          <label for="new_prompt">続けて質問する</label>
+          <textarea id="new_prompt" name="new_prompt" class="form-control" rows="6" style="height: 200px;" data-previous-response="<%= @chatgpt.content %>"></textarea>
+          <%= hidden_field_tag :previous_response, @chatgpt.content %>
+          <%= submit_tag '質問を続ける', class: 'btn btn-primary mt-2', id: 'continue_question_button' %>
+        <% end %>
+      </div>
+      <div id="loading-spinner" style="display: none;">処理中...</div>
+      <div class="show-page-return-button mt-3 text-center">
+        <%= link_to '戻る', users_chat_gpts_path, class: "btn btn-secondary mx-2" %>
+        <% if @chatgpt.persisted? %>
+          <%= link_to '削除', users_chat_gpt_path(@chatgpt), method: :delete, data: { confirm: "この質問を本当に削除してよろしいですか？" }, class: "btn btn-danger mx-2" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <p class="show-page-login-alert">ログインしてください。</p>
+  <%= link_to "ログイン", new_user_session_path, class: "btn btn-primary" %>
+<% end %>

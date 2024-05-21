@@ -26,6 +26,7 @@ class User < ApplicationRecord
   has_many :followings, through: :active_relationships, source: :followed
   has_many :followers, through: :passive_relationships, source: :follower
   has_many :learning_status, class_name: "Learning", foreign_key: "learner_id", dependent: :destroy #学習している関連付け
+  has_many :chat_gpts, dependent: :destroy
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
@@ -109,5 +110,5 @@ class User < ApplicationRecord
 
   def completed?(article)
     learning_status.exists?(learned_article_id: article.id, completed: true)
-  end 
+  end
 end

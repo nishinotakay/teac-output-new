@@ -23,6 +23,8 @@ services:
       - webpacker
     environment:
       WEBPACKER_DEV_SERVER_HOST: webpacker
+    env_file:
+      - .env
     # (stdin_open,tty) = コンテナ内でデバックできるようにする
     stdin_open: true
     tty: true

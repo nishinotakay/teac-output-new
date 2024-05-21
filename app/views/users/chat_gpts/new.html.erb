@@ -1,0 +1,6 @@
+<% provide(:title, "AIに質問する") %>
+<div class="content">
+  <div class="container-fluid">
+    <%= render "users/chat_gpts/shared/chat_gpt_form", btn_name: "質問する", url: users_chat_gpts_path(dashboard: @dashboard, page: params[:page]), method: :post %>
+  </div>
+</div>

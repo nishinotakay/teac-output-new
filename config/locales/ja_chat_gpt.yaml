@@ -1,0 +1,12 @@
+ja:
+  activerecord:
+    models:
+      chat_gpt: '質問タイトル'
+    attributes:
+      chat_gpt:
+        title: 'タイトル'
+        prompt: '質問内容'
+        content: '回答'
+        created_at: '投稿日時'
+        updated_at: '編集日時'
+        user: '投稿者'
