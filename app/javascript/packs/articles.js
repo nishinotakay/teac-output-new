@@ -1,6 +1,6 @@
 window.hljs = require('highlight.js');
 import { marked } from 'marked'
-import '../../stylesheets/users/articles'
+import '../stylesheets/users/articles'
 import 'highlight.js/styles/github-dark.css';
 
 marked.setOptions({
