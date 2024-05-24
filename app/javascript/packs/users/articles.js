@@ -1,7 +1,7 @@
 window.hljs = require('highlight.js');
-import "highlight.js/scss/github-dark.scss";
 import { marked } from 'marked'
 import '../../stylesheets/users/articles'
+import 'highlight.js/styles/github-dark.css';
 
 marked.setOptions({
   breaks: true,
