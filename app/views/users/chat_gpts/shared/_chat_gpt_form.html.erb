@@ -4,18 +4,18 @@
     <!-- 新規作成フォーム -->
     <div class="new-chatgpt-form-container">
       <h2>新しい質問を作成</h2>
-      <%= form_with(model: @chatgpt, url: url, local: true) do |f| %>
+      <%= form_with(model: @chatgpt, url: url, local: true, id: 'new-question-form') do |f| %>
         <div class="row mt-4">
           <div class="col-12">
             <%= f.label :prompt, "プロンプトを入力してください", class: "form-label" %>
-            <%= f.text_area :prompt, class: "form-control", rows: 8, required: true, placeholder: "ここにプロンプトを入力..." %>
+            <%= f.text_area :prompt, class: "form-control", rows: 8, required: true, placeholder: "ここにプロンプトを入力...", id: 'new_prompt' %>
           </div>
 
           <!-- デフォルトのモードを設定するための隠しフィールド -->
           <%= f.hidden_field :mode, value: "teacher" %>
 
           <div class="col-12 text-center my-3">
-            <%= f.submit btn_name, class: "btn btn-primary" %>
+            <%= f.submit btn_name, class: "btn btn-primary", id: 'new_question_button' %>
             <%= link_to 'キャンセル', users_chat_gpts_path, class: "btn btn-outline-dark" %>
           </div>
         </div>
@@ -57,7 +57,7 @@
             <label for="new_prompt">続けて質問する</label>
             <textarea id="new_prompt" name="new_prompt" class="form-control" rows="3"></textarea>
             <%= hidden_field_tag :previous_response, @chatgpt.content %>
-            <%= submit_tag '質問を続ける', class: 'btn btn-primary mt-2' %>
+            <%= submit_tag '質問を続ける', class: 'btn btn-primary mt-2', id: 'continue_question_button' %>
           <% end %>
         </div>
       </div>

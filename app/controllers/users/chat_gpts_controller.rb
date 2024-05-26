@@ -48,6 +48,12 @@ module Users
     end
 
     def continue_question
+      @chatgpt = ChatGpt.find_by(id: params[:id])
+      if @chatgpt.blank?
+        render json: { error: 'ChatGptが見つかりません。' }, status: :not_found
+        return
+      end
+
       new_prompt = params[:new_prompt]
       previous_content = @chatgpt.content
       previous_title = OpenAiService.extract_title(previous_content)
@@ -55,9 +61,10 @@ module Users
 
       begin
         response = OpenAiService.generate_chat(new_prompt, previous_title, previous_content, mode: @chatgpt.mode, summary: previous_summary)
-        new_content = "質問：#{new_prompt}\n回答：#{response[:content]}"
+        new_content = "質問：#{new_prompt}\n\n回答：#{response[:content]}"
         @chatgpt.update(content: "#{previous_content}\n\n#{new_content}")
-        render json: { content: @chatgpt.content } # JSONレスポンスを返す
+
+        render json: { content: render_to_string(partial: 'users/chat_gpts/shared/show_content', locals: { chatgpt: @chatgpt, question_number: @chatgpt.id }) }
       rescue StandardError => e
         Rails.logger.error "AIによるコンテンツの生成に失敗しました: #{e.message}"
         render json: { error: 'AIによるコンテンツの生成に失敗しました。' }, status: :unprocessable_entity

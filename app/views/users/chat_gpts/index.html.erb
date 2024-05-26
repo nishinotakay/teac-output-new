@@ -1,22 +1,27 @@
 <!-- app/views/users/chat_gpts/index.html.erb -->
 <% if @chatgpts.present? %>
   <div class="chatgpt-list">
-    <% @chatgpts.each.with_index(1) do |chatgpt, index| %>
+    <% @chatgpts.each.with_index(1) do |chatgpt, chatgpt_index| %>
       <div class="chatgpt-item">
-        <p>
-          <%= link_to "質問No. #{current_user.chat_gpts.count - index + 1}", users_chat_gpt_path(chatgpt), class: "question-link" %>
-          <%= chatgpt.created_at.strftime("%Y/%m/%d %H:%M") %>
-          に質問しました。
-        </p>
         <% title, content = extract_title_and_content(chatgpt.content) %>
-        <% if title.present? %>
-          <p><strong>タイトル：</strong><%= link_to title, users_chat_gpt_path(chatgpt) %></p>
-        <% end %>
-        <p><strong>質問:</strong></p>
-        <p><%= chatgpt.prompt %></p>
-        <p><strong>回答:</strong></p>
+        <p><strong>タイトル：</strong><%= link_to title.presence || "No Title", users_chat_gpt_path(chatgpt) %></p>
         <% if content.present? %>
-          <p><%= content %></p>
+          <div>
+            <% questions_and_answers = split_questions_and_answers(content) %>
+            <% questions_and_answers.each_with_index do |(question, answer), answer_index| %>
+              <div class="qa-block">
+                <p><strong>質問No. <%= chatgpt.id %>-<%= answer_index + 1 %>：</strong> <%= question.strip if question.present? %></p>
+                <% title_match = answer.match(/タイトル:\s*(.*)/) %>
+                <% if title_match %>
+                  <p><strong>回答No. <%= chatgpt.id %>-<%= answer_index + 1 %>：タイトル：</strong> <%= title_match[1].strip %></p>
+                  <p><%= answer.sub(title_match[0], '').strip.html_safe if answer.present? %></p>
+                <% else %>
+                  <p><strong>回答No. <%= chatgpt.id %>-<%= answer_index + 1 %>：</strong> <%= answer.strip.html_safe if answer.present? %></p>
+                <% end %>
+              </div>
+              <hr>
+            <% end %>
+          </div>
         <% else %>
           <p>回答がまだありません。</p>
         <% end %>

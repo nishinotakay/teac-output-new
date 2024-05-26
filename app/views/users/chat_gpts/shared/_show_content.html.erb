@@ -1,0 +1,22 @@
+<!-- app/views/users/chat_gpts/shared/_show_content.html.erb -->
+<div class="show-page-card-body">
+  <% if chatgpt.content.present? %>
+    <% questions_and_answers = split_questions_and_answers(chatgpt.content) %>
+    <% questions_and_answers.each_with_index do |(question, answer), index| %>
+      <div class="qa-block">
+        <% if index == 0 %>
+          <p><strong>タイトル：</strong> <%= extract_title_and_content(chatgpt.content).first %></p>
+        <% end %>
+        <p><strong>質問No. <%= question_number %>-<%= index + 1 %>：</strong> <%= question.strip if question.present? %></p>
+        <% title_match = answer.match(/タイトル:\s*(.*)/) %>
+        <% if title_match %>
+          <p><strong>回答No. <%= question_number %>-<%= index + 1 %>：タイトル：</strong> <%= title_match[1].strip %></p>
+          <p><%= answer.sub(title_match[0], '').strip.html_safe if answer.present? %></p>
+        <% else %>
+          <p><strong>回答No. <%= question_number %>-<%= index + 1 %>：</strong> <%= answer.strip.html_safe if answer.present? %></p>
+        <% end %>
+      </div>
+      <hr>
+    <% end %>
+  <% end %>
+</div>
