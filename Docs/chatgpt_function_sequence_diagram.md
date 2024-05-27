@@ -1,3 +1,6 @@
+##### Docs/chatgpt_function_sequence_diagram.md
+##### ChatGPTへの質問機能シーケンス図
+
 ```mermaid
 sequenceDiagram
     participant ユーザー
