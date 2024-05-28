@@ -1,6 +1,6 @@
 window.hljs = require('highlight.js');
 import { marked } from 'marked'
-import '../../stylesheets/users/articles'
+import '../stylesheets/users/articles'
 import 'highlight.js/styles/github-dark.css';
 
 marked.setOptions({
@@ -18,6 +18,17 @@ marked.setOptions({
     }
   }
 });
+
+const renderer = {
+  heading(text, level) {
+    return `
+      <h${level} class="marked-heading">
+        ${text}
+      </h${level}>`;
+  }
+};
+
+marked.use({ renderer });
 
 window.makecodeblock = function(pre){
   pre.wrap('<div class="code-frame"></div>')
