@@ -72,9 +72,11 @@
         </div>
       <% end %>
     </div>
-    <div class="tweet-paginate col-12 col-sm-8 offset-sm-2">
-      <%= paginate @tweets, theme: 'bootstrap-5' %>
-    </div>
+    <% if @tweets.any? %>
+      <div class="tweet-paginate col-12 col-sm-8 offset-sm-2">
+        <%= paginate @tweets, theme: 'bootstrap-5' %>
+      </div>
+    <% end %>
   </div>
 </div>
 
