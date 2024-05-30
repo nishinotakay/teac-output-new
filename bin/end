@@ -45,4 +45,3 @@ cat <<EOS
 EOS
 docker ps -aq | xargs -r docker rm
 echo "成功 全てのDockerコンテナを削除しました!"
-# Temporary comment to stage file
