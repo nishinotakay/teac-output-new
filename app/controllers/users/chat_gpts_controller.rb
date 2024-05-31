@@ -18,7 +18,7 @@ module Users
     end
 
     def show
-      if @chatgpt.nil?
+      if @chatgpt.blank?
         redirect_to root_path, alert: '指定されたChatGptが見つかりません。'
       else
         @title, @content = extract_title_and_content(@chatgpt.content)
@@ -42,6 +42,7 @@ module Users
           render :new, status: :internal_server_error
         end
       else
+        flash.now[:alert] = 'チャットGPTの保存に失敗しました。'
         Rails.logger.debug "ChatGPT Save Errors: #{@chatgpt.errors.full_messages.join(', ')}"
         render :new, status: :unprocessable_entity
       end
