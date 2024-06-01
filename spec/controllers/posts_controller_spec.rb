@@ -224,3 +224,73 @@ describe Users::PostsController, type: :request do
     end
   end
 end
+
+describe Admins::PostsController, type: :request do
+  before(:each) do
+    @admin = FactoryBot.create(:admin)
+    @user = FactoryBot.create(:user) # 権限のないユーザー
+    @post = FactoryBot.create(:post, admin: @admin)
+    @admin.confirm
+    @user.confirm
+  end
+
+  describe 'アクセス権限を有するAdminの場合' do
+    context 'indexアクションテスト', focus: true do
+      it 'indexへのアクセスに対して正常なレスポンスが返ってきているか' do
+        sign_in @admin
+        get admins_posts_path
+        expect(response).to be_successful
+      end
+
+      it 'indexのアクセスに対して返ってきたレスポンスが200レスポンスであったか' do
+        sign_in @admin
+        get admins_posts_path
+        expect(response).to have_http_status(:ok)
+      end
+    end
+  end
+
+  describe '権限を有しないユーザーの場合' do
+    context 'editアクションテスト' do
+      it '権限がないためadmins_sign_in_pathにリダイレクトされるか' do
+        sign_in @user
+        get edit_admins_post_path(@post)
+        expect(response).to redirect_to new_admin_session_path
+        expect(flash[:alert]).to eq('ログインもしくはアカウント登録してください。')
+      end
+
+      it 'ログインしていない場合、サインインページにリダイレクトされるか' do
+        get edit_admins_post_path(@post)
+        expect(response).to redirect_to new_admin_session_path
+      end
+    end
+
+    context 'updateアクションテスト' do
+      it '権限がないためadmins_sign_in_pathにリダイレクトされるか' do
+        sign_in @user
+        patch admins_post_path(@post), params: { post: { title: 'Updated Title' } }
+        expect(response).to redirect_to new_admin_session_path
+        expect(flash[:alert]).to eq('ログインもしくはアカウント登録してください。')
+      end
+
+      it 'ログインしていない場合、サインインページにリダイレクトされるか' do
+        patch admins_post_path(@post), params: { post: { title: 'Updated Title' } }
+        expect(response).to redirect_to new_admin_session_path
+      end
+    end
+
+    context 'destroyアクションテスト' do
+      it '権限がないためadmins_sign_in_pathにリダイレクトされるか' do
+        sign_in @user
+        delete admins_post_path(@post)
+        expect(response).to redirect_to new_admin_session_path
+        expect(flash[:alert]).to eq('ログインもしくはアカウント登録してください。')
+      end
+
+      it 'ログインしていない場合、サインインページにリダイレクトされるか' do
+        delete admins_post_path(@post)
+        expect(response).to redirect_to new_admin_session_path
+      end
+    end
+  end
+end
