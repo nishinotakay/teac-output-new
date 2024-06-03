@@ -13,11 +13,7 @@ class Users::CheckoutsController < Users::Base
     end
     render json: { session: session }, status: :ok
   end
-
-  def complete
-    @charge_plan = ChargePlan.find_by(charge_type: "一括払い")
-  end
-
+  
   private
 
   def create_session
@@ -37,7 +33,7 @@ class Users::CheckoutsController < Users::Base
         },
        quantity: 1,
       }],
-      success_url: 'http://0.0.0.0:3000/users/checkouts/complete',
+      success_url: Rails.application.routes.url_helpers.users_user_payments_url(current_user, host: '0.0.0.0:3000'),
       cancel_url: 'http://0.0.0.0:3000/users/checkouts/new'
     )
   end

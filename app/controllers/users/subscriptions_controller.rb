@@ -9,10 +9,6 @@ class Users::SubscriptionsController < Users::Base
     render json: { session: session }, status: :ok
   end
 
-  def complete
-    @charge_plan = ChargePlan.find_by(charge_type: "定額決済")
-  end
-
   private 
 
   def create_session
@@ -25,11 +21,9 @@ class Users::SubscriptionsController < Users::Base
         price: @charge_plan.stripe_plan_id,
         quantity: 1,
       }],
-      success_url: 'http://0.0.0.0:3000/users/subscriptions/complete',
+      success_url: Rails.application.routes.url_helpers.users_user_payments_url(current_user, host: '0.0.0.0:3000'),
       cancel_url: 'http://0.0.0.0:3000/users/subscriptions/new'
     )
-  
-    session
   end
 
 end

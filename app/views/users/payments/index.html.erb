@@ -1,0 +1,46 @@
+<% provide(:title, "支払い履歴") %>
+<div class="container-fluid">
+<% if @payments.any? %>
+  <% @payments.each do |payment| %>
+  <table class="table table-fixed ">
+    <thead>
+      <tr>
+        <th scope="col" class="w-25">支払日</th>
+        <th scope="col" class="w-25">金額</th>
+        <th scope="col" class="w-25">料金体系</th>
+        <th scope="col" class="w-25">決済ステータス</th>
+      </tr>
+    <tbody>
+    <tr>
+      <!-- 支払い日時./-->
+      <td>
+        <%= Time.at(payment[:data].created).strftime("%Y-%m-%d") %>
+      </td>
+      <!-- 支払い金額./-->
+      <td>
+        <!-- 単体決済(一括払いの料金表示)./-->
+        <% if payment[:data].object == "charge" %>
+          <%= payment[:data].amount %>
+        <% end %>
+        <!-- サブスクリプションの料金表示./-->
+        <% if payment[:data].object == "subscription" %>
+          <%= payment[:data][:plan].amount %>
+        <% end %>
+      </td>
+      <!-- 料金体系./-->
+      <td>
+         <%= t("payment.#{payment[:type]}") %>
+      </td>
+      <!-- 決済ステータス./-->
+      <td>
+        <%= t("payment.status.#{payment[:data].status}") %>
+      </td>
+    </tr>
+    </tbody>
+    </thead>
+  </table>
+<% end %>  
+<% else %>
+  <p>支払い履歴がありません</p>
+<% end %>
+</div>
