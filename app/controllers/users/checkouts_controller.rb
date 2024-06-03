@@ -6,20 +6,23 @@ class Users::CheckoutsController < Users::Base
   end
 
   def create
-    session = create_session
-    unless current_user.stripe_customer_id
-      customer = Stripe::Customer.create(email: current_user.email)
-      current_user.update(stripe_customer_id: customer.id)
-    end
+    customer = ensure_stripe_customer
+    session = create_session(customer)
     render json: { session: session }, status: :ok
   end
   
   private
 
-  def create_session
+  def ensure_stripe_customer
+    return Stripe::Customer.retrieve(current_user.stripe_customer_id) if current_user.stripe_customer_id
+    customer = Stripe::Customer.create(email: current_user.email)
+    current_user.update(stripe_customer_id: customer.id)
+  end
+
+  def create_session(customer)
     @charge_plan = ChargePlan.find_by(charge_type: "一括払い")
     Stripe::Checkout::Session.create(
-      customer_email: current_user.email,
+      customer: customer.id,
       mode: 'payment',
       payment_method_types: ['card'],
       line_items: [{
