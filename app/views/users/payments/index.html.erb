@@ -12,26 +12,26 @@
       </tr>
     <tbody>
     <tr>
-      <!-- 支払い日時./-->
+      <!-- 支払い日時 -->
       <td>
         <%= Time.at(payment[:data].created).strftime("%Y-%m-%d") %>
       </td>
-      <!-- 支払い金額./-->
+      <!-- 支払い金額 -->
       <td>
-        <!-- 単体決済(一括払いの料金表示)./-->
+        <!-- 単体決済(一括払いの料金表示) -->
         <% if payment[:data].object == "charge" %>
           <%= payment[:data].amount %>
         <% end %>
-        <!-- サブスクリプションの料金表示./-->
+        <!-- サブスクリプションの料金表示 -->
         <% if payment[:data].object == "subscription" %>
           <%= payment[:data][:plan].amount %>
         <% end %>
       </td>
-      <!-- 料金体系./-->
+      <!-- 料金体系 -->
       <td>
          <%= t("payment.#{payment[:type]}") %>
       </td>
-      <!-- 決済ステータス./-->
+      <!-- 決済ステータス -->
       <td>
         <%= t("payment.status.#{payment[:data].status}") %>
       </td>

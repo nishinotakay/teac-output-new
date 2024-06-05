@@ -8,7 +8,6 @@ class Users::PaymentsController < Users::Base
       @subscriptions = Stripe::Subscription.list(customer: current_user.stripe_customer_id)
       @payments = combine_payments(@charges.data, @subscriptions.data)
     else
-      flash[:alert] = 'Stripeの顧客IDが設定されていません。'
       @payments = []
     end
   end
