@@ -23,11 +23,11 @@ class Admins::ChargePlansController < Admins::Base
       if @charge_plan.charge_type == "定額決済"
         create_stripe_plan
       end
-        if @charge_plan.save
-          render :complete
-        else
-          render :confrim
-        end
+      if @charge_plan.save
+        render :complete
+      else
+        render :confrim
+      end
   end
 
   def complete

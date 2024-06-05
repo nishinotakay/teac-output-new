@@ -12,4 +12,5 @@ class UserDecorator < ApplicationDecorator
   
     links.join.html_safe
   end
+  
 end
