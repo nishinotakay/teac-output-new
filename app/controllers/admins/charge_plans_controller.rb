@@ -26,7 +26,7 @@ class Admins::ChargePlansController < Admins::Base
       if @charge_plan.save
         render :complete
       else
-        render :confrim
+        render :confirm
       end
   end
 
