@@ -44,7 +44,7 @@ class Admins::ChargePlansController < Admins::Base
       if @charge_plan.charge_type == "定額決済"
         create_stripe_plan
       end
-      render action: :show
+      render :show
     else
       render :edit
     end
