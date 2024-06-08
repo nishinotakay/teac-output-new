@@ -44,9 +44,8 @@
                 </time>
                 <button class="btn btn-menu" data-bs-toggle="dropdown" style="width: 30px; margin-left: 8px;">︙</button>
                 <ul class="dropdown-menu">
-                  <% if post.admin_id == current_admin.id %>
+                  <% if current_admin.present? %>
                     <li><%= link_to '閲覧', admins_post_path(id: post.id), class: "nav-link" %></li>
-                    <li><%= link_to '編集', edit_admins_post_path(id: post.id), class: "nav-link" %></li>
                     <li><%= link_to '削除', admins_post_path(id: post.id), method: :delete, data: {confirm: "選択した記事を削除します。"}, class: "nav-link" %></li>
                   <% else %>
                     <li><%= link_to '閲覧', admins_post_path(id: post.id), class: "nav-link" %></li>
