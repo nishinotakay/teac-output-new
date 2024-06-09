@@ -2,6 +2,8 @@
 @import "admin-lte";
 @import '@fortawesome/fontawesome-free';
 @import './admins/custom';
+@import './users/github-dark.scss';
+@import './users/articles.scss';
 
 .dropdown-menu {
   min-width: 0px;
