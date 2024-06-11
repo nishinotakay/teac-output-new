@@ -76,7 +76,7 @@
                       編集</button>
                     </li>
                     <li>
-                      <%= link_to '削除', users_tweet_tweet_comment_path(@tweet, comment), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %>
+                      <%= link_to '削除', users_tweet_tweet_comment_path(@tweet, comment), method: :delete, data: { confirm: t('tweet.confirmations.delete_comment') }, class:"dropdown-item" %>
                     </li>
                   <% end %>
                 </ul>

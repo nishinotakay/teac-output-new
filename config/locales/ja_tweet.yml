@@ -9,4 +9,6 @@ ja:
         updated_at: '編集日時'
         author: '投稿者'
         images: '画像'
-
+  tweet:
+    confirmations:
+      delete_comment: "本当にコメントを削除しますか？"
