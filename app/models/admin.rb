@@ -9,6 +9,7 @@ class Admin < ApplicationRecord
 
   has_many :articles, dependent: :destroy
   has_many :posts, dependent: :destroy
+  has_many :learning_status, class_name: "Learning", foreign_key: "learner_id", dependent: :destroy #学習している関連付け
 
   enum gender: { male: 0, female: 1, other: 2 }
 
@@ -26,5 +27,9 @@ class Admin < ApplicationRecord
     else
       admins.order(order[0] => order[1])
     end
+  end
+
+  def completed?(article)
+    learning_status.exists?(learned_article_id: article.id, completed: true)
   end
 end

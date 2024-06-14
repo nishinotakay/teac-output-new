@@ -1,0 +1,60 @@
+<h1 style="text-align:center;">編集画面</h1>
+<div style="text-align:center;">
+  <%= form_with(model: @learning, url: admins_learning_path(@learning), method: :patch, local: true) do |form| %>
+    <%= render 'layouts/error_messages', model: form.object %>
+    
+    <div class="row mt-4">
+      <div class="col-12 div-title-form">
+        <%= form.label :title, "タイトル" %>
+        <%= form.text_field :title, id: "learning_title", value: @learning.title, placeholder: "タイトル（必須 30文字まで)", maxlength: 30, class: "form-control title-form" %>
+      </div>
+      <div class="col-12 my-2 div-subtitle-form">
+        <%= form.label :sub_title, "サブタイトル" %>
+        <%= form.text_field :sub_title, id: "learning_sub_title", value: @learning.sub_title, placeholder: "サブタイトル", class: "form-control subtitle-form" %>
+      </div>
+      
+      <div class="col-6 editor-side">
+        <div class="card card-outline card-info">
+          <div class="card-header">
+            <h3 class="card-title text-center">エディター</h3>
+          </div>
+          <div class="card-body">
+            <div class="col-12 editor-body">
+              <%= form.text_area :content, placeholder: "内容（必須 240文字まで)", maxlength: 240, cols: 30, rows: 30, class: "form-control markdown-editor", data: {admin_id: current_admin.id}, id: "editor" %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 preview-side">
+        <div class="card card-outline card-info d-flex flex-column justify-content-start">
+          <div class="card-header">
+            <h3 class="card-title">プレビュー</h3>
+          </div>
+          <div class="card-body col-12">
+            <div id="preview" class="preview form-control" style="overflow: auto; height: 550px;"></div>
+            <div class="text-center div-btns my-3" style="display: flex; align-items: center; justify-content: center;">
+              <%= form.hidden_field :article_type, value: "e-learning" %>
+              <%= form.submit "更新", class: "btn btn-primary ml-2" %>
+              <%= link_to 'キャンセル', request.referer || admins_learnings_path, class: "btn btn-outline-dark ml-2" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const editor = document.getElementById('editor');
+    const preview = document.getElementById('preview');
+
+    editor.addEventListener('input', function() {
+      preview.innerHTML = editor.value;
+    });
+
+    // 初期ロード時にプレビューを更新
+    preview.innerHTML = editor.value;
+  });
+</script>

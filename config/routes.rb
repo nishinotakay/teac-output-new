@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       end
     end
     resources :inquiries
+    resources :learnings
   end
 
   # =================================================================

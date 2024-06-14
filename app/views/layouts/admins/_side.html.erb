@@ -18,6 +18,14 @@
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item">
+          <%= link_to admins_learnings_path, class:"nav-link", method: :get do %>
+            <i class="nav-icon fa-sharp fa-solid fa-book-open"></i> 
+            <p>
+              e-learning
+            </p>
+          <% end %>
+        </li>
+        <li class="nav-item">
           <%= link_to admins_articles_path, class:"nav-link", method: :get do %>
             <i class="nav-icon fas fa-th"></i> <!-- <i class="nav-icon fas fa-newspaper"></i> user使用のアイコン -->
             <p>
