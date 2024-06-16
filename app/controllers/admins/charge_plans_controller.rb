@@ -20,23 +20,15 @@ class Admins::ChargePlansController < Admins::Base
 
   def create
     @charge_plan.admin_id = current_admin.id
-      if @charge_plan.charge_type == "定額決済"
-        create_stripe_plan
-      end
-      if @charge_plan.save
-        render :complete
-      else
-        render :confirm
-      end
-  end
+    if @charge_plan.charge_type == "定額決済"
+      create_stripe_plan
+    end
 
-  def complete
-  end
-
-  def show
-  end
-
-  def edit
+    if @charge_plan.save
+      render :complete
+    else
+      render :confirm
+    end
   end
 
   def update
@@ -83,9 +75,9 @@ class Admins::ChargePlansController < Admins::Base
       charge_plan = current_admin.charge_plan
       if charge_plan.present?
         @charge_plan = ChargePlan.find_by(id: current_admin.charge_plan.id)
-          if current_admin.id != @charge_plan.admin_id
-            redirect_to admins_dash_boards_path
-          end
+        if current_admin.id != @charge_plan.admin_id
+          redirect_to admins_dash_boards_path
+        end
       end
     end
 

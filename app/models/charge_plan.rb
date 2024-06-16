@@ -13,15 +13,15 @@ class ChargePlan < ApplicationRecord
 
   private
 
-    def not_free_plan
-      charge_type == "定額決済" || charge_type === "一括決済"
-    end
+  def not_free_plan
+    charge_type == "定額決済" || charge_type == "一括決済"
+  end
 
-    def check_double_charge 
-      charge_plan = ChargePlan.find_by(admin_id: self.admin_id)
-      if charge_plan.present?
-        errors.add(:deadline, "すでに受講料金が設定されています。")
-      end
+  def check_double_charge 
+    charge_plan = ChargePlan.find_by(admin_id: self.admin_id)
+    if charge_plan.present?
+      errors.add(:deadline, "すでに受講料金が設定されています。")
     end
+  end
 
 end

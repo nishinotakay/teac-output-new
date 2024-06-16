@@ -11,14 +11,14 @@
         <td></td>
       </tr>
     </thead>
-  <tbody>
-    <tr>
-      <td class="align-middle"><%= @charge_plan.price %>円</td>
-      <td class="align-middle"><%= @charge_plan.quantity %>人</td>
-      <td class="align-middle"><%= @charge_plan.amount %>円</td>
-      <td class="align-middle"><%= @charge_plan.charge_type %></td>
-      <td><%= link_to "編集", edit_admins_charge_plan_path(@charge_plan), class: 'btn btn-secondary', data: {"turbolinks"=>false} %></td>
-      <td><%= link_to "削除", admins_charge_plan_path(@charge_plan), class: 'btn btn-danger', method: :delete, data: {confirm: "本当に削除しますか?" }%></td>
-    </tr>
-  </tbody>
+    <tbody>
+      <tr>
+        <td class="align-middle"><%= @charge_plan.price %>円</td>
+        <td class="align-middle"><%= @charge_plan.quantity %>人</td>
+        <td class="align-middle"><%= @charge_plan.amount %>円</td>
+        <td class="align-middle"><%= @charge_plan.charge_type %></td>
+        <td><%= link_to "編集", edit_admins_charge_plan_path(@charge_plan), class: 'btn btn-secondary', data: {"turbolinks"=>false} %></td>
+        <td><%= link_to "削除", admins_charge_plan_path(@charge_plan), class: 'btn btn-danger', method: :delete, data: {confirm: "本当に削除しますか?" }%></td>
+      </tr>
+    </tbody>
   </table>
