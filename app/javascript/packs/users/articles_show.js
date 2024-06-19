@@ -1,5 +1,5 @@
 import { marked } from 'marked';
-import "./articles";
+import "../articles";
 
 function auto_line_break_img(article) {
   article.find("img").each(function () { // 取得されたimg要素に対してeachメソッドで繰り返し処理
