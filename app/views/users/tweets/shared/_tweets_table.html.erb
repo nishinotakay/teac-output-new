@@ -16,10 +16,10 @@
           <div class="col-12 col-sm-8 offset-sm-2">
             <div class="card tweets-index-item">
               <div class="d-flex align-items-center">
-                  <% if data[:image].present? %>
-                    <%= image_tag data[:image] , class: "rounded-circle", size: "60x60" %>
-                  <% end %>
-                <div class="d-flex align-items-start flex-column justify-content-start"> <%# flex-colmunは縦並び %>
+                <% if data[:image].present? %>
+                  <%= image_tag data[:image] , class: "rounded-circle", size: "60x60" %>
+                <% end %>
+                <div class="d-flex align-items-start flex-column justify-content-start">
                   <div class="px-0">
                     <%= link_to_if current_user.present?,  data[:tweet].user.name, index_user_users_tweet_path(data[:tweet].user_id), class:'fw-bold', style: "text-decoration: underline;" do %>
                       <strong><%= data[:tweet].user.name %>&nbsp;</strong>
@@ -30,15 +30,15 @@
                 <div class="d-flex align-items-center ms-auto">
                   <div class="dropdown">
                     <button class="btn" data-bs-toggle="dropdown" style="width: 50px">︙</button>
-                      <ul class="dropdown-menu test-color">
-                        <li><%= link_to '詳細', users_tweet_path(data[:tweet].id), class:"dropdown-item" %></li>
+                    <ul class="dropdown-menu test-color">
+                      <li><%= link_to '詳細', users_tweet_path(data[:tweet].id), class:"dropdown-item" %></li>
                       <% unless current_admin.present? %>  
                         <% if data[:tweet].user.name == current_user.name %>
                           <li><%= link_to '編集', edit_users_tweet_path(data[:tweet]), remote: true, class:"dropdown-item" %></li>
                           <li><%= link_to '削除', users_tweet_path(data[:tweet]), method: :delete, data: { confirm: 'Are you sure?' }, class:"dropdown-item" %></li>
                         <% end %>
                       <% end %>
-                      </ul>
+                    </ul>
                   </div>
                 </div>
               </div>
@@ -80,19 +80,18 @@
   </div>
 </div>
 
-
 <div class="modal fade" id="sortFilterModal" tabindex="-1" aria-labelledby="sortFilterModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="form-inline">
-        <h5 class="modal-title text-center flex-grow-1 mt-4" id="sortFilterModalLabel"></h5>
-        <button type="button" class="modal-close btn-close mr-3" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-header">
+        <h5 class="modal-title text-center w-100" id="sortFilterModalLabel">絞り込み検索</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body text-right">
+      <div class="modal-body">
         <div class="sort-modal" style="display: none;">
-          <div class="form-group row my-5">
+          <div class="form-group row mb-3">
             <label for="sort-select" class="col-sm-3 col-form-label"><%= Tweet.human_attribute_name(:created_at) %></label>
-            <div class="col-md-9">
+            <div class="col-sm-9">
               <% order = {'DESC': '新しい順', 'ASC': '古い順'} %>
               <% params[:order] ||= 'DESC' %>
               <select id="sort-select" class="form-select" aria-label="Default select desc">
@@ -104,42 +103,34 @@
         </div>
         <div class="filter-modal" style="display: none;">
           <% unless current_admin.present? %>
-          <div class="form-group row my-4">
-            <label for="input-author" class="col-sm-4 col-form-label">
-              <%= Tweet.human_attribute_name(:author) %>
-            </label>
-            <div class="col-md-8">
-              <input type="text" aria-label="author" id="input-author" class="form-control" value="<%= params[:author] %>">
+            <div class="form-group row mb-3">
+              <label for="input-author" class="col-sm-3 col-form-label">投稿者</label>
+              <div class="col-sm-9">
+                <input type="text" id="input-author" class="form-control" value="<%= params[:author] %>">
+              </div>
             </div>
           <% end %>
-          </div>
-          <div class="form-group row my-4">
-            <label for="input-post" class="col-sm-4 col-form-label">
-              <%= Tweet.human_attribute_name(:post) %>
-            </label>
-            <div class="col-md-8">
-              <input type="text" aria-label="post" id="input-post" class="form-control" value="<%= params[:post] %>">
+          <div class="form-group row mb-3">
+            <label for="input-post" class="col-sm-3 col-form-label">投稿内容</label>
+            <div class="col-sm-9">
+              <input type="text" id="input-post" class="form-control" value="<%= params[:post] %>">
             </div>
           </div>
-          <div class="form-group row my-4">
-            <label for="input-created" class="col-sm-3 col-form-label">
-              <%= Tweet.human_attribute_name(:created_at) %>
-            </label>
-            <div class="col-md-9 form-inline">
-              <div class="col-md-5">
-                <input type="date" aria-label="created" id="input-start" class="form-control" value="<%= params[:start] %>">
-              </div>
-              <div class="offset-1 align-bottom">〜</div>
-              <div class="col-md-5">
-                <input type="date" aria-label="created" id="input-finish" class="form-control" value="<%= params[:finish] %>">
+          <div class="form-group row mb-3">
+            <label for="input-created" class="col-sm-3 col-form-label">投稿日時</label>
+            <div class="col-sm-9">
+              <div class="input-group">
+                <input type="date" id="input-start" class="form-control" value="<%= params[:start] %>">
+                <span class="input-group-text">〜</span>
+                <input type="date" id="input-finish" class="form-control" value="<%= params[:finish] %>">
               </div>
             </div>
           </div>
         </div>
-        <div class="text-center">
-          <button type="button" class="btn btn-primary submit-btn"></button>
-          <button type="button" class="modal-close btn btn-secondary" data-bs-dismiss="modal">戻る</button>
-        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary submit-btn">検索する</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">戻る</button>
       </div>
     </div>
   </div>
