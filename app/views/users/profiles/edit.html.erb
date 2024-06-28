@@ -1,79 +1,81 @@
 <%= javascript_pack_tag "users/profiles" %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-<div class="offset-3 div-title-form">
-  <div class="card card-outline card-primary">
-    <div class="card-header text-center">
-      <h2>プロフィールを編集する</h2>
+<div class="container">
+  <div class="offset-3 div-title-form mx-auto" style="max-width: 600px;">
+    <div class="card card-outline card-primary">
+      <div class="card-header text-center">
+        <h2>プロフィール編集する</h2>
+      </div>
+      <br>
+      <%= form_with model: @profile, url: users_profile_path, local: true do |f| %>
+        <%= render 'layouts/error_messages', model: f.object %>
+        <div class="text-center">
+          <% image = @profile.present? && @profile.image.present? ? @profile.image : "user_default.png" %>
+          <%= image_tag image , class: "rounded-circle", size: "120x120" %>
+        </div>
+        <div style="padding-left:50px">
+          <div class="form-group">
+            <div class="form-inline">
+              <i class="fas fa-image"></i>
+              <label class="profile-indent">プロフィール画像</label>
+              <label class="profile-indent-image">
+                <%= f.file_field :image %>
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-inline">
+              <i class="fas fa-user"></i>
+              <label class="profile-indent">名前</label>
+              <label class="profile-indent-gender">
+                <%= f.fields_for :user do |user_fields| %>
+                  <%= user_fields.text_field :name, class: "form-control", style: "width:300px" %>
+                <% end %>
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-inline">
+              <i class="fas fa-gift"></i>
+              <label class="profile-indent">誕生日</label>
+              <label class="profile-indent-birthday">
+                <%= f.date_field :birthday, use_month_numbers: true , class: 'form-control', style: "width:300px" %>
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-inline">
+              <i class="fas fa-heart"></i>
+              <label class="profile-indent">性別</label>
+              <label class="profile-indent-gender">
+                <%= f.select :gender, Profile.genders_i18n.keys.map {|k| [Profile.genders_i18n[k], k]}, {include_blank: '選択してください'}, class: 'form-control', style: "width:300px" %>
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-inline">
+              <i class="fas fa-book-open"></i>
+              <label class="profile-indent">登録日</label>
+              <label class="profile-indent-input">
+                <%= f.date_field :registration_date, use_month_numbers: true , class: 'form-control', style: "width:300px" %>
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-inline">
+              <i class="fas fa-flag"></i>
+              <label class="profile-indent">趣味</label>
+              <label class="profile-indent-hobby">
+                <%= f.text_area :hobby, class: "form-control", style: "width:300px" %>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="text-center form-group">
+          <%= f.submit "更新", class: "btn btn-primary" , style: "width:150px" %>
+        </div>
+      <% end %>
     </div>
-    <br>
-    <%= form_with model: @profile, url: users_profile_path, local: true do |f| %>
-      <%= render 'layouts/error_messages', model: f.object %>
-      <div class="text-center">
-        <% image = @profile.present? && @profile.image.present? ? @profile.image : "user_default.png" %>
-        <%= image_tag image , class: "rounded-circle", size: "120x120" %>
-      </div>
-      <div style="padding-left:50px">
-        <div class="form-group">
-          <div class="form-inline">
-            <i class="fas fa-image"></i>
-            <label class="profile-indent">プロフィール画像</label>
-            <label class="profile-indent-image">
-              <%= f.file_field :image %>
-            </label>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="form-inline">
-            <i class="fas fa-user"></i>
-            <label class="profile-indent">名前</label>
-            <label class="profile-indent-gender">
-              <%= f.fields_for :user do |user_fields| %>
-                <%= user_fields.text_field :name, class: "form-control", style: "width:300px" %>
-              <% end %>
-            </label>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="form-inline">
-            <i class="fas fa-gift"></i>
-            <label class="profile-indent">誕生日</label>
-            <label class="profile-indent-birthday">
-              <%= f.date_field :birthday, use_month_numbers: true , class: 'form-control', style: "width:300px" %>
-            </label>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="form-inline">
-            <i class="fas fa-heart"></i>
-            <label class="profile-indent">性別</label>
-            <label class="profile-indent-gender">
-              <%= f.select :gender, Profile.genders_i18n.keys.map {|k| [Profile.genders_i18n[k], k]}, {include_blank: '選択してください'}, class: 'form-control', style: "width:300px" %>
-            </label>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="form-inline">
-            <i class="fas fa-book-open"></i>
-            <label class="profile-indent">登録日</label>
-            <label class="profile-indent-input">
-              <%= f.date_field :registration_date, use_month_numbers: true , class: 'form-control', style: "width:300px" %>
-            </label>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="form-inline">
-            <i class="fas fa-flag"></i>
-            <label class="profile-indent">趣味</label>
-            <label class="profile-indent-hobby">
-              <%= f.text_area :hobby, class: "form-control", style: "width:300px" %>
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="text-center form-group">
-        <%= f.submit "更新", class: "btn btn-primary" , style: "width:150px" %>
-      </div>
-    <% end %>
   </div>
 </div>
