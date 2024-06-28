@@ -9,26 +9,6 @@ module Admins
       today = Date.today.strftime('%Y%m%d').to_i
     end
 
-    # def edit
-    # end
-
-    # def update
-    #   if @user.update(users_params)
-    #     redirect_to admins_users_path, notice: 'ユーザー情報の更新が完了しました'
-    #   else
-    #     render :edit
-    #   end
-    # end
-
-    # def destroy
-    #   if @user.destroy
-    #     flash[:success] = "#{@user.name}のデータを削除しました。"
-    #     redirect_to admins_users_path
-    #   else
-    #     render :index
-    #   end
-    # end
-
     def index
       order = { 
         id: params[:ord_id], 
