@@ -1,6 +1,9 @@
 class Inquiry < ApplicationRecord
   belongs_to :user
 
+  validates :subject, presence: true
+  validates :content, presence: true
+
   def self.sort_and_filter(params)
     order = {
       created_at: params[:ord_created_at],

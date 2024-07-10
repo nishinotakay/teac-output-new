@@ -1,6 +1,6 @@
+<!-- /home/sample_user/sample_1/teac-output-new/app/views/users/posts/_form.html.erb -->
 <%= form_with model: @post, url: users_posts_path(@post), method: :post, local: true do |form| %>
   <div style="text-align:center;">
-    <%= render 'layouts/error_messages', model: form.object %>
     <div class="field">
       <%= form.label :title, "タイトル" %><br>
       <%= form.text_field :title, id:"post_title", placeholder:"タイトル (必須 30文字まで)", maxlength: 30, size: 40 %>

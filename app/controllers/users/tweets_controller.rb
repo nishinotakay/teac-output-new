@@ -27,7 +27,7 @@ module Users
       if @tweet.save
         flash[:success] = 'つぶやきを作成しました。'
       else
-        flash[:danger] = @tweet.errors.full_messages.join('・')
+        flash[:warning] = @tweet.errors.full_messages.join('・')
       end
       redirect_back(fallback_location: root_path)
     end
