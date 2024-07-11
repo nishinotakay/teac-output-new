@@ -42,7 +42,7 @@ module Users
       if @post.save
         redirect_to users_post_path(@post), flash: { success: '動画を投稿しました' }
       else
-        flash[:warning] = @post.errors.full_messages
+        flash[:error] = @post.errors.full_messages
         render :new
       end
     end

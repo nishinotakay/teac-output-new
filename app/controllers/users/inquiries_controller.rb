@@ -15,7 +15,7 @@ module Users
       if @inquiry.save
         redirect_to new_users_inquiry_path, flash: { success: '問い合わせを投稿しました。' }
       else
-        flash.now[:warning] = '問い合わせ投稿出来ませんでした。'
+        flash.now[:error] = '問い合わせ投稿出来ませんでした。'
         render :new
       end
     end

@@ -57,7 +57,7 @@ module Users
           format.json { render json: @article, status: :created }
         else
           format.html do
-            flash.now[:alert] = '記事の作成に失敗しました。'
+            flash.now[:error] = '記事の作成に失敗しました。'
             render :new
           end
           format.json { render json: @article.errors, status: :unprocessable_entity }
