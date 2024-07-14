@@ -1,22 +1,26 @@
-<button type="button" class="btn btn-success sort-modal-btn ml-5" data-bs-toggle="modal" data-bs-target="#sortFilterModal" style="display: none;">
-  並べ替え
-</button>
-<button type="button" class="btn btn-success filter-modal-btn ml-3" data-bs-toggle="modal" data-bs-target="#sortFilterModal" style="display: none;">
-  絞り込み検索
-</button>
-<% if params[:reset] %>
-  <button type="button" class="btn btn-outline-success reset-btn ml-3">リセット</button>
-<% elsif params[:reset_admin] %>
-  <button type="button" class="btn btn-outline-success reset-btn-admin ml-3">リセット</button>
-<% end %>
-
 <div class="content">
   <div class="container-fluid">
     <div class="row">
-      <% if controller.controller_name == "dash_boards" %>
-        <%= render 'users/articles/shared/my_articles', dashboard: dashboard %>
-      <% else %>
-      <div class="col-12">
+      <div class="col-2 article-folder-wrapper">
+        <div class="hamburger-menu-wrapper">
+          <button class="hamburger-menu" id="js-hamburger-menu">
+            <span class="hamburger-menu-bar"></span>
+            <span class="hamburger-menu-bar"></span>
+            <span class="hamburger-menu-bar"></span>
+          </button>
+            <span class="hamburger-menu-text">記事フォルダ</span>
+        </div>
+        <nav class="folder-wrapper">
+          <ul class="folder-list">
+            <li class="folder-list-item"><a href="#" class="folder-link"><i class="fa-regular fa-folder"></i>Ruby</a></li>
+            <li class="folder-list-item"><a href="#" class="folder-link"><i class="fa-regular fa-folder"></i>Rails</a></li>
+            <li class="folder-list-item"><a href="#" class="folder-link"><i class="fa-regular fa-folder"></i>JS</a></li>
+            <li class="folder-list-item"><a href="#" class="folder-link"><i class="fa-regular fa-folder"></i>HTML</a></li>
+          </ul>
+          <%= link_to "フォルダ新規作成", "#", class: "btn btn-success mt-3" %>
+        </nav>
+      </div>
+      <div class="col-10">
         <% hover = @articles.present? ? "table-hover" : "" %>
         <table class="table articles-table <%= hover %> table-scroll">
           <thead>
@@ -92,7 +96,6 @@
           <%= paginate @articles, theme: 'bootstrap-5' %>
         </div>
       </div>
-      <% end %>
     </div>
   </div>
 </div>

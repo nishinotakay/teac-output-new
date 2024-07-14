@@ -164,3 +164,126 @@
   margin: 56px 0px 16px;
 }
 
+// 記事フォルダ機能に関するスタイル
+
+.hamburger-menu-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.hamburger-menu {
+  min-width: 50px;
+  height: 50px;
+  position: relative;
+  border: none;
+  background: transparent;
+  appearance: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.hamburger-menu-bar {
+  display: inline-block;
+  width: 44%;
+  height: 2px;
+  background: #242424;
+  position: absolute;
+  left: 0;
+  transform: translateX(0);
+  transition: .5s;
+}
+
+.hamburger-menu-text {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.hamburger-menu-bar:first-child {
+  top: 16px;
+}
+
+.hamburger-menu-bar:nth-child(2) {
+  top: 24px;
+}
+
+.hamburger-menu-bar:last-child {
+  top: 32px;
+}
+
+.hamburger-menu--open .hamburger-menu-bar {
+  top: 50%;
+}
+
+.hamburger-menu--open .hamburger-menu-bar:first-child {
+  transform: translateX(-50%) translateY(-50%) rotate(45deg);
+}
+
+.hamburger-menu--open .hamburger-menu-bar:last-child {
+  transform: translateX(-50%) translateY(-50%) rotate(-45deg);
+}
+
+.hamburger-menu--open .hamburger-menu-bar:nth-child(2) {
+  display: none;
+}
+
+.article-folder-wrapper {
+  max-width: 100%;
+  position: relative;
+  left: -20px;
+}
+
+.folder-wrapper {
+  display: none;
+  background: #F3F6F9;
+  position: absolute;
+  top: 50px;
+  width: 100%;
+  padding: 10px;
+  z-index: 9999;
+  position: absolute;
+}
+
+.foler-list-item {
+  display: block;
+}
+
+.folder-list {
+  text-align: left;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.folder-link {
+  color: #000;
+  font-weight: 400;
+  text-decoration: none;
+  display: block;
+  padding: 24px 0;
+  transition: .5s;
+}
+
+.folder-link:hover {
+  color: #666;
+}
+
+.fa-regular,.fa-folder {
+  margin-right: 15px;
+}
+
+@media (max-width: 960px) {
+  .article-folder-wrapper {
+    position: relative;
+  }
+}
+
+@media (max-width: 460px) {
+  .hamburger-menu-wrapper {
+    display: none;
+  }
+
+  .folder-wrapper, .folder-list-item {
+    display: none;
+  }
+}
