@@ -223,7 +223,7 @@ Article.create!(
     {
       title: 'メソッド編',
       sub_title: 'paramsとは',
-      content: 'paramsとはRailsで送られてきた値を受け取るためのメソッドです。 
+      content: 'paramsとはRailsで送られてきた値を受け取るためのメソッドです。
                 送られてくる情報(リクエストパラメータ)は主に、getのクエリパラメータとPostでformを使って送信されるデータの2つです。',
       article_type: 'e-learning',
       admin_id: '1'
