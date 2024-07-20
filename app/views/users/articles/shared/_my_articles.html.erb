@@ -38,7 +38,7 @@
             <% if hover.present? %>
               <% @articles.each_with_index do |article, index| %>
                 <tr>
-                  <td class="link-td" id="article-title" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'>
+                  <td class="link-td" id="article-title" draggable="true" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'>
                     <div class="d-flex align-items-center">
                       <%= article.title %>
                       <% unless current_admin.present? %>

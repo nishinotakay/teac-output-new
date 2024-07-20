@@ -132,4 +132,47 @@ $(function(){
     $('.folder-wrapper').slideToggle(500)
     $('.hamburger-menu').toggleClass('hamburger-menu--open')
   });
+
+  var articleID;
+
+  $('.link-td[draggable="true"]').on('dragstart', function(e) {
+    const onClickElement = $(this).attr('onclick');
+    const match = onClickElement.match(/\/users\/articles\/(\d+)\?/);
+
+    if (match) {
+      articleID = match[1];
+      console.log('dragstart');
+      console.log(articleID);
+
+      const articleTitle = $(this).text().trim();
+      console.log(articleTitle);
+
+      e.originalEvent.dataTransfer.setData('text/plain', articleTitle)
+      console.log(articleTitle);
+
+      $(this).addClass('dragging-element');
+
+      const dragIcon = $('<div class="dragging-icon-wrapper"><div class="dragging-icon"><i class="fa fa-file-alt"></i><div class="dragging-text">' + articleTitle + '</div></div></div>');
+      $('body').append(dragIcon);
+      e.originalEvent.dataTransfer.setDragImage(dragIcon[0],0,0)
+    } else {
+      console.log('not found article_id');
+    }
+  });
+
+  $('.folder-list-item').on('dragenter', function(e) {
+    console.log('dragenter');
+    $(this).find('.folder-link').addClass('folder-dragging');
+  });
+
+  $('.folder-list-item').on('dragleave', function(e) {
+    console.log('dragleave');
+    $(this).find('.folder-link').removeClass('folder-dragging');
+  });
+
+  $('.link-td[draggable="true"]').on('dragend',function(e) {
+    console.log('dragend');
+    $(this).removeClass('dragging-element');
+  });
+
 });

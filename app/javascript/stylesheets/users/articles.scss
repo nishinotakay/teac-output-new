@@ -272,6 +272,34 @@
   margin-right: 15px;
 }
 
+.fa-file-alt {
+  margin: 5px 0;
+}
+
+.dragging-element {
+  opacity: 0.1;
+}
+
+.dragging-icon-wrapper {
+  padding-left: 15px;
+  opacity: 1;
+}
+
+.dragging-icon {
+  display: inline-block;
+  border: 1px solid #000;
+  padding: 10px;
+}
+
+.dragging-text {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.folder-dragging {
+  background: #e8e8e8;
+}
+
 @media (max-width: 960px) {
   .article-folder-wrapper {
     position: relative;
