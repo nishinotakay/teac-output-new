@@ -10,16 +10,37 @@
           </button>
             <span class="hamburger-menu-text">記事フォルダ</span>
         </div>
-        <nav class="folder-wrapper">
+        <div class="folder-wrapper">
           <ul class="folder-list">
             <li class="folder-list-item"><a href="#" class="folder-link" id="1"><i class="fa-regular fa-folder"></i>Ruby</a></li>
             <li class="folder-list-item"><a href="#" class="folder-link" id="2"><i class="fa-regular fa-folder"></i>Rails</a></li>
             <li class="folder-list-item"><a href="#" class="folder-link" id="3"><i class="fa-regular fa-folder"></i>JS</a></li>
             <li class="folder-list-item"><a href="#" class="folder-link" id="4"><i class="fa-regular fa-folder"></i>HTML</a></li>
           </ul>
-          <%= link_to "フォルダ新規作成", "#", class: "btn btn-success mt-3" %>
-        </nav>
-      </div>
+          <!-- Button to Open the Modal -->
+          <button type="button" class="btn btn-secondary addFolderbtn" data-bs-toggle="modal" data-bs-target="#addFolderModal">
+            フォルダ新規作成
+          </button>
+        </div>
+      <!-- Modal -->
+      <div class="modal fade" id="addFolderModal" tabindex="-1" aria-labelledby="addFolderModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+              <h5 class="modal-title" id="addFolderModalLabel">フォルダの追加</h5>
+              <button type="button" class="btn-close position-absolute end-0 mr-1 addFolderbtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+              Modal body content goes here.
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary addFolderbtn-cancel" data-bs-dismiss="modal">キャンセル</button>
+              <button type="button" class="btn btn-primary">追加</button>
+            </div>
+          </div>
+        </div>
+      </div>    
+      </div><!-- ./ col-2 article-folder-wrapper -->
       <div class="col-10">
         <% hover = @articles.present? ? "table-hover" : "" %>
         <table class="table articles-table <%= hover %> table-scroll">
