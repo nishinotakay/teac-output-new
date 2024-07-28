@@ -59,6 +59,8 @@ Rails.application.routes.draw do
         post 'article_create', on: :member
         delete 'article_destroy', on: :member
       end
+      post 'assign_folder/:folder_id', to: 'folders#assign_folder', as: 'assign_folder'
+      resources :folders, only: [:create, :destroy, :edit]
     end
     resources :users do
       resource :posts, only: [] do

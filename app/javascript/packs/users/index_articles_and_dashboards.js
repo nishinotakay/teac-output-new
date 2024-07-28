@@ -136,8 +136,8 @@ $(function(){
   var articleID;
 
   $('.link-td[draggable="true"]').on('dragstart', function(e) {
-    const onClickElement = $(this).attr('onclick');
-    const match = onClickElement.match(/\/users\/articles\/(\d+)\?/);
+      const onClickElement = $(this).attr('onclick');
+      const match = onClickElement.match(/\/users\/articles\/(\d+)\?/);
 
     if (match) {
       articleID = match[1];
@@ -149,8 +149,6 @@ $(function(){
 
       e.originalEvent.dataTransfer.setData('text/plain', articleTitle)
       console.log(articleTitle);
-
-      $(this).addClass('dragging-element');
 
       const dragIcon = $('<div class="dragging-icon-wrapper"><div class="dragging-icon"><i class="fa fa-file-alt"></i><div class="dragging-text">' + articleTitle + '</div></div></div>');
       $('body').append(dragIcon);
@@ -170,9 +168,42 @@ $(function(){
     $(this).find('.folder-link').removeClass('folder-dragging');
   });
 
+  $('.folder-list-item').on('dragover', function(e) {
+    e.preventDefault();
+    console.log('dragover');
+  });
+
+  $('.folder-list-item').on('drop', function(e) {
+    e.preventDefault();
+    console.log('drop event');
+    const folderID = $(this).find('.folder-link').attr("id");
+
+    console.log(folderID)
+    $(this).find('.folder-link').removeClass('folder-dragging');
+    console.log(articleID);
+
+    fetch('/users/articles/' + articleID + '/assign_folder/' + folderID , {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+      },
+      body: JSON.stringify({ article_id: articleID, folder_id: folderID })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  });
+
   $('.link-td[draggable="true"]').on('dragend',function(e) {
     console.log('dragend');
     $(this).removeClass('dragging-element');
+    $('.dragging-icon-wrapper').remove();
+    console.log('remove element');
   });
 
 });

@@ -14,6 +14,9 @@ class Article < ApplicationRecord
   has_many :learnings
   has_many :users, through: :learnings
 
+  has_many :article_folders
+  has_many :folders, through: :article_folders
+
   validates :title, presence: true, length: { in: 1..40 }
   validates :sub_title, allow_nil: true, length: { maximum: 50 }
   validates :content, presence: true
