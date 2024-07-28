@@ -13,8 +13,4 @@ module ApplicationHelper
     linked_str.html_safe
   end
 
-  def amount_calc(price, quantity)
-    @charge_plan.amount = (price * quantity)
-  end
-
 end

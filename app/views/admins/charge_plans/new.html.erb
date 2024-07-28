@@ -7,8 +7,6 @@
     <div class="charge-guide">3.完了</div>
   </div>
 
-<%= render 'layouts/error_messages', model: @charge_plan %>
-
 <%= form_with model: @charge_plan, url: confirm_admins_charge_plans_path, local: true do |f| %>
   <div class="field mt-3">
     <%= f.label :price %>

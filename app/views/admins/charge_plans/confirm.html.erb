@@ -19,7 +19,7 @@
     <p class="fs-5">料金体系: <%= @charge_plan.charge_type %></p>
   </div>
   <div class="field mt-3">
-    <p class="fs-5">合計金額: <%= amount_calc(@charge_plan.price, @charge_plan.quantity) %>円</p>
+    <p class="fs-5">合計金額: <%= @total_amount %>円</p>
   </div>
 
 <%= form_with model: @charge_plan, url: admins_charge_plans_path, method: :post, local: true do |f| %>

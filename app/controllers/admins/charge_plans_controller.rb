@@ -11,6 +11,7 @@ class Admins::ChargePlansController < Admins::Base
   def confirm
     @charge_plan.admin_id = current_admin.id
     render :new if @charge_plan.invalid?
+    @total_amount = @charge_plan.amount_calc(@charge_plan.price, @charge_plan.quantity)
   end
 
   def back

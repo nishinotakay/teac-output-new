@@ -1,8 +1,6 @@
 <%= javascript_pack_tag "admins/charge" %>
 <h2 class="text-center mb-5">受講料金 編集</h2>
 
-<%= render 'layouts/error_messages', model: @charge_plan %>
-
 <%= form_with model: @charge_plan, url: admins_charge_plan_path, local: true do |f| %>
   <div class="field mt-3">
     <%= f.label :price %>
