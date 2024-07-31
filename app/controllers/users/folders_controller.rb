@@ -1,4 +1,16 @@
-class Users::FoldersController < Users::Base
+class Users::FoldersController < ApplicationController
+  before_action :authenticate_user!
+
+  def create
+    @folder = Folder.new(folder_params)
+    if @folder.save
+      flash[:success] = "フォルダを作成しました。"
+      redirect_to users_dash_boards_path
+    else
+      flash[:danger] = "作成に失敗しました。"
+      redirect_to users_dash_boards_path
+    end
+  end
 
   def assign_folder
     article_id = params[:article_id]
@@ -11,6 +23,12 @@ class Users::FoldersController < Users::Base
     else
       render json: { success: false, errors: article_folder.errors.full_messages }
     end
-
   end
+
+  private
+  
+    def folder_params
+      params.require(:folder).permit(:name)
+    end
+
 end

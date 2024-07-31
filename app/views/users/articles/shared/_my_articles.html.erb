@@ -31,7 +31,12 @@
               <button type="button" class="btn-close position-absolute end-0 mr-1 addFolderbtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
-              Modal body content goes here.
+              <%= form_with(model: Folder.new, url: users_folders_path, local:true) do |f| %>
+              <%= render 'layouts/error_messages', model: f.object %>
+                <%= f.label :name %>
+                <%= f.text_field :name %>
+                <%= f.submit %>
+              <% end %>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary addFolderbtn-cancel" data-bs-dismiss="modal">キャンセル</button>

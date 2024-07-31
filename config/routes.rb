@@ -53,6 +53,7 @@ Rails.application.routes.draw do
     resources :chat_rooms, only: [:create, :show]
     resources :stocks, only:[:create, :destroy, :index]
     resources :learnings, only: [:index, :show, :create]
+    resources :folders, only: [:create, :destroy, :edit]
     resources :articles do
       resources :article_comments, only: %i[create destroy update] # 記事コメント機能
       resource :likes, only: [] do
@@ -60,7 +61,6 @@ Rails.application.routes.draw do
         delete 'article_destroy', on: :member
       end
       post 'assign_folder/:folder_id', to: 'folders#assign_folder', as: 'assign_folder'
-      resources :folders, only: [:create, :destroy, :edit]
     end
     resources :users do
       resource :posts, only: [] do
