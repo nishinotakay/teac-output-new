@@ -12,13 +12,12 @@
         </div>
         <div class="folder-wrapper">
           <ul class="folder-list">
-            <li class="folder-list-item"><a href="#" class="folder-link" id="1"><i class="fa-regular fa-folder"></i>Ruby</a></li>
-            <li class="folder-list-item"><a href="#" class="folder-link" id="2"><i class="fa-regular fa-folder"></i>Rails</a></li>
-            <li class="folder-list-item"><a href="#" class="folder-link" id="3"><i class="fa-regular fa-folder"></i>JS</a></li>
-            <li class="folder-list-item"><a href="#" class="folder-link" id="4"><i class="fa-regular fa-folder"></i>HTML</a></li>
+          <% @folders.each do |folder| %>
+            <li class="folder-list-item"><a href="#" class="folder-link" id="<%= folder.id %>"><i class="fa-regular fa-folder"></i><%= folder.name %></a></li>
+          <% end %>
           </ul>
           <!-- Button to Open the Modal -->
-          <button type="button" class="btn btn-secondary addFolderbtn" data-bs-toggle="modal" data-bs-target="#addFolderModal">
+          <button type="button" class="btn btn-secondary mt-3 addFolderbtn" data-bs-toggle="modal" data-bs-target="#addFolderModal">
             フォルダ新規作成
           </button>
         </div>
@@ -32,15 +31,10 @@
             </div>
             <div class="modal-body text-center">
               <%= form_with(model: Folder.new, url: users_folders_path, local:true) do |f| %>
-              <%= render 'layouts/error_messages', model: f.object %>
-                <%= f.label :name %>
-                <%= f.text_field :name %>
-                <%= f.submit %>
+                <%= f.text_field :name, class: "form-control" %>
+                <%= f.submit "追加する", class: "btn btn-primary mt-3" %>
+                <button type="button" class="btn btn-secondary addFolderbtn-cancel mt-3 ml-3" data-bs-dismiss="modal">キャンセル</button>
               <% end %>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary addFolderbtn-cancel" data-bs-dismiss="modal">キャンセル</button>
-              <button type="button" class="btn btn-primary">追加</button>
             </div>
           </div>
         </div>

@@ -25,6 +25,9 @@ module Users
         format.json { render json: @articles }
       end
       end
+
+      @folders = current_user.folders if current_user.folders.present?
+
     end
   end
 end

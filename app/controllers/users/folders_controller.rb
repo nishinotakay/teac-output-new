@@ -2,7 +2,7 @@ class Users::FoldersController < ApplicationController
   before_action :authenticate_user!
 
   def create
-    @folder = Folder.new(folder_params)
+    @folder = current_user.folders.new(folder_params)
     if @folder.save
       flash[:success] = "フォルダを作成しました。"
       redirect_to users_dash_boards_path
