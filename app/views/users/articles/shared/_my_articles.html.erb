@@ -13,12 +13,12 @@
         <div class="folder-wrapper">
           <ul class="folder-list">
           <% @folders.each do |folder| %>
-            <li class="folder-list-item"><a href="#" class="folder-link" id="<%= folder.id %>"><i class="fa-regular fa-folder"></i><%= folder.name %></a></li>
+            <li class="folder-list-item" data-folder-id="<%= folder.id %>"><i class="fa-regular fa-folder fa-lg"></i><%= link_to "#{folder.name}", users_folder_path(folder.id), class: "folder-link" %></li>
           <% end %>
           </ul>
           <!-- Button to Open the Modal -->
           <button type="button" class="btn btn-secondary mt-3 addFolderbtn" data-bs-toggle="modal" data-bs-target="#addFolderModal">
-            フォルダ新規作成
+            フォルダ新規作成  
           </button>
         </div>
       <!-- Modal -->

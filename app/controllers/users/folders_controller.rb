@@ -12,6 +12,14 @@ class Users::FoldersController < ApplicationController
     end
   end
 
+  def show
+    folder_id = params[:folder_id]
+    @article_folder = ArticleFolder.where(folder_id)
+    article_ids = @article_folder.pluck(:article_id)
+    @articles = Article.where(id: article_ids)
+    
+  end
+
   def assign_folder
     article_id = params[:article_id]
     folder_id = params[:folder_id]

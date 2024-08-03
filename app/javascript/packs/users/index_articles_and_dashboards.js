@@ -128,7 +128,7 @@ $(function(){
     window.location.search = search
   })
 
-  $('#js-hamburger-menu, .folder-link').on('click', function () {
+  $('#js-hamburger-menu').on('click', function () {
     $('.folder-wrapper').slideToggle(500)
     $('.hamburger-menu').toggleClass('hamburger-menu--open')
   });
@@ -160,12 +160,12 @@ $(function(){
 
   $('.folder-list-item').on('dragenter', function(e) {
     console.log('dragenter');
-    $(this).find('.folder-link').addClass('folder-dragging');
+    $(this).addClass('folder-dragging');
   });
 
   $('.folder-list-item').on('dragleave', function(e) {
     console.log('dragleave');
-    $(this).find('.folder-link').removeClass('folder-dragging');
+    $(this).removeClass('folder-dragging');
   });
 
   $('.folder-list-item').on('dragover', function(e) {
@@ -176,10 +176,10 @@ $(function(){
   $('.folder-list-item').on('drop', function(e) {
     e.preventDefault();
     console.log('drop event');
-    const folderID = $(this).find('.folder-link').attr("id");
+    const folderID = $(this).data("folder-id");
 
     console.log(folderID)
-    $(this).find('.folder-link').removeClass('folder-dragging');
+    $(this).removeClass('folder-dragging');
     console.log(articleID);
 
     fetch('/users/articles/' + articleID + '/assign_folder/' + folderID , {
