@@ -314,3 +314,8 @@
     display: none;
   }
 }
+
+// ハンバーガーメニューと開発環境のデバック情報の被りを回避
+.avoid-element-coverage {
+  margin-bottom: 100px;
+}

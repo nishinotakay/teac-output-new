@@ -13,7 +13,7 @@
         <div class="folder-wrapper">
           <ul class="folder-list">
           <% @folders.each do |folder| %>
-            <li class="folder-list-item" data-folder-id="<%= folder.id %>"><i class="fa-regular fa-folder fa-lg"></i><%= link_to "#{folder.name}", users_folder_path(folder.id), class: "folder-link" %></li>
+            <li class="folder-list-item" data-folder-id="<%= folder.id %>"><i class="fa-regular fa-folder fa-lg"></i><%= link_to "#{folder.name}", users_folder_path(folder.id), remote: true, class: "folder-link" %></li>
           <% end %>
           </ul>
           <!-- Button to Open the Modal -->
