@@ -41,17 +41,21 @@ class User < ApplicationRecord
     artcl_max = filter[:articles_max].blank? ? Article.count : filter[:articles_max]
     posts_min = filter[:posts_min].blank? ? 0 : filter[:posts_min]
     posts_max = filter[:posts_max].blank? ? Post.count : filter[:posts_max]
-
+    tweets_min = filter[:tweets_min].blank? ? 0 : filter[:tweets_min]
+    tweets_max = filter[:tweets_max].blank? ? Tweet.count : filter[:tweets_max]
+  
     users = where(["name like ? and email like ?", "%#{filter[:name]}%", "%#{filter[:email]}%"])
-      .left_joins(:articles).left_joins(:posts).group("users.id")
+      .left_joins(:articles).left_joins(:posts).left_joins(:tweets).group("users.id")
       .having("count(articles.id) between ? and ?", artcl_min, artcl_max)
       .having("count(posts.id) between ? and ?", posts_min, posts_max)
-    if order[0] == :articles || order[0] == :posts || order[0] == :profiles
+      .having("count(tweets.id) between ? and ?", tweets_min, tweets_max)
+    
+    if order[0] == :articles || order[0] == :posts || order[0] == :tweets
       users.order("COUNT(#{order[0].to_s}.id) #{order[1]}")
     else
       users.order(order[0] => order[1])
     end
-  end
+  end  
 
   def social_profile(provider)
     social_profiles.select { |sp| sp.provider == provider.to_s }.first
