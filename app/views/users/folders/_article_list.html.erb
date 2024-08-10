@@ -1,6 +1,40 @@
+<!-- フォルダ編集モーダル -->
+<div class="modal fade" id="editFolderModal" tabindex="-1" aria-labelledby="editFolderModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header d-flex justify-content-center">
+        <h5 class="modal-title" id="editFolderModalLabel">フォルダの編集</h5>
+        <button type="button" class="btn-close position-absolute end-0 mr-1" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <%= form_with(model: @folder, url: users_folder_path(@folder), local:true ) do |f| %>
+          <%= f.text_field :name, class: "form-control text-center" %>
+          <%= f.submit "編集する", class: "btn btn-primary mt-3" %>
+          <button type="button" class="btn btn-secondary addFolderbtn-cancel mt-3 ml-3" data-bs-dismiss="modal">キャンセル</button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div><!-- ./editFolderModal  -->
+<!-- フォルダ削除モーダル -->
+<div class="modal fade" id="destroyFolderModal" tabindex="-1" aria-labelledby="destroyFolderModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header d-flex justify-content-center">
+        <h5 class="modal-title" id="destroyFolderModalLabel">フォルダの削除</h5>
+        <button type="button" class="btn-close position-absolute end-0 mr-1" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p><%= "#{@folder.name}フォルダを削除しますか?" %><br>削除したフォルダは復元できません。</p>
+        <%= link_to "削除する", users_folder_path(@folder), class: "btn btn-danger d-inline p-2 mt-2", method: :delete, data: {confirm: "この操作は取り消せません。よろしいですか?"} %>
+        <button type="button" class="btn btn-secondary d-inline" data-bs-dismiss="modal">キャンセル</button>
+      </div>
+    </div>
+  </div>
+</div><!-- ./ destroyFolderModal -->
 <div class="col-12 avoid-element-coverage">
   <% if @articles.present? %>
-  <% hover = @articles.present? ? "table-hover" : "" %>
+    <% hover = @articles.present? ? "table-hover" : "" %>
     <table class="table articles-table <%= hover %> table-scroll">
       <thead>
         <tr>
@@ -60,19 +94,19 @@
                       <% end %>
                     </ul>
                   </td>
-                </tr>
-              <% end %>
-            <% else %>
-              <%= render 'users/shared/table_without_record' %>
+              </tr>
             <% end %>
-          </tbody>
-        </table>
-        <div class="article-paginate">
-          <%= paginate @articles, theme: 'bootstrap-5' %>
-        </div>
+          <% else %>
+            <%= render 'users/shared/table_without_record' %>
+          <% end %>
+        </tbody>
+    </table>
+      <div class="article-paginate">
+        <%= paginate @articles, theme: 'bootstrap-5' %>
       </div>
+</div><!-- col-12 ./-->
 <% else %>
-  <div class="col-12">
+  <div class="col-12 no-folder">
     <p class="fs-4">フォルダに追加した記事がありません。</p>
   </div>
 <% end %>

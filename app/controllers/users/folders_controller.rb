@@ -17,10 +17,37 @@ class Users::FoldersController < ApplicationController
     @article_folder = ArticleFolder.where(folder_id: folder_id)
     article_ids = @article_folder.pluck(:article_id)
     @articles = Article.where(id: article_ids).page(params[:page])
+    @folder = Folder.find(params[:id])
+    @folder_view = params[:folder_view]
+    Rails.logger.info "folder_view content: #{@folder_view.inspect}"
 
     respond_to do |format|
       format.html
       format.js
+    end
+  end
+
+  def update
+    @folder = Folder.find(params[:id])
+    if @folder.present?
+      @folder.update(folder_params)
+      flash[:success] = "フォルダを編集しました。"
+      redirect_to users_dash_boards_path
+    else
+      flash[:danger] = "編集に失敗しました。"
+      redirect_to users_dash_boards_path
+    end
+  end
+
+  def destroy
+    @folder = Folder.find(params[:id])
+    if @folder.present?
+      @folder.destroy
+      flash[:danger] = "フォルダを削除しました。"
+      redirect_to users_dash_boards_path
+    else
+      flash[:danger] = "削除に失敗しました。"
+      redirect_to users_dash_boards_path
     end
   end
 

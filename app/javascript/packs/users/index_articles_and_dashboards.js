@@ -5,7 +5,7 @@ $(function(){
   title.wrap('<div class="form-inline title-and-buttons">')
   var t_and_btns = $('.title-and-buttons')
   t_and_btns.parent().removeClass('col-sm-6')
-  t_and_btns.parent().addClass('col-sm-8')
+  t_and_btns.parent().addClass('col-md-12')
   var reset = $('.reset-btn')
   var filter = $('.filter-modal-btn')
   var sort = $('.sort-modal-btn')
@@ -204,6 +204,17 @@ $(function(){
     $(this).removeClass('dragging-element');
     $('.dragging-icon-wrapper').remove();
     console.log('remove element');
+  });
+
+  $('.folder-link').on('click', function(event) {
+    const folderName = $(this).text();
+    $('h1').text(folderName);
+    if (!$('.editFolderbtn,.editFolderbtn').length){
+      $('h1').wrap('<div class="heading-wrapper col-2"></div>')
+      $('.filter-modal-btn').after('<button type="button" class="btn btn-danger ml-3 mr-5 destroyFolderbtn" data-bs-toggle="modal" data-bs-target="#destroyFolderModal">フォルダ削除</button>');
+      $('.filter-modal-btn').after('<button type="button" class="btn btn-secondary ml-5 float-end editFolderbtn" data-bs-toggle="modal" data-bs-target="#editFolderModal">フォルダ編集</button>');
+      $('.filter-modal-btn').after('<div class="flex-spacer"></div>');
+    }
   });
 
 });
