@@ -49,8 +49,9 @@
           <tbody>
             <% if hover.present? %>
               <% @articles.each_with_index do |article, index| %>
+                <% article_folders = @article_folder.find { |af| af.article_id == article.id } %>
                 <tr>
-                  <td class="link-td folder-article" id="article-title" draggable="true" onclick='window.location="<%= users_article_path(id: article.id) %>"'>
+                  <td class="link-td folder-article" id="article-title" draggable="true" data-article-id="<%= article_folders.article_id %>" data-folder-id="<%= article_folders.folder_id %>" onclick='window.location="<%= users_article_path(id: article.id) %>"'>
                     <div class="d-flex align-items-center">
                       <%= article.title %>
                     <% unless current_admin.present? %>

@@ -134,14 +134,20 @@ $(function(){
   });
 
   var articleID;
+  var oldFolderID;
+  var draggedArticle;
 
-  $('.link-td[draggable="true"]').on('dragstart', function(e) {
-      const onClickElement = $(this).attr('onclick');
-      const match = onClickElement.match(/\/users\/articles\/(\d+)\?/);
+  $(document).on('dragstart', '.link-td[draggable="true"]', function(e) {
+      draggedArticle = $(this).closest('tr');
+      console.log('dragstart start')
+      articleID = $(this).closest('td').attr('data-article-id');
+      console.log("articleID:", articleID);
 
-    if (match) {
-      articleID = match[1];
-      console.log('dragstart');
+      oldFolderID = $(this).closest('td').attr('data-folder-id');
+      console.log("oldFolderID:", oldFolderID);
+
+    if (articleID) {
+      console.log('if article ID dragstart');
       console.log(articleID);
 
       const articleTitle = $(this).text().trim();
@@ -173,7 +179,7 @@ $(function(){
     console.log('dragover');
   });
 
-  $('.folder-list-item').on('drop', function(e) {
+  $('.folder-list-item').off('drop').on('drop', function(e) {
     e.preventDefault();
     console.log('drop event');
     const folderID = $(this).data("folder-id");
@@ -182,17 +188,27 @@ $(function(){
     $(this).removeClass('folder-dragging');
     console.log(articleID);
 
+    const newFolderID = $(this).data('folder-id');
+
     fetch('/users/articles/' + articleID + '/assign_folder/' + folderID , {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
       },
-      body: JSON.stringify({ article_id: articleID, folder_id: folderID })
+      body: JSON.stringify({
+        article_id: articleID,
+        old_folder_id: oldFolderID,
+        folder_id: folderID
+      })
     })
     .then(response => response.json())
     .then(data => {
-      console.log('Success:', data);
+      if (data.success) {
+        draggedArticle.remove();
+      } else {
+        console.error('Failed to move article:', data.errors);
+      }
     })
     .catch((error) => {
       console.error('Error:', error);

@@ -18,8 +18,8 @@ class Users::FoldersController < ApplicationController
     article_ids = @article_folder.pluck(:article_id)
     @articles = Article.where(id: article_ids).page(params[:page])
     @folder = Folder.find(params[:id])
+    @folder_id = @folder.articles.includes(:user, :admin)
     @folder_view = params[:folder_view]
-    Rails.logger.info "folder_view content: #{@folder_view.inspect}"
 
     respond_to do |format|
       format.html
@@ -53,9 +53,22 @@ class Users::FoldersController < ApplicationController
 
   def assign_folder
     article_id = params[:article_id]
-    folder_id = params[:folder_id]
+    old_folder_id = params[:old_folder_id]
+    new_folder_id = params[:folder_id]
+    user_id = current_user.id
 
-    article_folder = ArticleFolder.new(article_id: article_id, folder_id: folder_id)
+    if old_folder_id
+    article_folder = ArticleFolder.find_by(article_id: article_id, folder_id: old_folder_id)
+
+    if article_folder
+      article_folder.destroy
+    else
+      render json: { success: false, errors: ["元のフォルダと記事の関連が見つかりません。"] } and return
+    end
+
+    end 
+
+    article_folder = ArticleFolder.new(article_id: article_id, folder_id: new_folder_id, user_id: user_id)
 
     if article_folder.save
       render json: { success: true }

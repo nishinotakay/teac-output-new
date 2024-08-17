@@ -12,10 +12,12 @@
         </div>
         <div class="folder-wrapper">
           <ul class="folder-list">
-          <% @folders.each do |folder| %>
-            <li class="folder-list-item" data-folder-id="<%= folder.id %>"><i class="fa-regular fa-folder fa-lg"></i><%= link_to "#{folder.name}", users_folder_path(folder.id), remote: true, class: "folder-link" %></li>
+          <% if @folders.present? %>
+            <% @folders.each do |folder| %>
+              <li class="folder-list-item" data-folder-id="<%= folder.id %>"><i class="fa-regular fa-folder fa-lg"></i><%= link_to "#{folder.name}", users_folder_path(folder.id), remote: true, class: "folder-link" %></li>
+            <% end %>
+            </ul>
           <% end %>
-          </ul>
           <!-- Button to Open the Modal -->
           <button type="button" class="btn btn-secondary mt-3 addFolderbtn" data-bs-toggle="modal" data-bs-target="#addFolderModal">
             フォルダ新規作成  
@@ -58,7 +60,7 @@
             <% if hover.present? %>
               <% @articles.each_with_index do |article, index| %>
                 <tr>
-                  <td class="link-td" id="article-title" draggable="true" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'>
+                  <td class="link-td" id="article-title" draggable="true" data-article-id="<%= article.id %>" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'>
                     <div class="d-flex align-items-center">
                       <%= article.title %>
                       <% unless current_admin.present? %>
