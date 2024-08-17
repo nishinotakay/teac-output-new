@@ -7,6 +7,7 @@ class User < ApplicationRecord
     :recoverable, :rememberable, :validatable,
     :confirmable,
     :omniauthable, omniauth_providers: %i[google_oauth2 line facebook]
+  after_create :create_default_folder
 
   has_many :articles, dependent: :destroy
   has_many :posts, dependent: :destroy
@@ -111,4 +112,10 @@ class User < ApplicationRecord
   def completed?(article)
     learning_status.exists?(learned_article_id: article.id, completed: true)
   end 
+
+  private
+
+  def create_default_folder
+    self.folders.create(name: '未分類')
+  end
 end
