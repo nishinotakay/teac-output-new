@@ -138,24 +138,14 @@ $(function(){
   var draggedArticle;
 
   $(document).on('dragstart', '.link-td[draggable="true"]', function(e) {
-      draggedArticle = $(this).closest('tr');
-      console.log('dragstart start')
-      articleID = $(this).closest('td').attr('data-article-id');
-      console.log("articleID:", articleID);
-
-      oldFolderID = $(this).closest('td').attr('data-folder-id');
-      console.log("oldFolderID:", oldFolderID);
+    draggedArticle = $(this).closest('tr');
+    articleID = $(this).closest('td').attr('data-article-id');
+    oldFolderID = $(this).closest('td').attr('data-folder-id');
 
     if (articleID) {
-      console.log('if article ID dragstart');
-      console.log(articleID);
-
       const articleTitle = $(this).text().trim();
-      console.log(articleTitle);
-
       e.originalEvent.dataTransfer.setData('text/plain', articleTitle)
-      console.log(articleTitle);
-
+      
       const dragIcon = $('<div class="dragging-icon-wrapper"><div class="dragging-icon"><i class="fa fa-file-alt"></i><div class="dragging-text">' + articleTitle + '</div></div></div>');
       $('body').append(dragIcon);
       e.originalEvent.dataTransfer.setDragImage(dragIcon[0],0,0)
@@ -165,28 +155,21 @@ $(function(){
   });
 
   $('.folder-list-item').on('dragenter', function(e) {
-    console.log('dragenter');
     $(this).addClass('folder-dragging');
   });
 
   $('.folder-list-item').on('dragleave', function(e) {
-    console.log('dragleave');
     $(this).removeClass('folder-dragging');
   });
 
   $('.folder-list-item').on('dragover', function(e) {
     e.preventDefault();
-    console.log('dragover');
   });
 
-  $('.folder-list-item').off('drop').on('drop', function(e) {
+  $('.folder-list-item').on('drop', function(e) {
     e.preventDefault();
-    console.log('drop event');
     const folderID = $(this).data("folder-id");
-
-    console.log(folderID)
     $(this).removeClass('folder-dragging');
-    console.log(articleID);
 
     const newFolderID = $(this).data('folder-id');
 
@@ -205,7 +188,9 @@ $(function(){
     .then(response => response.json())
     .then(data => {
       if (data.success) {
+        if ($('.folder-article').length > 0){
         draggedArticle.remove();
+        }
       } else {
         console.error('Failed to move article:', data.errors);
       }
@@ -215,22 +200,18 @@ $(function(){
     });
   });
 
-  $('.link-td[draggable="true"]').on('dragend',function(e) {
-    console.log('dragend');
-    $(this).removeClass('dragging-element');
+  $(document).on('dragend', '.link-td[draggable="true"]', function(e) {
     $('.dragging-icon-wrapper').remove();
-    console.log('remove element');
   });
 
   $('.folder-link').on('click', function(event) {
     const folderName = $(this).text();
     $('h1').text(folderName);
-    if (!$('.editFolderbtn,.editFolderbtn').length){
+    if (!$('.editFolderbtn,.destroyFolderbtn').length){
       $('h1').wrap('<div class="heading-wrapper col-2"></div>')
       $('.filter-modal-btn').after('<button type="button" class="btn btn-danger ml-3 mr-5 destroyFolderbtn" data-bs-toggle="modal" data-bs-target="#destroyFolderModal">フォルダ削除</button>');
       $('.filter-modal-btn').after('<button type="button" class="btn btn-secondary ml-5 float-end editFolderbtn" data-bs-toggle="modal" data-bs-target="#editFolderModal">フォルダ編集</button>');
       $('.filter-modal-btn').after('<div class="flex-spacer"></div>');
     }
   });
-
 });
