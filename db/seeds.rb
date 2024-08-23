@@ -1,23 +1,68 @@
 # frozen_string_literal: true
 
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+# ここにデータベースの初期データを作成するコードを書きます。
+# bin/rails db:seed コマンドを実行することで、このデータがデータベースにロードされます。
+
+# Adminを最初に作成
+puts "============================================="
+puts "===== Adminを作成中... ====="
+puts "============================================="
+
+admin = Admin.new(
+  email:    'test_admin@gmail.com',
+  name:     'テストadmin1',
+  password: 'password'
+)
+
+admin.skip_confirmation! # deviseの確認メールをスキップ
+if admin.save
+  puts "成功 Adminが正常に作成されました！"
+else
+  puts "失敗 Adminの作成に失敗しました: #{admin.errors.full_messages.join(', ')}"
+end
+
+# Managerの作成
+puts "============================================="
+puts "===== Managerを作成中... ====="
+puts "============================================="
+
+manager = Manager.new(
+  email:    'test_manager@gmail.com',
+  name:     'テストmanager1',
+  password: 'password'
+)
+
+manager.skip_confirmation! # deviseの確認メールをスキップ
+if manager.save
+  puts "成功 Managerが正常に作成されました！"
+else
+  puts "失敗 Managerの作成に失敗しました: #{manager.errors.full_messages.join(', ')}"
+end
+
+# ユーザーの作成
+puts "============================================="
+puts "===== ユーザーを作成中... ====="
+puts "============================================="
 
 30.times do |i|
   user = User.new(
-    email:    "test_user#{i}@gmail.com", # sample: test_user1@gmail.com
+    email:    "test_user#{i}@gmail.com", # 例: test_user1@gmail.com
     name:     "テストuser#{i}",
     password: 'password'
   )
 
   user.skip_confirmation! # deviseの確認メールをスキップ
-  user.save!
+  if user.save
+    puts "成功 User #{i}が正常に作成されました！"
+  else
+    puts "失敗 User #{i}の作成に失敗しました: #{user.errors.full_messages.join(', ')}"
+  end
 end
+
+# 固定ユーザーの作成
+puts "============================================="
+puts "===== 固定ユーザーを作成中... ====="
+puts "============================================="
 
 names = %i[生澤智史 菅原靖人 養性光明 元永真広 西野鷹也 江草誠]
 emails = %i[ikezawa@test.com sugawara@test.com yosei@test.com motonaga@test.com nishino@test.com egusa@test.com]
@@ -30,8 +75,17 @@ emails = %i[ikezawa@test.com sugawara@test.com yosei@test.com motonaga@test.com 
   )
 
   user.skip_confirmation! # deviseの確認メールをスキップ
-  user.save!
+  if user.save
+    puts "成功 #{names[i]}が正常に作成されました！"
+  else
+    puts "失敗 #{names[i]}の作成に失敗しました: #{user.errors.full_messages.join(', ')}"
+  end
 end
+
+# 記事の作成
+puts "============================================="
+puts "===== 記事を作成中... ====="
+puts "============================================="
 
 User.all.each do |u|
   5.times do |i|
@@ -40,27 +94,18 @@ User.all.each do |u|
       sub_title: "さぶたいとる#{i} author #{u.name}",
       content:   "こんてんつ#{i} author #{u.name}"
     )
-    article.save!
+    if article.save
+      puts "成功 Article #{i} by #{u.name}が正常に作成されました！"
+    else
+      puts "失敗 Article #{i} by #{u.name}の作成に失敗しました: #{article.errors.full_messages.join(', ')}"
+    end
   end
 end
 
-manager = Manager.new(
-  email:    'test_manager@gmail.com',
-  name:     'テストmanager1',
-  password: 'password'
-)
-
-manager.skip_confirmation! # deviseの確認メールをスキップ
-manager.save!
-
-admin = Admin.new(
-  email:    'test_admin@gmail.com',
-  name:     'テストadmin1',
-  password: 'password'
-)
-
-admin.skip_confirmation! # deviseの確認メールをスキップ
-admin.save!
+# 投稿の作成
+puts "============================================="
+puts "===== 投稿を作成中... ====="
+puts "============================================="
 
 35.times do
   user = User.order('RAND()').first
@@ -72,8 +117,17 @@ admin.save!
     user:        user
   )
 
-  post.save!
+  if post.save
+    puts "成功 Post by #{user.name}が正常に作成されました！"
+  else
+    puts "失敗 Post by #{user.name}の作成に失敗しました: #{post.errors.full_messages.join(', ')}"
+  end
 end
+
+# 固定の投稿の作成
+puts "============================================="
+puts "===== 固定の投稿を作成中... ====="
+puts "============================================="
 
 Post.create!(title: 'Rspecについて_2',
   body: 'Rspec勉強会続き',
@@ -106,13 +160,23 @@ Post.create!(title: 'payjpを用いての決済機能について解説',
   user_id: '2'
 )
 
-puts "Posts Created"
+puts "成功 固定の投稿を作成しました！"
+
+# テナントの作成
+puts "============================================="
+puts "===== テナントを作成中... ====="
+puts "============================================="
 
 35.times do |n|
   Tenant.create!(name: "テナント#{n+1}")
 end
 
-puts "Tenants Created"
+puts "成功 テナントを作成しました！"
+
+# プロフィールの作成
+puts "============================================="
+puts "===== プロフィールを作成中... ====="
+puts "============================================="
 
 Profile.create!(birthday: '1990-03-30',
   gender: 'male',
@@ -140,13 +204,24 @@ Profile.create!(birthday: '2000-12-25',
   hobby: '食べ歩き',
   user_id: '5')
 
-puts "Profile Created"
+puts "成功 プロフィールを作成しました！"
+
+# ツイートの作成
+puts "============================================="
+puts "===== ツイートを作成中... ====="
+puts "============================================="
 
 User.all.each do |u|
   5.times do |i|
     tweet = u.tweets.create!(post: "つぶやきコンテント#{i + 1}")
+    puts "成功 Tweet #{i + 1} by #{u.name}が正常に作成されました！"
   end
 end
+
+# 問い合わせの作成
+puts "============================================="
+puts "===== 問い合わせを作成中... ====="
+puts "============================================="
 
 Inquiry.create!(
   user_id: '1',
@@ -182,6 +257,13 @@ Inquiry.create!(
   content: '新しい機能の提案があります',
   created_at: '2023-11-05'
 )
+
+puts "成功 問い合わせを作成しました！"
+
+# 記事の作成
+puts "============================================="
+puts "===== 記事を作成中... ====="
+puts "============================================="
 
 Article.create!(
   [
@@ -223,10 +305,12 @@ Article.create!(
     {
       title: 'メソッド編',
       sub_title: 'paramsとは',
-      content: 'paramsとはRailsで送られてきた値を受け取るためのメソッドです。 
+      content: 'paramsとはRailsで送られてきた値を受け取るためのメソッドです。
                 送られてくる情報(リクエストパラメータ)は主に、getのクエリパラメータとPostでformを使って送信されるデータの2つです。',
       article_type: 'e-learning',
       admin_id: '1'
     }
   ]
 )
+
+puts "成功 記事を作成しました！"

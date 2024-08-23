@@ -41,18 +41,23 @@ Rails.application.routes.draw do
   end
 
   devise_for :users, controllers: {
-    sessions:      'users/sessions',
-    passwords:     'users/passwords',
-    confirmations: 'users/confirmations',
-    registrations: 'users/registrations',
+    sessions:           'users/sessions',
+    passwords:          'users/passwords',
+    confirmations:      'users/confirmations',
+    registrations:      'users/registrations',
     omniauth_callbacks: 'users/omniauth_callbacks'
   }
 
   namespace :users do
     resources :dash_boards, only: [:index]
-    resources :chat_rooms, only: [:create, :show]
-    resources :stocks, only:[:create, :destroy, :index]
-    resources :learnings, only: [:index, :show, :create]
+    resources :chat_gpts do
+      member do
+        post :continue_question
+      end
+    end
+    resources :chat_rooms, only: %i[create show]
+    resources :stocks, only: %i[create destroy index]
+    resources :learnings, only: %i[index show create]
     resources :articles do
       resources :article_comments, only: %i[create destroy update] # 記事コメント機能
       resource :likes, only: [] do
@@ -60,12 +65,13 @@ Rails.application.routes.draw do
         delete 'article_destroy', on: :member
       end
     end
+
     resources :users do
       resource :posts, only: [] do
         get 'index_user', on: :member
       end
-      resource :relationships, only: [:index, :create, :destroy]
-        get :followings, :followers, on: :member
+      resource :relationships, only: %i[index create destroy]
+      get :followings, :followers, on: :member
     end
     resources :users, only: [:show]
     resources :posts do
@@ -106,7 +112,7 @@ Rails.application.routes.draw do
   }
 
   namespace :managers do
-    resources :tenants, only: [:index, :show, :new, :create, :destroy]
+    resources :tenants, only: %i[index show new create destroy]
     resources :profiles do
       collection do
         get 'managers_show'

@@ -1,0 +1,13 @@
+<% provide(:title, "AIに質問する") %>
+<div class="content">
+  <div class="container-fluid">
+    <%= render "users/chat_gpts/shared/chat_gpt_form", btn_name: "質問する", url: users_chat_gpts_path(dashboard: @dashboard, page: params[:page]), method: :post %>
+  </div>
+</div>
+
+<!-- ローディングスピナーと処理中メッセージ -->
+<div id="loading-spinner" style="display: none; text-align: center; margin-top: 10px;">
+  <span>処理中...</span>
+</div>
+
+<script src="<%= asset_pack_path 'application.js' %>"></script>

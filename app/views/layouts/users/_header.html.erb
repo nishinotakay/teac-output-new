@@ -13,7 +13,11 @@
     <% unless current_admin.present? %>
       <li class="nav-item d-none d-sm-inline-block">
         <%= link_to "投稿した記事一覧", users_dash_boards_path, class:"nav-link", method: :get %>
-      </li>
+        <% unless current_admin.present? %>
+        <li class="nav-item d-none d-sm-inline-block">
+          <%= link_to "AIに質問", new_users_chat_gpt_path, class: "nav-link", target: "_blank" %>
+        </li>
+      <% end %>
     <% end %>
   </ul>
   <!-- Right navbar links -->
@@ -24,7 +28,7 @@
             <%= link_to new_users_article_path, class: "nav-link", method: :get do %>
               <p>記事投稿</p>
             <% end %>
-          </li> 
+          </li>
         <% elsif request.fullpath == "/users/profiles" %>
           <% if current_user.profile&.id.present? %>
             <li class="nav-item">
@@ -52,11 +56,11 @@
             <% end %>
           </li>
         <% end %>
-      </li>    
+      </li>
     </ul>
   <div class="dropdown navbar-nav" style="padding-bottom:6px">
       <div class="nav-link" id="dropdownMenuButton button_group" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <b class="caret"></b> 
+        <b class="caret"></b>
         <% if current_user.present? %>
           <%= image_tag(@user_profile_image.presence || 'default_profile_image.png', class: "rounded-circle", size: "30x30") %>
         <% end %>

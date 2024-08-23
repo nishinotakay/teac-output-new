@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_02_14_022102) do
+ActiveRecord::Schema.define(version: 2024_05_19_161625) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -90,6 +90,16 @@ ActiveRecord::Schema.define(version: 2024_02_14_022102) do
     t.string "article_type"
     t.index ["admin_id"], name: "index_articles_on_admin_id"
     t.index ["user_id"], name: "index_articles_on_user_id"
+  end
+
+  create_table "chat_gpts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.text "prompt"
+    t.text "content"
+    t.bigint "user_id", null: false
+    t.string "mode"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_chat_gpts_on_user_id"
   end
 
   create_table "chat_messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -286,6 +296,7 @@ ActiveRecord::Schema.define(version: 2024_02_14_022102) do
   add_foreign_key "article_comments", "users"
   add_foreign_key "articles", "admins"
   add_foreign_key "articles", "users"
+  add_foreign_key "chat_gpts", "users"
   add_foreign_key "chat_messages", "chat_rooms"
   add_foreign_key "chat_messages", "users"
   add_foreign_key "chat_room_users", "chat_rooms"

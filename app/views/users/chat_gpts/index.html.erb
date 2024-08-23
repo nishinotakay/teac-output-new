@@ -1,0 +1,38 @@
+<!-- app/views/users/chat_gpts/index.html.erb -->
+<% if @chatgpts.present? %>
+  <div class="chatgpt-list">
+    <% @chatgpts.each.with_index(1) do |chatgpt, chatgpt_index| %>
+      <div class="chatgpt-item">
+        <% title, content = extract_title_and_content(chatgpt.content) %>
+        <p><strong>タイトル：</strong><%= link_to title.presence || "No Title", users_chat_gpt_path(chatgpt) %></p>
+        <% if content.present? %>
+          <div>
+            <% questions_and_answers = split_questions_and_answers(content) %>
+            <% questions_and_answers.each_with_index do |(question, answer), answer_index| %>
+              <div class="qa-block">
+                <p><strong>質問No. <%= chatgpt.id %>-<%= answer_index + 1 %>：</strong> <%= question.strip if question.present? %></p>
+                <% title_match = answer.match(/タイトル:\s*(.*)/) %>
+                <% if title_match %>
+                  <p><strong>回答No. <%= chatgpt.id %>-<%= answer_index + 1 %>：タイトル：</strong> <%= title_match[1].strip %></p>
+                  <p><%= answer.sub(title_match[0], '').strip.html_safe if answer.present? %></p>
+                <% else %>
+                  <p><strong>回答No. <%= chatgpt.id %>-<%= answer_index + 1 %>：</strong> <%= answer.strip.html_safe if answer.present? %></p>
+                <% end %>
+              </div>
+              <hr>
+            <% end %>
+          </div>
+        <% else %>
+          <p>回答がまだありません。</p>
+        <% end %>
+      </div>
+      <hr>
+    <% end %>
+  </div>
+<% else %>
+  <p>質問がありません。</p>
+<% end %>
+
+<div class="box-return-to-create">
+  <%= link_to '質問作成に戻る', new_users_chat_gpt_path, class: "btn btn-primary" %>
+</div>
