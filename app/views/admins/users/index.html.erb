@@ -30,7 +30,7 @@
               <tr>
                 <td><%= user.name %></td>
                 <td><%= user.email %></td>
-                <td><%= user.articles.count %></td>
+                <td><%= link_to user.articles.count, users_dash_boards_path(user_id: user.id), style: "text-decoration: none;" %></td>
                 <td><%= link_to user.posts.count, index_user_users_user_posts_path(user.id), style: "text-decoration: none;" %></td>
                 <td><%= link_to user.tweets.count, index_user_users_tweet_path(id: user.id), style: "text-decoration: none;" %></td>
                 <td>
