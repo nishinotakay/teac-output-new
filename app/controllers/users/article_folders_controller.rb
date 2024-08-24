@@ -33,3 +33,4 @@ class Users::ArticleFoldersController < ApplicationController
     end
 
 end
+

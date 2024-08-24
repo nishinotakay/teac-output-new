@@ -1,0 +1,112 @@
+<%= javascript_pack_tag "users/folder" %>
+<div class="modal fade" id="editFolderModal" tabindex="-1" aria-labelledby="editFolderModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header d-flex justify-content-center">
+        <h5 class="modal-title" id="editFolderModalLabel">フォルダの編集</h5>
+        <button type="button" class="btn-close position-absolute end-0 mr-1" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <%= form_with(model: @folder, url: users_folder_path(@folder), local:true ) do |f| %>
+          <%= f.text_field :name, class: "form-control text-center" %>
+          <%= f.submit "編集する", class: "btn btn-primary mt-3" %>
+          <button type="button" class="btn btn-secondary addFolderbtn-cancel mt-3 ml-3" data-bs-dismiss="modal">キャンセル</button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div><!-- ./editFolderModal  -->
+<div class="modal fade" id="destroyFolderModal" tabindex="-1" aria-labelledby="destroyFolderModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header d-flex justify-content-center">
+        <h5 class="modal-title" id="destroyFolderModalLabel">フォルダの削除</h5>
+        <button type="button" class="btn-close position-absolute end-0 mr-1" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p><%= "#{@folder.name}フォルダを削除しますか?" %><br>削除したフォルダは復元できません。</p>
+        <%= link_to "削除する", users_folder_path(@folder), class: "btn btn-danger d-inline p-2 mt-2", method: :delete, data: {confirm: "この操作は取り消せません。よろしいですか?"} %>
+        <button type="button" class="btn btn-secondary d-inline" data-bs-dismiss="modal">キャンセル</button>
+      </div>
+    </div>
+  </div>
+</div><!-- ./ destroyFolderModal -->
+<div class="col-12 avoid-element-coverage">
+  <% if @articles.present? %>
+    <% hover = @articles.present? ? "table-hover" : "" %>
+    <table class="table articles-table <%= hover %> table-scroll">
+      <thead>
+        <tr>
+          <th class="px-5"><%= Article.human_attribute_name(:title) %></th>
+          <th class="px-5"><%= Article.human_attribute_name(:sub_title) %></th>
+          <th class="px-5"><%= Article.human_attribute_name(:user) %></th>
+          <th class="px-5"><%= Article.human_attribute_name(:created_at) %></th>
+          <th></th>
+        </tr>
+      </thead>
+        <tbody>
+          <% if hover.present? %>
+            <% @articles.each_with_index do |article, index| %>
+              <% article_folders = @article_folder.find { |af| af.article_id == article.id } %>
+              <tr>
+                <td class="link-td folder-article" id="article-title" draggable="true" data-article-id="<%= article_folders.article_id %>" data-folder-id="<%= article_folders.folder_id %>" onclick='window.location="<%= users_article_path(id: article.id) %>"'>
+                  <div class="d-flex align-items-center">
+                    <%= article.title %>
+                  <% unless current_admin.present? %>
+                    <% if article.likes.present? %>
+                      <% if current_user.article_already_liked?(article.id) %>
+                        <i class="fa-solid fa-heart ml-4 mr-2"></i><%= article.likes.count %>
+                      <% else %>
+                        <i class="fa-regular fa-heart ml-4 mr-2"></i><%= article.likes.count %>
+                      <% end %>
+                    <% else %>
+                      <% if article.likes.present? %>
+                        <i class="fa-solid fa-heart ml-4 mr-2"></i><%= article.likes.count %>
+                      <% end %>
+                    <% end %>
+                    <% if article.article_comments.present? %>
+                      <i class="fa-regular fa-comment fa-sm ms-auto">&nbsp<%= article.article_comments.count %></i>
+                    <% end %>
+                  <% end %>
+                  </div>
+                </td>
+                <td class="link-td" id="article-subtitle" onclick='window.location="<%= users_article_path(id: article.id) %>"'><%= article.sub_title %></td>
+                  <% if article.admin.present? %>
+                    <td class="link-td" id="article-authur" onclick='window.location="<%= admins_article_path(id: article.id) %>"'><%= article.admin.name %></td>
+                  <% else %>
+                    <td class="link-td" id="article-authur" onclick='window.location="<%= users_article_path(id: article.id) %>"'><%= article.user.name %></td>
+                  <% end %>
+                <td class="link-td" id="article-createdat" onclick='window.location="<%= users_article_path(id: article.id) %>"'><%= l(article.created_at, format: :long) %></td>
+                  <td>
+                    <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
+                    <ul class="dropdown-menu">
+                      <% if current_user.present? && current_admin.nil? %>
+                        <% if article.user_id == current_user.id %>
+                          <li><%= link_to '閲覧', users_article_path(id: article.id, page: params[:page]), class: "nav-link" %></li>
+                          <li><%= link_to '編集', edit_users_article_path(id: article.id, page: params[:page]), class: "nav-link" %></li>
+                          <li><%= link_to '削除', users_article_path(id: article.id, page: params[:page]), method: :delete, data: {confirm: "選択した記事を削除します。"}, class: "nav-link" %></li>
+                        <% else %>
+                          <li><%= link_to '閲覧', users_article_path(id: article.id, page: params[:page]), class: "nav-link" %></li>
+                        <% end %>
+                      <% end %>
+                      <% if current_admin.present? %>
+                        <li><%= link_to '閲覧', users_article_path(id: article.id, page: params[:page]), class: "nav-link" %></li>
+                      <% end %>
+                    </ul>
+                  </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <%= render 'users/shared/table_without_record' %>
+          <% end %>
+        </tbody>
+    </table>
+      <div class="article-paginate">
+        <%= paginate @articles, theme: 'bootstrap-5' %>
+      </div>
+</div><!-- col-12 ./-->
+<% else %>
+  <div class="col-12">
+    <p class="fs-4">フォルダに追加した記事がありません。</p>
+  </div>
+<% end %>

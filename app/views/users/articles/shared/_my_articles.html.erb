@@ -12,12 +12,12 @@
         </div>
         <div class="folder-wrapper">
           <ul class="folder-list">
-          <% if @folders.present? %>
-            <% @folders.each do |folder| %>
-              <li class="folder-list-item" data-folder-id="<%= folder.id %>"><i class="fa-regular fa-folder fa-lg"></i><%= link_to "#{folder.name}", users_folder_path(folder.id), remote: true, class: "folder-link" %></li>
+            <% if @folders.present? %>
+              <% @folders.each do |folder| %>
+                <li class="folder-list-item" data-folder-id="<%= folder.id %>"><i class="fa-regular fa-folder fa-lg"></i><%= link_to "#{folder.name}", users_folder_path(folder.id), remote: true, class: "folder-link" %></li>
+              <% end %>
             <% end %>
-            </ul>
-          <% end %>
+          </ul>
           <!-- Button to Open the Modal -->
           <button type="button" class="btn btn-secondary mt-3 addFolderbtn" data-bs-toggle="modal" data-bs-target="#addFolderModal">
             フォルダ新規作成  
@@ -103,7 +103,7 @@
                         <% end %>
                       <% end %>
                       <% if current_admin.present? %>
-                       <li><%= link_to '閲覧', users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
+                        <li><%= link_to '閲覧', users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
                       <% end %>
                     </ul>
                   </td>
@@ -116,92 +116,6 @@
         </table>
         <div class="article-paginate">
           <%= paginate @articles, theme: 'bootstrap-5' %>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="sortFilterModal" tabindex="-1" aria-labelledby="sortFilterModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="form-inline">
-        <h5 class="modal-title text-center flex-grow-1 mt-4" id="sortFilterModalLabel"></h5>
-        <button type="button" class="modal-close btn-close mr-3" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body text-right">
-      <% if current_admin.nil? %>
-        <div class="sort-modal" style="display: none;">
-          <div class="form-group row my-5">
-            <label for="sort-select" class="col-sm-3 col-form-label"><%= Article.human_attribute_name(:created_at) %></label>
-            <div class="col-md-9">
-              <% order = {'DESC': '新しい順', 'ASC': '古い順'} %>
-              <% params[:order] ||= 'DESC' %>
-              <select id="sort-select" class="form-select" aria-label="Default select desc">
-                <option value="<%= params[:order] %>" selected><%= order.delete(:"#{params[:order]}") %></option>
-                <option value="<%= order.keys[0] %>"><%= order[order.keys[0]] %></option>
-              </select>
-            </div>
-          </div>
-        </div>    
-      <% else %>
-        <div class="sort-modal" style="display: none;">
-          <div class="form-group row my-5">
-            <label for="sort-select" class="col-sm-3 col-form-label"><%= Article.human_attribute_name(:created_at) %></label>
-            <div class="col-md-9">
-              <% order = {'DESC': '新しい順', 'ASC': '古い順'} %>
-              <% params[:order] ||= 'DESC' %>
-              <select id="sort-select-admin" class="form-select" aria-label="Default select desc">
-                <option value="<%= params[:order] %>" selected><%= order.delete(:"#{params[:order]}") %></option>
-                <option value="<%= order.keys[0] %>"><%= order[order.keys[0]] %></option>
-              </select>
-            </div>        
-          </div>
-        </div>
-      <% end %>
-        <div class="filter-modal" style="display: none;">
-          <% if !dashboard %>
-            <div class="form-group row my-4">
-              <label for="input-author" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:user) %></label>
-              <div class="col-md-8">
-                <input type="text" aria-label="author" id="input-author" class="form-control" value="<%= params[:author] %>">
-              </div>
-            </div>
-          <% end %>
-          <div class="form-group row my-4">
-            <label for="input-title" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:title) %></label>
-            <div class="col-md-8">
-              <input type="text" aria-label="title" id="input-title" class="form-control" value="<%= params[:title] %>">
-            </div>
-          </div>
-          <div class="form-group row my-4">
-            <label for="input-subtitle" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:sub_title) %></label>
-            <div class="col-md-8">
-              <input type="text" aria-label="subtitle" id="input-subtitle" class="form-control" value="<%= params[:subtitle] %>">
-            </div>
-          </div>
-          <div class="form-group row my-4">
-            <label for="input-content" class="col-sm-4 col-form-label"><%= Article.human_attribute_name(:content) %></label>
-            <div class="col-md-8">
-              <input type="text" aria-label="content" id="input-content" class="form-control" value="<%= params[:content] %>">
-            </div>
-          </div>
-          <div class="form-group row my-4">
-            <label for="input-created" class="col-sm-3 col-form-label"><%= Article.human_attribute_name(:created_at) %></label>
-            <div class="col-md-9 form-inline">
-              <div class="col-md-5">
-                <input type="date" aria-label="created" id="input-start" class="form-control" value="<%= params[:start] %>">
-              </div>
-              <div class="offset-1 align-bottom">〜</div>
-              <div class="col-md-5">
-                <input type="date" aria-label="created" id="input-finish" class="form-control" value="<%= params[:finish] %>">
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="text-center">
-          <button type="button" class="btn btn-primary submit-btn"></button>
-          <button type="button" class="modal-close btn btn-secondary" data-bs-dismiss="modal">戻る</button>
         </div>
       </div>
     </div>
