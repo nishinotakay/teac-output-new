@@ -14,8 +14,7 @@ class Users::ArticleFoldersController < ApplicationController
       else
         render json: { success: false, errors: ["元のフォルダと記事の関連が見つかりません。"] } and return
       end
-
-    end 
+    end
 
     article_folder = ArticleFolder.new(assign_folder_params)
 
