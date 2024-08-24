@@ -171,8 +171,6 @@ $(function(){
     const folderID = $(this).data("folder-id");
     $(this).removeClass('folder-dragging');
 
-    const newFolderID = $(this).data('folder-id');
-
     fetch('/users/articles/' + articleID + '/assign_folder/' + folderID , {
       method: 'POST',
       headers: {
