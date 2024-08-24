@@ -1,11 +1,11 @@
 class Users::ArticleFoldersController < ApplicationController
+  before_action :authenticate_user!
 
   def assign_folder
     article_id = params[:article_id]
     old_folder_id = params[:old_folder_id]
     new_folder_id = params[:folder_id]
-    user_id = current_user.id
-
+    
     if old_folder_id
       article_folder = ArticleFolder.find_by(article_id: article_id, folder_id: old_folder_id)
 
@@ -29,7 +29,7 @@ class Users::ArticleFoldersController < ApplicationController
   private
 
     def assign_folder_params
-      params.require(:article_folder).permit(:article_id, :folder_id, :user_id)
+      params.require(:article_folder).permit(:article_id, :folder_id, :user_id).merge(user_id: current_user.id)
     end
 
 end
