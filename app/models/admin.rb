@@ -9,6 +9,7 @@ class Admin < ApplicationRecord
 
   has_many :articles, dependent: :destroy
   has_many :posts, dependent: :destroy
+  has_one :charge_plan, dependent: :destroy
 
   enum gender: { male: 0, female: 1, other: 2 }
 
@@ -27,4 +28,9 @@ class Admin < ApplicationRecord
       admins.order(order[0] => order[1])
     end
   end
+
+  def have_charge_plan?(admin)
+    ChargePlan.where(admin_id: admin.id).exists?
+  end
+
 end

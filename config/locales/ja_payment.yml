@@ -1,0 +1,8 @@
+ja:
+  payment:
+    charge: "一括払い"
+    subscription: "サブスクリプション"
+    status:
+      succeeded: "成功"
+      failed: "失敗"
+      active: "契約中"

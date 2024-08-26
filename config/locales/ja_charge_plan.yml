@@ -1,0 +1,12 @@
+ja:
+  activerecord:
+    models:
+      charge_plan: "決済プラン"
+    attributes:
+      admins:
+      charge_plan:
+        price: "受講生10人あたりの料金"
+        quantity: "参加人数"
+        amount: "合計金額"
+        charge_type: "料金体系"
+        deadline: "注意!"

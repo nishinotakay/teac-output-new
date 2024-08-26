@@ -65,6 +65,7 @@
         <% if current_user.present? %>
           <li style="padding-left:3px"><%= current_user.name %></li>
           <hr style="height:0.5px">
+          <%= current_user.decorate.charge_type_flag %>
           <li style="padding-left:3px"><%= link_to "詳細画面", users_user_path(current_user), method: :get, class: "d-block" %></li>
           <li style="padding-left:3px"><%= link_to "ストック一覧", users_stocks_path, method: :get %></li>
           <li style="padding-left:3px"><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
