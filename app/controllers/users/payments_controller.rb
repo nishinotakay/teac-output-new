@@ -4,31 +4,23 @@ class Users::PaymentsController < Users::Base
 
   def index
     if current_user.stripe_customer_id
-      @charges = Stripe::Charge.list(customer: current_user.stripe_customer_id)
-      @subscriptions = Stripe::Subscription.list(customer: current_user.stripe_customer_id)
-      @payments = combine_payments(@charges.data, @subscriptions.data)
+      all_charges = Stripe::Charge.list(customer: current_user.stripe_customer_id).data
+      @subscriptions = Stripe::Subscription.list(customer: current_user.stripe_customer_id).data
+
+      subscription_invoice_ids = @subscriptions.map(&:latest_invoice)
+      @charges = all_charges.reject { |charge| subscription_invoice_ids.include?(charge.invoice) }
     else
-      @payments = []
+      @charges = []
+      @subscriptions = []
     end
   end
 
-    private
 
-    def combine_payments(charges, subscriptions)
-      combined = []
-      charges.each do |charge|
-        combined << { type: 'charge', data: charge }
-      end
-      subscriptions.each do |subscription|
-        combined << { type: 'subscription', data: subscription }
-      end
-        combined.sort_by{ |payment| payment[:data].created }
-    end
+  private
 
-    def verify_payment_user
-      unless current_user.id.to_s == params[:user_id]
-        redirect_to users_dash_boards_path
-      end
+  def verify_payment_user
+    unless current_user.id.to_s == params[:user_id]
+      redirect_to users_dash_boards_path
     end
-    
+  end
 end
