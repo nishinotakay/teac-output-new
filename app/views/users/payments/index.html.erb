@@ -1,46 +1,50 @@
 <% provide(:title, "支払い履歴") %>
 <div class="container-fluid">
-<% if @payments.any? %>
-  <% @payments.each do |payment| %>
-  <table class="table table-fixed ">
-    <thead>
-      <tr>
-        <th scope="col" class="w-25">支払日</th>
-        <th scope="col" class="w-25">金額</th>
-        <th scope="col" class="w-25">料金体系</th>
-        <th scope="col" class="w-25">決済ステータス</th>
-      </tr>
-    <tbody>
-    <tr>
-      <!-- 支払い日時 -->
-      <td>
-        <%= Time.at(payment[:data].created).strftime("%Y-%m-%d") %>
-      </td>
-      <!-- 支払い金額 -->
-      <td>
-        <!-- 単体決済(一括払いの料金表示) -->
-        <% if payment[:data].object == "charge" %>
-          <%= payment[:data].amount %>
+  <% if @charges.any? %>
+    <h2>単体決済</h2>
+    <table class="table table-fixed">
+      <thead>
+        <tr>
+          <th scope="col" class="w-25">支払日</th>
+          <th scope="col" class="w-25">金額</th>
+          <th scope="col" class="w-25">決済ステータス</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @charges.each do |charge| %>
+        <tr>
+          <td><%= Time.at(charge.created).strftime("%Y-%m-%d") %></td>
+          <td><%= charge.amount %>円</td>
+          <td><%= t("payment.status.#{charge.status}") %></td>
+        </tr>
         <% end %>
-        <!-- サブスクリプションの料金表示 -->
-        <% if payment[:data].object == "subscription" %>
-          <%= payment[:data][:plan].amount %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>単体決済の履歴がありません。</p>
+  <% end %>
+
+  <% if @subscriptions.any? %>
+    <h2>定額決済</h2>
+    <table class="table table-fixed">
+      <thead>
+        <tr>
+          <th scope="col" class="w-25">支払日</th>
+          <th scope="col" class="w-25">金額</th>
+          <th scope="col" class="w-25">決済ステータス</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @subscriptions.each do |subscription| %>
+        <tr>
+          <td><%= Time.at(subscription.current_period_start).strftime("%Y-%m-%d") %></td>
+          <td><%= subscription.items.data.first.plan.amount %>円</td>
+          <td><%= t("payment.status.#{subscription.status}") %></td>
+        </tr>
         <% end %>
-      </td>
-      <!-- 料金体系 -->
-      <td>
-         <%= t("payment.#{payment[:type]}") %>
-      </td>
-      <!-- 決済ステータス -->
-      <td>
-        <%= t("payment.status.#{payment[:data].status}") %>
-      </td>
-    </tr>
-    </tbody>
-    </thead>
-  </table>
-  <% end %>  
-<% else %>
-  <p>支払い履歴がありません</p>
-<% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>定額決済の履歴がありません。</p>
+  <% end %>
 </div>
