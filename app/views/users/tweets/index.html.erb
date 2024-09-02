@@ -7,7 +7,7 @@
   <a class= "modalTrriger" href="#" data-bs-toggle="modal" data-bs-target="#commentNotificationModal">
     <%= number_of_comment_notifications %>件の未確認のコメントがあります。
   </a>
-<% end %>  
+  <% end %>  
   <!-- モーダルの設定 -->
   <div class="modal fade" id="commentNotificationModal" tabindex="-1" aria-labelledby="commentNotificationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -39,6 +39,35 @@
     </div>
   </div>
 <% end %>
+
 <%= render "users/tweets/shared/tweets_table" %>
+
+<div class="comment-form mt-4" style="max-width: 600px; margin: 0 auto;">
+  <%= form_with(model: @comment, url: create_comment_users_tweets_path, local: true, html: { style: "display: flex; flex-direction: column; align-items: flex-start;" }) do |f| %>
+    <div class="form-group" style="width: 100%;">
+      <%= f.text_area :content, rows: 3, style: "width: 100%; resize: vertical; border-radius: 4px; border: 1px solid #ccc; padding: 8px;", placeholder: 'コメントを入力してください' %>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: flex-start; margin-top: 10px;">
+      <%= f.submit 'コメントする', class: 'btn btn-primary', style: "white-space: nowrap; padding: 6px 12px; font-size: 14px;" %>
+      <span style="color: #666; font-size: 14px; margin-top: 5px;">〜コメント一覧〜</span>
+    </div>
+  <% end %>
+</div>
+<!-- 〜コメント一覧〜 -->
+<div class="comments-list mt-4">
+  <h3>〜コメント一覧〜</h3>
+  <% @tweets.each do |tweet| %>
+    <div class="tweet-comments mb-4">
+      <h4>つぶやき: <%= tweet.post %></h4>
+      <% tweet.tweet_comments.order(created_at: :desc).each do |comment| %>
+        <div class="comment mb-2">
+          <p><strong><%= comment.user.name %>:</strong> <%= comment.content %></p>
+          <small><%= comment.created_at.strftime('%Y-%m-%d %H:%M') %></small>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
 <div id="new" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

@@ -3,7 +3,7 @@ require 'rinku'
 module Users
   class TweetsController < Users::Base
     # Userがログインしていないと、投稿を作成・編集・削除できない
-    before_action :authenticate_user!, only: %i[show index new create edit update destroy index_user]
+    before_action :authenticate_user!, only: %i[show index new create edit update destroy index_user create_comment]
     before_action :set_tweet, only: %i[show edit update destroy]
     # 投稿をしたユーザーでないと編集・削除できない
     before_action :correct_tweet_user, only: %i[edit update destroy]
@@ -11,6 +11,7 @@ module Users
 
     def index
       fetch_tweets_and_images
+      @comment = TweetComment.new
     end
 
     def show
@@ -59,10 +60,24 @@ module Users
       fetch_tweets_and_images(@user.id)
     end
 
+    def create_comment
+      @comment = current_user.tweet_comments.new(comment_params)
+      if @comment.save
+        flash[:success] = 'コメントが投稿されました'
+      else
+        flash[:danger] = @comment.errors.full_messages.join('・')
+      end
+      redirect_back(fallback_location: users_tweets_path)
+    end
+
     private
 
     def tweet_params
       params.require(:tweet).permit(:post, images: [])
+    end
+
+    def comment_params
+      params.require(:tweet_comment).permit(:content, :tweet_id)
     end
 
     def fetch_tweets_and_images(user_id = nil)
@@ -70,7 +85,6 @@ module Users
       @tweets = Tweet.apply_and_sort_query(filter, user_id, params[:page])
       @tweets_with_images = Tweet.tweet_and_image(@tweets)
     end
-
 
     # beforeフィルター
     def set_tweet

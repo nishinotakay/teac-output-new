@@ -98,6 +98,9 @@ Rails.application.routes.draw do
     end
     resources :profiles
     resources :tweets do # つぶやき機能
+      collection do
+        post 'create_comment'  # コメント作成用のルートを追加
+      end
       member do
         get 'index_user'
       end
