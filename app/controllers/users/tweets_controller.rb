@@ -15,7 +15,13 @@ module Users
 
     def show
       @tweet_comments = @tweet.tweet_comments.order(created_at: :desc)
-      @tweet_comment = current_user.tweet_comments.new unless current_admin.present?
+      if current_user.present?
+        @tweet_comment = current_user.tweet_comments.new
+      elsif current_admin.present?
+        @tweet_comment = nil
+      else
+        redirect_to root_path
+      end
     end
 
     def new
