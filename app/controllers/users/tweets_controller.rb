@@ -33,9 +33,6 @@ module Users
     end
 
     def edit
-      respond_to do |format|
-        format.js
-      end
     end
 
     def update
@@ -43,7 +40,8 @@ module Users
         flash[:success] = '編集成功しました。'
         redirect_to users_tweets_url
       else
-        render :edit
+        flash[:error] = @tweet.errors.full_messages.join('・')
+        redirect_to users_tweets_url
       end
     end
 

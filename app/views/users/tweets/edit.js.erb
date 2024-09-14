@@ -1,2 +1,2 @@
-$("#edit").html("<%= escape_javascript(render 'users/tweets/edit') %>");
+$("#edit").html("<%= j render partial: 'users/tweets/edit', locals: { tweet: @tweet } %>");
 $("#edit").modal("show");
