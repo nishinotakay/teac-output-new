@@ -40,8 +40,9 @@ module Users
         flash[:success] = '編集成功しました。'
         redirect_to users_tweets_url
       else
-        flash[:error] = @tweet.errors.full_messages.join('・')
-        redirect_to users_tweets_url
+        respond_to do |format|
+          format.js { render 'edit.js.erb' }
+        end
       end
     end
 

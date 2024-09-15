@@ -9,7 +9,7 @@
     </div>
     <div class="modal-body">
       <div class="row">
-        <%= form_with(model: @tweet, url: users_tweet_path, method: :patch, local: true) do |form| %>
+        <%= form_with(model: @tweet, url: users_tweet_path, method: :patch, local: false) do |form| %>
           <%= render 'layouts/error_messages', model: form.object %>
           <div style="text-align:center;"> 
             <div class="field">
@@ -25,3 +25,4 @@
     </div>
   </div>
 </div>          
+  

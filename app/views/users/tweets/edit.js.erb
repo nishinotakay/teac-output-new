@@ -1,2 +1,5 @@
 $("#edit").html("<%= j render partial: 'users/tweets/edit', locals: { tweet: @tweet } %>");
 $("#edit").modal("show");
+
+$("#edit-modal .modal-content").html("<%= j render 'users/tweets/edit', tweet: @tweet %>");
+$("#edit-modal").modal("show");
