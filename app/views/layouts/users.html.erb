@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>App</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_pack_tag 'users', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'users', 'data-turbolinks-track': 'reload' %>
+    <script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+    <%# <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script> %>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [["$","$"], ["\\(","\\)"]],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+        }
+      });
+    </script>
+    <%# <script src="http://andywer.github.io/drag-mock/drag-mock.min.js"></script>      %>
+  </head>
+
+  <body class="hold-transition sidebar-mini" id="<%= page_body_id(params) %>">
+    <div class="wrapper">
+      <%= render "layouts/users/header" %>
+      <%= render "layouts/users/side" %>
+      <div class="content-wrapper">
+        <%= render "layouts/flash" %>
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1 class="m-0"><%= yield(:title) %></h1>
+              </div><!-- /.col -->
+            </div><!-- /.row -->
+          </div><!-- /.container-fluid -->
+        </div>
+        <%= render template: "layouts/application" %>
+        <%= debug(params) if Rails.env.development? %>
+      </div>
+      <%= render "layouts/users/control_side" %>
+      <%= render "layouts/users/footer" %>
+    </div>
+  </body>
+</html>

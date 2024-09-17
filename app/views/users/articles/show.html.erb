@@ -1,0 +1,129 @@
+<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<%= javascript_pack_tag "users/articles_show" %>
+<div class="container">
+  <div class="row">
+    <div class="offset-1 col-10">
+      <div class="article-show pt-1 pb-1">
+        <div class="col-12">
+          <div class="mx-0 mt-4 mb-3">
+            <h1><%= @article.title %></h1>
+          </div>
+          <div class="d-flex justify-content-between">
+            <h4 class="ml-0"><%= @article.sub_title %></h4>
+            <div class="d-flex align-items-start flex-column">
+              <% if @article.user == current_user %>
+                <div>
+                  <%= link_to "編集", edit_users_article_path(@article, dashboard: @dashboard, page: params[:page], show: true), class: "btn btn-success" %>
+                </div>
+                <div>
+                  <%= link_to "削除", users_article_path(@article, dashboard: @dashboard, page: params[:page]), method: :delete, data: {confirm: "表示中の記事を削除します。"}, class: "btn btn-danger ml-1" %>
+                </div>
+              <% else %>
+                <% if @article.admin.present? %>
+                  <%= Article.human_attribute_name(:user) %>：<%= @article.admin.name %>
+                <% else %>
+                  <%= Article.human_attribute_name(:user) %>：<%= @article.user.name %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="m-4 article-content" data-article="<%= @article.sanitized_content %>"></div>
+        <!-- いいね機能のボタン-->
+          <div id="article_<%= @article.id %>" class="d-inline">
+            <%= render 'users/likes/article_likes', locals: { article: @article } %>
+          </div>
+        <!-- ストック機能のボタン -->
+          <div id="article_stock_<%= @article.id %>" class="d-inline ml-3">
+            <%= render 'users/stocks/stock', locals: { article: @article, stock: @stock } %>
+          </div>
+        <!-- フォロー機能のボタン -->
+        <div class="user-follow mt-2 ml-4 d-inline">
+          <% if current_user != @user%>
+            <%= @user.profile.present? ? link_to(@user.name, users_profile_path(id: @user.profile), data: { turbolinks: false }, class: "text-decoration-none") : @user.name %>
+          <% end %>
+          <div id="user_follow_<%= @user.id %>" class="ml-1 d-inline">
+            <%= render partial: 'users/relationships/follow', locals: { user: @user } %>
+          </div>
+        </div>
+      </div>  
+      <div class="article-comments-card mt-2">
+        <div class="article-comments-list">
+          <% if @article_comments.present? %>
+            <% @article_comments.each do |article_comment| %>
+              <!-- コメント編集Modal -->
+              <%= form_with model: [@article, article_comment], url: users_article_article_comment_path(@article, article_comment), method: :patch do |form| %>
+                <div class="modal fade" id="articleCommentUpdateModal-<%=article_comment.id %>" tabindex="-1" aria-labelledby="articleCommentUpdateModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="articleCommentUpdateModalLabel">コメントの編集</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <%= form.text_area :content, class:"form-control" %>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                        <%= form.submit "更新する", class: "btn btn-primary" %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+              <!-- コメント編集Modalここまで -->
+              <div class="article-comment-box">
+                <div class='article-comment-info d-flex align-items-center'> <%# 投稿者の名前、プロフィール写真、投稿日時 %>
+                  <% image = article_comment.user.profile.present? && article_comment.user.profile.image.present? ? article_comment.user.profile&.image : "user_default.png" %>
+                  <%=image_tag image, class: 'rounded-circle', size: '30x30' %>
+                  <strong><%= article_comment.user.name %></strong>
+                  <div class='article-comment-info-rightside d-flex align-items-center ms-auto'>
+                    <time><%= l(article_comment.created_at, format: :long) %></time>
+                    <div class="dropdown">
+                      <button class="btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">︙</button>
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <% if article_comment.user == current_user %>
+                          <li>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn dropdown-item" data-bs-toggle="modal" data-bs-target="#articleCommentUpdateModal-<%=article_comment.id %>">編集</button>
+                            <!-- Button trigger modalここまで -->
+                          </li>
+                          <li>
+                            <%= link_to '削除', users_article_article_comment_path(@article, article_comment), method: :delete, data: { confirm: '削除してよろしいですか?' }, class: 'dropdown-item' %>
+                          </li>
+                        <% else %>
+                          <li>
+                            <%= link_to 'このコメントを報告する', '#', class: 'dropdown-item' %></li>
+                          <li>
+                        <% end %>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class='article-comment-content'>
+                  <%= format_and_linkify_text(article_comment.content) %>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="has_no_comments">コメントがありません</p>
+          <% end %>
+        </div>
+        <%= render "users/articles/shared/comment_form_and_preview", dashboard: false %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="zoominImgModal" tabindex="-1" aria-labelledby="zoominImgModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="text-right mt-3">
+        <button type="button" class="modal-close btn-close mr-3" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center align-middle">
+        <div class="zoomin-modal"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,58 @@
+<%= javascript_pack_tag "users/profiles" %>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col align-self-start"><!--左余白--></div><!--左余白-->
+    <div class="align-self-center profile-title-form"><!--中央余白-->
+      <div class="card card-outline card-primary">
+        <div class="card-header text-center"><h2>プロフィール</h2></div>
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-12"></div>
+              <div class="card-body">
+                <div class="user-about">
+                  <div class="image text-center">
+                    <% image = @profile.present? && @profile.image.present? ? @profile.image : "user_default.png" %>
+                    <%= image_tag image , class: "rounded-circle", size: "120x120" %>
+                  </div>
+                  <div class="profile-indent text-center mt-3">
+                    <i class="fas fa-user"></i>
+                    <span><%= @profile.user.name %></span>
+                  </div>
+                    <%= render partial: 'users/users/follow_index', locals: { user: @user } %>
+                  <div class="user-follow-btn mt-3">
+                    <div id="user_follow_<%= @user.id %>" class="ml-1 mt-3 profile-follow-btn">
+                      <%= render partial: 'users/relationships/follow', locals: { user: @user } %>
+                    </div>
+                  </div>
+                    <hr>
+                  <div class="profile-indent" style="padding-left:30px">
+                    <i class="fas fa-heart"></i>
+                    性別
+                    <% gender = @profile.present? && @profile.gender_i18n.present? ? @profile.gender_i18n : "―" %>
+                    <span class="profile-indent"><%= gender %></span>
+                  </div>
+                    <hr>
+                  <div class="profile-indent" style="padding-left:30px">
+                    <i class="fas fa-book-open"></i>
+                    登録日
+                    <td class="text-muted"><%= @profile.registration_date %></td>
+                  </div>
+                    <hr>
+                  <div class="profile-indent" style="padding-left:30px">
+                    <i class="fas fa-flag"></i>
+                    趣味
+                    <td class="text-muted"><%= @profile.hobby %></td>
+                  </div>
+                    <hr>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div><!--中央余白-->
+    <div class="col align-self-end"><!--右余白--></div><!--右余白-->
+  </div>
+</div>

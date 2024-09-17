@@ -1,0 +1,47 @@
+<% provide(:title,  "動画詳細") %>
+
+<div class="container post-show">
+  <div class="row">
+    <div class="video-container">
+      <iframe width="100%" height="0%" src="https://www.youtube.com/embed/<%= @post.youtube_url %>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+
+    <div class="post-details">
+      <h2 class="post-title"><%= @post.title %></h2>
+
+      <div class="post-info" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="post-author">
+          <% if @post.admin_id.present? %>
+            <%= image_tag "admin.png", class: 'rounded-circle', size: '30x30' %>
+          <% else %>
+            <% image = @post.user.present? && @post.user.profile.present? && @post.user.profile.image.present? ? @post.user.profile.image : "user_default.png" %>
+            <%= image_tag image, class: 'rounded-circle', size: '30x30' %>
+          <% end %> 
+          <%= @post.admin ? @post.admin.name : @post.user.name %>
+        </div>
+
+        <div class="post-metadata" style="display: flex; align-items: center;">
+          <div class="post-likes" id="post_<%= @post.id %>">
+            <%= @post.decorate.formatted_likes(current_user) %>
+          </div>
+
+          <time class="timestamp" datetime="<%= @post.created_at.strftime('%Y-%m-%d') %>">
+            <%= @post.created_at.strftime('%Y-%m-%d') %>
+          </time>
+
+          <% if @post.admin_id == current_admin.id %>
+            <button class="btn btn-post-show-menu" data-bs-toggle="dropdown">︙</button>
+            <ul class="dropdown-menu">
+              <li><%= link_to '編集', edit_admins_post_path(id: @post.id), class: "nav-link" %></li>
+              <li><%= link_to '削除', admins_post_path(id: @post.id), method: :delete, data: { confirm: "選択した記事を削除します。" }, class: "nav-link" %></li>
+            </ul>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="post-body">
+        <%= @post.body %>
+      </div>     
+    </div>
+  </div>
+</div>

@@ -1,0 +1,129 @@
+<%= javascript_pack_tag "admins/dashboards_index" %>
+<button type="button" class="btn btn-success sort-modal-btn ml-5" data-bs-toggle="modal" data-bs-target="#sortFilterModal" style="display: none;">
+  並べ替え
+</button>
+<button type="button" class="btn btn-success filter-modal-btn ml-3" data-bs-toggle="modal" data-bs-target="#sortFilterModal" style="display: none;">
+  絞り込み検索
+</button>
+<% if params[:reset] %>
+  <button type="button" class="btn btn-outline-success reset-btn ml-3">リセット</button>
+<% end %>
+
+<% provide(:title,  "登録ユーザー一覧") %>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>名前</th>
+            <th>email</th>
+            <th>記事投稿数</th>
+            <th>動画投稿数</th>
+            <th>つぶやき投稿数</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @users.exists? %>
+            <% @users.each do |user| %>
+              <tr>
+                <td><%= user.name %></td>
+                <td><%= user.email %></td>
+                <td><%= link_to user.articles.count, users_dash_boards_path(user_id: user.id), style: "text-decoration: none;" %></td>
+                <td><%= link_to user.posts.count, index_user_users_user_posts_path(user.id), style: "text-decoration: none;" %></td>
+                <td><%= link_to user.tweets.count, index_user_users_tweet_path(id: user.id), style: "text-decoration: none;" %></td>
+                <td>
+                  <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
+                  <ul class="dropdown-menu">
+                    <li><%= link_to '詳細', admins_user_path(user.id), class:"nav-link" %></li>
+                  </ul>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="100" class="text-center py-5">登録ユーザーなし</tr>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= paginate @users, theme: 'bootstrap-5' %>        
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="sortFilterModal" tabindex="-1" aria-labelledby="sortFilterModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="form-inline">
+        <h5 class="modal-title text-center flex-grow-1 mt-4" id="sortFilterModalLabel"></h5>
+        <button type="button" class="modal-close btn-close mr-3" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-right">
+        <div class="sort-modal" style="display: none;">
+          <% selects = [['五十音順', '逆順'], ['アルファベット順', '逆順'], ['多い順', '少ない順']] %>
+          <% order = {'五十音順': 'ASC', 'アルファベット順': 'ASC', '逆順': 'DESC', '多い順': 'DESC', '少ない順': 'ASC'}.with_indifferent_access %>
+          <% {'name': selects[0], 'email': selects[1], 'articles': selects[2], 'posts': selects[2]}.each do |k, v| %>
+            <div class="form-group row my-5">
+              <label for="sort-<%= k %>" class="col-sm-4 col-form-label"><%= User.human_attribute_name(k) %></label>
+              <div class="col-md-8">
+                <select id="sort-<%= k %>" class="form-select" aria-label="Default select none">
+                  <option value="" selected>-</option>
+                  <option value="<%= order[v[0]] %>"><%= v[0] %></option>
+                  <option value="<%= order[v[1]] %>"><%= v[1] %></option>
+                </select>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <div class="filter-modal" style="display: none;">
+          <div class="form-group row my-4">
+            <label for="input-name" class="col-sm-4 col-form-label"><%= Profile.human_attribute_name(:name) %></label>
+            <div class="col-md-8">
+              <input type="text" aria-label="name" id="input-name" class="form-control" value="<%= params[:flt_name] %>">
+            </div>
+          </div>
+          <div class="form-group row my-4">
+            <label for="input-email" class="col-sm-4 col-form-label"><%= User.human_attribute_name(:email) %></label>
+            <div class="col-md-8">
+              <input type="text" aria-label="email" id="input-email" class="form-control" value="<%= params[:flt_email] %>">
+            </div>
+          </div>
+          <div class="form-group row my-4">
+            <label for="input-articles" class="col-sm-4 col-form-label"><%= User.human_attribute_name(:articles) %></label>
+            <div class="col-md-8 form-inline">
+              <div class="col-md-5">
+                <input type="number" min="0"
+                  aria-label="articles" id="input-articles_min" class="col-md-12 form-control" value="<%= params[:flt_articles_min] %>">
+              </div>
+              <div class="align-bottom">〜</div>
+              <div class="col-md-5">
+                <input type="number" min="0"
+                  aria-label="articles" id="input-articles_max" class="col-md-12 form-control" value="<%= params[:flt_articles_max] %>">
+              </div>
+            </div>
+          </div>
+          <div class="form-group row my-4">
+            <label for="input-posts" class="col-sm-4 col-form-label"><%= User.human_attribute_name(:posts) %></label>
+            <div class="col-md-8 form-inline">
+              <div class="col-md-5">
+                <input type="number" min="0"
+                  aria-label="posts" id="input-posts_min" class="col-md-12 form-control" value="<%= params[:flt_posts_min] %>">
+              </div>
+              <div class="align-bottom">〜</div>
+              <div class="col-md-5">
+                <input type="number" min="0"
+                  aria-label="posts" id="input-posts_max" class="col-md-12 form-control" value="<%= params[:flt_posts_max] %>">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <button type="button" class="btn btn-primary submit-btn"></button>
+          <button type="button" class="modal-close btn btn-secondary" data-bs-dismiss="modal">戻る</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

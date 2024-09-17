@@ -1,0 +1,41 @@
+<%= javascript_pack_tag "users/profiles" %>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col align-self-start"><!--左余白--></div><!--左余白-->
+    <div class="align-self-center profile-title-form"><!--中央余白-->
+      <div class="card card-outline card-primary">
+        <div class="card-header text-center"><h2>マネージャー詳細画面</h2></div>
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-12"></div>
+              <div class="card-body">
+                <div class="user-about">
+                  <div class="image text-center", style="padding-left:28px">
+                    <%= image_tag "admin.png" , size: "120x120" %>
+                  </div>
+                  <div class="profile-indent text-center">
+                    <i class="fas fa-user"></i>
+                    <span><%= current_manager.name %></span>
+                  </div>
+                  <hr>
+                  <div class="profile-indent text-center">
+                    <i class="fas fa-envelope"></i>
+                    <span><%= current_manager.email %></span>
+                  </div>
+                  <hr style="height:0.5px">
+                </div>
+                <div class="btn-manager--edit">
+                  <%= link_to "編集する", edit_manager_registration_path, class: "btn btn-primary" %>
+                </div>   
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div><!--中央余白-->
+    <div class="col align-self-end"><!--右余白--></div><!--右余白-->
+  </div>
+</div>
+

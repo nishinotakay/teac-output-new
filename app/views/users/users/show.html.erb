@@ -1,0 +1,73 @@
+<%= javascript_pack_tag "users/profiles" %>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col align-self-start"><!--左余白--></div><!--左余白-->
+    <div class="align-self-center profile-title-form"><!--中央余白-->
+      <div class="card card-outline card-primary">
+        <div class="card-header text-center"><h2>ユーザー詳細画面</h2></div>
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-12"></div>
+              <div class="card-body">
+                <div class="user-about">
+                  <div class="image text-center">
+                    <% image = @profile.present? && @profile.image.present? ? @profile.image : "user_default.png" %>
+                    <%= image_tag image , class: "rounded-circle", size: "120x120" %>
+                  </div>
+                  <div class="profile-indent text-center">
+                    <i class="fas fa-user"></i>
+                    <span><%= current_user.name %></span>
+                  </div>
+                    <%= render partial: 'users/users/follow_index', locals: { user: @user } %>
+                    <hr>
+                  <div class="profile-indent text-center">
+                    <i class="fas fa-envelope"></i>
+                    <span><%= @user.email %></span>
+                  </div>
+                    <hr style="height:0.5px">
+                  <div class="profile-indent" style="padding-left:30px">
+                    <i class="fas fa-heart"></i>
+                    性別
+                    <% gender = @profile.present? && @profile.gender_i18n.present? ? @profile.gender_i18n : "―" %>
+                    <span class="profile-indent"><%= gender %></span>
+                  </div>
+                    <hr>
+                  <div class="profile-indent" style="padding-left:30px">
+                    <i class="fas fa-gift"></i>
+                    誕生日
+                    <span class="profile-indent" style="padding-right:10px">
+                    <% birthday = @profile.present? && @profile.birthday.present? ? @profile.birthday : "―" %>
+                    <%= birthday %></span>
+                  </div>
+                    <hr>
+                  <div class="profile-indent mb-5" style="padding-left:30px">
+                   <i class="fas fa-book-open"></i>
+                   プログラミング学習開始日
+                    <% learning_start = @profile.present? && @profile.learning_start.present? ? @profile.learning_start : "―" %>
+                    <%= learning_start %>
+                  </div>
+                  <div class="content">
+                    <div class="text-center">
+                      <button type="button" class="btn btn-success" style="width:100px">
+                      <%= link_to "投稿記事",users_articles_path,class: "Editlink" %>
+                      </button>
+                     <button type="button" class="btn btn-danger" style="width:100px">
+                      <%= link_to "投稿動画",users_posts_path,class: "Editlink" %>
+                      </button>
+                     <button type="button" class="btn btn-info" style="width:100px font-size:10px">
+                      <%= link_to "投稿つぶやき",users_tweets_path,class: "Editlink" %>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div><!--中央余白-->
+    <div class="col align-self-end"><!--右余白--></div><!--右余白-->
+  </div>
+</div>

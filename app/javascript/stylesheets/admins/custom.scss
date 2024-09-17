@@ -1,0 +1,64 @@
+// cssサンプル
+// stylesheet_pack_tag 'admins'が適応されている、app/views/layouts/admins.html.erbのレイアウトでこのcssファイルが適応されます。
+// webpcker_dev_serverが起動しているので、開発環境ではcssが更新されると自動でフロント側に反映されます。
+
+body {
+  background-color: #e9ecef;
+ }
+ 
+.register-box {
+  display: flex;
+  flex-direction: column;
+  height: 85vh;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.card-body1 {
+  flex: 1 1 auto;
+  min-height: 1px;
+  padding: 1rem;
+}
+
+.card-header{
+  background-color: #f8f9fa;
+}
+
+.dropdown-menu {
+  min-width: 0px;
+}
+
+.nav-link:hover{
+  background-color: #e9ecef;
+}
+
+.dropdown-menu-header {
+  min-width: 100px;
+}
+
+.nav-link:hover{
+  background-color: #e9ecef;
+}
+
+.custom-select-field{
+  width: 170px;
+  height: 32px;
+  border-width: 2px;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.charge-guide {
+  width: 16%;
+  height: 10%;
+  border: solid 1px #000;
+  padding: 14px;
+}
+
+.charge-guide:not(:last-child) {
+  margin-right: 18px;
+}
+
+.current-guide {
+  background-color: #d8d8d8; 
+}

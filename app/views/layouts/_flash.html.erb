@@ -1,0 +1,31 @@
+<% flash.each do |key, value| %>
+  <% alert_class = case key.to_sym
+     when :notice, :success then 'alert-success'
+     when :alert, :warning then 'alert-warning'
+     when :error then 'alert-danger'
+     else 'alert-secondary'
+  end %>
+  <div class="alert <%= alert_class %> alert-dismissible">
+    <% if value.is_a?(Array) %>
+      <ul>
+        <% value.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <%= value %>
+    <% end %>
+    <!-- flashメッセージを×ボタンで消す -->
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+  </div>
+<% end %>
+
+<!-- 下記は、flashメッセージの×ボタンを機能させるスクリプト -->
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script>
+$(function() {
+  $(".close").on('click', function() {
+    $(this).closest('.alert').hide();
+  });
+});
+</script>

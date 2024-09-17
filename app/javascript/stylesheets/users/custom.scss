@@ -1,0 +1,42 @@
+// cssサンプル
+// stylesheet_pack_tag 'users'が適応されている、app/views/layouts/users_auth.html.erbと、app/views/layouts/users.html.erbのレイアウトでこのcssファイルが適応されます。
+// webpcker_dev_serverが起動しているので、開発環境ではcssが更新されると自動でフロント側に反映されます。
+body {
+  background-color: #e9ecef;
+ }
+ 
+ .card-body1 {
+  flex: 1 1 auto;
+  min-height: 1px;
+  padding: 1rem;
+}
+
+.profile-indent{
+  padding-left:0.3em;
+}
+
+.profile-indent-name{
+  padding-left: 9.5em;
+}
+
+.profile-indent-birthday{
+  padding-left:8.4em;
+}
+
+.profile-indent-gender{
+  padding-left:9.4em;
+}
+
+.profile-indent-hobby{
+  padding-left:9.5em;
+}
+
+.profile-indent-image{
+  padding-left:5.1em;
+}
+
+.profile-indent-input{
+  padding-left: 8.3em;
+}
+
+@import "bootstrap";

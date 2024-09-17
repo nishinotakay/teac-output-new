@@ -1,0 +1,76 @@
+<%= javascript_pack_tag "users/profiles" %>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col align-self-start"><!--左余白--></div><!--左余白-->
+    <div class="align-self-center profile-title-form "><!--中央余白-->
+      <div class="card card-outline card-primary">
+        <div class="card-header text-center"><h2>登録ユーザー詳細画面</h2></div>
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-12"></div>
+              <div class="card-body">
+                <div class="user-about">
+                  <div class="image text-center">
+                    <p class="text-muted">
+                      <% image = @profile.present? && @profile.image.present? ? @profile.image : "user_default.png" %>
+                      <%= image_tag image , class: "rounded-circle", size: "120x120" %>
+                    </p>
+                  </div>
+                  <div class="profile-indent text-center">
+                    <i class="fas fa-user"></i>
+                    <span><%= @user.name %></span>
+                  </div>
+                    <hr style="height:0.1px">
+                  <div class="profile-indent text-center">
+                    <i class="fas fa-envelope"></i>
+                    <span><%= @user.email %></span>
+                  </div>
+                    <hr style="height:0.1px">
+                  <div class="profile-indent" style="padding-left:30px">
+                    <i class="fas fa-heart"></i>
+                    性別
+                    <span class="profile-indent">
+                    <% gender = @profile.present? && @profile.gender_i18n.present? ? @profile.gender_i18n : "―" %>
+                    <%= gender %></span>
+                  </div>
+                    <hr style="height:0.1px">
+                  <div class="profile-indent" style="padding-left:30px">
+                    <i class="fas fa-book-open"></i>
+                    登録日
+                    <span class="profile-indent">
+                    <% registration_date = @profile.present? && @profile.registration_date.present? ? @profile.registration_date : "―" %>
+                    <%= registration_date %></span>
+                  </div>
+                    <hr style="height:0.1px">
+                  <div class="profile-indent" style="padding-left:30px">
+                    <i class="fas fa-flag"></i>
+                    趣味
+                    <span class="profile-indent">
+                    <% hobby = @profile.present? && @profile.hobby.present? ? @profile.hobby : "―" %>
+                    <%= hobby %></span>
+                  </div>
+                  <div class="content mt-4 mb-3">
+                    <div class="text-center">
+                      <button type="button" class="btn btn-success" style="width:100px">
+                       <%= link_to "投稿記事",users_dash_boards_path(user_id: @user),class: "Editlink" %>
+                      </button>
+                      <button type="button" class="btn btn-danger" style="width:100px">
+                       <%= link_to "投稿動画",index_user_users_user_posts_path(user_id: @user),class: "Editlink" %>
+                      </button>
+                      <button type="button" class="btn btn-info" style="width:100px font-size:10px">
+                       <%= link_to "投稿つぶやき",index_user_users_tweet_path(user_id: @user),class: "Editlink" %>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div><!--中央余白-->
+    <div class="col align-self-end"><!--右余白--></div><!--右余白-->
+  </div>
+</div>

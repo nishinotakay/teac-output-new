@@ -1,0 +1,36 @@
+@import "bootstrap";
+@import "admin-lte";
+@import '@fortawesome/fontawesome-free';
+@import './admins/custom';
+@import './users/github-dark.scss';
+@import './users/articles.scss';
+
+.dropdown-menu {
+  min-width: 0px;
+}
+
+.dropdown:hover{
+  background-color: #e9ecef;
+}
+
+.dropdown-menu-header {
+  min-width: 100px;
+}
+
+.nav-link:hover{
+  background-color: #e9ecef;
+}
+
+.Editlink {
+  text-decoration: none;
+  color: white ;
+}
+
+.Editlink:hover {
+  text-decoration: none;
+  color: white ;
+}
+
+.profile-title-form {
+  width: 450px;
+}

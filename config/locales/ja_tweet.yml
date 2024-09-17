@@ -1,0 +1,14 @@
+ja:
+  activerecord:
+    models:
+      tweet: 'つぶやき'
+    attributes:
+      tweet:
+        post: '投稿内容'
+        created_at: '投稿日時'
+        updated_at: '編集日時'
+        author: '投稿者'
+        images: '画像'
+  tweet:
+    confirmations:
+      delete_comment: "本当にコメントを削除しますか？"

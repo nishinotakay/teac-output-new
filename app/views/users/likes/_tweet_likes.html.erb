@@ -1,0 +1,9 @@
+<% if current_user.tweet_already_liked?(@tweet.id) %>
+  <%= link_to tweet_destroy_users_tweet_likes_path(@tweet), method: :delete, remote: true, class: 'text-decoration-none' do %>
+    <i class="fa-solid fa-heart ml-4 mr-2"></i><%= @tweet.likes.count %>
+  <% end %>
+<% else %>
+  <%= link_to tweet_create_users_tweet_likes_path(@tweet), method: :post, remote: true, class: 'text-decoration-none' do %>
+    <i class="fa-regular fa-heart ml-4 mr-2"></i><%= @tweet.likes.count %>
+  <% end %>
+<% end %>

@@ -1,0 +1,7 @@
+<%= javascript_pack_tag "users/articles_new_and_edit" %>
+<% provide(:title,  "記事編集") %>
+<div class="content">
+  <div class="container">
+    <%= render "users/articles/shared/article_form_and_preview", btn_name: "更新", url: users_article_path(dashboard: @dashboard, page: params[:page]), method: :patch %>
+  </div>
+</div>

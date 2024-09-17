@@ -1,0 +1,26 @@
+<h1 style="text-align:center;">編集画面</h1>
+<%= form_with model: @post, url: admins_post_path(@post), method: :patch, local: true do |form| %>
+  <div style="text-align:center;">
+    <%= render 'layouts/error_messages', model: form.object %>
+    <div class="field">
+      <%= form.label :title, "タイトル" %><br>
+      <%= form.text_field :title, id:"post_title", placeholder:"タイトル（必須 30文字まで)", maxlength: 30, size: 40 %>
+    </div>
+    <span class="count_t" id="count_title_t">0文字</span>
+
+    <div class="field">
+      <%= form.label :body, "内容" %><br>
+      <%= form.text_area :body, id:"post_text", placeholder:"内容（必須 240文字まで)", maxlength: 240, size: "40x10" %>
+    </div>
+    <span class="count" id="count_title">0文字</span>
+
+    <div class="field">
+      <%= form.label :youtube_url, "Youtube URL" %><br>
+      <%= form.text_field :youtube_url, id: :post_youtube_url, placeholder:"YoutubeのURLを添付（必須)", size: 40 %>
+    </div>
+
+    <div class="actions">
+      <br><%= form.submit %>
+    </div>
+  </div>
+<% end %>

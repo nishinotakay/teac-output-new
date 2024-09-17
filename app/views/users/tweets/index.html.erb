@@ -1,0 +1,44 @@
+<%= javascript_pack_tag "users/tweets","users/index_articles_and_dashboards" %>
+<% provide(:title, "つぶやき一覧") %>
+<% unless current_admin.present? %>
+  <% number_of_comment_notifications = @comment_notifications.count %>
+  <% if number_of_comment_notifications > 0 %>
+  <!-- モーダルのトリガー -->
+  <a class= "modalTrriger" href="#" data-bs-toggle="modal" data-bs-target="#commentNotificationModal">
+    <%= number_of_comment_notifications %>件の未確認のコメントがあります。
+  </a>
+<% end %>  
+  <!-- モーダルの設定 -->
+  <div class="modal fade" id="commentNotificationModal" tabindex="-1" aria-labelledby="commentNotificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="commentNotificationModalLabel">コメント通知一覧</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="list-group">
+            <% @comment_notifications.each do |notification| %>
+              <%= form_with url: confirmed_notification_users_tweet_tweet_comment_path(notification.tweet, notification), method: :patch, local: true, html: {class: "notification-form", id: "comment-#{notification.id}"} do |form| %>
+                <li class="list-group-item">
+                  <% image = current_user.profile.present? && current_user.profile.image.present? ? current_user.profile&.image : "user_default.png" %>
+                  <div class="d-flex align-items-center">
+                    <%= image_tag image , class: "rounded-circle", size: "60x60" %>
+                    <div class="d-flex flex-column align-items-start">
+                      <strong><%= notification.user.name %>さんがあなたのつぶやきにコメントしました。</strong>
+                      <p><%= link_to "#{truncate(notification.content, omission: '...')}", "#", class: "notification-link" %></p>
+                      <time class="timestamp" data-time="<%= notification.created_at.to_i %>"></time>
+                    </div>
+                  </div>
+                </li>
+              <% end %>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+<%= render "users/tweets/shared/tweets_table" %>
+<div id="new" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
