@@ -222,6 +222,8 @@ GEM
       racc (~> 1.4)
     nokogiri (1.15.3-arm64-darwin)
       racc (~> 1.4)
+    nokogiri (1.15.3-x86_64-darwin)
+      racc (~> 1.4)
     nokogiri (1.15.3-x86_64-linux)
       racc (~> 1.4)
     oauth2 (2.0.9)
@@ -405,6 +407,7 @@ GEM
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
     ssrf_filter (1.1.1)
+    stripe (12.5.0)
     thor (1.2.2)
     tilt (2.2.0)
     timeout (0.4.0)
@@ -447,6 +450,7 @@ GEM
 PLATFORMS
   aarch64-linux
   arm64-darwin-22
+  x86_64-darwin-23
   x86_64-linux
 
 DEPENDENCIES
@@ -493,6 +497,7 @@ DEPENDENCIES
   selenium-webdriver
   simplecov
   spring
+  stripe
   turbolinks (~> 5)
   turnip
   tzinfo-data

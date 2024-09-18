@@ -106,6 +106,10 @@ Rails.application.routes.draw do
           patch 'confirmed_notification' # confirmed_notificationアクションに対するRESTfulなルーティングを定義
         end
       end
+      resource :likes, only: [] do # つぶやきのいいね機能
+        post 'tweet_create', on: :member
+        delete 'tweet_destroy', on: :member
+      end
     end
     resources :inquiries
   end

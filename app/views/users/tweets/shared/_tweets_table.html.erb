@@ -60,7 +60,15 @@
                   <% end %>
                 </div>
                 <div class="goodIcon px-2">
-                  <i class="fa-regular fa-heart fa-lg"></i>
+                  <%= link_to users_tweet_path(data[:tweet].id), style: "color: black; text-decoration: none;" do %>
+                    <% if data[:tweet].likes.present? %>
+                      <% if current_user.tweet_already_liked?(data[:tweet].id) %>
+                        <i class="fa-solid fa-heart fa-lg"></i><%= data[:tweet].likes.count %>
+                      <% else %>
+                        <i class="fa-regular fa-heart fa-lg"></i><%= data[:tweet].likes.count %>
+                      <% end %>
+                    <% end %>
+                  <% end %>
                 </div>
               </div>
             </div>

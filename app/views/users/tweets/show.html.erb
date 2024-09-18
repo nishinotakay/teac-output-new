@@ -4,7 +4,7 @@
   <div class="row">
     <div class="co-12 col-lg-8 offset-lg-2">
       <div class="card">
-       <% image = @tweet.user.profile.present? && @tweet.user.profile.image.present? ? @tweet.user.profile&.image : "user_default.png" %>
+        <% image = @tweet.user.profile.present? && @tweet.user.profile.image.present? ? @tweet.user.profile&.image : "user_default.png" %>
         <div class="d-flex align-items-center">
           <%= image_tag image , class: "rounded-circle", size: "60x60" %>
           <div class="d-flex align-items-start justify-content-start">
@@ -15,6 +15,7 @@
             </div>
           </div>
         </div>
+
         <div class="tweet-content">
           <%= raw Rinku.auto_link(sanitize(simple_format(@tweet.post.gsub(/ /, '&nbsp;'))), :all, 'target="_blank"') %>
             <% @tweet.images.each do |image| %>
@@ -24,6 +25,7 @@
             <% end %>
         </div>
       </div>
+
       <% unless current_admin.present? %>
       <div class="comment-create-form form-group">
         <%= form_with(model: [@tweet, @tweet_comment], url: users_tweet_tweet_comments_path(@tweet, @tweet_comment), method: :post) do |form| %>
@@ -34,10 +36,18 @@
           <%= form.submit 'コメントする', class: "btn btn-primary comment-submit" %>
         <% end %>
       </div>
+
+      <div class="d-flex align-items-center justify-content-end mt-3">
+        <div id="tweet_<%= @tweet.id %>" class="ml-3">
+          <%= render 'users/likes/tweet_likes', tweet: @tweet %>
+        </div>
+      </div>
       <% end %>
+
       <% if @tweet_comments.exists? %>
         <p class="comment-list fw-bold">〜コメント一覧〜</p>
       <% end %>
+
       <% @tweet_comments.each do |comment| %>
         <div class="comment-box" id="comment-<%= comment.id %>">
           <!-- モーダルの設定 -->
@@ -61,6 +71,7 @@
               </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
           </div><!-- /.modal -->
+          
           <% image = comment.user.profile.present? && comment.user.profile.image.present? ? comment.user.profile&.image : "user_default.png" %>
           <div class="comment-contents">
             <div class="comment-header d-flex align-items-center">

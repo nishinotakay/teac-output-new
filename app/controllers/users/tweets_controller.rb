@@ -14,6 +14,7 @@ module Users
     end
 
     def show
+      @tweet = Tweet.find_by(id: params[:id])
       @tweet_comments = @tweet.tweet_comments.order(created_at: :desc)
       @tweet_comment = current_user.tweet_comments.new unless current_admin.present?
     end
@@ -74,7 +75,8 @@ module Users
 
     # beforeフィルター
     def set_tweet
-      @tweet = Tweet.find(params[:id])
+      @tweet = Tweet.find_by(id: params[:tweet_id])
+      Rails.logger.info("Tweet found: #{@tweet.inspect}")
     end
 
     def correct_tweet_user
