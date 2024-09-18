@@ -11,6 +11,7 @@ module Users
 
     def index
       fetch_tweets_and_images
+      @tweet = Tweet.new # 新しいツイート用のインスタンスを作成
     end
 
     def show
@@ -58,6 +59,7 @@ module Users
     def index_user
       @user = User.find(params[:id])
       fetch_tweets_and_images(@user.id)
+      @tweet = Tweet.new # 新しいツイート用のインスタンスを作成
     end
 
     private
@@ -71,7 +73,6 @@ module Users
       @tweets = Tweet.apply_and_sort_query(filter, user_id, params[:page])
       @tweets_with_images = Tweet.tweet_and_image(@tweets)
     end
-
 
     # beforeフィルター
     def set_tweet
