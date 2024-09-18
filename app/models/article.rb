@@ -2,6 +2,7 @@
 
 class Article < ApplicationRecord
   mount_uploader :image, ImageUploader # ようせい追加（画像保存）
+
   validates :user_id, presence: true, if: -> { admin_id.blank? }
   validates :admin_id, presence: true, if: -> { user_id.blank? }
 
@@ -21,6 +22,8 @@ class Article < ApplicationRecord
   validates :sub_title, allow_nil: true, length: { maximum: 50 }
   validates :content, presence: true
   validates :article_type, presence: true, if: :admin_updating_or_creating?
+
+  after_create :assign_to_default_folder
 
   def self.paginated_and_sort_filter(filter)
     
@@ -64,5 +67,13 @@ class Article < ApplicationRecord
 
     def admin_updating_or_creating?
       admin_id.present?
+    end
+
+    def assign_to_default_folder
+      return unless user.present?
+      uncategorized_folder = user.folders.find_by(name: '未分類')
+      if uncategorized_folder
+        ArticleFolder.create!(article_id: self.id, folder_id: uncategorized_folder.id)
+      end
     end
 end
