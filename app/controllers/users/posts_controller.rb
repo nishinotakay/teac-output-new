@@ -6,7 +6,7 @@ module Users
     skip_before_action :authenticate_user!, only: %i[show], if: :admin_signed_in?
 
     def index
-      @posts = Post.includes(:likes,:post_comments).filtered_and_ordered_posts(params, params[:page], 30)
+      @posts = Post.includes(:likes, :post_comments).filtered_and_ordered_posts(params, params[:page], 30)
 
       respond_to do |format|
         format.html
@@ -42,6 +42,7 @@ module Users
       if @post.save
         redirect_to users_post_path(@post), flash: { success: '動画を投稿しました' }
       else
+        flash[:error] = @post.errors.full_messages
         render :new
       end
     end
@@ -52,6 +53,7 @@ module Users
       if @post.update(post_params)
         redirect_to users_post_path(@post), flash: { success: '動画情報を更新しました' }
       else
+        flash[:error] = @post.errors.full_messages
         render :edit
       end
     end
@@ -60,7 +62,8 @@ module Users
       if @post.destroy!
         redirect_to users_posts_path, flash: { warning: '動画を削除しました。' }
       else
-        redirect_to :index
+        flash[:error] = '動画の削除に失敗しました。'
+        redirect_to users_posts_path
       end
     end
 

@@ -1,0 +1,37 @@
+<%= javascript_pack_tag 'users/stripe_checkout'%>
+<h2 class="text-center">定額決済画面</h2>
+
+<div class="charge-content mt-5">
+  <p class="text-center fs-5">受講料金:<%= @charge_plan.amount %>円</p>
+  <p class="text-center fs-5">支払方法:<%= @charge_plan.charge_type %></p>
+</div>
+
+<div id="privacyPolicy" class="privacy-policy m-auto mt-5">
+  <p class="text-center fw-bold fs-6">プライバシーポリシー</p>
+  <p class="fw-bold">1. Stripeを通じた決済処理</p>
+  <p>当サイトでは、オンラインでの支払い処理の安全性を確保するために、
+  国際的に認知されている決済サービスプロバイダーであるStripeを採用しています。</p>
+
+  <p>Stripeは、高度なセキュリティ基準と暗号化技術を使用して、お客様のクレジットカード情報などの決済情報を保護します。
+  これにより、当サイトはお客様の決済情報を直接取り扱うことなく、安全に支払い処理を行うことが可能になります。</p>
+
+  <p class="fw-bold">2. 情報の提供と使用</p>
+  <p>お客様がお支払いをする際、お客様のメールアドレスおよび支払い情報はStripeによって処理されます。
+  お客様の情報は、購入手続きの完了、購入後のサポート、および将来の購入を容易にするためにのみ使用されます。
+  当サイトおよびStripeは、これらの情報を他の目的で使用したり、第三者と共有したりすることはありません。</p>
+
+  <p class="fw-bold">3.サブスクリプションによる継続的な課金</p>
+  <p>お客様がサブスクリプションサービスに登録する際、お客様は定期的な課金に同意したことになります。
+  サブスクリプションは自動的に更新され、お客様のStripeに登録された支払い方法によって、定期的に課金が行われます。</p>
+  <p>サブスクリプションの課金期間はサービスによって異なりますが、お客様はいつでもサブスクリプションをキャンセルすることができます。
+  キャンセルされた場合、次回の課金日以降は課金されませんが、キャンセル時点までのサービスはそのまま提供されます。</p>
+</div>
+
+<div class="text-center mt-5 form-check">
+  <input type="checkbox" class="form-check-input" name="agreeCheckbox" id="agreeCheckbox" disabled>
+  <label class="form-check-label" for="agreeCheckbox" disabled>プライバシーポリシーに同意する</label>
+  <p class="fst-italic mt-3">※上記のプライバシーポリシーを最後までお読み下さい。</p>
+</div>
+<div class="text-center">
+  <button id="goToSubscriptionPage" class="mt-5" disabled>決済手続きへ</button>
+</div>

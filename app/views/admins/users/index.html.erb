@@ -20,6 +20,7 @@
             <th>email</th>
             <th>記事投稿数</th>
             <th>動画投稿数</th>
+            <th>つぶやき投稿数</th>
             <th></th>
           </tr>
         </thead>
@@ -29,8 +30,9 @@
               <tr>
                 <td><%= user.name %></td>
                 <td><%= user.email %></td>
-                <td><%= user.articles.count %></td>
-                <td><%= user.posts.count %></td>
+                <td><%= link_to user.articles.count, users_dash_boards_path(user_id: user.id), style: "text-decoration: none;" %></td>
+                <td><%= link_to user.posts.count, index_user_users_user_posts_path(user.id), style: "text-decoration: none;" %></td>
+                <td><%= link_to user.tweets.count, index_user_users_tweet_path(id: user.id), style: "text-decoration: none;" %></td>
                 <td>
                   <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
                   <ul class="dropdown-menu">

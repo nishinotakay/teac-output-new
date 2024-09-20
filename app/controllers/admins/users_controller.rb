@@ -15,7 +15,8 @@ module Admins
         name: params[:ord_name], 
         email: params[:ord_email], 
         articles: params[:ord_articles],
-        posts: params[:ord_posts] 
+        posts: params[:ord_posts], 
+        tweets: params[:ord_tweets]
       }.compact
 
       filter = {
@@ -24,7 +25,9 @@ module Admins
         articles_min: params[:flt_articles_min], 
         articles_max: params[:flt_articles_max],
         posts_min: params[:flt_posts_min], 
-        posts_max: params[:flt_posts_max]
+        posts_max: params[:flt_posts_max],
+        tweets_min: params[:flt_tweets_min], 
+        tweets_max: params[:flt_tweets_max]
       }
 
       @users = if order.count == 1

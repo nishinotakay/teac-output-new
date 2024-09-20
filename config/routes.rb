@@ -14,6 +14,13 @@ Rails.application.routes.draw do
   namespace :admins do
     resources :posts
     resources :dash_boards, only: [:index]
+    resources :charge_plans do
+      collection do
+        post 'confirm'
+        get 'back'
+        get 'complete'
+      end
+    end
     resources :articles do
       member do
         get 'users_show'
@@ -54,6 +61,12 @@ Rails.application.routes.draw do
     resources :stocks, only:[:create, :destroy, :index]
     resources :learnings, only: [:index, :show, :create]
     resources :folders, only: [:create, :show, :update, :destroy]
+    resources :checkouts, only: [:new, :create] do
+      get 'complete', on: :collection
+    end
+    resources :subscriptions, only: [:new, :create] do
+      get 'complete', on: :collection
+    end
     resources :articles do
       resources :article_comments, only: %i[create destroy update] # 記事コメント機能
       resource :likes, only: [] do
@@ -66,6 +79,7 @@ Rails.application.routes.draw do
       resource :posts, only: [] do
         get 'index_user', on: :member
       end
+      resources :payments, only: [:index]
       resource :relationships, only: [:index, :create, :destroy]
         get :followings, :followers, on: :member
     end

@@ -35,6 +35,7 @@ module Users
         @profile.user.update(profile_params[:user_attributes])
         redirect_to users_profile_path(current_user.profile), notice: 'プロフィールを作成しました'
       else
+        flash[:error] = @profile.errors.full_messages.join(', ')
         render :new
       end
     end
@@ -43,6 +44,7 @@ module Users
       if @profile.update(profile_params)
         redirect_to users_profile_path, notice: 'プロフィール情報を更新しました'
       else
+        flash[:error] = @profile.errors.full_messages.join(', ')
         render :edit
       end
     end

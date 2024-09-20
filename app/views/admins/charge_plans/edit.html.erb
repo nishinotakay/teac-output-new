@@ -1,0 +1,24 @@
+<%= javascript_pack_tag "admins/charge" %>
+<h2 class="text-center mb-5">受講料金 編集</h2>
+
+<%= form_with model: @charge_plan, url: admins_charge_plan_path, local: true do |f| %>
+  <div class="field mt-3">
+    <%= f.label :price %>
+    <%= f.number_field :price, id: "price_field", step: "100", min: "0", data: { default: '0' }, class: 'text-center form-control-sm price' %>
+  </div>
+  <div class="field mt-3">
+    <%= f.label :quantity %>
+    <%= f.number_field :quantity, id: "quantity_field", step: "10", min: "0", data: { default: '0' }, class: 'text-center form-control-sm' %>
+  </div>
+  <div class="field mt-3">
+    <%= f.label :charge_type %>
+    <%= f.select :charge_type, [["定額決済", "定額決済"], ["一括払い", "一括払い"], ["無料", "無料"]], { include_blank: "選択してください" }, { class: 'custom-select-field' } %>
+  </div>
+  <div class="field mt-5">
+    <p id="total_amount" class="fw-bold">合計金額</p>
+    <%= f.hidden_field :amount, id: "amount_field" %>
+  </div>
+  <div class="text-center mt-3 mb-4">
+    <%= f.submit "更新", class: 'btn btn-dark mt-3' %>
+  </div>
+<% end %>
