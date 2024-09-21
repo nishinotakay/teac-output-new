@@ -186,8 +186,9 @@ $(function(){
     .then(response => response.json())
     .then(data => {
       if (data.success) {
-        var flashMessage = `<p class="alert alert-success">${data.message}<button type="button" class="close" data-dismiss="alert">&times;</button></p>`;
+        var flashMessage = `<p class="alert alert-success ajax-flash">${data.message}<button type="button" class="close" data-dismiss="alert">&times;</button></p>`;
         $('.content-wrapper').prepend(flashMessage);
+
         if ($('.folder-article').length > 0){
         draggedArticle.remove();
         }
@@ -220,11 +221,4 @@ $(function(){
       $('.alert-success').hide(1000);
     }
   });
-  // ページの再読み込み時にflashメッセージを非表示にする
-  $(document).ready(function() {
-    if ($('.alert-success').length) {
-      $('.alert-success').hide();
-    }
-  });
-
 });

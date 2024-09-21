@@ -23,6 +23,7 @@ class Users::ArticleFoldersController < ApplicationController
     if article_folder.save
       flash[:success] = "#{old_folder.name}から#{new_folder.name}に移動しました!"
       render json: { success: true, message: flash[:success] }
+      flash.discard(:success)
     else
       render json: { success: false, errors: article_folder.errors.full_messages }
     end
