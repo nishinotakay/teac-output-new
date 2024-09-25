@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_05_19_161625) do
+ActiveRecord::Schema.define(version: 2024_09_25_082113) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -105,16 +105,6 @@ ActiveRecord::Schema.define(version: 2024_05_19_161625) do
     t.index ["admin_id"], name: "index_charge_plans_on_admin_id"
   end
 
-  create_table "chat_gpts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.text "prompt"
-    t.text "content"
-    t.bigint "user_id", null: false
-    t.string "mode"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_chat_gpts_on_user_id"
-  end
-
   create_table "chat_messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "chat_room_id", null: false
     t.bigint "user_id", null: false
@@ -156,6 +146,8 @@ ActiveRecord::Schema.define(version: 2024_05_19_161625) do
     t.boolean "completed", default: false
     t.integer "learner_id", null: false
     t.integer "learned_article_id", null: false
+    t.integer "admin_id"
+    t.index ["admin_id"], name: "index_learnings_on_admin_id"
   end
 
   create_table "likes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -164,6 +156,7 @@ ActiveRecord::Schema.define(version: 2024_05_19_161625) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "post_id"
+    t.bigint "tweet_id"
   end
 
   create_table "managers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -306,12 +299,13 @@ ActiveRecord::Schema.define(version: 2024_05_19_161625) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "article_comments", "articles"
   add_foreign_key "article_comments", "users"
   add_foreign_key "articles", "admins"
   add_foreign_key "articles", "users"
   add_foreign_key "charge_plans", "admins"
-  add_foreign_key "chat_gpts", "users"
   add_foreign_key "chat_messages", "chat_rooms"
   add_foreign_key "chat_messages", "users"
   add_foreign_key "chat_room_users", "chat_rooms"

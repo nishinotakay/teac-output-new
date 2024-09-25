@@ -38,6 +38,7 @@ Rails.application.routes.draw do
       end
     end
     resources :inquiries
+    resources :learnings, only: [:index, :show, :create]
   end
 
   # =================================================================

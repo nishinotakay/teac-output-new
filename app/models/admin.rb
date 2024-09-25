@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Admin < ApplicationRecord
   # Include default devise modules. Others available are:
   # :lockable, :timeoutable, :trackable and :omniauthable
@@ -10,8 +8,15 @@ class Admin < ApplicationRecord
   has_many :articles, dependent: :destroy
   has_many :posts, dependent: :destroy
   has_one :charge_plan, dependent: :destroy
-
+  
+  # 管理者の学習進捗を保持する関連付け
+  has_many :learning_status, class_name: "Learning", foreign_key: "admin_id", dependent: :destroy
+  
   enum gender: { male: 0, female: 1, other: 2 }
+
+  def completed?(article)
+    learning_status.exists?(learned_article_id: article.id, completed: true)
+  end
 
   def self.sort_filter(order, filter)
     artcl_min = filter[:articles_min].blank? ? 0 : filter[:articles_min]
@@ -32,5 +37,4 @@ class Admin < ApplicationRecord
   def have_charge_plan?(admin)
     ChargePlan.where(admin_id: admin.id).exists?
   end
-
 end

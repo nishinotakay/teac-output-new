@@ -1,0 +1,35 @@
+<%= javascript_pack_tag "admins/index_articles_and_dashboards" %>
+
+<% provide(:title,  "e-learning一覧") %>
+
+<div class="container">
+  <div class="row">
+    <% if @e_learning_articles.present? %>
+      <% @e_learning_articles.each_with_index do |article, index| %>
+      <div class="col-sm-6 offset-sm-1">
+        <div class="card e-learning-index-item">
+          <h5 class="card-header">
+            <% if current_admin.completed?(article) %>
+              <button type="button" class="btn btn-outline-secondary btn-xs learning-status-completed" disabled>完了</button>
+            <% else %>
+              <button type="button" class="btn btn-outline-secondary btn-xs learning-status-incomplete" disabled>未完了</button>
+            <% end %>
+            <%= article.title %>
+          </h5>
+          <div class="card-body">
+            <div class="card-text e-learning-index-item">
+              <%= article.sub_title %>
+            </div>
+            <div>
+              <%= link_to "記事を読む", admins_learning_path(id: article.id), class: "btn article-button" %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% end %>
+    <% end %>
+    <div class="article-paginate">
+      <%= paginate @e_learning_articles, theme: 'bootstrap-5' %>
+    </div>
+  </div>
+</div>
