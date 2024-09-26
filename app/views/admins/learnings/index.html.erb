@@ -21,7 +21,11 @@
               <%= article.sub_title %>
             </div>
             <div>
-              <%= link_to "記事を読む", admins_learning_path(id: article.id), class: "btn article-button" %>
+              <% if index == 0 || current_admin.completed?(@e_learning_articles[index - 1]) %>
+                <%= link_to "記事を読む", admins_learning_path(id: article.id), class: "btn article-button" %>
+              <% else %>
+                <button type="button" class="btn article-button" disabled>記事を読む</button>
+              <% end %>
             </div>
           </div>
         </div>

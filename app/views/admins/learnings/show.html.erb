@@ -15,8 +15,8 @@
       <hr>
       <div class="m-4 article-content" data-article="<%= @learning_article.content %>"></div>
       <div class="text-center mt-3">
-        <%= form_with(model: @learning, url: admins_learnings_path, local: true) do |f| %> <!-- URLをadminsに変更 -->
-          <%= f.hidden_field :admin_id, value: current_admin.id %> <!-- user_idをadmin_idに変更 -->
+        <%= form_with(model: @learning, url: admins_learnings_path, local: true) do |f| %>
+          <%= f.hidden_field :admin_id, value: current_admin.id %>
           <%= f.hidden_field :article_id, value: @learning_article.id %>
           <%= f.submit "読了したら次へ", class: 'btn btn-block nextButton' %>
         <% end %>
