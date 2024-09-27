@@ -5,11 +5,11 @@ class Users::ArticleFoldersController < ApplicationController
     article_id = params[:article_id]
     old_folder_id = params[:old_folder_id]
     new_folder_id = params[:folder_id]
+    old_folder = Folder.find_by(id: old_folder_id)
+    new_folder = Folder.find_by(id: new_folder_id)
     
     if old_folder_id
       article_folder = ArticleFolder.find_by(article_id: article_id, folder_id: old_folder_id)
-      old_folder = Folder.find_by(id: old_folder_id)
-      new_folder = Folder.find_by(id: new_folder_id)
 
       if article_folder
         article_folder.destroy
@@ -21,9 +21,15 @@ class Users::ArticleFoldersController < ApplicationController
     article_folder = ArticleFolder.new(assign_folder_params)
 
     if article_folder.save
-      flash[:success] = "#{old_folder.name}から#{new_folder.name}に移動しました!"
-      render json: { success: true, message: flash[:success] }
-      flash.discard(:success)
+      if old_folder
+        flash[:success] = "#{old_folder.name}から#{new_folder.name}に移動しました!"
+        render json: { success: true, message: flash[:success] }
+        flash.discard(:success)
+      else
+        flash[:success] = "#{new_folder.name}に移動しました!"
+        render json: { success: true, message: flash[:success] }
+        flash.discard(:success)
+      end
     else
       render json: { success: false, errors: article_folder.errors.full_messages }
     end

@@ -20,7 +20,7 @@
           </ul>
           <!-- Button to Open the Modal -->
           <button type="button" class="btn btn-secondary mt-3 addFolderbtn" data-bs-toggle="modal" data-bs-target="#addFolderModal">
-            フォルダ新規作成  
+            フォルダ新規作成
           </button>
         </div>
       <!-- CreateFolderModal -->
@@ -52,6 +52,7 @@
               <% unless dashboard %>
                 <th class="px-5"><%= Article.human_attribute_name(:user) %></th>
               <% end %>
+              <th class="px-5">フォルダ</th>
               <th class="px-5"><%= Article.human_attribute_name(:created_at) %></th>
               <th></th>
             </tr>
@@ -89,6 +90,9 @@
                       <td class="link-td" id="article-authur" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'><%= article.user.name %></td>
                     <% end %>
                   <% end %>
+                  <td class="link-td folder-name" id="article-authur" folder-artilce-id="<%= article.id %>" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'>
+                    <%= @folder_names[article.id] || "未分類" %>
+                  </td>
                   <td class="link-td" id="article-createdat" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'><%= l(article.created_at, format: :long) %></td>
                   <td>
                     <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>

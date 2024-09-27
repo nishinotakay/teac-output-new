@@ -136,11 +136,13 @@ $(function(){
   var articleID;
   var oldFolderID;
   var draggedArticle;
+  var oldfolderTd;
 
   $(document).on('dragstart', '.link-td[draggable="true"]', function(e) {
     draggedArticle = $(this).closest('tr');
     articleID = $(this).closest('td').attr('data-article-id');
     oldFolderID = $(this).closest('td').attr('data-folder-id');
+    oldfolderTd = $(this).closest('tr').find('.folder-name');
 
     if (articleID) {
       const articleTitle = $(this).text().trim();
@@ -169,6 +171,8 @@ $(function(){
   $('.folder-list-item').on('drop', function(e) {
     e.preventDefault();
     const folderID = $(this).data("folder-id");
+    const NewFolderName = $(this).find('.folder-link').text();
+
     $(this).removeClass('folder-dragging');
 
     fetch('/users/articles/' + articleID + '/assign_folder/' + folderID , {
@@ -186,11 +190,12 @@ $(function(){
     .then(response => response.json())
     .then(data => {
       if (data.success) {
-        var flashMessage = `<p class="alert alert-success ajax-flash">${data.message}<button type="button" class="close" data-dismiss="alert">&times;</button></p>`;
+        const flashMessage = `<p class="alert alert-success ajax-flash">${data.message}<button type="button" class="close" data-dismiss="alert">&times;</button></p>`;
         $('.content-wrapper').prepend(flashMessage);
+        oldfolderTd.text(NewFolderName);
 
         if ($('.folder-article').length > 0){
-        draggedArticle.remove();
+          draggedArticle.remove();
         }
       } else {
         console.error('Failed to move article:', data.errors);
@@ -208,7 +213,7 @@ $(function(){
   $('.folder-link').on('click', function(event) {
     const folderName = $(this).text();
     $('h1').text(folderName);
-    if (!$('.editFolderbtn,.destroyFolderbtn').length){
+    if (!$('.editFolderbtn,.destroyFolderbtn').length > 0){
       $('h1').wrap('<div class="heading-wrapper col-2"></div>')
       $('.filter-modal-btn').after('<button type="button" class="btn btn-danger ml-3 mr-5 destroyFolderbtn" data-bs-toggle="modal" data-bs-target="#destroyFolderModal">フォルダ削除</button>');
       $('.filter-modal-btn').after('<button type="button" class="btn btn-secondary ml-5 float-end editFolderbtn" data-bs-toggle="modal" data-bs-target="#editFolderModal">フォルダ編集</button>');
@@ -217,7 +222,7 @@ $(function(){
   });
 
   $('.folder-list-item').on('click', function(e) {
-    if ($('.alert-success').length) {
+    if ($('.alert-success').length > 0) {
       $('.alert-success').hide(1000);
     }
   });
