@@ -8,13 +8,14 @@
             <span class="hamburger-menu-bar"></span>
             <span class="hamburger-menu-bar"></span>
           </button>
-            <span class="hamburger-menu-text">記事フォルダ</span>
+          <span class="hamburger-menu-text">記事フォルダ</span>
         </div>
         <div class="folder-wrapper">
           <ul class="folder-list">
             <% if @folders.present? %>
               <% @folders.each do |folder| %>
-                <li class="folder-list-item" data-folder-id="<%= folder.id %>"><i class="fa-regular fa-folder fa-lg"></i><%= link_to "#{folder.name}", users_folder_path(folder.id), remote: true, class: "folder-link" %></li>
+                <li class="folder-list-item" data-folder-id="<%= folder.id %>"><i class="fa-regular fa-folder fa-lg"></i>
+                <%= link_to "#{folder.name}", users_folder_path(folder.id), remote: true, class: "folder-link" %></li>
               <% end %>
             <% end %>
           </ul>
@@ -22,7 +23,8 @@
           <button type="button" class="btn btn-secondary mt-3 addFolderbtn" data-bs-toggle="modal" data-bs-target="#addFolderModal">
             フォルダ新規作成
           </button>
-        </div>
+        </div><!-- ./ folder-wrapper -->
+      </div><!-- ./ col-2 article-folder-wrapper -->
       <!-- CreateFolderModal -->
       <div class="modal fade" id="addFolderModal" tabindex="-1" aria-labelledby="addFolderModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -40,8 +42,7 @@
             </div>
           </div>
         </div>
-      </div>
-      </div><!-- ./ col-2 article-folder-wrapper -->
+      </div><!-- ./ modal fade -->
       <div class="col-10">
         <% hover = @articles.present? ? "table-hover" : "" %>
         <table class="table articles-table <%= hover %> table-scroll">
@@ -77,7 +78,7 @@
                           <i class="fa-solid fa-heart ml-4 mr-2"></i><%= article.likes.count %>
                         <% end %>
                       <% end %>
-                      <%if article.article_comments.present? %>
+                      <% if article.article_comments.present? %>
                         <i class="fa-regular fa-comment fa-sm ms-auto">&nbsp<%= article.article_comments.count %></i>
                       <% end %>
                     </div>
@@ -121,7 +122,7 @@
         <div class="article-paginate">
           <%= paginate @articles, theme: 'bootstrap-5' %>
         </div>
-      </div>
-    </div>
+      </div><!-- ./ col-10 -->
+    </div><!-- ./ row -->
   </div>
 </div>

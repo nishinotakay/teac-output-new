@@ -1,4 +1,5 @@
 <%= javascript_pack_tag "users/folder" %>
+<!-- -editFolderModal -->
 <div class="modal fade" id="editFolderModal" tabindex="-1" aria-labelledby="editFolderModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -16,6 +17,7 @@
     </div>
   </div>
 </div><!-- ./editFolderModal  -->
+<!-- destroyFolderModal -->
 <div class="modal fade" id="destroyFolderModal" tabindex="-1" aria-labelledby="destroyFolderModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -101,9 +103,9 @@
           <% end %>
         </tbody>
     </table>
-      <div class="article-paginate">
-        <%= paginate @articles, theme: 'bootstrap-5' %>
-      </div>
+    <div class="article-paginate">
+      <%= paginate @articles, theme: 'bootstrap-5' %>
+    </div>
 </div><!-- col-12 ./-->
 <% else %>
   <div class="col-12">

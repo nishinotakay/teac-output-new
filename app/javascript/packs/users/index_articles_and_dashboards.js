@@ -172,7 +172,6 @@ $(function(){
     e.preventDefault();
     const folderID = $(this).data("folder-id");
     const NewFolderName = $(this).find('.folder-link').text();
-
     $(this).removeClass('folder-dragging');
 
     fetch('/users/articles/' + articleID + '/assign_folder/' + folderID , {

@@ -55,6 +55,5 @@ class Users::FoldersController < ApplicationController
     def folder_params
       params.require(:folder).permit(:name)
     end
-
 end
 
