@@ -405,6 +405,7 @@ GEM
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
     ssrf_filter (1.1.1)
+    stripe (12.5.0)
     thor (1.2.2)
     tilt (2.2.0)
     timeout (0.4.0)
@@ -493,6 +494,7 @@ DEPENDENCIES
   selenium-webdriver
   simplecov
   spring
+  stripe
   turbolinks (~> 5)
   turnip
   tzinfo-data
