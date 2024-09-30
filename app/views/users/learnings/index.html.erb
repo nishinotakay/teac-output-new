@@ -6,7 +6,7 @@
   <div class="row">
     <% if @e_learning_articles.present? %>
       <% @e_learning_articles.each_with_index do |article, index| %>
-      <div class="col-sm-6 offset-sm-1">
+      <div class="col-sm-8 offset-sm-2">
         <div class="card e-learning-index-item">
           <h5 class="card-header">
             <% if current_user.completed?(article) %>
