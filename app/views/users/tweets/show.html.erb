@@ -38,8 +38,8 @@
       </div>
 
       <div class="d-flex align-items-center justify-content-end mt-3">
-        <div id="tweet_<%= @tweet.id %>" class="ml-3">
-          <%= render 'users/likes/tweet_likes', tweet: @tweet %>
+        <div id="tweet_<%= @tweet.id %>">
+          <%= render 'users/likes/tweet_likes', locals: { tweet: @tweet } %>
         </div>
       </div>
       <% end %>
