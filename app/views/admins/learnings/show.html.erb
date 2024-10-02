@@ -1,0 +1,39 @@
+<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<%= javascript_pack_tag "admins/articles_show" %>
+
+<div class="container">
+  <div class="row">
+    <div class="offset-1 col-10 article-show">
+      <div class="col-12">
+        <div class="mx-2 mt-4 mb-3">
+          <h1><%= @learning_article.title %></h1>
+        </div>
+        <div class="d-flex justify-content-between">
+          <h4 class="ml-5"><%= @learning_article.sub_title %></h4>
+        </div>
+      </div>
+      <hr>
+      <div class="m-4 article-content" data-article="<%= @learning_article.content %>"></div>
+      <div class="text-center mt-3">
+        <%= form_with(model: @learning, url: admins_learnings_path, local: true) do |f| %>
+          <%= f.hidden_field :admin_id, value: current_admin.id %>
+          <%= f.hidden_field :article_id, value: @learning_article.id %>
+          <%= f.submit "読了したら次へ", class: 'btn btn-block nextButton' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="zoominImgModal" tabindex="-1" aria-labelledby="zoominImgModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="text-right mt-3">
+        <button type="button" class="modal-close btn-close mr-3" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center align-middle">
+        <div class="zoomin-modal"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-<%= javascript_pack_tag "users/index_articles_and_dashboards" %>
+<%= javascript_pack_tag "admins/index_articles_and_dashboards" %>
 
 <% provide(:title,  "e-learning一覧") %>
 
@@ -9,7 +9,7 @@
       <div class="col-sm-8 offset-sm-2">
         <div class="card e-learning-index-item">
           <h5 class="card-header">
-            <% if current_user.completed?(article) %>
+            <% if current_admin.completed?(article) %>
               <button type="button" class="btn btn-outline-secondary btn-xs learning-status-completed" disabled>完了</button>
             <% else %>
               <button type="button" class="btn btn-outline-secondary btn-xs learning-status-incomplete" disabled>未完了</button>
@@ -21,8 +21,8 @@
               <%= article.sub_title %>
             </div>
             <div>
-              <% if index == 0 || current_user.completed?(@e_learning_articles[index - 1]) %>
-                <%= link_to "記事を読む", users_learning_path(id: article.id), class: "btn article-button" %>
+              <% if index == 0 || current_admin.completed?(@e_learning_articles[index - 1]) %>
+                <%= link_to "記事を読む", admins_learning_path(id: article.id), class: "btn article-button" %>
               <% else %>
                 <button type="button" class="btn article-button" disabled>記事を読む</button>
               <% end %>
@@ -37,4 +37,3 @@
     </div>
   </div>
 </div>
-
