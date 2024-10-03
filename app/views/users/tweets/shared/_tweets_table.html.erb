@@ -60,7 +60,9 @@
                   <% end %>
                 </div>
                 <div class="goodIcon px-2">
-                  <i class="fa-regular fa-heart fa-lg"></i>
+                  <%= link_to users_tweet_path(data[:tweet].id), style: "color: black; text-decoration: none;" do %>
+                    <%= data[:tweet].decorate.formatted_likes(current_user) %>
+                  <% end %>
                 </div>
               </div>
             </div>

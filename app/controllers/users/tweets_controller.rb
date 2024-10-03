@@ -11,9 +11,11 @@ module Users
 
     def index
       fetch_tweets_and_images
+      @tweet = Tweet.new # 新しいツイート用のインスタンスを作成
     end
 
     def show
+      @tweet = Tweet.find_by(id: params[:id])
       @tweet_comments = @tweet.tweet_comments.order(created_at: :desc)
       if current_user.present?
         @tweet_comment = current_user.tweet_comments.new
@@ -62,6 +64,7 @@ module Users
     def index_user
       @user = User.find(params[:id])
       fetch_tweets_and_images(@user.id)
+      @tweet = Tweet.new # 新しいツイート用のインスタンスを作成
     end
 
     private
@@ -76,10 +79,10 @@ module Users
       @tweets_with_images = Tweet.tweet_and_image(@tweets)
     end
 
-
     # beforeフィルター
     def set_tweet
-      @tweet = Tweet.find(params[:id])
+      @tweet = Tweet.find_by(id: params[:tweet_id])
+      Rails.logger.info("Tweet found: #{@tweet.inspect}")
     end
 
     def correct_tweet_user

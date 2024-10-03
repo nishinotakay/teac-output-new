@@ -1,0 +1,1 @@
+$('#tweet_<%= @tweet.id %>').html("<%= j(render 'users/likes/tweet_likes', tweet: @tweet, like: @like) %>")

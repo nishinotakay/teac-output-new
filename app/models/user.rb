@@ -95,6 +95,10 @@ class User < ApplicationRecord
     likes.where(post_id: post_id).exists?
   end
 
+  def tweet_already_liked?(tweet_id) # つぶやきに対するいいね確認メソッドを追加
+    likes.where(tweet_id: tweet_id).exists?
+  end
+
   def stock?(article)
     stocks.exists?(article_id: article.id)
   end
