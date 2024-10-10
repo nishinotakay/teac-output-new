@@ -1,40 +1,44 @@
 require 'rails_helper'
 
 RSpec.describe "Users::Tweets", type: :request do
-  let(:user) { FactoryBot.create(:user, confirmed_at: Time.now) }
-  let(:tweet) { FactoryBot.create(:tweet, user: user) }
+  let(:user) { create :user, confirmed_at: Time.new(2024,1,1,0,0,0) }
+  let(:tweet) { create :tweet, user: user }
   let(:valid_params) {{ tweet: FactoryBot.attributes_for(:tweet, :valid)}}
   let(:invalid_params) {{ tweet: FactoryBot.attributes_for(:tweet, :invalid) }}
   let(:nil_params) {{ tweet: FactoryBot.attributes_for(:tweet, :nil_params)}}
   let(:referrer_url) { users_tweets_path }
-  let(:another_user) { FactoryBot.create(:user, confirmed_at: Time.now )}
-  let(:another_user_tweet) { FactoryBot.create(:tweet, user: another_user)}
+  let(:another_user) { create :user, confirmed_at: Time.new(2024,1,1,0,0,0) }
+  let(:another_user_tweet) { create :tweet, user: another_user }
 
   describe "GET /index" do
-    context 'ログインしているユーザーがつぶやき一覧にアクセスした場合' do
+    subject { get users_tweets_path }
+
+    # 正常系: 有効なアクセス
+    context 'ログインユーザーが一覧画面にアクセスした場合' do
       before do
         sign_in user
       end
 
-      it 'つぶやき一覧が表示される(HTTPステータスコード200が返される)' do
-        get users_tweets_path
+      it 'HTTPステータスコード200が返される' do
+        subject
         expect(response).to have_http_status(200)
       end
     end
 
-    context 'ログインしていないユーザーがつぶやき一覧にアクセスした場合' do
+    # 異常系: 不正なアクセス
+    context 'ログインしていないユーザーが一覧画面にアクセスした場合' do
       before do
         sign_out user
       end
 
-      it 'ログインページにリダイレクトされる(HTTPステータスコード302が返される)' do
-        get users_tweets_path
+      it 'HTTPステータスコード302が返される' do
+        subject
         expect(response).to have_http_status(302)
         expect(response).to redirect_to(new_user_session_path)
       end
 
       it 'エラーメッセージが表示される「ログインもしくはアカウント登録してください。」' do
-        get users_tweets_path
+        subject
         follow_redirect!
         expect(response.body).to include("ログインもしくはアカウント登録してください。")
       end
@@ -42,24 +46,28 @@ RSpec.describe "Users::Tweets", type: :request do
   end
 
   describe "GET /show" do
-    context 'ログインしているユーザーがつぶやき詳細画面にアクセスした場合' do
+    subject { get users_tweet_path(tweet.id) }
+
+    # 正常系:有効なアクセス
+    context 'ログインユーザーが詳細画面にアクセスした場合' do
       before do
         sign_in user
       end
 
-      it 'つぶやき詳細画面が表示される(HTTPステータスコード200が返される)' do
-        get users_tweet_path(tweet.id)
+      it 'HTTPステータスコード200が返される' do
+        subject
         expect(response).to have_http_status(200)
       end
     end
 
-    context 'ログインしていないユーザーがつぶやき詳細画面にアクセスした場合' do
+    # 異常系:不正なアクセス
+    context 'ログインしていないユーザーが詳細画面にアクセスした場合' do
       before do
         sign_out user
       end
 
-      it 'ログインページにリダイレクトされる(HTTPステータスコード302が返される)' do
-        get users_tweet_path(tweet.id)
+      it 'HTTPステータスコード302が返される' do
+        subject
         expect(response).to have_http_status(302)
         expect(response).to redirect_to(root_path)
       end
@@ -67,100 +75,117 @@ RSpec.describe "Users::Tweets", type: :request do
   end
 
   describe "POST / create" do
-    context 'ログインしているユーザーがつぶやきを作成した場合' do
-      before do
-        sign_in user
-      end
+    before do
+      sign_in user
+    end
+    
+    # 正常系: 有効なパラメーターで投稿
+    context 'ログインユーザーが新規投稿をした場合' do
+      subject { post users_tweets_path, params: valid_params, headers: { "HTTP_REFERER" => referrer_url } }
 
-      it 'つぶやき一覧画面にリダイレクトされる(HTTPステータスコード302が返される)' do
-        post users_tweets_path, params: valid_params, headers: { "HTTP_REFERER" => referrer_url }
+      it 'HTTPステータスコード302が返される' do
+        subject
         expect(response).to have_http_status(302)
         expect(response).to redirect_to(referrer_url)
       end
 
       it 'つぶやきがデータベースに保存される' do
-        expect { post users_tweets_path, params: valid_params }.to change(Tweet, :count).by(1)
+        expect { subject }.to change(Tweet, :count).by(1)
       end
 
-      it 'メッセージ「つぶやきを作成しました。」が表示される ' do
-        post users_tweets_path, params: valid_params, headers: { "HTTP_REFERER" => referrer_url }
+      it 'メッセージ「つぶやきを作成しました。」が表示される' do
+        subject
         follow_redirect!
         expect(response.body).to include("つぶやきを作成しました。")
       end
+    end
 
-      context 'ログインしているユーザーが空文字でつぶやきを投稿した場合' do
-        it 'つぶやき一覧画面にリダイレクトされる(HTTPステータスコード302が返される)' do
-          post users_tweets_path, params: nil_params, headers: { "HTTP_REFERER" => referrer_url }
-          expect(response).to have_http_status(302)
-          expect(response).to redirect_to(referrer_url)
-        end
+    # 異常系: 無効なパラメーターで投稿
+    context '空文字で新規投稿をした場合' do
+      subject { post users_tweets_path, params: nil_params, headers: { "HTTP_REFERER" => referrer_url } }
 
-        it 'エラーメッセージ「投稿内容を入力してください」が表示される' do
-          post users_tweets_path, params: nil_params, headers: { "HTTP_REFERER" => referrer_url }
-          follow_redirect!
-          expect(response.body).to include("投稿内容を入力してください")
-        end
+      it 'HTTPステータスコード302が返される' do
+        subject
+        expect(response).to have_http_status(302)
+        expect(response).to redirect_to(referrer_url)
       end
 
-      context 'ログインしているユーザーが255文字以上のつぶやきを投稿した場合' do
-        it 'つぶやき一覧画面にリダイレクトされる(HTTPステータスコード302が返される)' do
-          post users_tweets_path, params: invalid_params, headers: { "HTTP_REFERER" => referrer_url }
-          expect(response).to have_http_status(302)
-          expect(response).to redirect_to(referrer_url)
-        end
+      it 'エラーメッセージ「投稿内容を入力してください」が表示される' do
+        subject
+        follow_redirect!
+        expect(response.body).to include("投稿内容を入力してください")
+      end
+    end
 
-        it 'エラーメッセージ「投稿内容は255文字以内で入力してください」が表示される。' do
-          post users_tweets_path, params: invalid_params, headers: { "HTTP_REFERER" => referrer_url }
-          follow_redirect!
-          expect(response.body).to include("投稿内容は255文字以内で入力してください")
-        end
+    # 異常系: 無効なパラメーターで投稿
+    context '255文字以上の新規投稿をした場合' do
+      subject { post users_tweets_path, params: invalid_params, headers: { "HTTP_REFERER" => referrer_url } }
+
+      it 'HTTPステータスコード302が返される' do
+        subject
+        expect(response).to have_http_status(302)
+        expect(response).to redirect_to(referrer_url)
+      end
+
+      it 'エラーメッセージ「投稿内容は255文字以内で入力してください」が表示される。' do
+        subject
+        follow_redirect!
+        expect(response.body).to include("投稿内容は255文字以内で入力してください")
       end
     end
   end
 
   describe "GET / edit" do
-    context 'ログインしているユーザーが つぶやき編集画面にアクセスした場合' do
+
+    # 正常系: 有効な操作
+    context 'ログインユーザーが編集画面にアクセスした場合' do
       before do
         sign_in user
       end
 
-      it 'つぶやき編集画面にアクセスした場合(HTTPステータスコード200が返される)' do
+      it 'HTTPステータスコード200が返される' do
         get edit_users_tweet_path(tweet.id), xhr: true
         expect(response).to have_http_status(200)
       end
     end
 
-    context 'ログインしていないユーザーがつぶやき編集画面にアクセスした場合' do
+    # 異常系: 不正な操作
+    context 'ログインしていないユーザーが編集画面にアクセスした場合' do
+      subject { get edit_users_tweet_path(tweet.id) }
+
       before do
         sign_out user
       end
 
-      it 'ログイン画面にリダイレクトされる(HTTPステータスコード302が返される)' do
-        get edit_users_tweet_path(tweet.id)
+      it 'HTTPステータスコード302が返される' do
+        subject
         expect(response).to have_http_status(302)
         expect(response).to redirect_to(new_user_session_path)
       end
 
       it 'エラーメッセージ「ログインもしくはアカウント登録してください。」が表示される' do
-        get edit_users_tweet_path(tweet.id)
+        subject
         follow_redirect!
         expect(response.body).to include("ログインもしくはアカウント登録してください。")
       end
     end
 
-    context 'ログインしているユーザーが他ユーザーのつぶやき編集画面にアクセスした場合' do
+    # 異常系: 不正な操作
+    context 'ログインユーザーが他のユーザーの編集画面にアクセスした場合' do
+      subject { get edit_users_tweet_path(another_user_tweet.id) }
+
       before do
         sign_in user
       end
 
-      it 'ログイン画面にリダイレクトされる(HTTPステータスコード302が返される)' do
-        get edit_users_tweet_path(another_user_tweet.id)
+      it 'HTTPステータスコード302が返される' do
+        subject
         expect(response).to have_http_status(302)
         expect(response).to redirect_to(users_dash_boards_path)
       end
 
       it 'エラーメッセージ「ログインもしくはアカウント登録してください。」が表示される' do
-        get edit_users_tweet_path(another_user_tweet.id)
+        subject
         follow_redirect!
         expect(response.body).to include("アクセスできません")
       end
@@ -172,8 +197,9 @@ RSpec.describe "Users::Tweets", type: :request do
       sign_in user
     end
 
-    context "ログインしているユーザーがつぶやきを更新した場合" do
-      it '記事詳細画面にリダイレクトされる(HTTPステータスコード302が表示される)' do
+    # 正常系: 有効なパラメーターで更新
+    context "ログインユーザーがつぶやきを更新した場合" do
+      it 'HTTPステータスコード302が表示される' do
         patch users_tweet_path(tweet.id), params: valid_params
         expect(response).to have_http_status(302)
         expect(response).to redirect_to(users_tweets_url)
@@ -192,26 +218,32 @@ RSpec.describe "Users::Tweets", type: :request do
       end
     end
 
-    context "ログインしているユーザーが空文字でつぶやきを更新した場合" do
-      it "つぶやき編集画面から遷移しない(HTTPステータスコード200が返される)" do
-        patch users_tweet_path(tweet.id), params: nil_params, xhr: true
+    # 異常系: 無効なパラメーターで更新
+    context "空文字でつぶやきを更新した場合" do
+      subject { patch users_tweet_path(tweet.id), params: nil_params, xhr: true }
+
+      it "HTTPステータスコード200が返される" do
+        subject
         expect(response).to have_http_status(200)
       end
 
       it "エラーメッセージ「投稿内容を入力してください」が表示される" do
-        patch users_tweet_path(tweet.id), params: nil_params, xhr: true
+        subject
         expect(response.body).to include("投稿内容を入力してください")
       end
     end
 
-    context "ログインしているユーザーが255文字以上でつぶやきを更新した場合" do
-      it "つぶやき編集画面から遷移しない(HTTPステータスコード200が返される)" do
-        patch users_tweet_path(tweet.id), params: invalid_params, xhr: true
+    # 異常系: 無効なパラメーターで更新
+    context "255文字以上でつぶやきを更新した場合" do
+      subject { patch users_tweet_path(tweet.id), params: invalid_params, xhr: true }
+
+      it "HTTPステータスコード200が返される" do
+        subject
         expect(response).to have_http_status(200)
       end
 
       it "エラーメッセージ「投稿内容は255文字以内で入力してください」が表示される" do
-        patch users_tweet_path(tweet.id), params: invalid_params, xhr: true
+        subject
         expect(response.body).to include("投稿内容は255文字以内で入力してください")
       end
     end
@@ -223,64 +255,74 @@ RSpec.describe "Users::Tweets", type: :request do
       @tweet = FactoryBot.create(:tweet, user: user)
     end
 
-    context 'ログインしているユーザーがつぶやきを削除した場合' do
-      it 'つぶやき一覧画面にリダイレクトされる' do
-        delete users_tweet_path(@tweet.id)
+    # 正常系: 有効な操作
+    context 'ログインユーザーがつぶやきを削除した場合' do
+      subject { delete users_tweet_path(@tweet.id) }
+
+      it 'HTTPステータスコード302が返される' do
+        subject
         expect(response).to have_http_status(302)
         expect(response).to redirect_to users_tweets_url
       end
 
       it 'メッセージ「削除に成功しました。」が表示される' do
-        delete users_tweet_path(@tweet.id)
+        subject
         follow_redirect!
         expect(response.body).to include("削除に成功しました。")
       end
 
       it 'つぶやきが削除される(データベースからつぶやきが１つ減る)' do
-        expect { delete users_tweet_path(@tweet.id) }.to change(Tweet, :count).by(-1)
+        expect { subject }.to change(Tweet, :count).by(-1)
+      end
+    end
+
+    # 異常系: 不正な操作
+    context "ログインユーザーが別のユーザーの投稿を削除する操作をした場合" do
+      subject { delete users_tweet_path(another_user_tweet.id) }
+
+      it "HTTPステータスコード302が返される" do
+        subject
+        expect(response).to have_http_status(302)
+        expect(response).to redirect_to(users_dash_boards_path)
       end
 
-      context "ログインしているユーザーが別のユーザーのつぶやきを削除の操作をした場合" do
-        it "ユーザーダッシュボードにリダイレクトされる(HTTPステータスコード302)" do
-          delete users_tweet_path(another_user_tweet.id)
-          expect(response).to have_http_status(302)
-          expect(response).to redirect_to(users_dash_boards_path)
-        end
-
-        it "エラーメッセージ「アクセスできません」が表示される" do
-          delete users_tweet_path(another_user_tweet.id)
-          follow_redirect!
-          expect(response.body).to include("アクセスできません")
-        end
+      it "エラーメッセージ「アクセスできません」が表示される" do
+        subject
+        follow_redirect!
+        expect(response.body).to include("アクセスできません")
       end
     end
   end
 
   describe "index_user" do
-    context 'ログインしているユーザーが個別のユーザーのつぶやき一覧画面に遷移した場合' do
+    subject { get index_user_users_tweet_path(user.id)}
+
+    # 正常系: 有効なアクセス
+    context 'ログインユーザーが個別のユーザーの一覧画面にアクセスした場合' do
       before do
         sign_in user
       end
 
-      it '個別のユーザーのつぶやき一覧画面が表示される(HTTPステータスコード200が返される)' do
-        get index_user_users_tweet_path(user.id)
+      it 'HTTPステータスコード200が返される' do
+        subject
         expect(response).to have_http_status(200)
       end
     end
 
-    context 'ログインしていないユーザーが個別のユーザーのつぶやき一覧画面に遷移した場合' do
+    # 異常系: 不正なアクセス
+    context 'ログインしていないユーザーが個別のユーザーの一覧画面にアクセスした場合' do
       before do
         sign_out user
       end
 
-      it 'ログイン画面にリダイレクトされる(HTTPステータスコード302が返される)' do
-        get index_user_users_tweet_path(user.id)
+      it 'HTTPステータスコード302が返される' do
+        subject
         expect(response).to have_http_status(302)
         expect(response).to redirect_to(new_user_session_path)
       end
 
       it "エラーメッセージ「ログインもしくはアカウント登録してください。」が表示される" do
-        get index_user_users_tweet_path(user.id)
+        subject
         follow_redirect!
         expect(response.body).to include("ログインもしくはアカウント登録してください。")
       end
