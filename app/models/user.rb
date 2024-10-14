@@ -7,6 +7,7 @@ class User < ApplicationRecord
     :recoverable, :rememberable, :validatable,
     :confirmable,
     :omniauthable, omniauth_providers: %i[google_oauth2 line facebook]
+  after_create :create_default_folder
 
   has_many :articles, dependent: :destroy
   has_many :posts, dependent: :destroy
@@ -21,6 +22,7 @@ class User < ApplicationRecord
   has_many :chat_messages
   has_many :post_comments, dependent: :destroy
   has_many :stocks, dependent: :destroy
+  has_many :folders, dependent: :destroy
   has_many :active_relationships, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
   has_many :passive_relationships, class_name: "Relationship", foreign_key: "followed_id", dependent: :destroy
   has_many :followings, through: :active_relationships, source: :followed
@@ -114,4 +116,10 @@ class User < ApplicationRecord
   def completed?(article)
     learning_status.exists?(learned_article_id: article.id, completed: true)
   end 
+
+  private
+
+  def create_default_folder
+    self.folders.create(name: '未分類')
+  end
 end

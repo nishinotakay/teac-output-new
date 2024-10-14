@@ -1,0 +1,128 @@
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-2 article-folder-wrapper">
+        <div class="hamburger-menu-wrapper">
+          <button class="hamburger-menu" id="js-hamburger-menu">
+            <span class="hamburger-menu-bar"></span>
+            <span class="hamburger-menu-bar"></span>
+            <span class="hamburger-menu-bar"></span>
+          </button>
+          <span class="hamburger-menu-text">記事フォルダ</span>
+        </div>
+        <div class="folder-wrapper">
+          <ul class="folder-list">
+            <% if @folders.present? %>
+              <% @folders.each do |folder| %>
+                <li class="folder-list-item" data-folder-id="<%= folder.id %>"><i class="fa-regular fa-folder fa-lg"></i>
+                <%= link_to "#{folder.name}", users_folder_path(folder.id), remote: true, class: "folder-link" %></li>
+              <% end %>
+            <% end %>
+          </ul>
+          <!-- Button to Open the Modal -->
+          <button type="button" class="btn btn-secondary mt-3 addFolderbtn" data-bs-toggle="modal" data-bs-target="#addFolderModal">
+            フォルダ新規作成
+          </button>
+        </div><!-- ./ folder-wrapper -->
+      </div><!-- ./ col-2 article-folder-wrapper -->
+      <!-- CreateFolderModal -->
+      <div class="modal fade" id="addFolderModal" tabindex="-1" aria-labelledby="addFolderModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+              <h5 class="modal-title" id="addFolderModalLabel">フォルダの追加</h5>
+              <button type="button" class="btn-close position-absolute end-0 mr-1 addFolderbtn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+              <%= form_with(model: Folder.new, url: users_folders_path, local:true) do |f| %>
+                <%= f.text_field :name, class: "form-control" %>
+                <%= f.submit "追加する", class: "btn btn-primary mt-3" %>
+                <button type="button" class="btn btn-secondary addFolderbtn-cancel mt-3 ml-3" data-bs-dismiss="modal">キャンセル</button>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div><!-- ./ modal fade -->
+      <div class="col-10">
+        <% hover = @articles.present? ? "table-hover" : "" %>
+        <table class="table articles-table <%= hover %> table-scroll">
+          <thead>
+            <tr>
+              <th class="px-5"><%= Article.human_attribute_name(:title) %></th>
+              <th class="px-5"><%= Article.human_attribute_name(:sub_title) %></th>
+              <% unless dashboard %>
+                <th class="px-5"><%= Article.human_attribute_name(:user) %></th>
+              <% end %>
+              <th class="px-5">フォルダ</th>
+              <th class="px-5"><%= Article.human_attribute_name(:created_at) %></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if hover.present? %>
+              <% @articles.each_with_index do |article, index| %>
+                <tr>
+                  <td class="link-td" id="article-title" draggable="true" data-article-id="<%= article.id %>" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'>
+                    <div class="d-flex align-items-center">
+                      <%= article.title %>
+                      <% unless current_admin.present? %>
+                        <% if article.likes.present? %>
+                          <% if current_user.article_already_liked?(article.id) %>
+                            <i class="fa-solid fa-heart ml-4 mr-2"></i><%= article.likes.count %>
+                          <% else %>
+                            <i class="fa-regular fa-heart ml-4 mr-2"></i><%= article.likes.count %>
+                          <% end %>
+                        <% end %>
+                      <% else %>
+                        <% if article.likes.present? %>
+                          <i class="fa-solid fa-heart ml-4 mr-2"></i><%= article.likes.count %>
+                        <% end %>
+                      <% end %>
+                      <% if article.article_comments.present? %>
+                        <i class="fa-regular fa-comment fa-sm ms-auto">&nbsp<%= article.article_comments.count %></i>
+                      <% end %>
+                    </div>
+                  </td>
+                  <td class="link-td" id="article-subtitle" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'><%= article.sub_title %></td>
+                  <% if !dashboard %>
+                    <% if article.admin.present? %>
+                      <td class="link-td" id="article-authur" onclick='window.location="<%= admins_article_path(id: article.id, dashboard: dashboard) %>"'><%= article.admin.name %></td>
+                    <% else %>
+                      <td class="link-td" id="article-authur" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'><%= article.user.name %></td>
+                    <% end %>
+                  <% end %>
+                  <td class="link-td folder-name" id="article-authur" folder-artilce-id="<%= article.id %>" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'>
+                    <%= @folder_names[article.id] || "未分類" %>
+                  </td>
+                  <td class="link-td" id="article-createdat" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'><%= l(article.created_at, format: :long) %></td>
+                  <td>
+                    <button class="btn" data-bs-toggle="dropdown" style="width: 66.5px" >︙</button>
+                    <ul class="dropdown-menu">
+                      <% if current_user.present? && current_admin.nil? %>
+                        <% if article.user_id == current_user.id %>
+                          <li><%= link_to '閲覧', users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
+                          <li><%= link_to '編集', edit_users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
+                          <li><%= link_to '削除', users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), method: :delete, data: {confirm: "選択した記事を削除します。"}, class: "nav-link" %></li>
+                        <% else %>
+                          <li><%= link_to '閲覧', users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
+                        <% end %>
+                      <% end %>
+                      <% if current_admin.present? %>
+                        <li><%= link_to '閲覧', users_article_path(id: article.id, dashboard: dashboard, page: params[:page]), class: "nav-link" %></li>
+                      <% end %>
+                    </ul>
+                  </td>
+                </tr>
+              <% end %>
+            <% else %>
+              <%= render 'users/shared/table_without_record' %>
+            <% end %>
+          </tbody>
+        </table>
+        <div class="article-paginate">
+          <%= paginate @articles, theme: 'bootstrap-5' %>
+        </div>
+      </div><!-- ./ col-10 -->
+    </div><!-- ./ row -->
+  </div>
+</div>

@@ -164,3 +164,172 @@
   margin: 56px 0px 16px;
 }
 
+// 記事フォルダ機能に関するスタイル
+
+.hamburger-menu-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.hamburger-menu {
+  min-width: 50px;
+  height: 50px;
+  position: relative;
+  border: none;
+  background: transparent;
+  appearance: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.hamburger-menu-bar {
+  display: inline-block;
+  width: 44%;
+  height: 2px;
+  background: #242424;
+  position: absolute;
+  left: 0;
+  transform: translateX(0);
+  transition: .5s;
+}
+
+.hamburger-menu-text {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.hamburger-menu-bar:first-child {
+  top: 16px;
+}
+
+.hamburger-menu-bar:nth-child(2) {
+  top: 24px;
+}
+
+.hamburger-menu-bar:last-child {
+  top: 32px;
+}
+
+.hamburger-menu--open .hamburger-menu-bar {
+  top: 50%;
+}
+
+.hamburger-menu--open .hamburger-menu-bar:first-child {
+  transform: translateX(-50%) translateY(-50%) rotate(45deg);
+}
+
+.hamburger-menu--open .hamburger-menu-bar:last-child {
+  transform: translateX(-50%) translateY(-50%) rotate(-45deg);
+}
+
+.hamburger-menu--open .hamburger-menu-bar:nth-child(2) {
+  display: none;
+}
+
+.article-folder-wrapper {
+  max-width: 100%;
+  position: relative;
+  left: -20px;
+}
+
+.folder-wrapper {
+  display: none;
+  background: #F3F6F9;
+  position: absolute;
+  top: 50px;
+  width: 100%;
+  padding: 10px;
+  z-index: 100;
+  position: absolute;
+}
+
+.folder-list-item {
+  display: block;
+  height: 30px;
+}
+
+.folder-list-item:not(:first-child) {
+  margin: 24px 0;
+}
+
+.folder-list {
+  text-align: left;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.folder-link {
+  color: #000;
+  font-weight: 400;
+  text-decoration: none;
+  padding: 12px 0;
+  transition: .3s;
+}
+
+.folder-link:hover {
+  color: #999;
+}
+
+.fa-regular,.fa-folder {
+  margin-right: 20px;
+}
+
+.fa-file-alt {
+  margin: 5px 0;
+}
+
+.dragging-icon-wrapper {
+  padding-left: 15px;
+  opacity: 0.1;
+}
+
+.dragging-icon {
+  display: inline-block;
+  border: 1px solid #000;
+  padding: 10px;
+}
+
+.dragging-text {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.folder-dragging {
+  background: #e8e8e8;
+}
+
+@media (max-width: 960px) {
+  .article-folder-wrapper {
+    position: relative;
+  }
+}
+
+@media (max-width: 460px) {
+  .hamburger-menu-wrapper {
+    display: none;
+  }
+
+  .folder-wrapper, .folder-list-item {
+    display: none;
+  }
+}
+
+// ハンバーガーメニューと開発環境のデバック情報の被りを回避
+.avoid-element-coverage {
+  margin-bottom: 250px;
+}
+
+.title-and-buttons {
+  display: flex;
+}
+
+.editFolderbtn,
+.destroyFolderbtn {
+  margin-left: 10px;
+}
+
+.flex-spacer {
+  flex-grow: 1;
+}

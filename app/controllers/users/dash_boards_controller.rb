@@ -25,6 +25,15 @@ module Users
         format.json { render json: @articles }
       end
       end
+
+      @folders = current_user.folders if current_user.folders.present?
+
+      @folder_names = {}
+      @articles.each do |article|
+        latest_folder = ArticleFolder.where(article_id: article.id).order(created_at: :desc).first
+        @folder_names[article.id] = latest_folder.folder.name if latest_folder.present?
+      end
     end
   end
 end
+

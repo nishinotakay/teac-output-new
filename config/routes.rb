@@ -61,6 +61,7 @@ Rails.application.routes.draw do
     resources :chat_rooms, only: [:create, :show]
     resources :stocks, only:[:create, :destroy, :index]
     resources :learnings, only: [:index, :show, :create]
+    resources :folders, only: [:create, :show, :update, :destroy]
     resources :checkouts, only: [:new, :create] do
       get 'complete', on: :collection
     end
@@ -73,6 +74,7 @@ Rails.application.routes.draw do
         post 'article_create', on: :member
         delete 'article_destroy', on: :member
       end
+      post 'assign_folder/:folder_id', to: 'article_folders#assign_folder', as: 'assign_folder'
     end
     resources :users do
       resource :posts, only: [] do
