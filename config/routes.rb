@@ -21,6 +21,7 @@ Rails.application.routes.draw do
 
     namespace :users do
       resources :dash_boards, only: [:index]
+      resources :folders, only: [:create, :show, :update, :destroy]
       resources :chat_rooms, only: [:create, :show]
       resources :stocks, only:[:create, :destroy, :index]
       resources :learnings, only: [:index, :show, :create]

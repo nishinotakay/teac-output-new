@@ -15,7 +15,7 @@
             <% if @folders.present? %>
               <% @folders.each do |folder| %>
                 <li class="folder-list-item" data-folder-id="<%= folder.id %>"><i class="fa-regular fa-folder fa-lg"></i>
-                <%= link_to "#{folder.name}", users_folder_path(folder.id), remote: true, class: "folder-link" %></li>
+                <%= link_to "#{folder.name}", users_folder_path(tenant_id: params[:tenant_id], id: folder.id), remote: true, class: "folder-link" %></li>
               <% end %>
             <% end %>
           </ul>
