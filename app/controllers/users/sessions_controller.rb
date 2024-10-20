@@ -1,30 +1,31 @@
-# frozen_string_literal: true
-
 module Users
   class SessionsController < Devise::SessionsController
     layout 'users_auth'
-    # before_action :configure_sign_in_params, only: [:create]
 
-    # GET /resource/sign_in
-    # def new
-    #   super
-    # end
+    def create
+      tenant_id = session[:tenant_id] || params[:tenant_id] || current_user&.tenant_id
 
-    # POST /resource/sign_in
-    # def create
-    #   super
-    # end
+      # テナント名を取得
+      tenant_name = "tenant_#{tenant_id}"
 
-    # DELETE /resource/sign_out
-    # def destroy
-    #   super
-    # end
+      # テナントの切り替え
+      if tenant_name.present?
+        begin
+          Apartment::Tenant.switch!(tenant_name)
+          Rails.logger.info("Switched to Tenant: #{Apartment::Tenant.current}")
+        rescue Apartment::TenantNotFound => e
+          Rails.logger.error("Tenant not found: #{tenant_name}")
+          render :new, alert: "Tenant not found"
+          return
+        end
+      else
+        Rails.logger.error("Tenant ID is missing")
+      end
 
-    # protected
-
-    # If you have extra params to permit, append them to the sanitizer.
-    # def configure_sign_in_params
-    #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
-    # end
+      # ログイン処理の後にテナントIDをセッションに保存
+      super do |resource|
+        session[:tenant_id] = tenant_id
+      end
+    end
   end
 end

@@ -4,7 +4,7 @@ require_relative 'boot'
 
 require 'rails/all'
 require 'apartment'
-require 'apartment/elevators/subdomain'
+require 'apartment/elevators/generic'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -31,6 +31,6 @@ module App
         routing_specs:    false      # routing specは作らない
     end
     config.autoload_paths += %W[#{config.root}/lib]
-    config.middleware.use Apartment::Elevators::Subdomain
+    Rails.application.config.middleware.use Apartment::Elevators::Generic, lambda { |request| request.params['tenant_id']}
   end
 end

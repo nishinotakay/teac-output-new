@@ -1,15 +1,18 @@
 # frozen_string_literal: true
-
+require 'apartment'
 require 'apartment/elevators/generic'
 
 # Apartmentの設定
-# 'ros-apartment' を使用している場合、設定が異なることがあります。
-Apartment::Tenant.init do |config|
+Apartment.configure do |config|
   # マルチテナント化しないモデルを指定します。
   config.excluded_models = %w{ Tenant }
 
   # テナントの名前を定義します。テナントごとに異なるデータベースまたはスキーマに対応します。
-  config.tenant_names = -> { Tenant.pluck(:name) }
+  config.tenant_names = -> {
+    tenant_names = Tenant.pluck(:name)  # 変数名を tenant_names に変更
+    puts "Migrating tenants: #{tenant_names}"  # tenant_names を出力
+    tenant_names  # tenant_names を返す
+  }
 
   # MySQLまたはPostgreSQLでスキーマを使用するかどうか
   config.use_schemas = true
