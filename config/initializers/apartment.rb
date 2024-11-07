@@ -2,23 +2,34 @@
 require 'apartment'
 require 'apartment/elevators/generic'
 
-# Apartmentの設定
 Apartment.configure do |config|
-  # マルチテナント化しないモデルを指定します。
+  # マルチテナント化しないモデルを指定
   config.excluded_models = %w{ Tenant }
 
-  # テナントの名前を定義します。テナントごとに異なるデータベースまたはスキーマに対応します。
-  config.tenant_names = -> {
-    tenant_names = Tenant.pluck(:name)  # 変数名を tenant_names に変更
-    puts "Migrating tenants: #{tenant_names}"  # tenant_names を出力
-    tenant_names  # tenant_names を返す
-  }
+  # テナントの名前を定義
+  config.tenant_names = lambda do
+    tenant_names = Tenant.pluck(:name)
+    tenant_names
+  end
 
-  # MySQLまたはPostgreSQLでスキーマを使用するかどうか
+  # 各テナントに対して個別のスキーマを作成
   config.use_schemas = true
 end
 
-# Custom Elevatorを使用して、ルーティングに基づいたテナント切り替えを行います。
+# ルーティングもしくはセッションに保存されたtenant_idによりテナントを切り替え。
+# サブドメインを使用する場合は、他のエレベーター（Subdomain Elevator）を使用してテナントを切り替えることも可能。
 Rails.application.config.middleware.use Apartment::Elevators::Generic, lambda { |request|
-  request.params['tenant_id']
+  tenant_id = request.params['tenant_id'] || request.session[:tenant_id]
+
+  if tenant_id.present?
+    tenant_name = "tenant_#{tenant_id}"
+    if Apartment.tenant_names.include?(tenant_name)
+      tenant_name
+    else
+      Rails.logger.error("Invalid tenant ID: #{tenant_id}")
+    end
+  else
+    Rails.logger.error("Tenant ID missing")
+    nil
+  end
 }

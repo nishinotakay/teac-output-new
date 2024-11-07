@@ -3,29 +3,21 @@ module Users
     layout 'users_auth'
 
     def create
-      tenant_id = session[:tenant_id] || params[:tenant_id] || current_user&.tenant_id
-
-      # テナント名を取得
-      tenant_name = "tenant_#{tenant_id}"
-
-      # テナントの切り替え
-      if tenant_name.present?
-        begin
-          Apartment::Tenant.switch!(tenant_name)
-          Rails.logger.info("Switched to Tenant: #{Apartment::Tenant.current}")
-        rescue Apartment::TenantNotFound => e
-          Rails.logger.error("Tenant not found: #{tenant_name}")
-          render :new, alert: "Tenant not found"
-          return
-        end
-      else
-        Rails.logger.error("Tenant ID is missing")
-      end
-
-      # ログイン処理の後にテナントIDをセッションに保存
-      super do |resource|
+      if params[:tenant_id].present? || session[:tenant_id].present?
+        tenant_id = session[:tenant_id] || params[:tenant_id]
+        tenant_name = "tenant_#{tenant_id}"
+      begin
+        Apartment::Tenant.switch!(tenant_name)
+        Rails.logger.info("Switched to Tenant: #{Apartment::Tenant.current}")
         session[:tenant_id] = tenant_id
+      rescue Apartment::TenantNotFound => e
+        Rails.logger.error("Tenant not found: #{tenant_name}")
+        render :new, alert: "Tenant not found"
+        return
       end
+      end
+
+      super
     end
   end
 end

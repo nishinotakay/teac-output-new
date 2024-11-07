@@ -8,7 +8,7 @@ class User < ApplicationRecord
     :confirmable,
     :omniauthable, omniauth_providers: %i[google_oauth2 line facebook]
   after_create :create_default_folder
-
+  belongs_to :tenant, optional: true
   has_many :articles, dependent: :destroy
   has_many :posts, dependent: :destroy
   has_one :profile, dependent: :destroy
