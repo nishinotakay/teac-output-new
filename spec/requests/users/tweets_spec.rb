@@ -78,9 +78,9 @@ RSpec.describe "Users::Tweets", type: :request do
     context 'ログインユーザーが新規投稿をした場合' do
       subject { post users_tweets_path, params: valid_params, headers: { "HTTP_REFERER" => referrer_url } }
 
-      it 'HTTPステータスコード302が返される' do
+      it 'HTTPステータスコード200が返される' do
         subject
-        expect(response).to have_http_status(302)
+        expect(response).to have_http_status(200)
         expect(response).to redirect_to(referrer_url)
       end
 
@@ -188,9 +188,9 @@ RSpec.describe "Users::Tweets", type: :request do
     end
 
     context "ログインユーザーがつぶやきを更新した場合" do
-      it 'HTTPステータスコード302が返される' do
+      it 'HTTPステータスコード200が返される' do
         patch users_tweet_path(tweet.id), params: valid_params
-        expect(response).to have_http_status(302)
+        expect(response).to have_http_status(200)
         expect(response).to redirect_to(users_tweets_url)
       end
 
@@ -208,16 +208,16 @@ RSpec.describe "Users::Tweets", type: :request do
     end
 
     context "空文字でつぶやきを更新した場合" do  
-      it "HTTPステータスコード200が返される" do
+      it "HTTPステータスコード302が返される" do
         patch users_tweet_path(tweet.id), params: nil_params, xhr: true
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(302)
       end
     end
 
     context "255文字以上でつぶやきを更新した場合" do
-      it "HTTPステータスコード200が返される" do
+      it "HTTPステータスコード302が返される" do
         patch users_tweet_path(tweet.id), params: invalid_params, xhr: true
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(302)
       end 
     end
   end
@@ -231,9 +231,9 @@ RSpec.describe "Users::Tweets", type: :request do
     context 'ログインユーザーがつぶやきを削除した場合' do
       subject { delete users_tweet_path(@tweet.id) }
 
-      it 'HTTPステータスコード302が返される' do
+      it 'HTTPステータスコード200が返される' do
         subject
-        expect(response).to have_http_status(302)
+        expect(response).to have_http_status(200)
         expect(response).to redirect_to users_tweets_url
       end
 
