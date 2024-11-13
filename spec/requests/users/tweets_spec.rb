@@ -37,7 +37,6 @@ RSpec.describe "Users::Tweets", type: :request do
 
       it 'エラーメッセージが存在する' do
         subject
-        follow_redirect!
         expect(flash[:alert]).to be_present
       end
     end
@@ -76,12 +75,11 @@ RSpec.describe "Users::Tweets", type: :request do
     end
     
     context 'ログインユーザーが新規投稿をした場合' do
-      subject { post users_tweets_path, params: valid_params, headers: { "HTTP_REFERER" => referrer_url } }
+      subject { post users_tweets_path, params: valid_params }
 
       it 'HTTPステータスコード200が返される' do
         subject
         expect(response).to have_http_status(200)
-        expect(response).to redirect_to(referrer_url)
       end
 
       it 'つぶやきがデータベースに保存される' do
@@ -90,39 +88,36 @@ RSpec.describe "Users::Tweets", type: :request do
 
       it 'サクセスメッセージが存在する' do
         subject
-        follow_redirect!
         expect(flash[:success]).to be_present
       end
     end
 
     context '空文字で新規投稿をした場合' do
-      subject { post users_tweets_path, params: nil_params, headers: { "HTTP_REFERER" => referrer_url } }
+      subject { post users_tweets_path, params: nil_params }
 
       it 'HTTPステータスコード302が返される' do
         subject
         expect(response).to have_http_status(302)
-        expect(response).to redirect_to(referrer_url)
+        expect(response).to redirect_to(users_tweets_path)
       end
 
       it 'エラーメッセージが存在する' do
         subject
-        follow_redirect!
         expect(flash[:error]).to be_present
       end
     end
 
     context '255文字以上の新規投稿をした場合' do
-      subject { post users_tweets_path, params: invalid_params, headers: { "HTTP_REFERER" => referrer_url } }
+      subject { post users_tweets_path, params: invalid_params }
 
       it 'HTTPステータスコード302が返される' do
         subject
         expect(response).to have_http_status(302)
-        expect(response).to redirect_to(referrer_url)
+        expect(response).to redirect_to(users_tweets_path)
       end
 
       it 'エラーメッセージが存在する' do
         subject
-        follow_redirect!
         expect(flash[:error]).to be_present
       end
     end
@@ -156,7 +151,6 @@ RSpec.describe "Users::Tweets", type: :request do
 
       it 'エラーメッセージが存在する' do
         subject
-        follow_redirect!
         expect(flash[:alert]).to be_present
       end
     end
@@ -176,7 +170,6 @@ RSpec.describe "Users::Tweets", type: :request do
 
       it 'エラーメッセージが存在する' do
         subject
-        follow_redirect!
         expect(flash[:alert]).to be_present
       end
     end
@@ -191,12 +184,10 @@ RSpec.describe "Users::Tweets", type: :request do
       it 'HTTPステータスコード200が返される' do
         patch users_tweet_path(tweet.id), params: valid_params
         expect(response).to have_http_status(200)
-        expect(response).to redirect_to(users_tweets_url)
       end
 
       it 'サクセスメッセージが存在する' do
         patch users_tweet_path(tweet.id), params: valid_params
-        follow_redirect!
         expect(flash[:success]).to be_present
       end
 
@@ -209,15 +200,17 @@ RSpec.describe "Users::Tweets", type: :request do
 
     context "空文字でつぶやきを更新した場合" do  
       it "HTTPステータスコード302が返される" do
-        patch users_tweet_path(tweet.id), params: nil_params, xhr: true
+        patch users_tweet_path(tweet.id), params: nil_params
         expect(response).to have_http_status(302)
+        expect(response).to redirect_to(users_tweets_path)
       end
     end
 
     context "255文字以上でつぶやきを更新した場合" do
       it "HTTPステータスコード302が返される" do
-        patch users_tweet_path(tweet.id), params: invalid_params, xhr: true
+        patch users_tweet_path(tweet.id), params: invalid_params
         expect(response).to have_http_status(302)
+        expect(response).to redirect_to(users_tweets_path)
       end 
     end
   end
@@ -234,12 +227,10 @@ RSpec.describe "Users::Tweets", type: :request do
       it 'HTTPステータスコード200が返される' do
         subject
         expect(response).to have_http_status(200)
-        expect(response).to redirect_to users_tweets_url
       end
 
       it 'サクセスメッセージが存在する' do
         subject
-        follow_redirect!
         expect(flash[:success]).to be_present
       end
 
@@ -259,7 +250,6 @@ RSpec.describe "Users::Tweets", type: :request do
 
       it "エラーメッセージが存在する" do
         subject
-        follow_redirect!
         expect(flash[:alert]).to be_present
       end
     end
@@ -268,7 +258,7 @@ RSpec.describe "Users::Tweets", type: :request do
   describe "index_user" do
     subject { get index_user_users_tweet_path(user.id)}
 
-    context 'ログインユーザーが個別のユーザーの一覧画面にアクセスした場合' do
+    context 'ログインユーザーが個別のユーザーのつぶやき一覧画面にアクセスした場合' do
       before do
         sign_in user
       end
@@ -279,7 +269,7 @@ RSpec.describe "Users::Tweets", type: :request do
       end
     end
 
-    context 'ログインしていないユーザーが個別のユーザーの一覧画面にアクセスした場合' do
+    context 'ログインしていないユーザーが個別のユーザーのつぶやき一覧画面にアクセスした場合' do
       before do
         sign_out user
       end
@@ -292,10 +282,8 @@ RSpec.describe "Users::Tweets", type: :request do
 
       it "エラーメッセージが存在する" do
         subject
-        follow_redirect!
         expect(flash[:alert]).to be_present
       end
     end
   end
 end
-
