@@ -120,6 +120,7 @@ class User < ApplicationRecord
   private
 
   def create_default_folder
+    return if self.nil?
     self.folders.create(name: '未分類')
   end
 end
