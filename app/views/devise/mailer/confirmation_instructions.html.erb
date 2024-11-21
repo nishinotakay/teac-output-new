@@ -1,0 +1,5 @@
+<p><%= t('.greeting', recipient: @email) %></p>
+
+<p><%= t('.instruction') %></p>
+
+<p><%= link_to t('.action'), tenant_user_user_confirmation_url(tenant_id: @resource.tenant_id, confirmation_token: @token) %></p>
