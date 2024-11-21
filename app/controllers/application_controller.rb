@@ -23,6 +23,7 @@ class ApplicationController < ActionController::Base
   end  
 
   def after_sign_out_path_for(resource)
+    Rails.logger.info("after_sign_out_path_for: resource = #{resource.inspect}")
     case resource
     when :user
       new_user_session_path
@@ -59,7 +60,7 @@ class ApplicationController < ActionController::Base
   end
 
   def switch_tenant
-    tenant_id = session[:tenant_id]&.to_i || current_user&.tenant_id
+    tenant_id = session[:tenant_id] || current_user&.tenant_id || params[:tenant_id]
 
     if tenant_id.nil?
       Rails.logger.error("Tenant ID is missing. Unable to switch tenant.")
