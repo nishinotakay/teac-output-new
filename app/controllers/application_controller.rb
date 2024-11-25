@@ -67,6 +67,7 @@ class ApplicationController < ActionController::Base
       return
     end
 
+    Rails.logger.info("Setting session[:tenant_id] to: #{tenant_id}")
     session[:tenant_id] = tenant_id
 
     tenant = Tenant.find_by(id: tenant_id)
@@ -74,6 +75,7 @@ class ApplicationController < ActionController::Base
       Apartment::Tenant.switch!(tenant.name)
       Rails.logger.info("Switched to Tenant: #{Apartment::Tenant.current}")
       Rails.logger.info("Current user after tenant switch: #{current_user.inspect}")
+      session[:tenant_id] = nil
     else
       Rails.logger.error("Tenant not found for tenant_id: #{tenant_id}")
       raise "Tenant not found"
