@@ -13,6 +13,7 @@ module Managers
     def create
       @tenant = Tenant.new(tenant_params)
       if @tenant.save
+        Apartment::Tenant.create(@tenant.name)
         flash[:notice] = "#{@tenant.name}を登録しました。"
         redirect_to managers_tenants_url
       else
