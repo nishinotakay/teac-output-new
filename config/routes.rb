@@ -3,7 +3,7 @@
 Rails.application.routes.draw do
   mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 
-  # admin関連=========================================================
+  # 管理者関連
   devise_for :admins, controllers: {
     sessions:      'admins/sessions',
     passwords:     'admins/passwords',
@@ -14,9 +14,47 @@ Rails.application.routes.draw do
   namespace :admins do
     resources :posts
     resources :dash_boards, only: [:index]
+    resources :charge_plans do
+      collection do
+        post 'confirm'
+        get 'back'
+        get 'complete'
+      end
+    end
+    resources :articles do
+      member do
+        get 'users_show'
+        get 'users_edit'
+        patch 'users_update'
+        delete 'users_destroy'
+      end
+    end
+    namespace :articles do
+      post 'image'
+    end
+    resources :users do
+      collection do
+        get 'admins_show'
+      end
+    end
+    resources :inquiries
+    resources :learnings, only: [:index, :show, :create]
   end
 
-  # ログイン前は tenant_id を含むURLを使用 ====================================================
+  # ユーザー関連
+  devise_scope :user do
+    root 'users/sessions#new'
+  end
+
+  # シングルテナント用
+  devise_for :users, skip: [:omniauth_callbacks], controllers: {
+    sessions:      'users/sessions',
+    passwords:     'users/passwords',
+    confirmations: 'users/confirmations',
+    registrations: 'users/registrations'
+  }
+
+  # マルチテナント用
   scope 'tenant/:tenant_id', as: 'tenant' do
     devise_for :users, skip: [:omniauth_callbacks], controllers: {
       sessions:      'users/sessions',
@@ -26,20 +64,12 @@ Rails.application.routes.draw do
     }, as: :tenant_user
   end
 
-  # OmniAuth コールバックをスコープ外に配置 ====================================================
+  # OmniAuth コールバック
   devise_for :users, only: :omniauth_callbacks, controllers: {
     omniauth_callbacks: 'users/omniauth_callbacks'
   }
 
-  # ログイン後の通常のルート ====================================================
-  devise_for :users, skip: [:omniauth_callbacks], controllers: {
-    sessions:      'users/sessions',
-    passwords:     'users/passwords',
-    confirmations: 'users/confirmations',
-    registrations: 'users/registrations'
-  }
-
-  # ダッシュボードへのルート
+  # ユーザーのダッシュボード
   get 'users/dash_boards', to: 'users/dash_boards#index', as: :users_dash_boards
 
   # その他のユーザー関連ルート
@@ -95,7 +125,7 @@ Rails.application.routes.draw do
     resources :inquiries
   end
 
-  # manager関連=======================================================
+  # マネージャー関連
   devise_for :managers, controllers: {
     sessions:      'managers/sessions',
     passwords:     'managers/passwords',
@@ -112,6 +142,6 @@ Rails.application.routes.draw do
     end
   end
 
-  # 共通==============================================================
+  # 共通
   get 'use', to: 'use#index'
 end

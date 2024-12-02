@@ -15,6 +15,7 @@
       def create
         # ここでUser.new（と同等の操作）を行う
         build_resource(sign_up_params)
+        
         resource.tenant_id = params[:tenant_id]
         Rails.logger.debug "Resource: #{resource.inspect}"
 
