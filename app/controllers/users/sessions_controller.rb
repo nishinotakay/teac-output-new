@@ -3,20 +3,24 @@ module Users
     layout 'users_auth'
 
     def create
-      if params[:tenant_id].present? || session[:tenant_id].present?
-        tenant_id = session[:tenant_id] || params[:tenant_id]
-        tenant_name = "tenant_#{tenant_id}"
-      begin
-        Apartment::Tenant.switch!(tenant_name)
-        Rails.logger.info("Switched to Tenant: #{Apartment::Tenant.current}")
-        session[:tenant_id] = tenant_id
-      rescue Apartment::TenantNotFound => e
-        Rails.logger.error("Tenant not found: #{tenant_name}")
-        render :new, alert: "Tenant not found"
-        return
+      return super unless params[:tenant_id].present? || session[:tenant_id].present?
+      tenant_id = params[:tenant_id] || session[:tenant_id]
+      tenant = Tenant.find_by(id: tenant_id)
+    
+      if tenant
+        session[:tenant_id] = tenant_id    
+        super do |user|
+          warden.set_user(user, scope: :tenant_user_user)
+        end
+      else
+        flash[:alert] = "無効なテナントです"
+        redirect_to new_tenant_user_user_session_path(tenant_id: tenant_id)
       end
-      end
+    end
 
+    def destroy
+      return super unless session[:tenant_id].present?
+      session[:tenant_id] = nil
       super
     end
   end
