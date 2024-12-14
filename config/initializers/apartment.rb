@@ -1,35 +1,27 @@
-# frozen_string_literal: true
-require 'apartment'
 require 'apartment/elevators/generic'
 
 Apartment.configure do |config|
-  # マルチテナント化しないモデルを指定
+  # マルチテナント化しないモデルを設定
   config.excluded_models = %w{ Tenant }
 
-  # テナントの名前を定義
-  config.tenant_names = lambda do
-    tenant_names = Tenant.pluck(:name)
-    tenant_names
-  end
+  # パブリックスキーマへのフォールバックを無効
+  config.default_tenant = false
 
-  # 各テナントに対して個別のスキーマを作成
+  # 切り替え対象のテナント名をApartmentに設定
+  config.tenant_names = lambda { Tenant.pluck(:name) }
+
+  # テナントごとに個別のスキーマを使用
   config.use_schemas = true
 end
 
-# ルーティングもしくはセッションに保存されたtenant_idによりテナントを切り替え。
-# サブドメインを使用する場合は、他のエレベーター（Subdomain Elevator）を使用してテナントを切り替えることも可能。
+# リクエストごとに有効なテナント名であるかをチェック。有効な場合はそのテナント名をApartmentで使用可能にする
 Rails.application.config.middleware.use Apartment::Elevators::Generic, lambda { |request|
   tenant_id = request.params['tenant_id'] || request.session[:tenant_id]
-
+  
   if tenant_id.present?
-    tenant_name = "tenant_#{tenant_id}"
-    if Apartment.tenant_names.include?(tenant_name)
-      tenant_name
-    else
-      Rails.logger.error("Invalid tenant ID: #{tenant_id}")
+    tenant = Tenant.find_by(id: tenant_id)
+    if tenant && tenant.name.present? && Apartment.tenant_names.include?(tenant.name)
+      tenant.name
     end
-  else
-    Rails.logger.error("Tenant ID missing")
-    nil
   end
 }
