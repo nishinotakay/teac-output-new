@@ -1,9 +1,9 @@
 class ApplicationController < ActionController::Base
   add_flash_types :success, :info, :warning, :danger
+  before_action :switch_tenant
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_comment_notifiations
   before_action :set_profile_image, if: :user_signed_in?
-  before_action :switch_tenant
 
   def after_sign_in_path_for(resource)
     if resource.is_a?(User)
@@ -23,7 +23,6 @@ class ApplicationController < ActionController::Base
   end  
 
   def after_sign_out_path_for(resource)
-    Rails.logger.info("after_sign_out_path_for: resource = #{resource.inspect}")
     case resource
     when :user
       new_user_session_path
@@ -60,25 +59,40 @@ class ApplicationController < ActionController::Base
   end
 
   def switch_tenant
-    tenant_id = session[:tenant_id] || current_user&.tenant_id || params[:tenant_id]
+    tenant_id = params[:tenant_id] || 
+                session[:tenant_id] || 
+                current_user&.tenant_id
+    
+    Rails.logger.info "=== Tenant Switch Debug ==="
+    Rails.logger.info "Current User: #{current_user.inspect}"
+    Rails.logger.info "Session: #{session.to_h}"
+    Rails.logger.info "=== Current User ==="
+    Rails.logger.info("current_user.tenant_id: #{current_user&.tenant_id}")
+    Rails.logger.info("tenant_user_user.tenant_id: #{current_tenant_user_user&.tenant_id}")
+    Rails.logger.info("session[:tenant_id]: #{session[:tenant_id]}")
+    Rails.logger.info("params[:tenant_id]: #{ params[:tenant_id]}")
+    Rails.logger.info("tenant_id: #{tenant_id}")
 
-    if tenant_id.nil?
-      Rails.logger.error("Tenant ID is missing. Unable to switch tenant.")
-      return
+    if tenant_id.present?
+      tenant = Tenant.find_by(id: tenant_id)
+    elsif current_user.present?
+      tenant = Tenant.find_by(id: current_user.tenant_id)
+    else
+      tenant = Tenant.find_by(id: session[:tenant_id])
     end
-
-    Rails.logger.info("Setting session[:tenant_id] to: #{tenant_id}")
-    session[:tenant_id] = tenant_id
-
-    tenant = Tenant.find_by(id: tenant_id)
+    
     if tenant
       Apartment::Tenant.switch!(tenant.name)
       Rails.logger.info("Switched to Tenant: #{Apartment::Tenant.current}")
-      Rails.logger.info("Current user after tenant switch: #{current_user.inspect}")
-      session[:tenant_id] = nil
-    else
-      Rails.logger.error("Tenant not found for tenant_id: #{tenant_id}")
-      raise "Tenant not found"
+    end
+
+    if request.path == root_path || 
+       request.path == new_user_session_path ||
+       request.path == new_user_registration_path ||
+       request.path == new_user_password_path ||
+       request.path == new_user_confirmation_path
+       Apartment::Tenant.reset
+       Rails.logger.info("Switched to Single Tenant: Current Tenant is Single_Tenant")
     end
   end
 end
