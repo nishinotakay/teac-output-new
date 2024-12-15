@@ -24,9 +24,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          
           <%= f.password_field :password, autocomplete: "new-password", class:"form-control", placeholder:"パスワード", required: true %>
-          
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -43,8 +41,8 @@
         </div>
         <div class="row">
           <div class="col-8">
-            <div class="icheck-primary" onclick="controlSubmit()">
-              <input type="checkbox" id="agreeTerms" name="terms" required>
+            <div class="icheck-primary">
+              <input type="checkbox" id="agreeTerms" name="terms" required onclick="document.getElementById('sign_up_submit').disabled = !this.checked;">
               <label for="agreeTerms">
                 <%= link_to "利用規約", use_path %>に同意する
               </label>
