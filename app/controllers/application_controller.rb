@@ -8,6 +8,10 @@ class ApplicationController < ActionController::Base
   def after_sign_in_path_for(resource)
     if resource.is_a?(User)
       sign_in(:user, resource)
+    end
+
+    if resource.is_a?(Admin)
+      sign_in(:admin, resource)
     end 
 
     case resource
@@ -26,8 +30,6 @@ class ApplicationController < ActionController::Base
     case resource
     when :user
       new_user_session_path
-    when :tenant_user_user
-      new_tenant_user_user_session_path
     when :admin
       new_admin_session_path
     when :manager
@@ -61,13 +63,14 @@ class ApplicationController < ActionController::Base
   def switch_tenant
     tenant_id = params[:tenant_id] || 
                 session[:tenant_id] || 
-                current_user&.tenant_id
+                current_user&.tenant_id ||
+                current_admin&.tenant_id
     
     Rails.logger.info "=== Tenant Switch Debug ==="
-    Rails.logger.info "Current User: #{current_user.inspect}"
+    Rails.logger.info "Current User: #{current_admin.inspect}"
     Rails.logger.info "Session: #{session.to_h}"
     Rails.logger.info "=== Current User ==="
-    Rails.logger.info("current_user.tenant_id: #{current_user&.tenant_id}")
+    Rails.logger.info("current_user.tenant_id: #{current_admin&.tenant_id}")
     Rails.logger.info("tenant_user_user.tenant_id: #{current_tenant_user_user&.tenant_id}")
     Rails.logger.info("session[:tenant_id]: #{session[:tenant_id]}")
     Rails.logger.info("params[:tenant_id]: #{ params[:tenant_id]}")
@@ -77,6 +80,8 @@ class ApplicationController < ActionController::Base
       tenant = Tenant.find_by(id: tenant_id)
     elsif current_user.present?
       tenant = Tenant.find_by(id: current_user.tenant_id)
+    elsif current_admin.present?
+      tenant = Tenant.find_by(id: current_admin.tenant_id)
     else
       tenant = Tenant.find_by(id: session[:tenant_id])
     end
@@ -84,15 +89,9 @@ class ApplicationController < ActionController::Base
     if tenant
       Apartment::Tenant.switch!(tenant.name)
       Rails.logger.info("Switched to Tenant: #{Apartment::Tenant.current}")
-    end
-
-    if request.path == root_path || 
-       request.path == new_user_session_path ||
-       request.path == new_user_registration_path ||
-       request.path == new_user_password_path ||
-       request.path == new_user_confirmation_path
-       Apartment::Tenant.reset
-       Rails.logger.info("Switched to Single Tenant: Current Tenant is Single_Tenant")
+    else
+      Apartment::Tenant.reset
+      Rails.logger.info("Switched to Single Tenant: Current Tenant is Single_Tenant")
     end
   end
 end
