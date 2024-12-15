@@ -20,8 +20,10 @@ module Users
 
     def destroy
       return super unless session[:tenant_id].present?
+      warden.logout(:tenant_user_user)
+      warden.logout(:user)
+      redirect_to new_tenant_user_user_session_path(tenant_id: session[:tenant_id])
       session[:tenant_id] = nil
-      super
     end
   end
 end
