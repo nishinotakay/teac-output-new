@@ -16,27 +16,24 @@ module Users
       if current_admin.present? && current_user.nil?
         user = User.find(params[:user_id])
         @articles = user.articles.paginated_and_sort_filter(filter).page(params[:page]).per(30)
-      elsif current_tenant_user_user.present?
-        @articles = current_tenant_user_user.articles.paginated_and_sort_filter(filter).page(params[:page]).per(30)
-      elsif current_user.present?
+      else
         @articles = current_user.articles.paginated_and_sort_filter(filter).page(params[:page]).per(30)
+
+      respond_to do |format|
+        format.any
+        format.html
+        format.json { render json: @articles }
+      end
       end
 
       if current_user.present?
         @folders = current_user.folders if current_user.folders.present?
       end
-      
-      if @articles.present?
-        @folder_names = {}
-        @articles.each do |article|
-          latest_folder = ArticleFolder.where(article_id: article.id).order(created_at: :desc).first
-          @folder_names[article.id] = latest_folder.folder.name if latest_folder.present?
-        end
-      end
 
-      respond_to do |format|
-        format.html
-        format.json { render json: @articles }
+      @folder_names = {}
+      @articles.each do |article|
+        latest_folder = ArticleFolder.where(article_id: article.id).order(created_at: :desc).first
+        @folder_names[article.id] = latest_folder.folder.name if latest_folder.present?
       end
     end
   end
