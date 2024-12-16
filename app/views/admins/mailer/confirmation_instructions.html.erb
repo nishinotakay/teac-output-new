@@ -2,4 +2,4 @@
 
 <p><%= t('.instruction') %></p>
 
-<p><%= link_to t('.action'), confirmation_url(@resource, confirmation_token: @token) %></p>
+<p><%= link_to t('.action'), tenant_admin_admin_confirmation_url(tenant_id: @resource.tenant_id, confirmation_token: @token) %></p>
