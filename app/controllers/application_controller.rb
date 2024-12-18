@@ -87,6 +87,13 @@ class ApplicationController < ActionController::Base
     end
     
     if tenant
+      if current_user.present? && !tenant.authorized_tenant?(current_user)
+        flash[:alert] = "アクセス権限がありません。"
+        return
+      elsif current_admin.present? && !tenant.authorized_tenant?(current_admin)
+        flash[:alert] = "アクセス権限がありません。"
+        return
+      end
       Apartment::Tenant.switch!(tenant.name)
       Rails.logger.info("Switched to Tenant: #{Apartment::Tenant.current}")
     else
