@@ -76,14 +76,19 @@ class ApplicationController < ActionController::Base
     Rails.logger.info("params[:tenant_id]: #{ params[:tenant_id]}")
     Rails.logger.info("tenant_id: #{tenant_id}")
 
+    current_tenant = Apartment::Tenant.current
+    default_tenant = Apartment::Tenant.default_tenant
+
     if tenant_id.present?
       tenant = Tenant.find_by(id: tenant_id)
     elsif current_user.present?
       tenant = Tenant.find_by(id: current_user.tenant_id)
     elsif current_admin.present?
       tenant = Tenant.find_by(id: current_admin.tenant_id)
-    else
+    elsif session[:tenant_id].present?
       tenant = Tenant.find_by(id: session[:tenant_id])
+    else
+      tenant = nil
     end
     
     if tenant
@@ -97,6 +102,25 @@ class ApplicationController < ActionController::Base
       Apartment::Tenant.switch!(tenant.name)
       Rails.logger.info("Switched to Tenant: #{Apartment::Tenant.current}")
     else
+      excluded_paths = [
+        # 一般ユーザー側のシングルテナント
+        root_path,
+        new_user_session_path,
+        new_user_registration_path,
+        new_user_password_path,
+        new_user_confirmation_path,
+        # 管理者側のシングルテナント
+        new_admin_session_path,
+        new_admin_password_path
+      ]
+      unless excluded_paths.include?(request.path)
+        if current_tenant != default_tenant && current_user.nil? && current_admin.nil? && session[:tenant_id].nil?
+          flash[:alert] = "セッションが無効です。再度ログインしてください。"
+          redirect_to root_path
+          return
+        end
+      end
+      Rails.logger.info("Before SwitchTenant Current: #{Apartment::Tenant.current}")
       Apartment::Tenant.reset
       Rails.logger.info("Switched to Single Tenant: Current Tenant is Single_Tenant")
     end
