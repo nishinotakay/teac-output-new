@@ -46,12 +46,28 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit :sign_in, keys: added_attrs
   end
 
+  def switch_tenant
+    tenant_id = get_tenant_id
+    current_tenant = Apartment::Tenant.current
+    tenant = Tenant.find_by(id:tenant_id)
+    if tenant
+      return unless authorized_tenant?(tenant)
+      Apartment::Tenant.switch!(tenant.name)
+      Rails.logger.info("Switched to Tenant: #{Apartment::Tenant.current}")
+    else
+      check_session_status(current_tenant)
+      Apartment::Tenant.reset
+      Rails.logger.info("Switched to Single Tenant: Current Tenant is Single_Tenant")
+    end
+  end 
+
   private
 
+   # コメント通知件数を表示するためのメソッド
   def set_comment_notifiations
     if user_signed_in?
       @comment_notifications = TweetComment.where(confirmed: false, recipient_id: current_user.id)
-        .where.not(user_id: current_user.id)
+        .where.not(user_id: current_user.id) # user_idがログインユーザーの場合はカウントしない。
         .order(created_at: :desc)
     end
   end
@@ -60,69 +76,31 @@ class ApplicationController < ActionController::Base
     @user_profile_image = current_user.profile&.image.present? ? current_user.profile.image : "user_default.png"
   end
 
-  def switch_tenant
-    tenant_id = params[:tenant_id] || 
-                session[:tenant_id] || 
-                current_user&.tenant_id ||
-                current_admin&.tenant_id
-    
-    Rails.logger.info "=== Tenant Switch Debug ==="
-    Rails.logger.info "Current User: #{current_admin.inspect}"
-    Rails.logger.info "Session: #{session.to_h}"
-    Rails.logger.info "=== Current User ==="
-    Rails.logger.info("current_user.tenant_id: #{current_admin&.tenant_id}")
-    Rails.logger.info("tenant_user_user.tenant_id: #{current_tenant_user_user&.tenant_id}")
-    Rails.logger.info("session[:tenant_id]: #{session[:tenant_id]}")
-    Rails.logger.info("params[:tenant_id]: #{ params[:tenant_id]}")
-    Rails.logger.info("tenant_id: #{tenant_id}")
+  def get_tenant_id
+    params[:tenant_id] || session[:tenant_id] || current_user&.tenant_id || current_admin&.tenant_id
+  end
 
-    current_tenant = Apartment::Tenant.current
-    default_tenant = Apartment::Tenant.default_tenant
+  def authorized_tenant?(tenant)
+    return true if !user_signed_in? && session[:tenant_id].nil? || 
+                   !admin_signed_in? && session[:tenant_id].nil?
 
-    if tenant_id.present?
-      tenant = Tenant.find_by(id: tenant_id)
-    elsif current_user.present?
-      tenant = Tenant.find_by(id: current_user.tenant_id)
-    elsif current_admin.present?
-      tenant = Tenant.find_by(id: current_admin.tenant_id)
-    elsif session[:tenant_id].present?
-      tenant = Tenant.find_by(id: session[:tenant_id])
+    if (user_signed_in? && tenant.has_user?(current_user)) || 
+       (admin_signed_in? && tenant.has_user?(current_admin))
+       return true
     else
-      tenant = nil
-    end
-    
-    if tenant
-      if current_user.present? && !tenant.authorized_tenant?(current_user)
-        flash[:alert] = "アクセス権限がありません。"
-        return
-      elsif current_admin.present? && !tenant.authorized_tenant?(current_admin)
-        flash[:alert] = "アクセス権限がありません。"
-        return
-      end
-      Apartment::Tenant.switch!(tenant.name)
-      Rails.logger.info("Switched to Tenant: #{Apartment::Tenant.current}")
-    else
-      excluded_paths = [
-        # 一般ユーザー側のシングルテナント
-        root_path,
-        new_user_session_path,
-        new_user_registration_path,
-        new_user_password_path,
-        new_user_confirmation_path,
-        # 管理者側のシングルテナント
-        new_admin_session_path,
-        new_admin_password_path
-      ]
-      unless excluded_paths.include?(request.path)
-        if current_tenant != default_tenant && current_user.nil? && current_admin.nil? && session[:tenant_id].nil?
-          flash[:alert] = "セッションが無効です。再度ログインしてください。"
-          redirect_to root_path
-          return
-        end
-      end
-      Rails.logger.info("Before SwitchTenant Current: #{Apartment::Tenant.current}")
-      Apartment::Tenant.reset
-      Rails.logger.info("Switched to Single Tenant: Current Tenant is Single_Tenant")
+      flash[:alert] = "不正なテナントへのアクセスのため、ページを表示できませんでした。元のテナントに戻ります"
+      return false
     end
   end
+
+  def check_session_status(current_tenant)
+    return true if !user_signed_in? || !admin_signed_in?
+    default_tenant = Apartment::Tenant.default_tenant
+    if current_tenant != default_tenant && session[:tenant_id].nil? && !user_signed_in? ||
+      current_tenant = default_tenant && session[:tenant_id].nil? && !admin_signed_in?
+      flash[:alert] = "セッションが無効です。再度ログインしてください。"
+      redirect_to root_path
+    end
+  end
+
 end
