@@ -5,6 +5,7 @@ class Admin < ApplicationRecord
     :recoverable, :rememberable, :validatable,
     :confirmable
 
+  belongs_to :tenant, optional: true
   has_many :articles, dependent: :destroy
   has_many :posts, dependent: :destroy
   has_one :charge_plan, dependent: :destroy

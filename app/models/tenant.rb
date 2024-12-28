@@ -1,5 +1,6 @@
 class Tenant < ApplicationRecord
   has_many :users
+  has_many :admins
   validates :name, presence: true, length: { in: 1..20 }
 
   def has_user?(user)
