@@ -49,8 +49,8 @@ class ApplicationController < ActionController::Base
   def switch_tenant
     tenant_id = get_tenant_id
     current_tenant = Apartment::Tenant.current
-    tenant = Tenant.find_by(id:tenant_id)
-    if tenant
+    tenant = Tenant.find_by(id: tenant_id)
+    if tenant.present?
       return unless authorized_tenant?(tenant)
       Apartment::Tenant.switch!(tenant.name)
       Rails.logger.info("Switched to Tenant: #{Apartment::Tenant.current}")
@@ -81,12 +81,12 @@ class ApplicationController < ActionController::Base
   end
 
   def authorized_tenant?(tenant)
-    return true if !user_signed_in? && session[:tenant_id].nil? || 
+    return true if !user_signed_in? && session[:tenant_id].nil? ||
                    !admin_signed_in? && session[:tenant_id].nil?
 
-    if (user_signed_in? && tenant.has_user?(current_user)) || 
-       (admin_signed_in? && tenant.has_user?(current_admin))
-       return true
+    if user_signed_in? && tenant.has_user?(current_user) || 
+      admin_signed_in? && tenant.has_user?(current_admin)
+      return true
     else
       flash[:alert] = "不正なテナントへのアクセスのため、ページを表示できませんでした。元のテナントに戻ります"
       return false
@@ -94,12 +94,13 @@ class ApplicationController < ActionController::Base
   end
 
   def check_session_status(current_tenant)
-    return true if !user_signed_in? || !admin_signed_in?
+    return if BEFORE_LOGIN_SINGLE_TENANT_PATHS.include?(request.path)
+
     default_tenant = Apartment::Tenant.default_tenant
-    if current_tenant != default_tenant && session[:tenant_id].nil? && !user_signed_in? ||
-      current_tenant = default_tenant && session[:tenant_id].nil? && !admin_signed_in?
-      flash[:alert] = "セッションが無効です。再度ログインしてください。"
-      redirect_to root_path
+    if current_tenant != default_tenant && current_user.nil? && session[:tenant_id].nil? ||
+       current_tenant != default_tenant && current_admin.nil? && session[:tenant_id].nil?
+       flash[:alert] = "セッションが無効です。再度ログインしてください。"
+       redirect_to root_path
     end
   end
 
