@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
   module Users
     class RegistrationsController < Devise::RegistrationsController
       layout 'users_auth'
@@ -17,7 +16,6 @@
         build_resource(sign_up_params)
         
         resource.tenant_id = params[:tenant_id]
-        Rails.logger.debug "Resource: #{resource.inspect}"
 
         # ここでUser.save（と同等の操作）を行う
         resource.save
