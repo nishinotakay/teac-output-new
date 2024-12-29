@@ -31,6 +31,7 @@ module Admins
     def destroy
       return super unless session[:tenant_id].present?
       warden.logout(:tenant_admin_admin)
+      warden.logout(:admin)
 
       redirect_to new_tenant_admin_admin_session_path(tenant_id: session[:tenant_id])
       session[:tenant_id] = nil
