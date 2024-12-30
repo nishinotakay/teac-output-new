@@ -1,7 +1,8 @@
 module Users
   class DashBoardsController < Users::Base
-    skip_before_action :authenticate_user!, only: %i[index], if: :admin_signed_in?
-    
+    before_action :authenticate_user!
+    skip_before_action :authenticate_user!, only: %i[show], if: :admin_signed_in?
+
     def index
       filter = {
         author:   params[:author],
