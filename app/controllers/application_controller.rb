@@ -48,18 +48,16 @@ class ApplicationController < ActionController::Base
 
   def switch_tenant
     tenant_id = get_tenant_id
-    current_tenant = Apartment::Tenant.current
     tenant = Tenant.find_by(id: tenant_id)
     if tenant.present?
       return unless authorized_tenant?(tenant)
       Apartment::Tenant.switch!(tenant.name)
       Rails.logger.info("Switched to Tenant: #{Apartment::Tenant.current}")
     else
-      check_session_status(current_tenant)
       Apartment::Tenant.reset
       Rails.logger.info("Switched to Single Tenant: Current Tenant is Single_Tenant")
     end
-  end 
+  end
 
   private
 
@@ -81,26 +79,20 @@ class ApplicationController < ActionController::Base
   end
 
   def authorized_tenant?(tenant)
+    # ログイン前は認証チェックをスキップ
     return true if !user_signed_in? && session[:tenant_id].nil? ||
                    !admin_signed_in? && session[:tenant_id].nil?
+
+    # マルチテナントのログイン画面にて、メールアドレス もしくは パスワードの入力誤りをした場合は認証チェックをスキップ             
+    return true if request.path == new_tenant_user_user_session_path(tenant_id: tenant.id) ||
+                   request.path == new_tenant_admin_admin_session_path(tenant_id: tenant.id)
 
     if user_signed_in? && tenant.has_user?(current_user) || 
       admin_signed_in? && tenant.has_user?(current_admin)
       return true
     else
-      flash[:alert] = "不正なテナントへのアクセスのため、ページを表示できませんでした。元のテナントに戻ります"
+      flash[:alert] = "不正なテナントへのアクセスのため、ページを表示できません。元のテナントに戻ります。"
       return false
-    end
-  end
-
-  def check_session_status(current_tenant)
-    return if BEFORE_LOGIN_SINGLE_TENANT_PATHS.include?(request.path)
-
-    default_tenant = Apartment::Tenant.default_tenant
-    if current_tenant != default_tenant && current_user.nil? && session[:tenant_id].nil? ||
-       current_tenant != default_tenant && current_admin.nil? && session[:tenant_id].nil?
-       flash[:alert] = "セッションが無効です。再度ログインしてください。"
-       redirect_to root_path
     end
   end
 
