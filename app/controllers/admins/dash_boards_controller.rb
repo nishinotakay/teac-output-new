@@ -1,5 +1,7 @@
 module Admins
   class DashBoardsController < Admins::Base
+    before_action :authenticate_admin!
+
     def index
       params[:order] ||= 'DESC'
       filter = {
