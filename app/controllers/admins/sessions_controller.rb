@@ -18,8 +18,8 @@ module Admins
     
       if tenant
         session[:tenant_id] = tenant_id
-        super do |tenant_admin_admin|
-          warden.set_user(tenant_admin_admin, scope: :admin)
+        super do |admin|
+          sign_in(:admin, admin)
         end
       else
         flash[:alert] = "無効なテナントです"
@@ -30,10 +30,11 @@ module Admins
     # DELETE /resource/sign_out
     def destroy
       return super unless session[:tenant_id].present?
-      warden.logout(:tenant_admin_admin)
-      warden.logout(:admin)
-
+      
+      sign_out(:admin)
+      sign_out(:tenant_admin_admin)
       redirect_to new_tenant_admin_admin_session_path(tenant_id: session[:tenant_id])
+ 
       session[:tenant_id] = nil
     end
 
