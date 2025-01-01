@@ -19,7 +19,7 @@ module Admins
       if tenant
         session[:tenant_id] = tenant_id
         super do |tenant_admin_admin|
-          warden.set_user(tenant_admin_admin, scope: :tenant_admin_admin)
+          warden.set_user(tenant_admin_admin, scope: :admin)
         end
       else
         flash[:alert] = "無効なテナントです"

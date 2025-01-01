@@ -10,7 +10,7 @@ module Users
       if tenant
         session[:tenant_id] = tenant_id    
         super do |tenant_user_user|
-          warden.set_user(tenant_user_user, scope: :tenant_user_user)
+          warden.set_user(tenant_user_user, scope: :user)
         end
       else
         flash[:alert] = "無効なテナントです"

@@ -6,14 +6,6 @@ class ApplicationController < ActionController::Base
   before_action :set_profile_image, if: :user_signed_in?
 
   def after_sign_in_path_for(resource)
-    if resource.is_a?(User)
-      sign_in(:user, resource)
-    end
-
-    if resource.is_a?(Admin)
-      sign_in(:admin, resource)
-    end 
-
     case resource
     when User
       users_dash_boards_path
