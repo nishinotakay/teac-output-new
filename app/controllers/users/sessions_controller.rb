@@ -9,8 +9,8 @@ module Users
     
       if tenant
         session[:tenant_id] = tenant_id    
-        super do |tenant_user_user|
-          warden.set_user(tenant_user_user, scope: :user)
+        super do |user|
+          sign_in(:user, user)
         end
       else
         flash[:alert] = "無効なテナントです"
@@ -20,8 +20,9 @@ module Users
 
     def destroy
       return super unless session[:tenant_id].present?
-      warden.logout(:tenant_user_user)
-      warden.logout(:user)
+
+      sign_out(:user)
+      sign_out(:tenant_user_user)
 
       redirect_to new_tenant_user_user_session_path(tenant_id: session[:tenant_id])
       session[:tenant_id] = nil
