@@ -33,8 +33,8 @@ module Admins
       
       sign_out(:admin)
       sign_out(:tenant_admin_admin)
+
       redirect_to new_tenant_admin_admin_session_path(tenant_id: session[:tenant_id])
- 
       session[:tenant_id] = nil
     end
 
