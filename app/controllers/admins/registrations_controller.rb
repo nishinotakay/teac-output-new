@@ -67,8 +67,7 @@ module Admins
     # The path used after sign up for inactive accounts.
     def after_inactive_sign_up_path_for(resource)
        return super unless params[:tenant_id].present?
-       redirect_to new_tenant_admin_admin_session_path(tenant_id: params[:tenant_id])
-     end
+       new_tenant_admin_admin_session_path(tenant_id: params[:tenant_id])
+    end
   end
 end
-

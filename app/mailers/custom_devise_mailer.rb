@@ -18,8 +18,6 @@ class CustomDeviseMailer < Devise::Mailer
       generated_url = user_confirmation_url(confirmation_token: token)
     end
 
-    Rails.logger.debug "Generated URL: #{generated_url}"
-
     super
-  end  
+  end
 end

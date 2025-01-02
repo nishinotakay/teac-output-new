@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
     else
       root_path
     end
-  end  
+  end
 
   def after_sign_out_path_for(resource)
     case resource
@@ -80,11 +80,11 @@ class ApplicationController < ActionController::Base
                    request.path == new_tenant_admin_admin_session_path(tenant_id: tenant.id)
 
     if user_signed_in? && tenant.has_user?(current_user) || 
-      admin_signed_in? && tenant.has_user?(current_admin)
-      return true
+       admin_signed_in? && tenant.has_user?(current_admin)
+       return true
     else
-      flash[:alert] = "不正なテナントへのアクセスのため、ページを表示できません。元のテナントに戻ります。"
-      return false
+       flash[:alert] = "不正なテナントへのアクセスのため、ページを表示できません。元のテナントに戻ります。"
+       return false
     end
   end
 
