@@ -16,7 +16,7 @@ module Admins
       tenant_id = params[:tenant_id] || session[:tenant_id]
       tenant = Tenant.find_by(id: tenant_id)
     
-      if tenant
+      if tenant.present?
         session[:tenant_id] = tenant_id
         super do |admin|
           sign_in(:admin, admin)
