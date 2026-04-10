@@ -46,6 +46,9 @@ gem 'devise-bootstrap-views', '~> 1.0'
 gem 'devise-i18n'
 gem 'rails-i18n', '~> 6.0'
 
+gem 'rack-cors'          # CORS 制御
+gem 'jwt'                # JWT 認証
+
 gem 'dotenv-rails'
 gem 'rinku'
 gem 'draper'

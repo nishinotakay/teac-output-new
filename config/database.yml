@@ -3,17 +3,20 @@ default: &default
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
-  password: password
-  host: db
+  password: password  # Use your MySQL password from docker-compose.yml
+  host: docker-db-service  # This is the Docker service name
+  port: 3306
 
 development:
   <<: *default
-  database: development_db
+  database: your_app_development  # Replace with your actual database name
 
 test:
   <<: *default
-  database: test_db
+  database: your_app_test
 
 production:
   <<: *default
-  url: <%= ENV['JAWSDB_URL'] %>
+  database: your_app_production
+  username: your_app
+  password: <%= ENV['YOUR_APP_DATABASE_PASSWORD'] %>
