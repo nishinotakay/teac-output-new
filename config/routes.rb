@@ -3,6 +3,60 @@
 Rails.application.routes.draw do
   mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 
+  # ===========================================================
+  # API v1
+  # ===========================================================
+  namespace :api do
+    namespace :v1 do
+      # --- ユーザー認証 ---
+      scope :auth do
+        post   'signup',  to: 'auth/users#signup'
+        post   'login',   to: 'auth/users#login'
+        delete 'logout',  to: 'auth/users#logout'
+        get    'me',      to: 'auth/users#me'
+      end
+
+      # --- 管理者認証 ---
+      scope 'admin/auth' do
+        post   'login',  to: 'auth/admins#login'
+        delete 'logout', to: 'auth/admins#logout'
+        get    'me',     to: 'auth/admins#me'
+      end
+
+      # --- マネージャー認証 ---
+      scope 'manager/auth' do
+        post   'login',  to: 'auth/managers#login'
+        delete 'logout', to: 'auth/managers#logout'
+        get    'me',     to: 'auth/managers#me'
+      end
+
+      # --- ユーザー向けリソース ---
+      resources :posts, only: [:index, :show, :create, :update, :destroy], controller: 'users/posts' do
+        post   'likes', to: 'users/likes#post_create',   as: :post_like
+        delete 'likes', to: 'users/likes#post_destroy'
+      end
+      resources :articles, only: [:index, :show, :create, :update, :destroy], controller: 'users/articles' do
+        post   'likes', to: 'users/likes#article_create', as: :article_like
+        delete 'likes', to: 'users/likes#article_destroy'
+      end
+      resources :tweets,    only: [:index, :show, :create, :update, :destroy], controller: 'users/tweets'
+      resources :inquiries, only: [:index, :show, :create],                    controller: 'users/inquiries'
+      resources :learnings, only: [:index, :create],                           controller: 'users/learnings'
+      resources :stocks,    only: [:index, :create, :destroy],                 controller: 'users/stocks'
+      resource  :profile,   only: [:show, :update],                            controller: 'users/profiles'
+
+      # --- 管理者向けリソース ---
+      namespace :admin do
+        resources :users,     only: [:index, :show, :update, :destroy]
+        resources :articles,  only: [:index, :show, :create, :update, :destroy]
+        resources :posts,     only: [:index, :show, :create, :update, :destroy]
+        resources :learnings, only: [:index, :create]
+      end
+    end
+  end
+  # ===========================================================
+
+
   # admin関連=========================================================
   devise_for :admins, controllers: {
     sessions:      'admins/sessions',
