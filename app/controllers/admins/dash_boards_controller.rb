@@ -1,3 +1,5 @@
+# 管理者ダッシュボードコントローラ: ログイン中の管理者が自分の記事一覧をフィルタ・ソート付きで表示するアクションを提供する
+
 module Admins
   class DashBoardsController < Admins::Base
     def index

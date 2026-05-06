@@ -1,3 +1,5 @@
+# 受講料金プランモデル: 講師が設定する受講料（定額決済・一括決済・無料）の情報とStripe連携を管理する
+
 class ChargePlan < ApplicationRecord
   validates :price, presence: true, numericality: { greater_than: 0,}, if: :not_free_plan
   validates :quantity, presence: true, numericality: { greater_than: 0,}, if: :not_free_plan

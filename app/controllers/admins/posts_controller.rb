@@ -1,9 +1,12 @@
+# 管理者向け動画投稿コントローラ: 管理者がYouTube動画記事の一覧・作成・編集・削除を行うアクションを提供する
+
 module Admins
   class PostsController < Admins::Base
     before_action :authenticate_admin!, only: %i[show index new create edit update destroy]
     before_action :set_post, only: %i[show edit update destroy]
     before_action :prevent_url, only: %i[edit update destroy]
 
+    # 動画投稿一覧をフィルタ・ソート付きで表示する
     def index
       @posts = Post.filtered_and_ordered_posts(params, params[:page], 30)
 
@@ -13,6 +16,7 @@ module Admins
       end
     end
 
+    # 動画投稿の詳細を表示する
     def show
       @post = Post.find(params[:id])
 
@@ -22,10 +26,12 @@ module Admins
       end
     end
 
+    # 新規動画投稿フォームを表示する
     def new
       @post = current_admin.posts.new
     end
 
+    # 動画投稿編集フォームを表示する
     def edit
       respond_to do |format|
         format.html
@@ -33,6 +39,7 @@ module Admins
       end
     end
 
+    # 新規動画投稿を保存する（YouTubeURLから動画IDを抽出して保存）
     def create
       @post = current_admin.posts.new(post_params)
       url = params[:post][:youtube_url].last(11)
@@ -44,6 +51,7 @@ module Admins
       end
     end
 
+    # 動画投稿情報を更新する
     def update
       url = params[:post][:youtube_url].last(11)
       @post.youtube_url = url
@@ -54,6 +62,7 @@ module Admins
       end
     end
 
+    # 動画投稿を削除する
     def destroy
       if @post.destroy
         redirect_to admins_posts_path, flash: { warning: '動画を削除しました。' }

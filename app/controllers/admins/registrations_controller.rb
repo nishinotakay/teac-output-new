@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# 管理者向けアカウント登録コントローラ: Deviseの新規登録・アカウント編集フローを管理者向けにカスタマイズする
 
 module Admins
   class RegistrationsController < Devise::RegistrationsController

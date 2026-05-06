@@ -1,3 +1,5 @@
+# つぶやきモデル: ユーザーが投稿する短文テキストおよび画像付き投稿（最大4枚・5MB）を管理する
+
 class Tweet < ApplicationRecord
   belongs_to :user
   has_many :tweet_comments, dependent: :destroy # この行を追加

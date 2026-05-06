@@ -1,3 +1,5 @@
+# お問い合わせモデル: ユーザーからの問い合わせの保存・フィルタリング・表示/非表示管理を行う
+
 class Inquiry < ApplicationRecord
   belongs_to :user
 

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# ユーザー向け記事コントローラ: ユーザーが記事の一覧・閲覧・作成・編集・削除・画像アップロードを行うアクションを提供する
 
 module Users
   class ArticlesController < Users::Base
@@ -8,6 +9,7 @@ module Users
     before_action :set_dashboard, only: %i[show new create edit update destroy]
     skip_before_action :authenticate_user!, only: %i[show], if: :admin_signed_in?
 
+    # 記事一覧をフィルタ・ページネーション付きで表示する
     def index
       filter = {
         author:   params[:author],
@@ -27,6 +29,7 @@ module Users
       end
     end
 
+    # 記事の詳細・コメント一覧・ストック状態を表示する
     def show
       @article = Article.find(params[:id])
       @article_comments = @article.article_comments.all.order(created_at: 'DESC')
@@ -41,10 +44,12 @@ module Users
       @user = @article.user
     end
 
+    # 新規記事作成フォームを表示する
     def new
       @article = current_user.articles.new
     end
 
+    # 新規記事を保存する
     def create
       @article = current_user.articles.new(article_params)
     
@@ -65,6 +70,7 @@ module Users
       end
     end    
 
+    # 記事編集フォームを表示する
     def edit
       @show = params[:show].present?
 
@@ -74,6 +80,7 @@ module Users
       end
     end
 
+    # 記事を更新する
     def update
       respond_to do |format|
         if @article.update(article_params)
@@ -93,6 +100,7 @@ module Users
     end
     
 
+    # 記事を削除する
     def destroy
       flash[:notice] = '記事を削除しました。'
       @article.destroy
@@ -103,6 +111,7 @@ module Users
       end
     end
 
+    # 記事本文中の画像をアップロードしてURLを返す（リッチテキストエディタ用）
     def image
       if current_user.id == params[:user_id].to_i
         @article = current_user.articles.new(params.permit(:image))

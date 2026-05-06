@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# ユーザー向けOAuth認証コールバックコントローラ: Google・Facebook・LINEログインのコールバック処理とユーザー作成・サインインを管理する
 
 module Users
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController

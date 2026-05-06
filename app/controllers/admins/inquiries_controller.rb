@@ -1,5 +1,8 @@
+# 管理者向けお問い合わせコントローラ: お問い合わせの一覧表示・詳細確認・表示/非表示切り替えを管理する
+
 module Admins
   class InquiriesController < Admins::Base
+    # お問い合わせ一覧をフィルタ・ソート付きで表示する
     def index
       params[:ord_created_at] ||= 'desc'
       sort_and_filter_params = Inquiry.sort_and_filter(params)
@@ -10,11 +13,13 @@ module Admins
       @users = User.page(params[:page]).per(30)
     end
 
+    # お問い合わせの詳細と送信ユーザーを表示する
     def show
       @inquiry = Inquiry.find(params[:id])
-      @user = @inquiry.user 
+      @user = @inquiry.user
     end
 
+    # お問い合わせの表示/非表示状態をトグルする
     def update
       @inquiry = Inquiry.find(params[:id])
       if @inquiry.update(hidden: !@inquiry.hidden)

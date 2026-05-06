@@ -1,3 +1,5 @@
+# 管理者（講師）モデル: 講師アカウントの認証・記事・動画投稿・受講料設定などを管理する
+
 class Admin < ApplicationRecord
   # Include default devise modules. Others available are:
   # :lockable, :timeoutable, :trackable and :omniauthable
@@ -5,13 +7,14 @@ class Admin < ApplicationRecord
     :recoverable, :rememberable, :validatable,
     :confirmable
 
+  # == アソシエーション ==
   has_many :articles, dependent: :destroy
   has_many :posts, dependent: :destroy
   has_one :charge_plan, dependent: :destroy
-  
+
   # 管理者の学習進捗を保持する関連付け
   has_many :learning_status, class_name: "Learning", foreign_key: "admin_id", dependent: :destroy
-  
+
   enum gender: { male: 0, female: 1, other: 2 }
 
   def completed?(article)

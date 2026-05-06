@@ -1,3 +1,5 @@
+# 動画投稿モデル: ユーザー・管理者が投稿するYouTube動画記事の保存・フィルタリングを管理する
+
 class Post < ApplicationRecord
   belongs_to :admin, optional: true
   belongs_to :user, optional: true

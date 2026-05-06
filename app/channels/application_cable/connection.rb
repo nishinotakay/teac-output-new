@@ -1,3 +1,5 @@
+# Action Cable 接続クラス: WebSocket接続時にセッションからユーザーを認証し、未認証接続を拒否する
+
 module ApplicationCable
   class Connection < ActionCable::Connection::Base
     identified_by :current_user

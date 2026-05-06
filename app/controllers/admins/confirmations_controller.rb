@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# 管理者向けメール確認コントローラ: Deviseのメールアドレス確認フローを管理者向けにカスタマイズする
 
 module Admins
   class ConfirmationsController < Devise::ConfirmationsController

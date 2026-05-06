@@ -1,16 +1,21 @@
+# ユーザー向けストックコントローラ: ユーザーが記事をストック（ブックマーク）する追加・削除・一覧表示を提供する
+
 module Users
   class Users::StocksController < Users::Base
     before_action :set_article, only: %i[create destroy]
 
+  # 記事をストックに追加する
   def create
     @stock = current_user.stocks.create(stock_params)
   end
 
+  # ストックを削除する
   def destroy
     @stock = Stock.find_by(stock_params)
     @stock.destroy
   end
 
+  # ストック済み記事の一覧をフィルタ付きで表示する
   def index
     filter = {
       author: params[:author],

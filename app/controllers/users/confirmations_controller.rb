@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# ユーザー向けメール確認コントローラ: Deviseのメールアドレス確認フローをユーザー向けにカスタマイズする
 
 module Users
   class ConfirmationsController < Devise::ConfirmationsController

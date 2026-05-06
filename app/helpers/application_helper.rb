@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# アプリケーションヘルパー: ページIDの生成・テキストのサニタイズ/リンク化など、全ビューで使える共通ヘルパーメソッドを定義する
 
 module ApplicationHelper
   def page_body_id(params)

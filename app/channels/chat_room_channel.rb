@@ -1,3 +1,5 @@
+# チャットルームチャンネル: チャットルームへの接続・チャンネル購読・メッセージ送信のリアルタイム処理を担う
+
 class ChatRoomChannel < ApplicationCable::Channel
   
   def subscribed

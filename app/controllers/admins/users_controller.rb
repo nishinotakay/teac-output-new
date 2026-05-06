@@ -1,14 +1,18 @@
+# 管理者向けユーザー管理コントローラ: 管理者がユーザー一覧・詳細の閲覧・フィルタリングを行うアクションを提供する
+
 module Admins
   class UsersController < Admins::Base
     require 'date'
     before_action :authenticate_admin!, only: %i[show edit update destroy admins_show]
     before_action :set_user, only: %i[show edit update destroy]
 
+    # ユーザーの詳細情報（プロフィール）を表示する
     def show
       @profile = @user.profile
       today = Date.today.strftime('%Y%m%d').to_i
     end
 
+    # ユーザー一覧をフィルタ・ソート付きで表示する
     def index
       order = { 
         id: params[:ord_id], 
@@ -38,6 +42,7 @@ module Admins
                end
     end
 
+    # 管理者自身の詳細画面を表示する
     def admins_show
     end
 

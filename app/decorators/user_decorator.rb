@@ -1,3 +1,5 @@
+# ユーザーデコレーター: 受講料金プランの種別に応じた決済リンク表示など、ユーザーのビュー向けロジックを定義する
+
 class UserDecorator < ApplicationDecorator
   delegate_all
 

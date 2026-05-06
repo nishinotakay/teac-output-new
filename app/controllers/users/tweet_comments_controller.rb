@@ -1,7 +1,10 @@
+# ユーザー向けつぶやきコメントコントローラ: つぶやきへのコメント投稿・更新・削除と通知確認を管理する
+
 module Users
   class TweetCommentsController < Users::Base
     before_action :authenticate_user!, only: %i[create destroy update]
 
+    # 新規つぶやきコメントを保存し、ツイートオーナーへ通知メールを送信する
     def create
       @tweet_comment = current_user.tweet_comments.new(tweet_comment_params)
       if @tweet_comment.save
@@ -13,6 +16,7 @@ module Users
       end
     end
 
+    # つぶやきコメントを削除する
     def destroy
       @tweet = Tweet.find(params[:tweet_id])
       @tweet_comment = current_user.tweet_comments.find_by(tweet_id: @tweet.id)
@@ -24,6 +28,7 @@ module Users
       end
     end
 
+    # つぶやきコメントを更新する
     def update
       @tweet = Tweet.find(params[:tweet_id])
       @tweet_comment = current_user.tweet_comments.find_by(id: params[:id], tweet_id: @tweet.id)

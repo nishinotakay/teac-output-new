@@ -1,9 +1,12 @@
+# ユーザー向け動画コメントコントローラ: ユーザーが動画投稿へのコメントを作成・更新・削除するアクションを提供する
+
 module Users
   class PostCommentsController < Users::Base
     before_action :authenticate_user!, only: %i[create destroy update]
     before_action :set_post
     before_action :set_post_comment, only: %i[destroy update]
 
+    # 動画コメントを新規保存する
     def create
       @post_comment = current_user.post_comments.new(post_comment_params.merge(post: @post))
       if @post_comment.save
@@ -13,6 +16,7 @@ module Users
       end
     end
 
+    # 動画コメントを更新する
     def update
       if @post_comment.update(post_comment_params)
         flash[:success] = 'コメントを更新しました。'
@@ -22,6 +26,7 @@ module Users
       redirect_to users_post_path(@post)
     end
 
+    # 動画コメントを削除する
     def destroy
       if @post_comment.destroy
         redirect_to users_post_url(@post), success: 'コメントを削除しました。'

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# ユーザー向けパスワードリセットコントローラ: Deviseのパスワード再設定フローをユーザー向けにカスタマイズする
 
 module Users
   class PasswordsController < Devise::PasswordsController

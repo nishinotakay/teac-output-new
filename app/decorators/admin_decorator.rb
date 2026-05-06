@@ -1,3 +1,5 @@
+# 管理者デコレーター: 管理者オブジェクトのビュー向けプレゼンテーションロジック（料金設定リンクの出し分け等）を定義する
+
 class AdminDecorator < ApplicationDecorator
   delegate_all
 

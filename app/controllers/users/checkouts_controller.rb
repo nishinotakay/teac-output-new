@@ -1,3 +1,5 @@
+# ユーザー向け一括払いチェックアウトコントローラ: Stripe Checkoutセッションを生成し、一括決済フローを提供する
+
 class Users::CheckoutsController < Users::Base
   before_action :authenticate_user!, only: %i[new create]
 

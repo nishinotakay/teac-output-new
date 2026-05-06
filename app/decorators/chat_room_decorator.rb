@@ -1,3 +1,5 @@
+# チャットルームデコレーター: チャットルームオブジェクトのビュー向けプレゼンテーションロジックを定義する
+
 class ChatRoomDecorator < Draper::Decorator
   delegate_all
 

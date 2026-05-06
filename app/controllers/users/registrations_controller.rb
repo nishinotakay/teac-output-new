@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# ユーザー向けアカウント登録コントローラ: Deviseの新規登録フローをカスタマイズし、メール確認フローと成功・失敗の画面遷移を制御する
 
 module Users
   class RegistrationsController < Devise::RegistrationsController

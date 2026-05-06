@@ -1,7 +1,10 @@
+# ユーザー向けチャットルームコントローラ: 2ユーザー間のダイレクトメッセージルームの作成・表示を管理する
+
 module Users
   class ChatRoomsController < Users::Base
     before_action :authenticate_user!
 
+    # 相手ユーザーとのチャットルームを作成（既存があれば再利用）してリダイレクトする
     def create
       partner_user_id = chat_room_params[:user_id].to_i
       if current_user.id == partner_user_id
@@ -25,6 +28,7 @@ module Users
       redirect_to users_profiles_path
     end
 
+    # チャットルームの詳細とメッセージ一覧を表示する（参加者以外はアクセス不可）
     def show
       @chat_room = ChatRoom.find_by(id: params[:id])
       if @chat_room.nil? || !@chat_room.users.include?(current_user)

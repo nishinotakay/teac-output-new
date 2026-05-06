@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# ユーザー向けセッションコントローラ: Deviseのログイン・ログアウトフローをユーザー向けにカスタマイズする
 
 module Users
   class SessionsController < Devise::SessionsController

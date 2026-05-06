@@ -1,3 +1,5 @@
+# プロフィールモデル: ユーザーの詳細プロフィール（趣味・登録日・アイコン画像等）を管理する
+
 class Profile < ApplicationRecord
   has_one_attached :image
   belongs_to :user

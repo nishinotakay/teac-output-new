@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# マネージャー向けセッションコントローラ: Deviseのログイン・ログアウトフローをマネージャー向けにカスタマイズする
 
 module Managers
   class SessionsController < Devise::SessionsController

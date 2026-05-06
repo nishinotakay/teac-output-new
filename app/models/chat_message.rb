@@ -1,3 +1,5 @@
+# チャットメッセージモデル: チャットルームへ送信されたメッセージを管理し、Action Cableでリアルタイム配信する
+
 class ChatMessage < ApplicationRecord
   belongs_to :user
   belongs_to :chat_room

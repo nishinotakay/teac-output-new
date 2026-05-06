@@ -1,3 +1,5 @@
+# ユーザー向け決済履歴コントローラ: Stripeの支払い履歴・サブスクリプション情報を取得・表示するアクションを提供する
+
 class Users::PaymentsController < Users::Base
   before_action :authenticate_user!
   before_action :verify_payment_user, only: %i[index]

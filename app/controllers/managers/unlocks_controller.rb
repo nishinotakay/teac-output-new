@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# マネージャー向けアカウントロック解除コントローラ: Deviseのアカウントロック解除フローをマネージャー向けにカスタマイズする
 
 module Managers
   class UnlocksController < Devise::UnlocksController

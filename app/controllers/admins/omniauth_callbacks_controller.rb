@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# 管理者向けOAuth認証コールバックコントローラ: 管理者のSNSログイン（OmniAuth）コールバックを処理する
 
 module Admins
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController

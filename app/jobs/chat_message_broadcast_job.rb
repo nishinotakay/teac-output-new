@@ -1,3 +1,5 @@
+# チャットメッセージブロードキャストジョブ: 新規チャットメッセージをAction Cableでリアルタイムにブロードキャストするバックグラウンドジョブ
+
 class ChatMessageBroadcastJob < ApplicationJob
   queue_as :default
 

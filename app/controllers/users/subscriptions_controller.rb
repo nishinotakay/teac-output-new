@@ -1,3 +1,5 @@
+# ユーザー向けサブスクリプションコントローラ: Stripe Checkoutセッションを生成し、定額決済（月額サブスクリプション）フローを提供する
+
 class Users::SubscriptionsController < Users::Base
 
   def new

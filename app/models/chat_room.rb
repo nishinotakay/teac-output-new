@@ -1,3 +1,5 @@
+# チャットルームモデル: 2ユーザー間のダイレクトメッセージルームを管理する
+
 class ChatRoom < ApplicationRecord
   has_many :chat_room_users
   has_many :chat_messages

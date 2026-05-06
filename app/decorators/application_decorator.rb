@@ -1,3 +1,5 @@
+# 全デコレーターの基底クラス: Draperを用いてビュー向けのプレゼンテーションロジックを共通化する
+
 class ApplicationDecorator < Draper::Decorator
   # Define methods for all decorated objects.
   # Helpers are accessed through `helpers` (aka `h`). For example:

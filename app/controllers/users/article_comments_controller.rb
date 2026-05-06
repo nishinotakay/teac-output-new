@@ -1,3 +1,5 @@
+# ユーザー向け記事コメントコントローラ: ユーザーが記事コメントを投稿・更新・削除するアクションを提供する
+
 module Users
   class ArticleCommentsController < Users::Base
     def create

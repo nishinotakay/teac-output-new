@@ -1,3 +1,5 @@
+# ユーザー向け動画投稿コントローラ: ユーザーがYouTube動画記事の一覧・閲覧・作成・編集・削除を行うアクションを提供する
+
 module Users
   class PostsController < Users::Base
     before_action :authenticate_user!, only: %i[show index new create edit update destroy index_user]
@@ -5,6 +7,7 @@ module Users
     before_action :prevent_url, only: %i[edit update destroy]
     skip_before_action :authenticate_user!, only: %i[show], if: :admin_signed_in?
 
+    # 動画投稿一覧をフィルタ・ソート付きで表示する
     def index
       @posts = Post.includes(:likes, :post_comments).filtered_and_ordered_posts(params, params[:page], 30)
 
@@ -14,6 +17,7 @@ module Users
       end
     end
 
+    # 動画投稿の詳細とコメント一覧を表示する
     def show
       @post_comments = @post.post_comments.includes(:user).order(created_at: :desc)
       @post_comment = current_user.post_comments.new unless current_admin.present?
@@ -24,10 +28,12 @@ module Users
       end
     end
 
+    # 新規動画投稿フォームを表示する
     def new
       @post = current_user.posts.new
     end
 
+    # 動画投稿編集フォームを表示する
     def edit
       respond_to do |format|
         format.html
@@ -35,6 +41,7 @@ module Users
       end
     end
 
+    # 新規動画投稿を保存する（YouTubeURLから動画IDを抽出して保存）
     def create
       @post = current_user.posts.new(post_params)
       url = params[:post][:youtube_url].last(11)
@@ -47,6 +54,7 @@ module Users
       end
     end
 
+    # 動画投稿情報を更新する
     def update
       url = params[:post][:youtube_url].last(11)
       @post.youtube_url = url
@@ -58,6 +66,7 @@ module Users
       end
     end
 
+    # 動画投稿を削除する
     def destroy
       if @post.destroy!
         redirect_to users_posts_path, flash: { warning: '動画を削除しました。' }
@@ -67,6 +76,7 @@ module Users
       end
     end
 
+    # 特定ユーザーの動画投稿一覧を表示する
     def index_user
       @user = User.includes(:posts).find(params[:user_id])
       @posts = @user.posts.filtered_and_ordered_posts(params, params[:page], 30)

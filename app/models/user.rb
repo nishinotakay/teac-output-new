@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# ユーザーモデル: 受講生アカウントの認証・プロフィール・各種コンテンツとの関連付けを管理する
 
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
@@ -9,6 +10,7 @@ class User < ApplicationRecord
     :omniauthable, omniauth_providers: %i[google_oauth2 line facebook]
   after_create :create_default_folder
 
+  # == アソシエーション ==
   has_many :articles, dependent: :destroy
   has_many :posts, dependent: :destroy
   has_one :profile, dependent: :destroy
@@ -29,6 +31,7 @@ class User < ApplicationRecord
   has_many :followers, through: :passive_relationships, source: :follower
   has_many :learning_status, class_name: "Learning", foreign_key: "learner_id", dependent: :destroy #学習している関連付け
 
+  # == バリデーション ==
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, uniqueness: true, format: { with: VALID_EMAIL_REGEX }
   validates :name,  presence: true, length: { in: 1..10 }

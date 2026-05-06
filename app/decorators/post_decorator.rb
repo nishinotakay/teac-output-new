@@ -1,3 +1,5 @@
+# 動画投稿デコレーター: いいね数・コメント数のHTMLアイコン付き表示など、動画投稿のビュー向けロジックを定義する
+
 class PostDecorator < Draper::Decorator
   delegate_all
 

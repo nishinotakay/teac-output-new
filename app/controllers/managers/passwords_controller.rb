@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# マネージャー向けパスワードリセットコントローラ: Deviseのパスワード再設定フローをマネージャー向けにカスタマイズする
 
 module Managers
   class PasswordsController < Devise::PasswordsController

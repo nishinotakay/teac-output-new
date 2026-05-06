@@ -1,3 +1,5 @@
+# ユーザーダッシュボードコントローラ: ログイン中のユーザーが自分の記事一覧・フォルダ情報をフィルタ付きで表示するアクションを提供する
+
 module Users
   class DashBoardsController < Users::Base
     skip_before_action :authenticate_user!, only: %i[index], if: :admin_signed_in?

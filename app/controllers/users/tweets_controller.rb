@@ -1,3 +1,4 @@
+# ユーザー向けつぶやきコントローラ: つぶやき投稿の一覧・表示・作成・編集・削除と画像付き投稿を管理する
 require 'rinku'
 
 module Users
@@ -9,10 +10,12 @@ module Users
     before_action :correct_tweet_user, only: %i[edit update destroy]
     skip_before_action :authenticate_user!, only: %i[show], if: :admin_signed_in?
 
+    # つぶやき一覧をフィルタ・画像付きで取得して表示する
     def index
       fetch_tweets_and_images
     end
 
+    # つぶやきの詳細とコメント一覧を表示する
     def show
       @tweet_comments = @tweet.tweet_comments.order(created_at: :desc)
       if current_user.present?
@@ -24,10 +27,12 @@ module Users
       end
     end
 
+    # 新規つぶやき投稿フォームを表示する
     def new
       @tweet = current_user.tweets.new
     end
 
+    # 新規つぶやきを保存する
     def create
       @tweet = current_user.tweets.new(tweet_params)
       if @tweet.save
@@ -38,9 +43,11 @@ module Users
       redirect_back(fallback_location: root_path)
     end
 
+    # つぶやき編集フォームを表示する
     def edit
     end
 
+    # つぶやきを更新する
     def update
       if @tweet.update(tweet_params)
         flash[:success] = '編集成功しました。'
@@ -52,6 +59,7 @@ module Users
       end
     end
 
+    # つぶやきを削除する
     def destroy
       if @tweet.destroy
         flash[:success] = '削除に成功しました。'
@@ -59,6 +67,7 @@ module Users
       end
     end
 
+    # 特定ユーザーのつぶやき一覧を表示する
     def index_user
       @user = User.find(params[:id])
       fetch_tweets_and_images(@user.id)

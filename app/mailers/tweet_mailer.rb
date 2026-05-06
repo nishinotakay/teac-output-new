@@ -1,3 +1,5 @@
+# つぶやきメーラー: つぶやきに新規コメントが付いた際にツイートオーナーへ通知メールを送信する
+
 class TweetMailer < ApplicationMailer
   def comment_notification(tweet_owner, commenter, comment_body, tweet_url)
     @tweet_owner = tweet_owner

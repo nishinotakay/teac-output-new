@@ -1,3 +1,5 @@
+# チャットルームユーザー中間テーブルモデル: チャットルームとユーザーの関連付けを管理し、2名制限を保証する
+
 class ChatRoomUser < ApplicationRecord
   belongs_to :chat_room
   belongs_to :user

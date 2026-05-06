@@ -1,7 +1,10 @@
+# ユーザー向けフォルダコントローラ: ユーザーが記事整理用フォルダを作成・表示・編集・削除するアクションを提供する
+
 class Users::FoldersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_folder, only: %i[show update destroy]
 
+  # 新規フォルダを作成する
   def create
     @folder = current_user.folders.new(folder_params)
     if @folder.save
@@ -13,6 +16,7 @@ class Users::FoldersController < ApplicationController
     end
   end
 
+  # フォルダ内の記事一覧を表示する
   def show
     @article_folder = ArticleFolder.where(folder_id: @folder.id)
     article_ids = @article_folder.pluck(:article_id)
@@ -24,6 +28,7 @@ class Users::FoldersController < ApplicationController
     end
   end
 
+  # フォルダ名を更新する
   def update
     if @folder.present?
       @folder.update(folder_params)
@@ -35,6 +40,7 @@ class Users::FoldersController < ApplicationController
     end
   end
 
+  # フォルダを削除する
   def destroy
     if @folder.present?
       @folder.destroy

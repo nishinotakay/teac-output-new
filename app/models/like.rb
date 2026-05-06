@@ -1,3 +1,5 @@
+# いいねモデル: ユーザーが記事またはつぶやきに付けるいいねを管理する（どちらか一方のみ許可）
+
 class Like < ApplicationRecord
   belongs_to :user
   belongs_to :article, optional: true

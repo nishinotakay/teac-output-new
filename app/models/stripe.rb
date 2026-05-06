@@ -1,3 +1,5 @@
+# Stripe設定ファイル: 環境ごとにStripe APIキーを設定し、決済機能を有効化する
+
 if Rails.env.development? || Rails.env.test?
   Rails.configuration.stripe = {
     :publishable_key => ENV['STRIPE_PUBLISHABLE_KEY'],

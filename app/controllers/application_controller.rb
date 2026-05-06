@@ -1,3 +1,5 @@
+# 全コントローラの基底クラス: ログイン後リダイレクト・フラッシュタイプ設定・Devise追加パラメータ許可などの共通処理を定義する
+
 class ApplicationController < ActionController::Base
   add_flash_types :success, :info, :warning, :danger
   before_action :configure_permitted_parameters, if: :devise_controller?

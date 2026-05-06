@@ -1,3 +1,5 @@
+# ユーザー向け記事フォルダ割り当てコントローラ: 記事をフォルダ間で移動・割り当てするアクションを提供する
+
 class Users::ArticleFoldersController < ApplicationController
   before_action :authenticate_user!
 

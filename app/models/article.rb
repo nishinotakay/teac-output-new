@@ -1,12 +1,11 @@
 # frozen_string_literal: true
+# 記事モデル: ユーザー・管理者が投稿する記事（通常記事・e-learning記事）の保存・フィルタリングを管理する
 
 class Article < ApplicationRecord
   mount_uploader :image, ImageUploader # ようせい追加（画像保存）
   after_create :assign_to_default_folder
-  
-  validates :user_id, presence: true, if: -> { admin_id.blank? }
-  validates :admin_id, presence: true, if: -> { user_id.blank? }
 
+  # == アソシエーション ==
   belongs_to :admin, optional: true
   belongs_to :user, optional: true
   has_many :article_comments, dependent: :destroy
@@ -19,6 +18,7 @@ class Article < ApplicationRecord
   has_many :article_folders, dependent: :destroy
   has_many :folders, through: :article_folders
 
+  # == バリデーション ==
   validates :title, presence: true, length: { in: 1..40 }
   validates :sub_title, allow_nil: true, length: { maximum: 50 }
   validates :content, presence: true
