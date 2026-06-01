@@ -7,21 +7,17 @@ default: &default
 development:
   <<: *default
   host: 127.0.0.1
-  port: 3307
+  port: 3306
   password: password
-  database: teac_output_development
+  database: <%= ENV.fetch('DB_NAME', 'development_db') %>
 
 test:
   <<: *default
   host: docker-db-service
   port: 3306
   password: password
-  database: teac_output_test
+  database: test_db
 
 production:
   <<: *default
-  host: <%= ENV.fetch('DB_HOST', 'localhost') %>
-  port: <%= ENV.fetch('DB_PORT', '3306') %>
-  username: <%= ENV.fetch('DB_USERNAME', 'root') %>
-  password: <%= ENV['DB_PASSWORD'] %>
-  database: <%= ENV.fetch('DB_NAME', 'teac_output_production') %>
+  url: <%= ENV['JAWSDB_URL'] %>

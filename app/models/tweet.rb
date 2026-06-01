@@ -1,6 +1,7 @@
 class Tweet < ApplicationRecord
   belongs_to :user
-  has_many :tweet_comments, dependent: :destroy # この行を追加
+  has_many :tweet_comments, dependent: :destroy
+  has_many :likes, dependent: :destroy
   has_many_attached :images
 
   validates :post, presence: true, length: { maximum: 255 }
