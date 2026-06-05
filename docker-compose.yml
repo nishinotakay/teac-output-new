@@ -23,7 +23,6 @@ services:
       - webpacker
     environment:
       WEBPACKER_DEV_SERVER_HOST: webpacker
-      DB_HOST: docker-db-service
     # (stdin_open,tty) = コンテナ内でデバックできるようにする
     stdin_open: true
     tty: true

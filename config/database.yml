@@ -3,19 +3,15 @@ default: &default
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
+  password: password
+  host: db
 
 development:
   <<: *default
-  host: <%= ENV.fetch('DB_HOST', '127.0.0.1') %>
-  port: 3306
-  password: password
-  database: <%= ENV.fetch('DB_NAME', 'development_db') %>
+  database: development_db
 
 test:
   <<: *default
-  host: docker-db-service
-  port: 3306
-  password: password
   database: test_db
 
 production:
