@@ -21,6 +21,8 @@ services:
     depends_on:
       - db
       - webpacker
+    env_file:
+      - dev.env
     environment:
       WEBPACKER_DEV_SERVER_HOST: webpacker
     # (stdin_open,tty) = コンテナ内でデバックできるようにする
