@@ -2,7 +2,7 @@ module JwtHelper
   EXPIRY = 24.hours
 
   def self.secret
-    Rails.application.credentials.secret_key_base
+    ENV['SECRET_KEY_BASE'] || Rails.application.credentials.secret_key_base
   end
 
   def self.encode(payload)
