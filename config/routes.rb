@@ -39,7 +39,12 @@ Rails.application.routes.draw do
         post   'likes', to: 'users/likes#article_create', as: :article_like
         delete 'likes', to: 'users/likes#article_destroy'
       end
-      resources :tweets,    only: [:index, :show, :create, :update, :destroy], controller: 'users/tweets'
+      resources :tweets, only: [:index, :show, :create, :update, :destroy], controller: 'users/tweets' do
+        # いいね: POST /api/v1/tweets/:tweet_id/like, DELETE /api/v1/tweets/:tweet_id/like
+        resource :like,     only: [:create, :destroy], controller: 'users/tweet_likes'
+        # コメント: POST /api/v1/tweets/:tweet_id/comments
+        resources :comments, only: [:create],          controller: 'users/tweet_comments'
+      end
       resources :inquiries, only: [:index, :show, :create],                    controller: 'users/inquiries'
       resources :learnings, only: [:index, :create],                           controller: 'users/learnings'
       resources :stocks,    only: [:index, :create, :destroy],                 controller: 'users/stocks'
@@ -47,7 +52,11 @@ Rails.application.routes.draw do
 
       # --- 管理者向けリソース ---
       namespace :admin do
-        resources :users,     only: [:index, :show, :update, :destroy]
+        resources :users, only: [:index, :show, :update, :destroy] do
+          # 管理者がユーザーのつぶやきを閲覧するエンドポイント: GET /api/v1/admin/users/:user_id/tweets
+          # namespace :admin の内側にいるため controller: 'tweets' だけで Api::V1::Admin::TweetsController を指す
+          resources :tweets, only: [:index], controller: 'tweets'
+        end
         resources :articles,  only: [:index, :show, :create, :update, :destroy]
         resources :posts,     only: [:index, :show, :create, :update, :destroy]
         resources :learnings, only: [:index, :create]
