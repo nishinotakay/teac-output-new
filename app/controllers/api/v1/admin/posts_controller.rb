@@ -1,10 +1,11 @@
 class Api::V1::Admin::PostsController < Api::V1::BaseController
   before_action :authenticate_admin!
   before_action :set_post, only: [:show, :update, :destroy]
+  before_action :authorize_post_owner!, only: [:update, :destroy]
 
   # GET /api/v1/admin/posts
   def index
-    posts = Post.order(created_at: :desc)
+    posts = Post.includes(:user, :admin).order(created_at: :desc)
     render json: { posts: posts.map { |p| post_json(p) } }
   end
 
@@ -45,6 +46,12 @@ class Api::V1::Admin::PostsController < Api::V1::BaseController
     render_not_found('投稿') unless @post
   end
 
+  def authorize_post_owner!
+    if @post.admin_id.present? && @post.admin_id != @current_admin.id
+      render json: { error: '権限がありません' }, status: :forbidden
+    end
+  end
+
   def post_params
     params.permit(:title, :body, :youtube_url)
   end
@@ -57,6 +64,7 @@ class Api::V1::Admin::PostsController < Api::V1::BaseController
       youtubeUrl: post.youtube_url,
       userId: post.user_id&.to_s,
       adminId: post.admin_id&.to_s,
+      posterName: (post.user&.name || post.admin&.name),
       createdAt: post.created_at.iso8601,
       updatedAt: post.updated_at.iso8601
     }
