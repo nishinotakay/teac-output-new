@@ -56,6 +56,13 @@ Rails.application.routes.draw do
           # 管理者がユーザーのつぶやきを閲覧するエンドポイント: GET /api/v1/admin/users/:user_id/tweets
           # namespace :admin の内側にいるため controller: 'tweets' だけで Api::V1::Admin::TweetsController を指す
           resources :tweets, only: [:index], controller: 'tweets'
+          # 管理者がユーザーの記事一覧を閲覧するエンドポイント: GET /api/v1/admin/users/:user_id/articles
+          # controller を user_articles に指定して Api::V1::Admin::UserArticlesController を指す。
+          # 既存のトップレベル Api::V1::Admin::ArticlesController（記事CRUD）とクラス名が衝突するため専用名にする
+          resources :articles, only: [:index], controller: 'user_articles'
+          # 管理者がユーザーの動画投稿一覧を閲覧するエンドポイント: GET /api/v1/admin/users/:user_id/posts
+          # 同様に user_posts を指定して Api::V1::Admin::UserPostsController を指す
+          resources :posts, only: [:index], controller: 'user_posts'
         end
         resources :articles,  only: [:index, :show, :create, :update, :destroy]
         resources :posts,     only: [:index, :show, :create, :update, :destroy]
