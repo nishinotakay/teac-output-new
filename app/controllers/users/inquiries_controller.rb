@@ -1,5 +1,7 @@
 module Users
   class InquiriesController < Users::Base
+    before_action :authenticate_user!
+    
     def index
       @inquiry = Inquiry.all
     end

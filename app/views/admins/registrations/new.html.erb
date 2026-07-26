@@ -6,7 +6,7 @@
     <div class="card-body">
       <p class="login-box-msg">管理者用アカウント登録</p>
 
-      <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= form_for(resource, as: resource_name, url: params[:tenant_id].present? ? tenant_admin_admin_registration_path(tenant_id: params[:tenant_id]) : registration_path(resource_name)) do |f| %>
         <div class="input-group mb-3">
           <%= f.text_field :name, class:"form-control", placeholder:"名前（フルネーム）", required: true %>
           <div class="input-group-append">
@@ -24,9 +24,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          
           <%= f.password_field :password, autocomplete: "new-password", class:"form-control", placeholder:"パスワード", required: true %>
-          
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -43,8 +41,8 @@
         </div>
         <div class="row">
           <div class="col-8">
-            <div class="icheck-primary" onclick="controlSubmit()">
-              <input type="checkbox" id="agreeTerms" name="terms" required>
+            <div class="icheck-primary">
+              <input type="checkbox" id="agreeTerms" name="terms" required onclick="document.getElementById('sign_up_submit').disabled = !this.checked;">
               <label for="agreeTerms">
                 <%= link_to "利用規約", use_path %>に同意する
               </label>

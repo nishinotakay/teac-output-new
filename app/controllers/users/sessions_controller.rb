@@ -1,30 +1,31 @@
-# frozen_string_literal: true
-
 module Users
   class SessionsController < Devise::SessionsController
     layout 'users_auth'
-    # before_action :configure_sign_in_params, only: [:create]
 
-    # GET /resource/sign_in
-    # def new
-    #   super
-    # end
+    def create
+      return super unless params[:tenant_id].present? || session[:tenant_id].present?
+      tenant_id = params[:tenant_id] || session[:tenant_id]
+      tenant = Tenant.find_by(id: tenant_id)
+    
+      if tenant.present?
+        session[:tenant_id] = tenant_id    
+        super do |user|
+          sign_in(:user, user)
+        end
+      else
+        flash[:alert] = "無効なテナントです"
+        redirect_to new_tenant_user_user_session_path(tenant_id: tenant_id)
+      end
+    end
 
-    # POST /resource/sign_in
-    # def create
-    #   super
-    # end
+    def destroy
+      return super unless session[:tenant_id].present?
 
-    # DELETE /resource/sign_out
-    # def destroy
-    #   super
-    # end
+      sign_out(:user)
+      sign_out(:tenant_user_user)
 
-    # protected
-
-    # If you have extra params to permit, append them to the sanitizer.
-    # def configure_sign_in_params
-    #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
-    # end
+      redirect_to new_tenant_user_user_session_path(tenant_id: session[:tenant_id])
+      session[:tenant_id] = nil
+    end
   end
 end

@@ -1,7 +1,7 @@
 module Admins
   class UsersController < Admins::Base
     require 'date'
-    before_action :authenticate_admin!, only: %i[show edit update destroy admins_show]
+    before_action :authenticate_admin!, only: %i[index show edit update destroy admins_show]
     before_action :set_user, only: %i[show edit update destroy]
 
     def show

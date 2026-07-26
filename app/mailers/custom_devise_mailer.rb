@@ -1,0 +1,23 @@
+# app/mailers/custom_devise_mailer.rb
+class CustomDeviseMailer < Devise::Mailer
+  helper :application
+  include Devise::Controllers::UrlHelpers
+
+  def confirmation_instructions(record, token, opts = {})
+    if record.respond_to?(:tenant_id) && record.tenant_id.present?
+      if record.is_a?(Admin)
+        opts[:template_path] = 'admins/mailer'
+        generated_url = tenant_admin_admin_confirmation_url(tenant_id: record.tenant_id, confirmation_token: token)
+      else
+        opts[:template_path] = 'users/mailer'
+        generated_url = tenant_user_user_confirmation_url(tenant_id: record.tenant_id, confirmation_token: token)
+        Rails.logger.debug "Generated URL: #{generated_url}"
+      end
+    else
+      opts[:template_path] = 'devise/mailer'
+      generated_url = user_confirmation_url(confirmation_token: token)
+    end
+
+    super
+  end
+end
