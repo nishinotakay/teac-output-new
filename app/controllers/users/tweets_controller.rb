@@ -7,6 +7,7 @@ module Users
     before_action :set_tweet, only: %i[show edit update destroy]
     # 投稿をしたユーザーでないと編集・削除できない
     before_action :correct_tweet_user, only: %i[edit update destroy]
+    before_action :fetch_tweets_and_images, only: %i[create update destroy]
     skip_before_action :authenticate_user!, only: %i[show], if: :admin_signed_in?
 
     def index
@@ -32,10 +33,11 @@ module Users
       @tweet = current_user.tweets.new(tweet_params)
       if @tweet.save
         flash[:success] = 'つぶやきを作成しました。'
+        render :index
       else
         flash[:error] = @tweet.errors.full_messages.join('・')
+        redirect_to users_tweets_path
       end
-      redirect_back(fallback_location: root_path)
     end
 
     def edit
@@ -43,19 +45,21 @@ module Users
 
     def update
       if @tweet.update(tweet_params)
-        flash[:success] = '編集成功しました。'
-        redirect_to users_tweets_url
+        flash[:success] = '編集に成功しました。'
+        render :index
       else
-        respond_to do |format|
-          format.js { render 'edit.js.erb' }
-        end
+        flash[:error] = @tweet.errors.full_messages.join('・')
+        redirect_to users_tweets_path
       end
     end
 
     def destroy
       if @tweet.destroy
         flash[:success] = '削除に成功しました。'
-        redirect_to users_tweets_url
+        render :index
+      else
+        flash[:danger] = '削除に失敗しました。'
+        redirect_to users_tweets_path
       end
     end
 
