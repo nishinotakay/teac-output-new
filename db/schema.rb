@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_09_26_025539) do
+ActiveRecord::Schema.define(version: 2026_06_01_000001) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -78,6 +78,19 @@ ActiveRecord::Schema.define(version: 2024_09_26_025539) do
     t.index ["user_id"], name: "index_article_comments_on_user_id"
   end
 
+  create_table "article_folders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "article_id"
+    t.bigint "folder_id"
+    t.bigint "admin_id"
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["admin_id"], name: "index_article_folders_on_admin_id"
+    t.index ["article_id"], name: "index_article_folders_on_article_id"
+    t.index ["folder_id"], name: "index_article_folders_on_folder_id"
+    t.index ["user_id"], name: "index_article_folders_on_user_id"
+  end
+
   create_table "articles", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title", null: false
     t.string "sub_title"
@@ -130,6 +143,16 @@ ActiveRecord::Schema.define(version: 2024_09_26_025539) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "folders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id"
+    t.bigint "admin_id"
+    t.index ["admin_id"], name: "index_folders_on_admin_id"
+    t.index ["user_id"], name: "index_folders_on_user_id"
+  end
+
   create_table "inquiries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "subject", null: false
     t.text "content", null: false
@@ -157,6 +180,7 @@ ActiveRecord::Schema.define(version: 2024_09_26_025539) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "post_id"
     t.bigint "tweet_id"
+    t.index ["tweet_id"], name: "index_likes_on_tweet_id"
   end
 
   create_table "managers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -303,6 +327,10 @@ ActiveRecord::Schema.define(version: 2024_09_26_025539) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "article_comments", "articles"
   add_foreign_key "article_comments", "users"
+  add_foreign_key "article_folders", "admins"
+  add_foreign_key "article_folders", "articles"
+  add_foreign_key "article_folders", "folders"
+  add_foreign_key "article_folders", "users"
   add_foreign_key "articles", "admins"
   add_foreign_key "articles", "users"
   add_foreign_key "charge_plans", "admins"
@@ -310,7 +338,10 @@ ActiveRecord::Schema.define(version: 2024_09_26_025539) do
   add_foreign_key "chat_messages", "users"
   add_foreign_key "chat_room_users", "chat_rooms"
   add_foreign_key "chat_room_users", "users"
+  add_foreign_key "folders", "admins"
+  add_foreign_key "folders", "users"
   add_foreign_key "inquiries", "users"
+  add_foreign_key "likes", "tweets"
   add_foreign_key "post_comments", "posts"
   add_foreign_key "post_comments", "users"
   add_foreign_key "posts", "admins"

@@ -73,8 +73,8 @@ module Admins
       end
 
       def prevent_url
-        unless current_admin.present?
-          redirect_to root_path, alert: '権限がありません。'
+        if @post.admin_id.present? && @post.admin_id != current_admin.id
+          redirect_to admins_posts_path, alert: '権限がありません。'
         end
       end
   end
