@@ -61,6 +61,10 @@ class Api::V1::BaseController < ActionController::API
     render json: { error: "#{resource}が見つかりません" }, status: :not_found
   end
 
+  def render_bad_request(message)
+    render json: { error: message }, status: :bad_request
+  end
+
   def user_json(user)
     profile = user.profile
     {
