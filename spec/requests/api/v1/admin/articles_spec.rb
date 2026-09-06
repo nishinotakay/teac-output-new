@@ -21,7 +21,7 @@ RSpec.describe 'Api::V1::Admin::Articles' do
   let(:admin_headers) { admin_auth_headers(current_admin) }
 
   describe 'GET /api/v1/admin/articles' do
-    context '管理者として認証済みの場合' do
+    context '講師として認証済みの場合' do
       let(:author_user) { create(:user, name: '山田花子') }
       let(:author_admin) { create(:admin, name: '佐藤講師') }
       let!(:user_article) do
@@ -39,7 +39,7 @@ RSpec.describe 'Api::V1::Admin::Articles' do
         create(
           :article,
           admin:        author_admin,
-          # 管理者の記事は article_type が必須（Article のバリデーション）
+          # 講師の記事は article_type が必須（Article のバリデーション）
           article_type: 'normal',
           title:        'React実践',
           sub_title:    '状態管理',
@@ -72,24 +72,24 @@ RSpec.describe 'Api::V1::Admin::Articles' do
         expect(returned_article).to have_key('image')
       end
 
-      it '受講生の記事に受講生名をauthorNameとして返す' do
+      it '受講生の記事に受講生名をposterNameとして返す' do
         get '/api/v1/admin/articles', headers: admin_headers
 
         returned_article = returned_articles.find do |article|
           article['id'] == user_article.id.to_s
         end
 
-        expect(returned_article['authorName']).to eq(author_user.name)
+        expect(returned_article['posterName']).to eq(author_user.name)
       end
 
-      it '管理者の記事に管理者名を投稿者名として返す' do
+      it '講師の記事に講師名をposterNameとして返す' do
         get '/api/v1/admin/articles', headers: admin_headers
 
         returned_article = returned_articles.find do |article|
           article['id'] == admin_article.id.to_s
         end
 
-        expect(returned_article['authorName']).to eq(author_admin.name)
+        expect(returned_article['posterName']).to eq(author_admin.name)
       end
 
       it 'パラメータ未指定時はサブタイトルがNULLの記事とe-learning記事も含めて全件返す' do
@@ -134,10 +134,37 @@ RSpec.describe 'Api::V1::Admin::Articles' do
         expect(returned_article_ids).to eq([user_article.id.to_s])
       end
 
-      it '管理者名を部分一致で絞り込む' do
+      it '講師名を部分一致で絞り込む' do
         get '/api/v1/admin/articles', params: { author: '藤講' }, headers: admin_headers
 
         expect(returned_article_ids).to eq([admin_article.id.to_s])
+      end
+
+      context '検索語にワイルドカード文字を含む場合' do
+        it 'タイトルの%は文字として一致させる' do
+          wildcard_article = create(:article, user: author_user, title: '達成率100%')
+
+          get '/api/v1/admin/articles', params: { title: '%' }, headers: admin_headers
+
+          expect(returned_article_ids).to eq([wildcard_article.id.to_s])
+        end
+
+        it 'サブタイトルの_は文字として一致させる' do
+          wildcard_article = create(:article, user: author_user, sub_title: 'snake_case入門')
+
+          get '/api/v1/admin/articles', params: { subtitle: '_' }, headers: admin_headers
+
+          expect(returned_article_ids).to eq([wildcard_article.id.to_s])
+        end
+
+        it '投稿者名の%は文字として一致させる' do
+          percent_user = create(:user, name: '100%達成')
+          percent_article = create(:article, user: percent_user)
+
+          get '/api/v1/admin/articles', params: { author: '%' }, headers: admin_headers
+
+          expect(returned_article_ids).to eq([percent_article.id.to_s])
+        end
       end
 
       it '開始日の始端以降に絞り込む' do
@@ -213,6 +240,15 @@ RSpec.describe 'Api::V1::Admin::Articles' do
         ])
       end
 
+      it 'orderが空白のみの場合は未指定として作成日時とIDの降順で返す' do
+        get '/api/v1/admin/articles', params: { order: '  ' }, headers: admin_headers
+
+        expect(returned_article_ids).to eq([
+          admin_article.id.to_s,
+          user_article.id.to_s
+        ])
+      end
+
       it 'orderが小文字のascでも昇順で返す' do
         get '/api/v1/admin/articles', params: { order: 'asc' }, headers: admin_headers
 
@@ -238,20 +274,35 @@ RSpec.describe 'Api::V1::Admin::Articles' do
         ])
       end
 
-      it 'orderが不正な値の場合は作成日時とIDの降順で返す' do
-        same_time_article = create(
-          :article,
-          user:       author_user,
-          created_at: admin_article.created_at
-        )
+      context 'orderパラメータが不正な場合' do
+        it 'orderがASCとDESC以外の値なら400を返す' do
+          get '/api/v1/admin/articles', params: { order: 'invalid' }, headers: admin_headers
 
-        get '/api/v1/admin/articles', params: { order: 'invalid' }, headers: admin_headers
+          expect(response).to have_http_status(:bad_request)
+          expect(JSON.parse(response.body)['error']).to eq('order は ASC または DESC で指定してください')
+        end
 
-        expect(returned_article_ids).to eq([
-          same_time_article.id.to_s,
-          admin_article.id.to_s,
-          user_article.id.to_s
-        ])
+        it 'orderが配列で渡されても400を返す' do
+          get '/api/v1/admin/articles', params: { order: ['ASC'] }, headers: admin_headers
+
+          expect(response).to have_http_status(:bad_request)
+        end
+      end
+
+      context 'キーワードパラメータが文字列以外の場合' do
+        it 'titleが配列で渡されたら400を返す' do
+          get '/api/v1/admin/articles', params: { title: ['Rails'] }, headers: admin_headers
+
+          expect(response).to have_http_status(:bad_request)
+          expect(JSON.parse(response.body)['error']).to eq('title は文字列で指定してください')
+        end
+
+        it 'authorがハッシュで渡されたら400を返す' do
+          get '/api/v1/admin/articles', params: { author: { name: '山田' } }, headers: admin_headers
+
+          expect(response).to have_http_status(:bad_request)
+          expect(JSON.parse(response.body)['error']).to eq('author は文字列で指定してください')
+        end
       end
 
       context '日付パラメータが不正な場合' do
