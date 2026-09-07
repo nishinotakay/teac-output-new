@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_09_26_025539) do
+ActiveRecord::Schema.define(version: 2026_09_07_140418) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -61,10 +61,14 @@ ActiveRecord::Schema.define(version: 2024_09_26_025539) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name"
+    t.bigint "tenant_id", null: false
+    t.bigint "プロアカ_id", null: false
     t.index ["confirmation_token"], name: "index_admins_on_confirmation_token", unique: true
     t.index ["email"], name: "index_admins_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
+    t.index ["tenant_id"], name: "index_admins_on_tenant_id"
     t.index ["unlock_token"], name: "index_admins_on_unlock_token", unique: true
+    t.index ["プロアカ_id"], name: "index_admins_on_プロアカ_id"
   end
 
   create_table "article_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -231,6 +235,12 @@ ActiveRecord::Schema.define(version: 2024_09_26_025539) do
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
+  create_table "proakas", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", limit: 20, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "profiles", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "learning_history"
@@ -315,14 +325,20 @@ ActiveRecord::Schema.define(version: 2024_09_26_025539) do
     t.string "provider"
     t.string "uid"
     t.string "stripe_customer_id"
+    t.bigint "tenant_id", null: false
+    t.bigint "プロアカ_id", null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["tenant_id"], name: "index_users_on_tenant_id"
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
+    t.index ["プロアカ_id"], name: "index_users_on_プロアカ_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "admins", "proakas", column: "プロアカ_id"
+  add_foreign_key "admins", "tenants"
   add_foreign_key "article_comments", "articles"
   add_foreign_key "article_comments", "users"
   add_foreign_key "article_folders", "admins"
@@ -349,4 +365,6 @@ ActiveRecord::Schema.define(version: 2024_09_26_025539) do
   add_foreign_key "tweet_comments", "tweets"
   add_foreign_key "tweet_comments", "users"
   add_foreign_key "tweets", "users"
+  add_foreign_key "users", "proakas", column: "プロアカ_id"
+  add_foreign_key "users", "tenants"
 end

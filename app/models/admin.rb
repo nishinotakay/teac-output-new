@@ -5,6 +5,9 @@ class Admin < ApplicationRecord
     :recoverable, :rememberable, :validatable,
     :confirmable
 
+  belongs_to :tenant
+  belongs_to :proaka, class_name: 'Proaka', foreign_key: 'プロアカ_id'
+
   has_many :articles, dependent: :destroy
   has_many :posts, dependent: :destroy
   has_one :charge_plan, dependent: :destroy

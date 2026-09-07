@@ -9,6 +9,9 @@ class User < ApplicationRecord
     :omniauthable, omniauth_providers: %i[google_oauth2 line facebook]
   after_create :create_default_folder
 
+  belongs_to :tenant
+  belongs_to :proaka, class_name: 'Proaka', foreign_key: 'プロアカ_id'
+
   has_many :articles, dependent: :destroy
   has_many :posts, dependent: :destroy
   has_one :profile, dependent: :destroy
