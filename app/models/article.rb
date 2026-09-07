@@ -24,6 +24,23 @@ class Article < ApplicationRecord
   validates :content, presence: true
   validates :article_type, presence: true, if: :admin_updating_or_creating?
 
+  # LIKE 用のパターン。% と _ は文字として扱う
+  def self.contains_pattern(keyword)
+    "%#{sanitize_sql_like(keyword)}%"
+  end
+
+  # API の絞り込み用スコープ。値が無ければ条件を付けない
+  scope :title_like,     ->(keyword) { where('articles.title LIKE ?', contains_pattern(keyword)) if keyword.present? }
+  scope :sub_title_like, ->(keyword) { where('articles.sub_title LIKE ?', contains_pattern(keyword)) if keyword.present? }
+  scope :content_like,   ->(keyword) { where('articles.content LIKE ?', contains_pattern(keyword)) if keyword.present? }
+  scope :author_name_like, lambda { |keyword|
+    if keyword.present?
+      left_joins(:user, :admin).where('users.name LIKE :author OR admins.name LIKE :author', author: contains_pattern(keyword))
+    end
+  }
+  scope :created_on_or_after,  ->(date) { where('articles.created_at >= ?', date.beginning_of_day) if date }
+  scope :created_on_or_before, ->(date) { where('articles.created_at <= ?', date.end_of_day) if date }
+
   def self.paginated_and_sort_filter(filter)
     
     start = Time.zone.parse(filter[:start].presence || '2020-01-01').beginning_of_day
@@ -55,6 +72,11 @@ class Article < ApplicationRecord
       .order(created_at: "#{filter[:order]}")
       .page(filter[:page]).per(30)
       .presence || Article.none
+  end
+
+  # 投稿者名。記事は user か admin のどちらかに必ず紐づく（上のバリデーション参照）
+  def poster_name
+    user&.name || admin&.name
   end
 
   # scriptタグとiframeタグを取り除くメソッド
