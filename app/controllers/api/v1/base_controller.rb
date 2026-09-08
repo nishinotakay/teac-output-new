@@ -18,6 +18,12 @@ class Api::V1::BaseController < ActionController::API
     @current_manager = Manager.find_by(id: id) if role == 'manager'
 
     render_unauthorized unless @current_user || @current_admin || @current_manager
+
+    # 以降このリクエスト内で行われる User/Admin へのクエリは、
+    # 自動的に自分のテナントの範囲内に絞り込まれる（他テナントのデータには
+    # アプリケーションレベルで一切アクセスできない）。managerはテナントに
+    # 紐付かないため current_tenant は nil のままとなり、絞り込みは行われない。
+    Current.tenant = current_tenant
   end
 
   # ログイン中のuser/adminが所属するテナントをRails側で判定する。

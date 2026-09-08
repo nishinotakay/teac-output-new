@@ -12,6 +12,11 @@ class User < ApplicationRecord
   belongs_to :tenant
   belongs_to :proaka, class_name: 'Proaka', foreign_key: 'プロアカ_id'
 
+  # リクエスト中に current_tenant が判明していれば、そのテナントの行だけを見せる。
+  # 未設定（コンソール/マイグレーション/managerとしての操作等）の場合は絞り込まない。
+  scope :in_current_tenant, -> { Current.tenant ? where(tenant: Current.tenant) : all }
+  default_scope { in_current_tenant }
+
   has_many :articles, dependent: :destroy
   has_many :posts, dependent: :destroy
   has_one :profile, dependent: :destroy
