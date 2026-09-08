@@ -20,6 +20,13 @@ class Api::V1::BaseController < ActionController::API
     render_unauthorized unless @current_user || @current_admin || @current_manager
   end
 
+  # ログイン中のuser/adminが所属するテナントをRails側で判定する。
+  # URLやリクエストパラメータのtenant_idを信用せず、認証済みレコード自身の
+  # tenant_id を正とすることで、どのテナントからのリクエストかを特定する。
+  def current_tenant
+    @current_user&.tenant || @current_admin&.tenant
+  end
+
   def authenticate_user!
     token = request.headers['Authorization']&.split(' ')&.last
     return render_unauthorized unless token
@@ -69,6 +76,7 @@ class Api::V1::BaseController < ActionController::API
       email: user.email,
       birthday: profile&.birthday&.strftime('%Y-%m-%d'),
       gender: user.gender,
+      tenantId: user.tenant_id.to_s,
       createdAt: user.created_at.iso8601
     }
   end
@@ -78,6 +86,7 @@ class Api::V1::BaseController < ActionController::API
       id: admin.id.to_s,
       name: admin.name,
       email: admin.email,
+      tenantId: admin.tenant_id.to_s,
       createdAt: admin.created_at.iso8601
     }
   end

@@ -98,4 +98,26 @@ RSpec.describe 'Api::V1::Auth::Users', type: :request do
       end
     end
   end
+
+  describe 'GET /api/v1/auth/me' do
+    let!(:user_a) { create(:user, tenant: tenant_a) }
+    let!(:user_b) { create(:user, tenant: tenant_b) }
+
+    def token_for(user)
+      JwtHelper.encode(id: user.id, role: 'user')
+    end
+
+    it 'リクエストパラメータではなく、認証済みユーザー自身の tenant_id を返す' do
+      get '/api/v1/auth/me', headers: { 'Authorization' => "Bearer #{token_for(user_a)}" }
+
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)['user']['tenantId']).to eq(tenant_a.id.to_s)
+    end
+
+    it 'ユーザーが異なればテナントの判定結果も異なる' do
+      get '/api/v1/auth/me', headers: { 'Authorization' => "Bearer #{token_for(user_b)}" }
+
+      expect(JSON.parse(response.body)['user']['tenantId']).to eq(tenant_b.id.to_s)
+    end
+  end
 end
