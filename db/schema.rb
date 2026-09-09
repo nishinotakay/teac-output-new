@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_07_140418) do
+ActiveRecord::Schema.define(version: 2026_09_09_121500) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -105,7 +105,9 @@ ActiveRecord::Schema.define(version: 2026_09_07_140418) do
     t.string "image"
     t.bigint "admin_id"
     t.string "article_type"
+    t.bigint "tenant_id", null: false
     t.index ["admin_id"], name: "index_articles_on_admin_id"
+    t.index ["tenant_id"], name: "index_articles_on_tenant_id"
     t.index ["user_id"], name: "index_articles_on_user_id"
   end
 
@@ -294,6 +296,8 @@ ActiveRecord::Schema.define(version: 2026_09_07_140418) do
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "tenant_id", null: false
+    t.index ["tenant_id"], name: "index_tweets_on_tenant_id"
     t.index ["user_id"], name: "index_tweets_on_user_id"
   end
 
@@ -346,6 +350,7 @@ ActiveRecord::Schema.define(version: 2026_09_07_140418) do
   add_foreign_key "article_folders", "folders"
   add_foreign_key "article_folders", "users"
   add_foreign_key "articles", "admins"
+  add_foreign_key "articles", "tenants"
   add_foreign_key "articles", "users"
   add_foreign_key "charge_plans", "admins"
   add_foreign_key "chat_messages", "chat_rooms"
@@ -364,6 +369,7 @@ ActiveRecord::Schema.define(version: 2026_09_07_140418) do
   add_foreign_key "stocks", "users"
   add_foreign_key "tweet_comments", "tweets"
   add_foreign_key "tweet_comments", "users"
+  add_foreign_key "tweets", "tenants"
   add_foreign_key "tweets", "users"
   add_foreign_key "users", "proakas", column: "プロアカ_id"
   add_foreign_key "users", "tenants"
