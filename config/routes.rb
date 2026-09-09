@@ -30,6 +30,11 @@ Rails.application.routes.draw do
         get    'me',     to: 'auth/managers#me'
       end
 
+      # --- マネージャー向けリソース ---
+      namespace :manager do
+        resources :tenants, only: [:index, :show, :create]
+      end
+
       # --- ユーザー向けリソース ---
       resources :posts, only: [:index, :show, :create, :update, :destroy], controller: 'users/posts' do
         post   'likes', to: 'users/likes#post_create',   as: :post_like
