@@ -1,13 +1,7 @@
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     origins_list = if Rails.env.development?
-                     [
-                       'http://localhost:5173',
-                       'http://localhost:5174',
-                       'http://127.0.0.1:5173',
-                       'http://127.0.0.1:5174',
-                       'http://localhost:3001',
-                     ]
+                     [/\Ahttp:\/\/localhost(:\d+)?\z/]
                    else
                      [ENV.fetch('FRONTEND_ORIGIN', '')]
                    end

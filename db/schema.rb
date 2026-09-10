@@ -185,6 +185,8 @@ ActiveRecord::Schema.define(version: 2026_09_09_121500) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "post_id"
+    t.bigint "tweet_id"
+    t.index ["tweet_id"], name: "index_likes_on_tweet_id"
   end
 
   create_table "managers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -360,6 +362,7 @@ ActiveRecord::Schema.define(version: 2026_09_09_121500) do
   add_foreign_key "folders", "admins"
   add_foreign_key "folders", "users"
   add_foreign_key "inquiries", "users"
+  add_foreign_key "likes", "tweets"
   add_foreign_key "post_comments", "posts"
   add_foreign_key "post_comments", "users"
   add_foreign_key "posts", "admins"

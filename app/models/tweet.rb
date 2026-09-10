@@ -4,6 +4,7 @@ class Tweet < ApplicationRecord
   belongs_to :user
   belongs_to :tenant
   has_many :tweet_comments, dependent: :destroy # この行を追加
+  has_many :likes, dependent: :destroy
   has_many_attached :images
 
   # リクエスト中に current_tenant が判明していれば、そのテナントの行だけを見せる。

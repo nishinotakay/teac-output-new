@@ -21,6 +21,9 @@ services:
     depends_on:
       - db
       - webpacker
+    env_file:
+      - .env
+      - dev.env
     environment:
       WEBPACKER_DEV_SERVER_HOST: webpacker
     # (stdin_open,tty) = コンテナ内でデバックできるようにする
@@ -46,7 +49,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
     ports:
-      - '3307:3306'
+      - '3306:3306'
     # 平野がコメントアウト
     # command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
