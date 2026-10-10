@@ -14,13 +14,20 @@ class Api::V1::Manager::TenantsController < Api::V1::BaseController
   end
 
   # POST /api/v1/manager/tenants
+  # テナントと、そのテナントの最初の管理者を同一トランザクションで作成する。
   def create
     tenant = Tenant.new(tenant_params)
-    if tenant.save
-      render json: { tenant: tenant_json(tenant) }, status: :created
-    else
-      render json: { errors: tenant.errors.full_messages }, status: :unprocessable_entity
+    admin = tenant.admins.build(admin_params)
+    admin.proaka ||= Proaka.order(:id).first # auth/users#signup と同じ
+    admin.skip_confirmation! # confirmable をスキップして即有効化（auth/users#signup と同じ）
+
+    ActiveRecord::Base.transaction do
+      tenant.save!
+      admin.save!
     end
+    render json: { tenant: tenant_json(tenant) }, status: :created
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
   end
 
   private
@@ -32,6 +39,15 @@ class Api::V1::Manager::TenantsController < Api::V1::BaseController
 
   def tenant_params
     params.permit(:name)
+  end
+
+  def admin_params
+    {
+      name: params[:admin_name],
+      email: params[:admin_email]&.downcase,
+      password: params[:admin_password],
+      password_confirmation: params[:admin_password_confirmation]
+    }
   end
 
   def tenant_json(tenant)
