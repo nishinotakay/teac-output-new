@@ -65,6 +65,16 @@ Rails.application.routes.draw do
     registrations: 'admins/registrations'
   }
 
+  # マルチテナントのadmin
+  scope 'tenant/:tenant_id', as: 'tenant' do
+    devise_for :admins, controllers: {
+      sessions:      'admins/sessions',
+      passwords:     'admins/passwords',
+      confirmations: 'admins/confirmations',
+      registrations: 'admins/registrations'
+    }, as: :tenant_admin
+  end
+
   namespace :admins do
     resources :posts
     resources :dash_boards, only: [:index]
@@ -110,10 +120,20 @@ Rails.application.routes.draw do
     omniauth_callbacks: 'users/omniauth_callbacks'
   }
 
+  # マルチテナントのuser
+  scope 'tenant/:tenant_id', as: 'tenant' do
+    devise_for :users, skip: [:omniauth_callbacks], controllers: {
+      sessions:      'users/sessions',
+      passwords:     'users/passwords',
+      confirmations: 'users/confirmations',
+      registrations: 'users/registrations'
+    }, as: :tenant_user
+  end
+
   namespace :users do
     resources :dash_boards, only: [:index]
     resources :chat_rooms, only: [:create, :show]
-    resources :stocks, only:[:create, :destroy, :index]
+    resources :stocks, only: [:create, :destroy, :index]
     resources :learnings, only: [:index, :show, :create]
     resources :folders, only: [:create, :show, :update, :destroy]
     resources :checkouts, only: [:new, :create] do

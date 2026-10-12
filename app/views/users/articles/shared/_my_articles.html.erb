@@ -92,7 +92,9 @@
                     <% end %>
                   <% end %>
                   <td class="link-td folder-name" id="article-authur" folder-artilce-id="<%= article.id %>" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'>
-                    <%= @folder_names[article.id] || "未分類" %>
+                    <% if @folders %>
+                      <%= @folder_names[article.id] || "未分類" %>
+                    <% end %>
                   </td>
                   <td class="link-td" id="article-createdat" onclick='window.location="<%= users_article_path(id: article.id, dashboard: dashboard) %>"'><%= l(article.created_at, format: :long) %></td>
                   <td>
@@ -120,7 +122,6 @@
           </tbody>
         </table>
         <div class="article-paginate">
-          <%= paginate @articles, theme: 'bootstrap-5' %>
         </div>
       </div><!-- ./ col-10 -->
     </div><!-- ./ row -->

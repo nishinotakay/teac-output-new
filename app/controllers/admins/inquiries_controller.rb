@@ -1,5 +1,7 @@
 module Admins
   class InquiriesController < Admins::Base
+    before_action :authenticate_admin!
+    
     def index
       params[:ord_created_at] ||= 'desc'
       sort_and_filter_params = Inquiry.sort_and_filter(params)
@@ -12,8 +14,8 @@ module Admins
 
     def show
       @inquiry = Inquiry.find(params[:id])
-      @user = @inquiry.user 
-    end
+      @user = @inquiry.user
+    end 
 
     def update
       @inquiry = Inquiry.find(params[:id])

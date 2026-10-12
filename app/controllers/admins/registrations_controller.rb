@@ -12,9 +12,16 @@ module Admins
     # end
 
     # POST /resource
-    # def create
-    #   super
-    # end
+    def create
+      return super unless params[:tenant_id].present?
+      
+      build_resource(sign_up_params)
+      resource.tenant_id = params[:tenant_id]
+      resource.save
+
+      flash[:success] = '送られてくるメールの認証URLからアカウントの認証をしてください。'
+      redirect_to new_tenant_admin_admin_session_path(tenant_id: params[:tenant_id])
+    end
 
     # GET /resource/edit
     # def edit
@@ -40,7 +47,7 @@ module Admins
     #   super
     # end
 
-    # protected
+    protected
 
     # If you have extra params to permit, append them to the sanitizer.
     # def configure_sign_up_params
@@ -58,8 +65,9 @@ module Admins
     # end
 
     # The path used after sign up for inactive accounts.
-    # def after_inactive_sign_up_path_for(resource)
-    #   super(resource)
-    # end
+    def after_inactive_sign_up_path_for(resource)
+       return super unless params[:tenant_id].present?
+       new_tenant_admin_admin_session_path(tenant_id: params[:tenant_id])
+    end
   end
 end
