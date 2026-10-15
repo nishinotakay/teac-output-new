@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :course do
-    name { "MyString" }
+    name { 'Ruby入門' }
   end
 end

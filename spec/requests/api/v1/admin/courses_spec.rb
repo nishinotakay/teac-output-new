@@ -27,12 +27,23 @@ RSpec.describe 'コースのCRUD API', type: :request do
   end
 
   describe '新規作成' do
-    it '名前を保存し、201を返す' do
+    it '名前を保存し、作成したコースと201を返す' do
       expect {
         post path, params: { name: 'Ruby入門' }, headers: headers, as: :json
       }.to change(Course, :count).by(1)
       expect(response).to have_http_status(:created)
       expect(Course.last.name).to eq('Ruby入門')
+      expect(JSON.parse(response.body)['course']).to eq(
+        'id' => Course.last.id.to_s, 'name' => 'Ruby入門'
+      )
+    end
+
+    it '名前が256文字なら保存せず422を返す' do
+      expect {
+        post path, params: { name: 'あ' * 256 }, headers: headers, as: :json
+      }.not_to change(Course, :count)
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(JSON.parse(response.body)['errors']).not_to be_empty
     end
 
     [nil, '', '   '].each do |name|
@@ -50,9 +61,12 @@ RSpec.describe 'コースのCRUD API', type: :request do
     let!(:course) { create(:course, name: '変更前') }
     let!(:other) { create(:course, name: '別のコース') }
 
-    it '指定した1件だけ更新し、204を返す' do
+    it '指定した1件だけ更新し、更新後のコースと200を返す' do
       patch "#{path}/#{course.id}", params: { name: '変更後' }, headers: headers, as: :json
-      expect(response).to have_http_status(:no_content)
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)['course']).to eq(
+        'id' => course.id.to_s, 'name' => '変更後'
+      )
       expect(course.reload.name).to eq('変更後')
       expect(other.reload.name).to eq('別のコース')
       expect(Course.count).to eq(2)
@@ -60,6 +74,13 @@ RSpec.describe 'コースのCRUD API', type: :request do
 
     it '空の名前なら元の名前を維持し、422を返す' do
       patch "#{path}/#{course.id}", params: { name: '' }, headers: headers, as: :json
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(course.reload.name).to eq('変更前')
+      expect(JSON.parse(response.body)['errors']).not_to be_empty
+    end
+
+    it '名前が256文字なら元の名前を維持し、422を返す' do
+      patch "#{path}/#{course.id}", params: { name: 'あ' * 256 }, headers: headers, as: :json
       expect(response).to have_http_status(:unprocessable_entity)
       expect(course.reload.name).to eq('変更前')
       expect(JSON.parse(response.body)['errors']).not_to be_empty
