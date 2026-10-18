@@ -6,10 +6,7 @@ class Api::V1::Admin::CoursesController < Api::V1::BaseController
 
     render json: {
       courses: courses.map do |course|
-        {
-          id: course.id.to_s,
-          name: course.name
-        }
+        course_json(course)
       end
     }
   end
@@ -19,8 +16,7 @@ class Api::V1::Admin::CoursesController < Api::V1::BaseController
     return render_not_found('コース') unless course
 
     if course.update(course_params)
-      #head :no_content
-      render json:{ course:{id: course.id.to_s, name: course.name}}
+      render json: { course: course_json(course) }
     else
       render json: { errors: course.errors.full_messages }, status: :unprocessable_entity
     end
@@ -30,7 +26,7 @@ class Api::V1::Admin::CoursesController < Api::V1::BaseController
     course = Course.new(course_params)
 
     if course.save
-      render json: { course: { id: course.id.to_s, name: course.name } }, status: :created
+      render json: { course: course_json(course) }, status: :created
     else
       render json: { errors: course.errors.full_messages }, status: :unprocessable_entity
     end
@@ -47,6 +43,10 @@ class Api::V1::Admin::CoursesController < Api::V1::BaseController
   end
 
   private
+
+  def course_json(course)
+    { id: course.id.to_s, name: course.name }
+  end
 
   def course_params
     params.permit(:name)
