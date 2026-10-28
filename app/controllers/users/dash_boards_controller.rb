@@ -1,7 +1,8 @@
 module Users
   class DashBoardsController < Users::Base
-    skip_before_action :authenticate_user!, only: %i[index], if: :admin_signed_in?
-    
+    before_action :authenticate_user!
+    skip_before_action :authenticate_user!, only: %i[show], if: :admin_signed_in?
+
     def index
       filter = {
         author:   params[:author],
@@ -16,24 +17,30 @@ module Users
       if current_admin.present? && current_user.nil?
         user = User.find(params[:user_id])
         @articles = user.articles.paginated_and_sort_filter(filter).page(params[:page]).per(30)
-      else
+      elsif current_user.present?
         @articles = current_user.articles.paginated_and_sort_filter(filter).page(params[:page]).per(30)
+      end
 
-      respond_to do |format|
+      if current_user.present?
+        respond_to do |format|
         format.any
         format.html
         format.json { render json: @articles }
-      end
+        end
       end
 
-      @folders = current_user.folders if current_user.folders.present?
+      if current_user.present?
+        @folders = current_user.folders if current_user.folders.present?
+      end
 
-      @folder_names = {}
-      @articles.each do |article|
-        latest_folder = ArticleFolder.where(article_id: article.id).order(created_at: :desc).first
-        @folder_names[article.id] = latest_folder.folder.name if latest_folder.present?
+      if current_user.present?
+        @folder_names = {}
+        @articles.each do |article|
+          latest_folder = ArticleFolder.where(article_id: article.id).order(created_at: :desc).first
+          @folder_names[article.id] = latest_folder.folder.name if latest_folder.present?
+        end
       end
     end
+
   end
 end
-

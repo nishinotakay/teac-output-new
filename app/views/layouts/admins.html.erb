@@ -22,8 +22,10 @@
   <body class="hold-transition sidebar-mini" id="<%= page_body_id(params) %>">
     <% if params[:controller] != "admins/sessions" %>
       <div class="wrapper">
+        <% if current_admin.present? %>
           <%= render "layouts/admins/header" %>
           <%= render "layouts/admins/side" %>
+        <% end %>
         <div class="content-wrapper">
           <%= render "layouts/flash" %>
           <!-- Content Header (Page header) -->

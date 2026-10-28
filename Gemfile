@@ -58,6 +58,7 @@ gem 'omniauth-google-oauth2'
 gem 'omniauth-rails_csrf_protection'
 gem 'omniauth-facebook'
 gem 'stripe'
+gem 'ros-apartment', github: 'rails-on-services/apartment', branch: 'main'
 
 group :development, :test do
   # ERD生成
