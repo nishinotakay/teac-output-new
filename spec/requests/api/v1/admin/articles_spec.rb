@@ -17,13 +17,14 @@ RSpec.describe 'Api::V1::Admin::Articles' do
     returned_articles.map { |article| article['id'] }
   end
 
-  let(:current_admin) { create(:admin) }
+  let(:tenant) { create(:tenant) }
+  let(:current_admin) { create(:admin, tenant: tenant) }
   let(:admin_headers) { admin_auth_headers(current_admin) }
 
   describe 'GET /api/v1/admin/articles' do
     context '講師として認証済みの場合' do
-      let(:author_user) { create(:user, name: '山田花子') }
-      let(:author_admin) { create(:admin, name: '佐藤講師') }
+      let(:author_user) { create(:user, name: '山田花子', tenant: tenant) }
+      let(:author_admin) { create(:admin, name: '佐藤講師', tenant: tenant) }
       let!(:user_article) do
         create(
           :article,
@@ -158,7 +159,7 @@ RSpec.describe 'Api::V1::Admin::Articles' do
         end
 
         it '投稿者名の%は文字として一致させる' do
-          percent_user = create(:user, name: '100%達成')
+          percent_user = create(:user, name: '100%達成', tenant: tenant)
           percent_article = create(:article, user: percent_user)
 
           get '/api/v1/admin/articles', params: { author: '%' }, headers: admin_headers
