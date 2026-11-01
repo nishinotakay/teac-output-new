@@ -4,7 +4,7 @@ class Api::V1::Users::PostsController < Api::V1::BaseController
 
   # GET /api/v1/posts
   def index
-    posts = Post.order(created_at: :desc)
+    posts = @current_user.posts.order(created_at: :desc)
     render json: { posts: posts.map { |p| post_json(p) } }
   end
 

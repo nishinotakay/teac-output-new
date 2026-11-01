@@ -72,6 +72,7 @@ Rails.application.routes.draw do
         resources :articles,  only: [:index, :show, :create, :update, :destroy]
         resources :posts,     only: [:index, :show, :create, :update, :destroy]
         resources :learnings, only: [:index, :create]
+        resources :courses,  only: [:index, :create, :update, :destroy]
       end
     end
   end
