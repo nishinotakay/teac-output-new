@@ -23,7 +23,7 @@ class Api::V1::Admin::CoursesController < Api::V1::BaseController
   end
 
   def create
-    course = Course.new(course_params)
+    course = Course.new(course_params.merge(tenant: @current_admin.tenant))
 
     if course.save
       render json: { course: course_json(course) }, status: :created
@@ -35,6 +35,7 @@ class Api::V1::Admin::CoursesController < Api::V1::BaseController
   def destroy
     course = Course.find_by(id: params[:id])
     return render_not_found('コース') unless course
+
     if course.destroy
       head :no_content
     else
