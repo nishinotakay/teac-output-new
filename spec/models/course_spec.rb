@@ -31,7 +31,7 @@ RSpec.describe Course, type: :model do
     it 'tenant が無いと無効になる' do
       course = build(:course, tenant: nil)
       expect(course).not_to be_valid
-      expect(course.errors.details[:tenant]).to include(error: :required)
+      expect(course.errors.details[:tenant]).to include(error: :blank)
     end
 
     it 'tenant があれば有効になる' do
