@@ -154,7 +154,7 @@ RSpec.describe 'コースのCRUD API', type: :request do
   describe '現在の認証制限' do
     let!(:course) { create(:course, name: '既存コース', tenant: admin.tenant) }
 
-    [:anonymous, :user].each do |role|
+    %i[anonymous user].each do |role|
       context(role == :anonymous ? '未ログインの場合' : '一般ユーザーの場合') do
         let(:unauthorized_headers) do
           if role == :user
@@ -165,9 +165,9 @@ RSpec.describe 'コースのCRUD API', type: :request do
           end
         end
 
-        [:get, :post, :patch, :delete].each do |method|
+        %i[get post patch delete].each do |method|
           it "#{method.upcase}を拒否し、データを変更しない" do
-            url = [:patch, :delete].include?(method) ? "#{path}/#{course.id}" : path
+            url = %i[patch delete].include?(method) ? "#{path}/#{course.id}" : path
             public_send(method, url, params: { name: '不正な変更' }, headers: unauthorized_headers, as: :json)
             expect(response).to have_http_status(:unauthorized)
             expect(Course.count).to eq(1)

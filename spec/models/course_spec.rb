@@ -44,7 +44,7 @@ RSpec.describe Course, type: :model do
     let!(:own_course) { create(:course, tenant: tenant) }
     let!(:foreign_course) { create(:course, tenant: create(:tenant)) }
 
-    after { Current.reset }
+    after(:each) { Current.reset }
 
     it 'Current.tenant をセットすると自テナントのコースだけ見える' do
       Current.tenant = tenant
