@@ -1,6 +1,6 @@
 class Api::V1::Manager::TenantsController < Api::V1::BaseController
   before_action :authenticate_manager!
-  before_action :set_tenant, only: [:show]
+  before_action :set_tenant, only: [:show, :update]
 
   # GET /api/v1/manager/tenants
   def index
@@ -11,6 +11,15 @@ class Api::V1::Manager::TenantsController < Api::V1::BaseController
   # GET /api/v1/manager/tenants/:id
   def show
     render json: { tenant: tenant_json(@tenant) }
+  end
+
+  # PATCH /api/v1/manager/tenants/:id
+  def update
+    if @tenant.update(tenant_params)
+      render json: { tenant: tenant_json(@tenant) }
+    else
+      render json: { errors: @tenant.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   # POST /api/v1/manager/tenants
