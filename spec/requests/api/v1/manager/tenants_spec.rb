@@ -88,6 +88,7 @@ RSpec.describe 'Api::V1::Manager::Tenants', type: :request do
       patch "/api/v1/manager/tenants/#{tenant.id}", params: { name: '新テナント' }, headers: auth_headers_for(manager)
 
       expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['tenant']).to include('id' => tenant.id.to_s, 'name' => '新テナント')
       expect(tenant.reload.name).to eq('新テナント')
     end
 
