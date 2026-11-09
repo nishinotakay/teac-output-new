@@ -4,8 +4,8 @@ class Api::V1::Users::ArticlesController < Api::V1::BaseController
 
   # GET /api/v1/articles
   def index
-    articles = Article.order(created_at: :desc)
-    render json: { articles: articles.map { |a| article_json(a) } }
+    articles = Article.includes(:likes).order(created_at: :desc)
+    render json: { articles: articles.map { |article| article_json(article) } }
   end
 
   # GET /api/v1/articles/:id
@@ -67,6 +67,8 @@ class Api::V1::Users::ArticlesController < Api::V1::BaseController
       image: article.image,
       userId: article.user_id&.to_s,
       adminId: article.admin_id&.to_s,
+      likesCount: article.likes.size,
+      likedByCurrentUser: article.likes.any? { |like| like.user_id == @current_user.id },
       createdAt: article.created_at.iso8601,
       updatedAt: article.updated_at.iso8601
     }
