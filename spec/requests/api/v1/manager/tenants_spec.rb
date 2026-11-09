@@ -80,4 +80,66 @@ RSpec.describe 'Api::V1::Manager::Tenants', type: :request do
       expect(response).to have_http_status(:unauthorized)
     end
   end
+
+  describe 'PATCH /api/v1/manager/tenants/:id' do
+    let!(:tenant) { create(:tenant, name: '旧テナント') }
+
+    it 'テナント名を更新して200を返す' do
+      patch "/api/v1/manager/tenants/#{tenant.id}", params: { name: '新テナント' }, headers: auth_headers_for(manager)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['tenant']).to include('id' => tenant.id.to_s, 'name' => '新テナント')
+      expect(tenant.reload.name).to eq('新テナント')
+    end
+
+    it 'テナント名が空なら422で、名前は変わらない' do
+      expect do
+        patch "/api/v1/manager/tenants/#{tenant.id}", params: { name: '' }, headers: auth_headers_for(manager)
+      end.not_to(change { tenant.reload.name })
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it 'テナント名が21文字なら422で、名前は変わらない' do
+      expect do
+        patch "/api/v1/manager/tenants/#{tenant.id}", params: { name: 'あ' * 21 }, headers: auth_headers_for(manager)
+      end.not_to(change { tenant.reload.name })
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it '存在しないidなら404' do
+      patch '/api/v1/manager/tenants/0', params: { name: '新テナント' }, headers: auth_headers_for(manager)
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it '未認証なら401' do
+      patch "/api/v1/manager/tenants/#{tenant.id}", params: { name: '新テナント' }
+
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it '管理者のトークンでは更新できない（401）' do
+      admin = create(:admin)
+      admin_headers = { 'Authorization' => "Bearer #{JwtHelper.encode(id: admin.id, role: 'admin')}" }
+
+      expect do
+        patch "/api/v1/manager/tenants/#{tenant.id}", params: { name: '新テナント' }, headers: admin_headers
+      end.not_to(change { tenant.reload.name })
+
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it '受講生のトークンでは更新できない（401）' do
+      user = create(:user)
+      user_headers = { 'Authorization' => "Bearer #{JwtHelper.encode(id: user.id, role: 'user')}" }
+
+      expect do
+        patch "/api/v1/manager/tenants/#{tenant.id}", params: { name: '新テナント' }, headers: user_headers
+      end.not_to(change { tenant.reload.name })
+
+      expect(response).to have_http_status(:unauthorized)
+    end
+  end
 end

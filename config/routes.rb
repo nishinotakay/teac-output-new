@@ -32,7 +32,7 @@ Rails.application.routes.draw do
 
       # --- マネージャー向けリソース ---
       namespace :manager do
-        resources :tenants, only: [:index, :show, :create]
+        resources :tenants, only: [:index, :show, :create, :update]
       end
 
       # --- ユーザー向けリソース ---
