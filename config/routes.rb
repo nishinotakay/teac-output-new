@@ -58,6 +58,10 @@ Rails.application.routes.draw do
       # --- 管理者向けリソース ---
       namespace :admin do
         resources :users, only: [:index, :show, :update, :destroy] do
+          member do
+            patch :cancel
+            patch :resume
+          end
           # 管理者がユーザーのつぶやきを閲覧するエンドポイント: GET /api/v1/admin/users/:user_id/tweets
           # namespace :admin の内側にいるため controller: 'tweets' だけで Api::V1::Admin::TweetsController を指す
           resources :tweets, only: [:index], controller: 'tweets'

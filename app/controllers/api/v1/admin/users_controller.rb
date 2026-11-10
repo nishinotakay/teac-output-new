@@ -1,6 +1,6 @@
 class Api::V1::Admin::UsersController < Api::V1::BaseController
   before_action :authenticate_admin!
-  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:show, :update, :destroy, :cancel, :resume]
 
   # GET /api/v1/admin/users
   def index
@@ -28,6 +28,18 @@ class Api::V1::Admin::UsersController < Api::V1::BaseController
     render json: { message: '削除しました' }
   end
 
+  # PATCH /api/v1/admin/users/:id/cancel
+  def cancel
+    @user.cancel!
+    render json: { user: admin_user_json(@user) }
+  end
+
+  # PATCH /api/v1/admin/users/:id/resume
+  def resume
+    @user.resume!
+    render json: { user: admin_user_json(@user) }
+  end
+
   private
 
   def set_user
@@ -51,6 +63,7 @@ class Api::V1::Admin::UsersController < Api::V1::BaseController
       articlesCount: user.articles.size,
       postsCount: user.posts.size,
       tweetsCount: user.tweets.size,
+      cancelledAt: user.cancelled_at&.iso8601,
       createdAt: user.created_at.iso8601
     }
   end

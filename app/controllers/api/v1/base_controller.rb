@@ -16,6 +16,7 @@ class Api::V1::BaseController < ActionController::API
     @current_user    = User.find_by(id: id)    if role == 'user'
     @current_admin   = Admin.find_by(id: id)   if role == 'admin'
     @current_manager = Manager.find_by(id: id) if role == 'manager'
+    return render_unauthorized if @current_user&.cancelled?
 
     render_unauthorized unless @current_user || @current_admin || @current_manager
 
@@ -41,7 +42,7 @@ class Api::V1::BaseController < ActionController::API
     return render_unauthorized unless payload && payload['role'] == 'user'
 
     @current_user = User.find_by(id: payload['id'])
-    render_unauthorized unless @current_user
+    render_unauthorized unless @current_user && !@current_user.cancelled?
   end
 
   def authenticate_admin!

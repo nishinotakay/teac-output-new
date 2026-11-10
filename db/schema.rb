@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_10_10_061232) do
+ActiveRecord::Schema.define(version: 2026_11_10_084531) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -339,6 +339,7 @@ ActiveRecord::Schema.define(version: 2026_10_10_061232) do
     t.string "stripe_customer_id"
     t.bigint "tenant_id", null: false
     t.bigint "プロアカ_id", null: false
+    t.datetime "cancelled_at"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
