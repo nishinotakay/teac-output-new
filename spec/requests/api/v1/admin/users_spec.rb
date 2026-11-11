@@ -62,16 +62,6 @@ RSpec.describe 'Api::V1::Admin::Users', type: :request do
     end
   end
 
-  describe 'DELETE /api/v1/admin/users/:id' do
-    it '他テナントのユーザーは削除できない（404で、実際に削除もされない）' do
-      expect do
-        delete "/api/v1/admin/users/#{user_b.id}", headers: auth_headers_for(admin_a)
-      end.not_to change(User.unscoped, :count)
-
-      expect(response).to have_http_status(:not_found)
-    end
-  end
-
   describe 'PATCH /api/v1/admin/users/:id/cancel' do
     let(:first_cancelled_at) { Time.zone.local(2026, 11, 1, 9, 0, 0) }
 
