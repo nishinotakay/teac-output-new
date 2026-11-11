@@ -57,7 +57,7 @@ Rails.application.routes.draw do
 
       # --- 管理者向けリソース ---
       namespace :admin do
-        resources :users, only: [:index, :show, :update, :destroy] do
+        resources :users, only: [:index, :show, :update] do
           member do
             patch :cancel
             patch :resume

@@ -1,6 +1,6 @@
 class Api::V1::Admin::UsersController < Api::V1::BaseController
   before_action :authenticate_admin!
-  before_action :set_user, only: [:show, :update, :destroy, :cancel, :resume]
+  before_action :set_user, only: [:show, :update, :cancel, :resume]
 
   # GET /api/v1/admin/users
   def index
@@ -20,12 +20,6 @@ class Api::V1::Admin::UsersController < Api::V1::BaseController
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
-  end
-
-  # DELETE /api/v1/admin/users/:id
-  def destroy
-    @user.destroy
-    render json: { message: '削除しました' }
   end
 
   # PATCH /api/v1/admin/users/:id/cancel
