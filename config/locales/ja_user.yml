@@ -14,3 +14,7 @@ ja:
         posts: "動画投稿数"
         purpose: "プログラミング学習の目的"
         learning_start: "プログラミング学習開始日"
+  devise:
+    failure:
+      user:
+        cancelled: このアカウントは解約されています。

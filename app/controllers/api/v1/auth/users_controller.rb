@@ -27,6 +27,8 @@ class Api::V1::Auth::UsersController < Api::V1::BaseController
   def login
     user = User.find_by(email: params[:email]&.downcase, tenant_id: params[:tenant_id])
     if user&.valid_password?(params[:password])
+      return render json: { error: 'このアカウントは解約されています' }, status: :forbidden if user.cancelled?
+
       token = JwtHelper.encode(id: user.id, role: 'user')
       render json: { token: token, user: user_json(user) }
     else

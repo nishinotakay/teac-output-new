@@ -125,6 +125,32 @@ class User < ApplicationRecord
     learning_status.exists?(learned_article_id: article.id, completed: true)
   end 
 
+  def cancelled?
+    cancelled_at.present?
+  end
+
+  # 二重に解約しても最初の解約日時を残す
+  def cancel!
+    return if cancelled?
+
+    update!(cancelled_at: Time.current)
+  end
+
+  def resume!
+    return unless cancelled?
+
+    update!(cancelled_at: nil)
+  end
+
+  # 旧 ERB 画面（Devise）のログインも止める
+  def active_for_authentication?
+    super && !cancelled?
+  end
+
+  def inactive_message
+    cancelled? ? :cancelled : super
+  end
+
   private
 
   def create_default_folder

@@ -47,6 +47,29 @@ RSpec.describe 'Api::V1::Auth::Users', type: :request do
         expect(response).to have_http_status(:unauthorized)
       end
     end
+
+    context '解約済みの受講生が正しいパスワードでログインした場合' do
+      it '403 と解約のメッセージを返し、トークンは返さない' do
+        user.update!(cancelled_at: Time.current)
+
+        post '/api/v1/auth/login', params: { email: user.email, password: 'password', tenant_id: tenant_a.id }
+
+        expect(response).to have_http_status(:forbidden)
+        body = JSON.parse(response.body)
+        expect(body['error']).to eq('このアカウントは解約されています')
+        expect(body['token']).to be_nil
+      end
+    end
+
+    context '解約済みの受講生がパスワードを間違えた場合' do
+      it '解約済みかどうかは明かさず 401 を返す' do
+        user.update!(cancelled_at: Time.current)
+
+        post '/api/v1/auth/login', params: { email: user.email, password: 'wrongpassword', tenant_id: tenant_a.id }
+
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
   end
 
   describe 'POST /api/v1/auth/signup' do
@@ -118,6 +141,15 @@ RSpec.describe 'Api::V1::Auth::Users', type: :request do
       get '/api/v1/auth/me', headers: { 'Authorization' => "Bearer #{token_for(user_b)}" }
 
       expect(JSON.parse(response.body)['user']['tenantId']).to eq(tenant_b.id.to_s)
+    end
+
+    it '解約前に取ったトークンでも、解約後は 401 になる' do
+      token = token_for(user_a)
+      user_a.update!(cancelled_at: Time.current)
+
+      get '/api/v1/auth/me', headers: { 'Authorization' => "Bearer #{token}" }
+
+      expect(response).to have_http_status(:unauthorized)
     end
   end
 end
