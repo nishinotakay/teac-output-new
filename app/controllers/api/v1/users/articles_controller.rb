@@ -1,6 +1,7 @@
 class Api::V1::Users::ArticlesController < Api::V1::BaseController
   before_action :authenticate_user!
   before_action :set_article, only: [:show, :update, :destroy]
+  before_action :reject_other_users_article, only: [:update, :destroy]
 
   # GET /api/v1/articles
   def index
@@ -25,10 +26,6 @@ class Api::V1::Users::ArticlesController < Api::V1::BaseController
 
   # PATCH /api/v1/articles/:id
   def update
-    unless @article.user_id == @current_user.id
-      return render json: { error: '権限がありません' }, status: :forbidden
-    end
-
     if @article.update(article_params)
       render json: { article: article_json(@article) }
     else
@@ -38,10 +35,6 @@ class Api::V1::Users::ArticlesController < Api::V1::BaseController
 
   # DELETE /api/v1/articles/:id
   def destroy
-    unless @article.user_id == @current_user.id
-      return render json: { error: '権限がありません' }, status: :forbidden
-    end
-
     @article.destroy
     render json: { message: '削除しました' }
   end
@@ -51,6 +44,12 @@ class Api::V1::Users::ArticlesController < Api::V1::BaseController
   def set_article
     @article = Article.find_by(id: params[:id])
     render_not_found('記事') unless @article
+  end
+
+  def reject_other_users_article
+    return if @article.user_id == @current_user.id
+
+    render json: { error: '権限がありません' }, status: :forbidden
   end
 
   def article_params
