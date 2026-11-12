@@ -92,6 +92,14 @@ class Article < ApplicationRecord
     self.content.gsub(/<script>.*<\/script>/m, '').gsub(/<iframe[\s\S]*?<\/iframe>/m, '')
   end
 
+  # フォルダ行が無い記事（未分類扱い）は、ここで行を作る
+  def move_to_folder!(folder)
+    article_folder = article_folders.first_or_initialize
+    return if article_folder.folder_id == folder.id
+
+    article_folder.update!(folder: folder)
+  end
+
   private
 
     def admin_updating_or_creating?

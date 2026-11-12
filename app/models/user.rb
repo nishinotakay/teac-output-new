@@ -151,6 +151,18 @@ class User < ApplicationRecord
     cancelled? ? :cancelled : super
   end
 
+  # 「未分類」が自動作成される前に登録した受講生にも用意する
+  def default_folder
+    folders.find_or_create_by!(name: Folder::DEFAULT_NAME)
+  end
+
+  # 「未分類」にはフォルダ行が無い自分の記事も数える
+  def folder_articles_counts
+    counts = ArticleFolder.where(folder_id: folders.select(:id)).group(:folder_id).count
+    articles_without_folder = articles.where.not(id: ArticleFolder.select(:article_id)).count
+    counts.merge(default_folder.id => counts.fetch(default_folder.id, 0) + articles_without_folder)
+  end
+
   private
 
   def create_default_folder

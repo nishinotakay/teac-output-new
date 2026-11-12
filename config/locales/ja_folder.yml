@@ -1,0 +1,7 @@
+ja:
+  activerecord:
+    models:
+      folder: 'フォルダ'
+    attributes:
+      folder:
+        name: 'フォルダ名'
