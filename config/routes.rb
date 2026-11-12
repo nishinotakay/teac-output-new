@@ -43,7 +43,11 @@ Rails.application.routes.draw do
       resources :articles, only: [:index, :show, :create, :update, :destroy], controller: 'users/articles' do
         post   'likes', to: 'users/likes#article_create', as: :article_like
         delete 'likes', to: 'users/likes#article_destroy'
+        member do
+          patch :folder, action: :update_folder
+        end
       end
+      resources :folders, only: [:index, :create, :update, :destroy], controller: 'users/folders'
       resources :tweets, only: [:index, :show, :create, :update, :destroy], controller: 'users/tweets' do
         # いいね: POST /api/v1/tweets/:tweet_id/like, DELETE /api/v1/tweets/:tweet_id/like
         resource :like,     only: [:create, :destroy], controller: 'users/tweet_likes'
