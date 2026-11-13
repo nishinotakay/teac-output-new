@@ -45,13 +45,13 @@ class Api::V1::Users::FoldersController < Api::V1::BaseController
 
   def set_folder
     @folder = @current_user.folders.find_by(id: params[:id])
-    render_not_found('フォルダ') unless @folder
+    render_not_found(Folder.model_name.human) unless @folder
   end
 
   def reject_default_folder
     return unless @folder.default?
 
-    render json: { errors: ['「未分類」フォルダは変更・削除できません'] }, status: :unprocessable_entity
+    render json: { errors: [I18n.t('folders.errors.default_folder_locked')] }, status: :unprocessable_entity
   end
 
   def folder_params

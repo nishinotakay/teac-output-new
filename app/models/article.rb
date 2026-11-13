@@ -108,7 +108,7 @@ class Article < ApplicationRecord
 
     def assign_to_default_folder
       return unless user.present?
-      uncategorized_folder = user.folders.find_by(name: '未分類')
+      uncategorized_folder = user.folders.find_by(name: Folder::DEFAULT_NAME)
       if uncategorized_folder
         ArticleFolder.create!(article_id: self.id, folder_id: uncategorized_folder.id)
       end

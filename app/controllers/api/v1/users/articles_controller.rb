@@ -42,7 +42,7 @@ class Api::V1::Users::ArticlesController < Api::V1::BaseController
   # PATCH /api/v1/articles/:id/folder
   def update_folder
     folder = @current_user.folders.find_by(id: params[:folder_id])
-    return render_not_found('フォルダ') unless folder
+    return render_not_found(Folder.model_name.human) unless folder
 
     @article.move_to_folder!(folder)
     render json: { article: article_json(@article) }

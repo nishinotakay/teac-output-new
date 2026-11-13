@@ -111,6 +111,15 @@ RSpec.describe 'Api::V1::Users::Folders', type: :request do
       expect(response).to have_http_status(:unprocessable_entity)
       expect(default_folder.reload.name).to eq('未分類')
     end
+
+    it '既存のフォルダと同じ名前なら 422 を返し、名前を変えない' do
+      current_user.folders.create!(name: 'Rails')
+
+      patch "/api/v1/folders/#{ruby_folder.id}", params: { name: 'Rails' }, headers: user_auth_headers(current_user)
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(ruby_folder.reload.name).to eq('Ruby')
+    end
   end
 
   describe 'DELETE /api/v1/folders/:id' do
