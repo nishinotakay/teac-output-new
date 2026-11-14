@@ -27,6 +27,9 @@ class Article < ApplicationRecord
   has_many :article_folders, dependent: :destroy
   has_many :folders, through: :article_folders
 
+  has_many :article_categories, dependent: :destroy
+  has_many :categories, through: :article_categories
+
   validates :title, presence: true, length: { in: 1..40 }
   validates :sub_title, allow_nil: true, length: { maximum: 50 }
   validates :content, presence: true
