@@ -105,6 +105,16 @@ RSpec.describe 'Api::V1::Users::Articles', type: :request do
       expect(response).to have_http_status(:not_found)
       expect(own_article.reload.folders).to eq(folders_before)
     end
+
+    it '他テナントの記事なら 404 を返し、フォルダを変えない' do
+      other_tenant_article = create(:article, user: create(:user, tenant: create(:tenant)))
+      folders_before = other_tenant_article.folders.to_a
+
+      patch "/api/v1/articles/#{other_tenant_article.id}/folder", params: { folder_id: ruby_folder.id }, headers: user_auth_headers(current_user)
+
+      expect(response).to have_http_status(:not_found)
+      expect(other_tenant_article.reload.folders).to eq(folders_before)
+    end
   end
 
   describe 'folderId' do

@@ -154,7 +154,7 @@ class User < ApplicationRecord
   # 「未分類」が自動作成される前に登録した受講生にも用意する
   def default_folder
     folders.find_or_create_by!(name: Folder::DEFAULT_NAME)
-  rescue ActiveRecord::RecordNotUnique
+  rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
     # 同時に開いた別のリクエストが先に作った
     folders.find_by!(name: Folder::DEFAULT_NAME)
   end
