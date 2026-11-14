@@ -1,0 +1,11 @@
+ja:
+  activerecord:
+    models:
+      folder: 'フォルダ'
+    attributes:
+      folder:
+        name: 'フォルダ名'
+  folders:
+    errors:
+      default_folder_locked: '「未分類」フォルダは変更・削除できません'
+

@@ -92,6 +92,14 @@ class Article < ApplicationRecord
     self.content.gsub(/<script>.*<\/script>/m, '').gsub(/<iframe[\s\S]*?<\/iframe>/m, '')
   end
 
+  # フォルダ行が無い記事（未分類扱い）は、ここで行を作る
+  def move_to_folder!(folder)
+    article_folder = article_folders.first_or_initialize
+    return if article_folder.folder_id == folder.id
+
+    article_folder.update!(folder: folder)
+  end
+
   private
 
     def admin_updating_or_creating?
@@ -100,7 +108,7 @@ class Article < ApplicationRecord
 
     def assign_to_default_folder
       return unless user.present?
-      uncategorized_folder = user.folders.find_by(name: '未分類')
+      uncategorized_folder = user.folders.find_by(name: Folder::DEFAULT_NAME)
       if uncategorized_folder
         ArticleFolder.create!(article_id: self.id, folder_id: uncategorized_folder.id)
       end
