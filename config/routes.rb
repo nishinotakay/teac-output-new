@@ -58,7 +58,7 @@ Rails.application.routes.draw do
       # --- 管理者向けリソース ---
       namespace :admin do
         post "article_search", to: "article_search#create"
-        resources :users, only: [:index, :show, :update, :destroy] do
+        resources :users, only: [:index, :show, :update] do
           member do
             patch :cancel
             patch :resume
