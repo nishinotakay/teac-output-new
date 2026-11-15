@@ -6,7 +6,7 @@
 
 | 役割 | リポジトリ | 技術 | 起動 |
 |---|---|---|---|
-| フロント | `tech-put-app`（origin `1107t/tech-put-app`、統合先 `main`） | React 18 / Vite 4 / TypeScript 4.9 / react-router-dom 7 / axios / Bootstrap 5 | `npm run dev` → :5173 |
+| フロント | `tech-put-app`（origin `nishinotakay/tech-put-app`、統合先 `main`） | React 18 / Vite 4 / TypeScript 4.9 / react-router-dom 7 / axios / Bootstrap 5 | `npm run dev` → :5173 |
 | バックエンド | `teac-output-new`（origin `nishinotakay/teac-output-new`、統合先 `develop`。e-learning は `feature/React` 系） | Rails 6.1 / Ruby 3.0.3 / MySQL 8 / RSpec / JWT（API）+ Devise（旧 ERB 画面） | `docker compose up -d` → `docker-compose.yml` の ports を見る |
 
 - 2 つのリポジトリは兄弟ディレクトリに置く前提（フロントの `CLAUDE.md` が `../teac-output-new` を参照）
@@ -42,7 +42,7 @@
 
 ## 変更の順番
 
-バックエンド PR → フロント PR。バックエンド PR は旧フロントのままでも動く変更に限る（フィールドは足すだけ。改名・削除しない）。
+PR は同時に出してよい（本文で互いの PR 番号をリンクする）。マージはバックエンド PR → フロント PR の順。バックエンド PR は旧フロントのままでも動く変更に限る（フィールドは足すだけ。改名・削除しない）。
 
 ## テストアカウント（ローカル seed 専用）
 
