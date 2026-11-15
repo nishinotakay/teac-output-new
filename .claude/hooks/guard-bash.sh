@@ -26,11 +26,11 @@ if printf '%s' "$cmd" | grep -Eq 'git[[:space:]]+(-C[[:space:]]+[^[:space:]]+[[:
   block "git add . / -A / --all（変種含む）は禁止。コミット対象はファイルパスを明示指定すること。"
 fi
 
-# 2) git add で docs/ ・ .claude/ を追加（コミット対象外）
+# 2) git add で docs/ ・ .claude/ を追加（docs/ は対象外、.claude/ はルール変更の PR だけ）
 #    ユーザーの明示指示がある時のみ ALLOW_DOCS_COMMIT=1 を付けて実行する（CLAUDE.md の例外規定と整合）
 if printf '%s' "$cmd" | grep -Eq 'git[[:space:]]+add[[:space:]].*(docs/|\.claude/)' \
    && ! printf '%s' "$cmd" | grep -q 'ALLOW_DOCS_COMMIT=1'; then
-  block "docs/ ・ .claude/ はコミット対象外。ユーザーの明示指示がある場合のみ ALLOW_DOCS_COMMIT=1 を付けて再実行。"
+  block "docs/ はコミット対象外、.claude/ はルール変更の PR だけ。ユーザーの明示指示がある場合のみ ALLOW_DOCS_COMMIT=1 を付けて再実行。"
 fi
 
 # 3) 破滅的 rm -rf
