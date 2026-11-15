@@ -59,7 +59,7 @@ src/
 - origin `nishinotakay/tech-put-app`、統合先 `main`。別 remote（`tetu5473`）があるので push 先を必ず `git remote -v` で確認する
 - 作業ブランチの prefix は既存の慣習どおり `feature/` と `fix/`
 - `.gitignore` が `.claude/` `CLAUDE.md` `claude_code_rule_md` `teac-output-new` を除外している。ルール一式は `install.sh` で配備し、コミットしない
-- バックエンドと対になる変更は **バックエンド PR が `develop`（または `PROGRESS.md` のベース）に入ってから** フロント PR を出す
+- バックエンドと対になる変更は、フロント PR をバックエンド PR と同時に出してよい（本文で互いの番号をリンク）。**マージはバックエンド PR が `develop`（または `PROGRESS.md` のベース）に入ってから**
 
 ## 既知の注意
 

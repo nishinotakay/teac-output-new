@@ -93,7 +93,7 @@ description: テックプット（フロント tech-put-app と Rails API teac-o
 | やりがち | 正しくは |
 |---|---|
 | Phase 1 のうちに `courses` テーブルも作っておく | 作らない。Phase 1 は既存の `article_type` と `learnings` だけで通す |
-| フロントの PR を先に出す | バックエンド PR がベースに入ってから出す |
+| フロントの PR を先にマージする | PR は同時に出してよいが、マージはバックエンド PR がベースに入ってから |
 | 「記事を読む」ボタンを無効にして順次解放を済ませる | サーバが 403 を返すところまで作る |
 | 受け入れ基準をフロントの単体テストで確かめようとする | フロントにテストランナーは無い。`npm run build` と Playwright で確かめる |
 | API の向き先を `.env.local` から読む | 読まない。ポートは `teac-output-new/docker-compose.yml` を見る |

@@ -36,6 +36,6 @@
 | 統合先 | `origin/main`（`nishinotakay/tech-put-app`）。作業ブランチ `feature/` `fix/` | `origin/develop`（`nishinotakay/teac-output-new`）。e-learning は `feature/React` 系。作業ブランチ `feat/` `fix/` |
 | 相手側 | API 向き先は `VITE_API_URL`。型は `*_json` と一致させる | `Current.tenant` をログイン主体から決め、モデルは `default_scope { in_current_tenant }`。マイグレーション・seed では nil |
 
-- 両方に跨る変更は **バックエンド PR → フロント PR** の順。バックエンド PR は旧フロントのままでも動く変更に限る（フィールドは足すだけ。改名・削除しない）
+- フロントとバックエンドの両方を変える機能は、PR を同時に出してよい（本文で互いの PR 番号をリンクする）。**マージはバックエンド PR → フロント PR の順**。バックエンド PR は旧フロントのままでも動く変更に限る（フィールドは足すだけ。改名・削除しない）
 - 共通の事実（ロール・URL・API 契約・テナント契約・テストアカウント）は `.claude/rules/project/techput-overview.md`。各リポジトリの詳細は `frontend.md` / `backend.md`
 - `src/` を触ると React / CSS / フロントのセキュリティ規則、`app/` `spec/` `db/migrate/` を触ると Rails / RSpec / マイグレーション / 認可の規則が追加で読み込まれる
