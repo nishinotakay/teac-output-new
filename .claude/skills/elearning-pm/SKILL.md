@@ -19,7 +19,7 @@ description: テックプット（フロント tech-put-app と Rails API teac-o
 
 | 何 | どこ |
 |---|---|
-| フロント | `tech-put-app/`（origin `1107t/tech-put-app`） |
+| フロント | `tech-put-app/`（origin `nishinotakay/tech-put-app`） |
 | バックエンド | `teac-output-new/`（origin `nishinotakay/teac-output-new`） |
 | 上流 4 文書 | `tech-put-app/docs/e-learning/` |
 | 進捗の正本 | `tech-put-app/docs/e-learning/PROGRESS.md` |
