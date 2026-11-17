@@ -16,6 +16,7 @@ class User < ApplicationRecord
   # 未設定（コンソール/マイグレーション/managerとしての操作等）の場合は絞り込まない。
   scope :in_current_tenant, -> { Current.tenant ? where(tenant: Current.tenant) : all }
   default_scope { in_current_tenant }
+  scope :not_cancelled, -> { where(cancelled_at: nil) }
 
   has_many :articles, dependent: :destroy
   has_many :posts, dependent: :destroy

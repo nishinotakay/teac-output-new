@@ -58,6 +58,11 @@ Rails.application.routes.draw do
       resources :learnings, only: [:index, :create],                           controller: 'users/learnings'
       resources :stocks,    only: [:index, :create, :destroy],                 controller: 'users/stocks'
       resource  :profile,   only: [:show, :update],                            controller: 'users/profiles'
+      resources :users,     only: [:index, :show],                             controller: 'users/users' do
+        resource :follow,   only: [:create, :destroy],                         controller: 'users/relationships'
+        get :followings, on: :member
+        get :followers,  on: :member
+      end
 
       # --- 管理者向けリソース ---
       namespace :admin do
