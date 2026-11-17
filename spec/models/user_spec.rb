@@ -86,4 +86,13 @@ RSpec.describe User, type: :model do
     user = FactoryBot.create(:user, :a)
     expect(user.email).to eq 'email@1.com'
   end
+
+  describe '.not_cancelled' do
+    it '解約していない受講生だけを返す' do
+      active_user = create(:user, tenant: tenant, proaka: proaka)
+      create(:user, tenant: tenant, proaka: proaka, cancelled_at: Time.current)
+
+      expect(described_class.not_cancelled).to contain_exactly(active_user)
+    end
+  end
 end
