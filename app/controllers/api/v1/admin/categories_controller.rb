@@ -109,7 +109,8 @@ class Api::V1::Admin::CategoriesController < Api::V1::BaseController
           id: article.id.to_s,
           title: article.title,
           author: article.poster_name.to_s,
-          content: article.content.to_s
+          content: article.content.to_s,
+          tenant_id: article.tenant_id
         }
       end,
       availableArticles: available_articles.map do |article|
@@ -117,7 +118,8 @@ class Api::V1::Admin::CategoriesController < Api::V1::BaseController
           id: article.id.to_s,
           title: article.title,
           author: article.poster_name.to_s,
-          content: article.content.to_s
+          content: article.content.to_s,
+          tenant_id: article.tenant_id
         }
       end
     }

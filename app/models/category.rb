@@ -10,4 +10,14 @@ class Category < ApplicationRecord
 
   has_many :article_categories, dependent: :destroy
   has_many :articles, through: :article_categories
+
+  before_validation :strip_name
+
+  validates :name, presence: true, length: { maximum: 255 }
+
+  private
+
+  def strip_name
+    self.name = name.strip if name
+  end
 end
