@@ -64,6 +64,10 @@ Rails.application.routes.draw do
         get :followers,  on: :member
       end
 
+      resources :chat_rooms, only: %i[index create],                          controller: 'users/chat_rooms' do
+        resources :messages, only: %i[index create],                          controller: 'users/chat_messages'
+      end
+
       # --- 管理者向けリソース ---
       namespace :admin do
         resources :users, only: [:index, :show, :update] do
