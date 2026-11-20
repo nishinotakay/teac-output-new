@@ -16,6 +16,7 @@ class User < ApplicationRecord
   # 未設定（コンソール/マイグレーション/managerとしての操作等）の場合は絞り込まない。
   scope :in_current_tenant, -> { Current.tenant ? where(tenant: Current.tenant) : all }
   default_scope { in_current_tenant }
+  scope :not_cancelled, -> { where(cancelled_at: nil) }
 
   has_many :articles, dependent: :destroy
   has_many :posts, dependent: :destroy
@@ -151,9 +152,25 @@ class User < ApplicationRecord
     cancelled? ? :cancelled : super
   end
 
+  # 「未分類」が自動作成される前に登録した受講生にも用意する
+  def default_folder
+    folders.find_or_create_by!(name: Folder::DEFAULT_NAME)
+  rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+    # 同時に開いた別のリクエストが先に作った
+    folders.find_by!(name: Folder::DEFAULT_NAME)
+  end
+
+  # 「未分類」にはフォルダ行が無い自分の記事も数える
+  def folder_articles_counts
+    counts = ArticleFolder.where(folder_id: folders.select(:id)).group(:folder_id).count
+    articles_without_folder = articles.where.not(id: ArticleFolder.select(:article_id)).count
+    default_folder_id = default_folder.id
+    counts.merge(default_folder_id => counts.fetch(default_folder_id, 0) + articles_without_folder)
+  end
+
   private
 
   def create_default_folder
-    self.folders.create(name: '未分類')
+    folders.create(name: Folder::DEFAULT_NAME)
   end
 end

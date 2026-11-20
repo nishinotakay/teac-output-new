@@ -52,4 +52,4 @@ development は `localhost` の正規表現、production は `ENV['FRONTEND_ORIG
 - origin `nishinotakay/teac-output-new`、統合先 `develop`。e-learning は `PROGRESS.md` 先頭のベース（`origin/feature/React`）
 - 作業ブランチの prefix は既存の多数派 `fix/` と `feat/`（`feature/` も残っているが新規では使わない）
 - `.claude/` `CLAUDE.md` はコミットしない。ルール一式は `install.sh` で配備
-- フロントと対になる変更はバックエンド PR を先に出し、旧フロントのままでも動く変更に限る（フィールドは足すだけ。改名・削除しない）
+- フロントとバックエンドの両方を変える機能は、PR を同時に出してよい（本文で互いの PR 番号をリンクする）。**マージはバックエンド PR → フロント PR の順**。バックエンド PR は旧フロントのままでも動く変更に限る（フィールドは足すだけ。改名・削除しない）

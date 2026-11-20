@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_11_11_105955) do
+ActiveRecord::Schema.define(version: 2026_11_17_020723) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -100,7 +100,7 @@ ActiveRecord::Schema.define(version: 2026_11_11_105955) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["admin_id"], name: "index_article_folders_on_admin_id"
-    t.index ["article_id"], name: "index_article_folders_on_article_id"
+    t.index ["article_id"], name: "index_article_folders_on_article_id_unique", unique: true
     t.index ["folder_id"], name: "index_article_folders_on_folder_id"
     t.index ["user_id"], name: "index_article_folders_on_user_id"
   end
@@ -184,6 +184,7 @@ ActiveRecord::Schema.define(version: 2026_11_11_105955) do
     t.bigint "user_id"
     t.bigint "admin_id"
     t.index ["admin_id"], name: "index_folders_on_admin_id"
+    t.index ["user_id", "name"], name: "index_folders_on_user_id_and_name", unique: true
     t.index ["user_id"], name: "index_folders_on_user_id"
   end
 
@@ -291,6 +292,8 @@ ActiveRecord::Schema.define(version: 2026_11_11_105955) do
     t.integer "followed_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["followed_id"], name: "index_relationships_on_followed_id"
+    t.index ["follower_id", "followed_id"], name: "index_relationships_on_follower_id_and_followed_id", unique: true
   end
 
   create_table "stocks", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

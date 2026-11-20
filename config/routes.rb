@@ -43,7 +43,11 @@ Rails.application.routes.draw do
       resources :articles, only: [:index, :show, :create, :update, :destroy], controller: 'users/articles' do
         post   'likes', to: 'users/likes#article_create', as: :article_like
         delete 'likes', to: 'users/likes#article_destroy'
+        member do
+          patch :folder, action: :update_folder
+        end
       end
+      resources :folders, only: [:index, :create, :update, :destroy], controller: 'users/folders'
       resources :tweets, only: [:index, :show, :create, :update, :destroy], controller: 'users/tweets' do
         # いいね: POST /api/v1/tweets/:tweet_id/like, DELETE /api/v1/tweets/:tweet_id/like
         resource :like,     only: [:create, :destroy], controller: 'users/tweet_likes'
@@ -54,6 +58,11 @@ Rails.application.routes.draw do
       resources :learnings, only: [:index, :create],                           controller: 'users/learnings'
       resources :stocks,    only: [:index, :create, :destroy],                 controller: 'users/stocks'
       resource  :profile,   only: [:show, :update],                            controller: 'users/profiles'
+      resources :users,     only: [:index, :show],                             controller: 'users/users' do
+        resource :follow,   only: [:create, :destroy],                         controller: 'users/relationships'
+        get :followings, on: :member
+        get :followers,  on: :member
+      end
 
       # --- 管理者向けリソース ---
       namespace :admin do
