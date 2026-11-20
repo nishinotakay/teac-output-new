@@ -14,9 +14,9 @@ module Users
           user_id: partner_user_id).map(&:chat_room).first
 
         if chat_room.blank?
-          chat_room = ChatRoom.create!
-          ChatRoomUser.create(chat_room: chat_room, user_id: current_user.id)
-          ChatRoomUser.create(chat_room: chat_room, user_id: partner_user_id)
+          chat_room = ChatRoom.create!(tenant: current_user.tenant)
+          ChatRoomUser.create!(chat_room: chat_room, user_id: current_user.id)
+          ChatRoomUser.create!(chat_room: chat_room, user_id: partner_user_id)
         end
         redirect_to action: :show, id: chat_room.id
       end
