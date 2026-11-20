@@ -66,6 +66,7 @@ Rails.application.routes.draw do
 
       # --- 管理者向けリソース ---
       namespace :admin do
+        post "article_search", to: "article_search#create"
         resources :users, only: [:index, :show, :update] do
           member do
             patch :cancel
@@ -85,7 +86,17 @@ Rails.application.routes.draw do
         resources :articles,  only: [:index, :show, :create, :update, :destroy]
         resources :posts,     only: [:index, :show, :create, :update, :destroy]
         resources :learnings, only: [:index, :create]
-        resources :courses,  only: [:index, :create, :update, :destroy]
+        resources :courses, only: [:index, :create, :update, :destroy] do
+          resources :categories, only: [:index, :create, :update, :destroy] do
+            get :articles, on: :member
+          end
+        end
+        # 追加：カテゴリーへの記事の紐付け・解除
+        resources :categories, only: [] do
+          resources :articles,
+                    only: [:create, :destroy],
+                    controller: 'category_articles'
+        end
       end
     end
   end

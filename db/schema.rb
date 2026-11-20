@@ -71,6 +71,16 @@ ActiveRecord::Schema.define(version: 2026_11_17_020723) do
     t.index ["プロアカ_id"], name: "index_admins_on_プロアカ_id"
   end
 
+  create_table "article_categories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "article_id", null: false
+    t.bigint "category_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["article_id", "category_id"], name: "index_article_categories_on_article_id_and_category_id", unique: true
+    t.index ["article_id"], name: "index_article_categories_on_article_id"
+    t.index ["category_id"], name: "index_article_categories_on_category_id"
+  end
+
   create_table "article_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "content"
     t.boolean "confirmed", default: false
@@ -109,6 +119,16 @@ ActiveRecord::Schema.define(version: 2026_11_17_020723) do
     t.index ["admin_id"], name: "index_articles_on_admin_id"
     t.index ["tenant_id"], name: "index_articles_on_tenant_id"
     t.index ["user_id"], name: "index_articles_on_user_id"
+  end
+
+  create_table "categories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.bigint "course_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "tenant_id", null: false
+    t.index ["course_id"], name: "index_categories_on_course_id"
+    t.index ["tenant_id"], name: "index_categories_on_tenant_id"
   end
 
   create_table "charge_plans", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -153,6 +173,8 @@ ActiveRecord::Schema.define(version: 2026_11_17_020723) do
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "tenant_id", null: false
+    t.index ["tenant_id"], name: "index_courses_on_tenant_id"
   end
 
   create_table "folders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -355,6 +377,8 @@ ActiveRecord::Schema.define(version: 2026_11_17_020723) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "admins", "proakas", column: "プロアカ_id"
   add_foreign_key "admins", "tenants"
+  add_foreign_key "article_categories", "articles"
+  add_foreign_key "article_categories", "categories"
   add_foreign_key "article_comments", "articles"
   add_foreign_key "article_comments", "users"
   add_foreign_key "article_folders", "admins"
@@ -364,11 +388,14 @@ ActiveRecord::Schema.define(version: 2026_11_17_020723) do
   add_foreign_key "articles", "admins"
   add_foreign_key "articles", "tenants"
   add_foreign_key "articles", "users"
+  add_foreign_key "categories", "courses"
+  add_foreign_key "categories", "tenants"
   add_foreign_key "charge_plans", "admins"
   add_foreign_key "chat_messages", "chat_rooms"
   add_foreign_key "chat_messages", "users"
   add_foreign_key "chat_room_users", "chat_rooms"
   add_foreign_key "chat_room_users", "users"
+  add_foreign_key "courses", "tenants"
   add_foreign_key "folders", "admins"
   add_foreign_key "folders", "users"
   add_foreign_key "inquiries", "users"

@@ -24,6 +24,7 @@ class Api::V1::Admin::CoursesController < Api::V1::BaseController
 
   def create
     course = Course.new(course_params)
+    course.tenant = @current_admin.tenant # 追加
 
     if course.save
       render json: { course: course_json(course) }, status: :created
