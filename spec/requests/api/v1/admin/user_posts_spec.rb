@@ -3,7 +3,7 @@
 # GET /api/v1/admin/users/:user_id/posts の正常系・認証・認可・存在しないユーザーを検証する。
 require 'rails_helper'
 
-RSpec.describe 'Api::V1::Admin::UserPosts', type: :request do
+RSpec.describe 'Api::V1::Admin::UserPosts' do
   # 管理者トークンを Authorization ヘッダー形式で組み立てるヘルパー
   def admin_auth_headers(admin)
     { 'Authorization' => "Bearer #{JwtHelper.encode(id: admin.id, role: 'admin')}" }

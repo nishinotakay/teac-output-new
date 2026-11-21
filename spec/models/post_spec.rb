@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Post, type: :model do
+RSpec.describe Post do
   let(:tenant) { create(:tenant) }
   let(:other_tenant) { create(:tenant) }
   let(:user) { create(:user, tenant: tenant) }

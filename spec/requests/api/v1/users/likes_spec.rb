@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Api::V1::Users::Likes（動画）', type: :request do
+RSpec.describe 'Api::V1::Users::Likes（動画）' do
   let(:tenant) { create(:tenant) }
   let(:user) { create(:user, tenant: tenant) }
   let(:headers) { { 'Authorization' => "Bearer #{JwtHelper.encode(id: user.id, role: 'user')}" } }
