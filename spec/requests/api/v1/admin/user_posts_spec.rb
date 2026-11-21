@@ -16,8 +16,8 @@ RSpec.describe 'Api::V1::Admin::UserPosts', type: :request do
 
   let(:admin) { create(:admin) }
   # 対象の受講生と、投稿が混ざらないことを確認するための別の受講生
-  let(:target_user) { create(:user) }
-  let(:other_user) { create(:user) }
+  let(:target_user) { create(:user, tenant: admin.tenant) }
+  let(:other_user) { create(:user, tenant: admin.tenant) }
 
   describe 'GET /api/v1/admin/users/:user_id/posts' do
     context '管理者として認証済みの場合' do
