@@ -1,0 +1,6 @@
+ja:
+  activerecord:
+    errors:
+      models:
+        chat_room_user:
+          different_tenant: '別のスクールの受講生とはチャットできません'
