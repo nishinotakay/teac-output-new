@@ -16,7 +16,7 @@ class Api::V1::Admin::VideoCommentsController < Api::V1::BaseController
     parent = find_parent
     return if performed?
 
-    comment = @post.video_comments.build(content: params[:content], parent: parent, admin: @current_admin)
+    comment = @post.video_comments.build(content: comment_content, parent: parent, admin: @current_admin)
     if comment.save
       render json: { comment: comment_json(comment, with_replies: true) }, status: :created
     else
@@ -26,7 +26,8 @@ class Api::V1::Admin::VideoCommentsController < Api::V1::BaseController
 
   # PATCH /api/v1/admin/posts/:post_id/comments/:id
   def update
-    if @comment.update(content: params[:content])
+    if @comment.update(content: comment_content)
+      preload_replies if @comment.parent_id.nil?
       render json: { comment: comment_json(@comment, with_replies: @comment.parent_id.nil?) }
     else
       render json: { errors: @comment.errors.full_messages }, status: :unprocessable_entity
@@ -54,6 +55,14 @@ class Api::V1::Admin::VideoCommentsController < Api::V1::BaseController
   def set_deletable_comment
     @comment = @post.video_comments.find_by(id: params[:id])
     render_not_found('コメント') unless @comment
+  end
+
+  def comment_content
+    params.permit(:content)[:content]
+  end
+
+  def preload_replies
+    ActiveRecord::Associations::Preloader.new.preload(@comment, replies: %i[user admin])
   end
 
   def find_parent
