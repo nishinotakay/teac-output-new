@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Api::V1::Users::VideoComments', type: :request do
+RSpec.describe 'Api::V1::Users::VideoComments' do
   def user_auth_headers(user)
     { 'Authorization' => "Bearer #{JwtHelper.encode(id: user.id, role: 'user')}" }
   end

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe VideoComment, type: :model do
+RSpec.describe VideoComment do
   let(:tenant) { create(:tenant) }
   let(:other_tenant) { create(:tenant) }
   let(:user) { create(:user, tenant: tenant) }
