@@ -39,6 +39,7 @@ Rails.application.routes.draw do
       resources :posts, only: [:index, :show, :create, :update, :destroy], controller: 'users/posts' do
         post   'likes', to: 'users/likes#post_create',   as: :post_like
         delete 'likes', to: 'users/likes#post_destroy'
+        resources :comments, only: %i[index create update destroy], controller: 'users/video_comments'
       end
       resources :articles, only: [:index, :show, :create, :update, :destroy], controller: 'users/articles' do
         post   'likes', to: 'users/likes#article_create', as: :article_like
@@ -70,7 +71,9 @@ Rails.application.routes.draw do
           resources :posts, only: [:index], controller: 'user_posts'
         end
         resources :articles,  only: [:index, :show, :create, :update, :destroy]
-        resources :posts,     only: [:index, :show, :create, :update, :destroy]
+        resources :posts,     only: [:index, :show, :create, :update, :destroy] do
+          resources :comments, only: %i[index create update destroy], controller: 'video_comments'
+        end
         resources :learnings, only: [:index, :create]
         resources :courses,  only: [:index, :create, :update, :destroy]
       end

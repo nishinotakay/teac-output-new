@@ -10,6 +10,7 @@ class Post < ApplicationRecord
 
   has_many :likes
   has_many :post_comments, dependent: :destroy
+  has_many :video_comments, dependent: :destroy
 
   validates :user_id, presence: true, if: -> { admin_id.blank? }
   validates :admin_id, presence: true, if: -> { user_id.blank? }

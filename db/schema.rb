@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_11_21_000000) do
+ActiveRecord::Schema.define(version: 2026_11_21_000001) do
 
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -349,6 +349,23 @@ ActiveRecord::Schema.define(version: 2026_11_21_000000) do
     t.index ["プロアカ_id"], name: "index_users_on_プロアカ_id"
   end
 
+  create_table "video_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "tenant_id", null: false
+    t.bigint "post_id", null: false
+    t.bigint "parent_id"
+    t.bigint "user_id"
+    t.bigint "admin_id"
+    t.text "content", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["admin_id"], name: "index_video_comments_on_admin_id"
+    t.index ["parent_id"], name: "index_video_comments_on_parent_id"
+    t.index ["post_id", "parent_id", "created_at"], name: "index_video_comments_on_post_id_and_parent_id_and_created_at"
+    t.index ["post_id"], name: "index_video_comments_on_post_id"
+    t.index ["tenant_id"], name: "index_video_comments_on_tenant_id"
+    t.index ["user_id"], name: "index_video_comments_on_user_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "admins", "proakas", column: "プロアカ_id"
@@ -385,4 +402,9 @@ ActiveRecord::Schema.define(version: 2026_11_21_000000) do
   add_foreign_key "tweets", "users"
   add_foreign_key "users", "proakas", column: "プロアカ_id"
   add_foreign_key "users", "tenants"
+  add_foreign_key "video_comments", "admins"
+  add_foreign_key "video_comments", "posts"
+  add_foreign_key "video_comments", "tenants"
+  add_foreign_key "video_comments", "users"
+  add_foreign_key "video_comments", "video_comments", column: "parent_id"
 end

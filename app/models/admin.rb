@@ -15,6 +15,7 @@ class Admin < ApplicationRecord
 
   has_many :articles, dependent: :destroy
   has_many :posts, dependent: :destroy
+  has_many :video_comments, dependent: :destroy
   has_one :charge_plan, dependent: :destroy
   
   # 管理者の学習進捗を保持する関連付け
