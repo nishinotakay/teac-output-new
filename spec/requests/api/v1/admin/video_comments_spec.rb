@@ -197,27 +197,34 @@ RSpec.describe 'Api::V1::Admin::VideoComments', type: :request do
       expect(json['comment']['parentId']).to eq(top.id.to_s)
     end
 
-    it '他の動画のコメントを parent_id にすると 4xx で DB 不変' do
+    it 'content に配列を送ると 422 で DB 不変' do
+      json_headers = headers.merge('CONTENT_TYPE' => 'application/json')
+      expect { post base_path, params: { content: ['a'] }.to_json, headers: json_headers }
+        .not_to(change { comment_count })
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it '他の動画のコメントを parent_id にすると 404 で DB 不変' do
       other_post = create(:post, tenant: tenant, user: student, admin: nil)
       foreign_parent = create_comment(post: other_post)
 
       expect { post base_path, params: { content: 'a', parent_id: foreign_parent.id }, headers: headers }
         .not_to(change { comment_count })
-      expect(response.status).to be_between(400, 499)
+      expect(response).to have_http_status(:not_found)
     end
 
-    it '他テナントのコメントを parent_id にすると 4xx で DB 不変' do
+    it '他テナントのコメントを parent_id にすると 404 で DB 不変' do
       foreign_parent = create_foreign_comment
 
       expect { post base_path, params: { content: 'a', parent_id: foreign_parent.id }, headers: headers }
         .not_to(change { comment_count })
-      expect(response.status).to be_between(400, 499)
+      expect(response).to have_http_status(:not_found)
     end
 
-    it '存在しない parent_id は 4xx で DB 不変' do
+    it '存在しない parent_id は 404 で DB 不変' do
       expect { post base_path, params: { content: 'a', parent_id: 0 }, headers: headers }
         .not_to(change { comment_count })
-      expect(response.status).to be_between(400, 499)
+      expect(response).to have_http_status(:not_found)
     end
   end
 

@@ -232,28 +232,35 @@ RSpec.describe 'Api::V1::Users::VideoComments', type: :request do
       expect(json['comment']['parentId']).to eq(top.id.to_s)
     end
 
-    it '他の動画のコメントを parent_id にすると 4xx で DB 不変' do
+    it 'content に配列を送ると 422 で DB 不変' do
+      json_headers = headers.merge('CONTENT_TYPE' => 'application/json')
+      expect { post base_path, params: { content: ['a'] }.to_json, headers: json_headers }
+        .not_to(change { comment_count })
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it '他の動画のコメントを parent_id にすると 404 で DB 不変' do
       other_post = create(:post, tenant: tenant, user: nil, admin: tenant_admin)
       foreign_parent = create_comment(post: other_post)
 
       expect { post base_path, params: { content: 'a', parent_id: foreign_parent.id }, headers: headers }
         .not_to(change { comment_count })
-      expect(response.status).to be_between(400, 499)
+      expect(response).to have_http_status(:not_found)
     end
 
-    it '他テナントのコメントを parent_id にすると 4xx で DB 不変' do
+    it '他テナントのコメントを parent_id にすると 404 で DB 不変' do
       foreign_parent = create(:video_comment, owner_tenant: other_tenant, post: foreign_post,
         user: create(:user, tenant: other_tenant))
 
       expect { post base_path, params: { content: 'a', parent_id: foreign_parent.id }, headers: headers }
         .not_to(change { comment_count })
-      expect(response.status).to be_between(400, 499)
+      expect(response).to have_http_status(:not_found)
     end
 
-    it '存在しない parent_id は 4xx で DB 不変' do
+    it '存在しない parent_id は 404 で DB 不変' do
       expect { post base_path, params: { content: 'a', parent_id: 0 }, headers: headers }
         .not_to(change { comment_count })
-      expect(response.status).to be_between(400, 499)
+      expect(response).to have_http_status(:not_found)
     end
   end
 
@@ -278,6 +285,14 @@ RSpec.describe 'Api::V1::Users::VideoComments', type: :request do
       expect(response).to have_http_status(:ok)
       expect(json['comment']).to include('id' => own_comment.id.to_s, 'content' => '変更後')
       expect(own_comment.reload.content).to eq('変更後')
+    end
+
+    it 'content に配列を送ると 422 で本文は変わらない' do
+      patch "#{base_path}/#{own_comment.id}", params: { content: ['a'] }.to_json,
+        headers: headers.merge('CONTENT_TYPE' => 'application/json')
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(own_comment.reload.content).to eq('元の本文')
     end
 
     it '他の受講生のコメントは 404 で DB 不変' do
