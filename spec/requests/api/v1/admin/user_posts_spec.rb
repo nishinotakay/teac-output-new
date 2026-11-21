@@ -79,6 +79,18 @@ RSpec.describe 'Api::V1::Admin::UserPosts', type: :request do
       end
     end
 
+    context '他テナントの受講生 ID の場合' do
+      let(:foreign_user) { create(:user, tenant: create(:tenant)) }
+      let!(:foreign_post) { create(:post, user: foreign_user) }
+
+      it '404 を返し、他テナントの動画は含まれない' do
+        get "/api/v1/admin/users/#{foreign_user.id}/posts", headers: admin_auth_headers(admin)
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).not_to include(foreign_post.id.to_s)
+      end
+    end
+
     context '未認証の場合' do
       it '401 を返す' do
         get "/api/v1/admin/users/#{target_user.id}/posts"

@@ -42,7 +42,7 @@ RSpec.describe Post, type: :model do
     let!(:own_post) { described_class.create!(build_post_attributes.merge(user: user)) }
     let!(:foreign_post) { described_class.create!(build_post_attributes.merge(user: other_user)) }
 
-    after { Current.reset }
+    after(:each) { Current.reset }
 
     it 'Current.tenant をセットすると他テナントの Post が見えない' do
       Current.tenant = tenant
@@ -57,7 +57,7 @@ RSpec.describe Post, type: :model do
       expect(described_class.all).to contain_exactly(own_post, foreign_post)
     end
 
-    it 'in_current_tenant スコープが定義されている' do
+    it 'in_current_tenant は Current.tenant の行だけを返す' do
       Current.tenant = other_tenant
 
       expect(described_class.in_current_tenant).to contain_exactly(foreign_post)
