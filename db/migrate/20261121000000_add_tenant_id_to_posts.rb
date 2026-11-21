@@ -9,6 +9,13 @@ class AddTenantIdToPosts < ActiveRecord::Migration[6.1]
       SET posts.tenant_id = COALESCE(users.tenant_id, admins.tenant_id)
     SQL
 
+    orphan_count = select_value('SELECT COUNT(*) FROM posts WHERE tenant_id IS NULL').to_i
+    if orphan_count.positive?
+      # DDL は暗黙コミットされるので、列を戻して再実行できる状態で止める
+      remove_column :posts, :tenant_id
+      raise "tenant を決められない posts が #{orphan_count} 件あります（user_id・admin_id が無い行）"
+    end
+
     change_column_null :posts, :tenant_id, false
     add_index :posts, :tenant_id
     add_foreign_key :posts, :tenants
