@@ -9,6 +9,7 @@ class ChatRoom < ApplicationRecord
 
   def self.find_or_create_between!(user, partner)
     transaction do
+      User.where(id: [user.id, partner.id]).order(:id).lock.load
       between(user, partner) || create_with_members!(user, partner)
     end
   end
