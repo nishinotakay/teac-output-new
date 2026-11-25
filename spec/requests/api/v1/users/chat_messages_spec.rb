@@ -16,7 +16,11 @@ RSpec.describe 'Api::V1::Users::ChatMessages' do
   let(:classmate) { create(:user, tenant: tenant, name: '佐藤花子') }
   let(:chat_room) { ChatRoom.find_or_create_between!(current_user, classmate) }
   let(:outsider) { create(:user, tenant: tenant) }
-  let(:other_tenant_room) { create(:chat_message).chat_room }
+  let(:other_tenant) { create(:tenant) }
+  let(:other_tenant_room) do
+    other_tenant_users = create_list(:user, 2, tenant: other_tenant)
+    ChatRoom.find_or_create_between!(*other_tenant_users)
+  end
 
   describe 'GET /api/v1/chat_rooms/:chat_room_id/messages' do
     it '未ログインなら 401 を返す' do
