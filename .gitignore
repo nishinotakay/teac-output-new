@@ -76,3 +76,6 @@ yarn-debug.log*
 .yarn-integrity
 
 /config/master.key
+
+# Claude Code（ルールは共有、個人設定だけ除外）
+.claude/settings.local.json

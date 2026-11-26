@@ -4,7 +4,8 @@
 
 - **ステージングはファイルパスを明示する。** `git add` にドット・`-A`・`--all` を渡さない（`.claude/hooks/guard-bash.sh` がブロックする）
 - 含めるもの: 実行ロジック・設定・マイグレーション・テスト（`app/` `config/` `db/migrate/` `lib/` `spec/` `src/` など）
-- 含めないもの: `docs/` `.claude/` `tmp/` `log/`、スクショ、調査メモ。ユーザーが明示したときだけ `ALLOW_DOCS_COMMIT=1` を付けて含める
+- 含めないもの: `docs/` `tmp/` `log/`、スクショ、調査メモ、`.claude/settings.local.json`（個人設定）
+- `CLAUDE.md` と `.claude/` は両リポジトリで git 管理する共有ルール。ユーザーが明示したときだけ `ALLOW_DOCS_COMMIT=1` を付け、ルール変更だけの PR にする
 - 判断基準は「これはロジックに影響する実行コードか」
 - 1 コミット = 1 つの論理的変更。ついでの修正・リファクタは別コミット
 
